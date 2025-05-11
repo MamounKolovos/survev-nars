@@ -1708,6 +1708,16 @@ export class GameMap {
         puzzlePiece?: string,
         hideFromMap?: boolean,
     ): Obstacle {
+        this.game.pluginManager.emit("obstacleWillGenerate", {
+            type,
+            pos,
+            layer,
+            ori,
+            scale,
+            buildingId,
+            puzzlePiece,
+            hideFromMap,
+        });
         const def = MapObjectDefs[type] as ObstacleDef;
 
         scale = scale ?? util.random(def.scale.createMin, def.scale.createMax);
@@ -1724,8 +1734,8 @@ export class GameMap {
         );
         this.game.objectRegister.register(obstacle);
         this.obstacles.push(obstacle);
-        if (obstacle.isDynamic) {
-            this.dynamicObstacles.push(obstacle);
+        if (def.regrow || obstacle.isDoor || obstacle.isButton) {
+            obstacle.makeDynamic();
         }
 
         if (def.map?.display && layer === 0 && !hideFromMap)
@@ -1734,6 +1744,7 @@ export class GameMap {
 
         this.addBounds(obstacle, !!buildingId);
 
+        this.game.pluginManager.emit("obstacleDidGenerate", { obstacle: obstacle });
         return obstacle;
     }
 
