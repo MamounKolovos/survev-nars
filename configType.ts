@@ -220,6 +220,13 @@ export interface ConfigType {
     oauthRedirectURI: string;
 
     /**
+     * Base path of the client
+     * Used if the API is on a subdomain instead of the main one
+     * So the auth code can redirect to it instead of `/`
+     */
+    oauthBasePath: string;
+
+    /**
      * API keys for accounts and other features.
      */
     secrets: {
@@ -294,6 +301,7 @@ export interface ConfigType {
          * NOTE: This is only used by the client so must be present at the build time!
          */
         AIP_PLACEMENT_ID?: string;
+        GAMEMONETIZE_ID?: string;
     };
 
     /**

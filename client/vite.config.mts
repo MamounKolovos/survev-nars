@@ -47,21 +47,39 @@ export default defineConfig(({ mode }) => {
     process.env.VITE_TURNSTILE_SCRIPT = "";
 
     if (Config.secrets.AIP_ID) {
-        process.env.VITE_ADIN_PLAY_SCRIPT = `
-    <script async src="//api.adinplay.com/libs/aiptag/pub/SNP/${Config.secrets.AIP_PLACEMENT_ID}/tag.min.js"></script>
-    <script>
-        window.aiptag = window.aiptag || { cmd: [] };
-        aiptag.cmd.display = aiptag.cmd.display || [];
-        // CMP tool settings
-        aiptag.cmp = {
-            show: true,
-            position: "centered", // centered, bottom
-            button: false,
-            buttonText: "Privacy settings",
-            buttonPosition: "bottom-left", // bottom-left, bottom-right, top-left, top-right
-        };
-    </script>
-    `;
+        process.env.VITE_ADIN_PLAY_SCRIPT = `<script>
+        const urlParams = new URLSearchParams(self.location.search);
+
+        const isCrazyGames = urlParams.has("crazygames");
+
+        const isPOKI = window != window.parent && new URL(document.referrer).origin.includes("poki");
+
+        const isWithinGameMonetize = window != window.parent && new URL(document.referrer).origin.includes("gamemonetize") || window.location.href.includes("gamemonetize");
+
+        if (!isCrazyGames && !isPOKI && !isWithinGameMonetize) {
+            const script = document.createElement("script");
+            script.src = "//api.adinplay.com/libs/aiptag/pub/SNP/${Config.secrets.AIP_ID}/tag.min.js";
+            document.head.appendChild(script);
+
+            window.aiptag = window.aiptag || { cmd: [] };
+            aiptag.cmd.display = aiptag.cmd.display || [];
+
+            // CMP tool settings
+            aiptag.cmp = {
+                show: true,
+                position: "centered", // centered, bottom
+                button: false,
+                buttonText: "Privacy settings",
+                buttonPosition: "bottom-left", // bottom-left, bottom-right, top-left, top-right
+            };
+
+            script.addEventListener("load", () => {
+                window.aiptag.cmd.display.push(() => {
+                    window.aipDisplayTag.display("${Config.secrets.AIP_PLACEMENT_ID}_728x90");
+                });
+            });
+        }
+    </script>`;
         process.env.VITE_AIP_PLACEMENT_ID = Config.secrets.AIP_PLACEMENT_ID;
     }
 
@@ -69,11 +87,8 @@ export default defineConfig(({ mode }) => {
         process.env.VITE_TURNSTILE_SCRIPT = `<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" defer></script>`;
     }
 
-    process.env = {
-        ...process.env,
-        VITE_GAME_VERSION: version,
-        VITE_BACKGROUND_IMG: selectedTheme.SPLASH_BG,
-    };
+    process.env.VITE_GAME_VERSION = version;
+    process.env.VITE_BACKGROUND_IMG = selectedTheme.SPLASH_BG;
 
     const plugins: Plugin[] = [ejsPlugin()];
 
@@ -92,9 +107,8 @@ export default defineConfig(({ mode }) => {
         port: Config.vite.port,
         host: Config.vite.host,
         proxy: {
-            // regex that matches /stats, /stats/slug but doesn't match /stats/
-            // since if it matches /stats/ it will infinite loop :p
-            // also why does vite not work without trailing slashes at the end of paths 😭
+            // this redirects /stats to /stats/
+            // because vite is cringe and does not work without trailing slashes at the end of paths 😭
             "^/stats(?!/$).*": {
                 target: `http://${Config.vite.host}:${Config.vite.port}`,
                 rewrite: (path) => path.replace(/^\/stats(?!\/$).*/, "/stats/"),
@@ -154,6 +168,7 @@ export default defineConfig(({ mode }) => {
             }),
             MENU_MUSIC: JSON.stringify(selectedTheme.MENU_MUSIC),
             AIP_PLACEMENT_ID: JSON.stringify(Config.secrets.AIP_PLACEMENT_ID),
+            VITE_GAMEMONETIZE_ID: JSON.stringify(Config.secrets.GAMEMONETIZE_ID),
             IS_DEV: isDev,
             PROXY_DEFS: JSON.stringify(Config.proxies),
             TURNSTILE_SITE_KEY: JSON.stringify(Config.secrets.TURNSTILE_SITE_KEY),

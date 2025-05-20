@@ -5,6 +5,7 @@ import { api } from "../api";
 import { device } from "../device";
 import { helpers } from "../helpers";
 import { proxy } from "../proxy";
+import { SDK } from "../sdk";
 import type { LoadoutMenu } from "./loadoutMenu";
 import type { Localization } from "./localization";
 import { MenuModal } from "./menuModal";
@@ -69,18 +70,18 @@ function createLoginOptions(
     // Define the available login methods
     if (proxy.loginSupported("google")) {
         addLoginOption("google", account.profile.linkedGoogle, () => {
-            window.location.href = "/api/auth/google";
+            window.location.href = api.resolveUrl("/api/auth/google");
         });
     }
     if (proxy.loginSupported("discord")) {
         addLoginOption("discord", account.profile.linkedDiscord, () => {
-            window.location.href = "/api/auth/discord";
+            window.location.href = api.resolveUrl("/api/auth/discord");
         });
     }
 
     if (proxy.loginSupported("mock")) {
         addLoginOption("mock", false, () => {
-            window.location.href = "/api/auth/mock";
+            window.location.href = api.resolveUrl("/api/auth/mock");
         });
     }
 }
@@ -249,7 +250,7 @@ export class ProfileUi {
 
         // Leaderboard
         $(".account-leaderboard-link").click((_e) => {
-            window.open(api.resolveUrl("/stats"), "_blank");
+            window.open("/stats", "_blank");
             return false;
         });
         $(".account-stats-link").click(() => {
@@ -257,7 +258,7 @@ export class ProfileUi {
                 if (this.account.loggedIn) {
                     if (this.account.profile.usernameSet) {
                         const slug = this.account.profile.slug || "";
-                        window.open(`/stats/${slug}`, "_blank");
+                        window.open(`/stats/?slug=${slug}`, "_blank");
                     } else {
                         this.setNameModal!.show(true);
                     }
@@ -336,6 +337,14 @@ export class ProfileUi {
             });
             return false;
         });
+
+        const loginSupported =
+            !SDK.isAnySDK &&
+            (proxy.loginSupported("google") ||
+                proxy.loginSupported("discord") ||
+                proxy.loginSupported("mock"));
+
+        $(".account-block").toggle(loginSupported);
     }
 
     onError(type: string, data?: string) {
