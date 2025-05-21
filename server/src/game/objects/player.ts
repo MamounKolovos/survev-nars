@@ -2154,6 +2154,10 @@ export class Player extends BaseGameObject {
             // spectating someone currently who is still alive
             player = this.spectating;
         }
+        // temporary guard while the spectating code is not fixed
+        if (!player) {
+            player = this;
+        }
 
         for (let i = 0; i < playerBarn.killFeedLines.length; i++) {
             const killFeedLine = playerBarn.killFeedLines[i];
