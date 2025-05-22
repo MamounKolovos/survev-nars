@@ -552,6 +552,15 @@ export class Obstacle extends BaseGameObject {
 
         this.interactedBy = player;
 
+        if (
+            this.game.pluginManager.emit("obstacleWillInteract", {
+                obstacle: this,
+                player,
+                auto,
+            })
+        )
+            return;
+
         if (this.isDoor && this.door) {
             if (!this.door.canUse) return;
             if (this.door.autoOpen && !auto) return;
@@ -574,6 +583,8 @@ export class Obstacle extends BaseGameObject {
         if (this.isButton && this.button.canUse) {
             this.useButton();
         }
+
+        this.game.pluginManager.emit("obstacleDidInteract", { obstacle: this, player });
     }
 
     unlock(): void {
