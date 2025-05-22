@@ -4141,6 +4141,16 @@ export class Player extends BaseGameObject {
 
         const itemDef = GameObjectDefs[dropMsg.item] as LootDef;
         if (!itemDef) return;
+
+        if (
+            this.game.pluginManager.emit("playerWillDropItem", {
+                player: this,
+                dropMsg,
+                itemDef,
+            })
+        )
+            return;
+
         switch (itemDef.type) {
             case "ammo": {
                 const inventoryCount = this.inventory[dropMsg.item];
@@ -4242,6 +4252,12 @@ export class Player extends BaseGameObject {
         if (reloading && this.weapons[this.curWeapIdx].ammo == 0) {
             this.weaponManager.tryReload();
         }
+
+        this.game.pluginManager.emit("playerDidDropItem", {
+            player: this,
+            dropMsg,
+            itemDef,
+        });
     }
 
     emoteFromMsg(msg: net.EmoteMsg) {

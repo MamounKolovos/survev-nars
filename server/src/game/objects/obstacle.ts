@@ -347,6 +347,14 @@ export class Obstacle extends BaseGameObject {
         const def = MapObjectDefs[this.type] as ObstacleDef;
         if (this.health === 0 || !this.destructible) return;
 
+        if (
+            this.game.pluginManager.emit("obstacleWillTakeDamage", {
+                obstacle: this,
+                params,
+            })
+        )
+            return;
+
         if (params.damageType === DamageType.Player) {
             let armorPiercing = false;
             let stonePiercing = false;
@@ -375,6 +383,8 @@ export class Obstacle extends BaseGameObject {
             this.scale = math.lerp(this.healthT, this.minScale, this.maxScale);
             this.updateCollider();
         }
+
+        this.game.pluginManager.emit("obstacleDidTakeDamage", { obstacle: this, params });
 
         // need to send full object for obstacles with explosions
         // so smoke particles work on the client
