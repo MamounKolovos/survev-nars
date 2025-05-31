@@ -1,6 +1,7 @@
 import type { Vec2 } from "../utils/v2";
 import { Main } from "./maps/baseDefs";
 import { Cobalt } from "./maps/cobaltDefs";
+import { Deathmatch } from "./maps/deathmatchDefs";
 import { Desert } from "./maps/desertDefs";
 import { Faction } from "./maps/factionDefs";
 import { Halloween } from "./maps/halloweenDefs";
@@ -48,6 +49,7 @@ export const MapDefs = {
     savannah: Savannah,
     cobalt: Cobalt,
     turkey: Turkey,
+    deathmatch: Deathmatch,
 } satisfies Record<string, MapDef>;
 
 export interface MapDef {

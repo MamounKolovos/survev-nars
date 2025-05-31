@@ -9,6 +9,7 @@ export enum MapId {
     Savannah = 5,
     Halloween = 6,
     Cobalt = 7,
+    Deathmatch = 8,
 }
 
 export const TeamModeToString = {
