@@ -1,6 +1,7 @@
 import type { Vec2 } from "../utils/v2";
 import { Main } from "./maps/baseDefs";
 import { Cobalt } from "./maps/cobaltDefs";
+import { Deathmatch } from "./maps/deathmatchDefs";
 import { Desert } from "./maps/desertDefs";
 import { Faction } from "./maps/factionDefs";
 import { ForcedLoot } from "./maps/forcedLootDefs";
@@ -50,6 +51,7 @@ export const MapDefs = {
     cobalt: Cobalt,
     turkey: Turkey,
     forced_loot: ForcedLoot,
+    deathmatch: Deathmatch,
 } satisfies Record<string, MapDef>;
 
 export interface MapDef {
