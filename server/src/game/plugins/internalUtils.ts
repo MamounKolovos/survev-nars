@@ -8,9 +8,12 @@ import type { ObstacleDef } from "../../../../shared/defs/mapObjectsTyping";
 import { GameConfig } from "../../../../shared/gameConfig";
 import * as net from "../../../../shared/net/net";
 import { ObjectType } from "../../../../shared/net/objectSerializeFns";
+import { collider } from "../../../../shared/utils/collider";
 import { util } from "../../../../shared/utils/util";
+import { v2 } from "../../../../shared/utils/v2";
 import { type TimerManager, createSimpleSegment } from "../../utils/pluginUtils";
 import type { GameMap } from "../map";
+import type { Loot } from "../objects/loot";
 import type { Player } from "../objects/player";
 import type { GamePlugin } from "../pluginManager";
 
@@ -269,5 +272,52 @@ export function attachCustomQuickSwitch(plugin: GamePlugin, customSwitchDelay: n
 
         weaponManager.player.setDirty();
         weaponManager.player.weapsDirty = true;
+    });
+}
+
+export function attachLootPingNotification(
+    plugin: GamePlugin,
+    notifCooldown: number,
+    maxPingToItemDist: number,
+) {
+    //key is player id, value is last time a successful item ping notif was sent by said player
+    const lastItemPingNotif: Record<number, number> = {};
+    plugin.on("pingDidOccur", (event) => {
+        const { playerId, pos, type, isPing, itemType } = event.data.ping;
+        if (type !== "ping_help") return;
+        if (playerId === 0) return;
+        if (!pos) return;
+        const player = plugin.game.objectRegister.getById(playerId) as Player;
+        if (v2.distance(pos, player.pos) > player.zoom) return;
+        const currentTime = player.timeAlive;
+        if (currentTime - lastItemPingNotif[playerId] < notifCooldown) return;
+
+        const objs = plugin.game.grid
+            .intersectCollider(collider.createCircle(pos, maxPingToItemDist))
+            .filter(
+                (obj): obj is Loot =>
+                    obj.__type == ObjectType.Loot &&
+                    obj.layer === player.layer &&
+                    v2.distance(pos, obj.pos) < maxPingToItemDist,
+            );
+        if (objs.length === 0) return;
+
+        let minDist = 9999;
+        let closestItemType = "";
+        for (const obj of objs) {
+            const d = v2.distance(obj.pos, pos);
+            if (d < minDist) {
+                minDist = d;
+                closestItemType = obj.type;
+            }
+        }
+
+        if (!closestItemType) return;
+        const itemName = (GameObjectDefs[closestItemType] as GunDef).name;
+        const text = `${player.name} pinged a ${itemName}`;
+        const segments = [createSimpleSegment(text, "#B4A3FC")];
+
+        plugin.game.playerBarn.addKillFeedLine(player.groupId, segments);
+        lastItemPingNotif[playerId] = currentTime;
     });
 }
