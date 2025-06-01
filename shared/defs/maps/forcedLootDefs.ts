@@ -1,9 +1,11 @@
 import { GameConfig } from "../../gameConfig";
 import { util } from "../../utils/util";
 import type { MapDef } from "../mapDefs";
+import { MapId } from "../types/misc";
 import { Main, type PartialMapDef } from "./baseDefs";
 
 const mapDef: PartialMapDef = {
+    mapId: MapId.ForcedLoot,
     desc: { name: "Fair Loot", icon: "", buttonCss: "" },
     gameConfig: {
         planes: {
