@@ -1497,7 +1497,7 @@ export const GunDefs: Record<string, GunDef> = {
         recoilTime: 1e10,
         moveSpread: 2.5,
         shotSpread: 0,
-        bulletCount: 0,
+        bulletCount: 1,
         bulletType: "bullet_sv98",
         headshotMult: 1.5,
         speed: { equip: 0, attack: 0 },
