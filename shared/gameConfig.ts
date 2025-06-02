@@ -123,7 +123,7 @@ export const GameConfig = {
     Plane,
     HasteType,
     gas: {
-        damageTickRate: 99999, // 2
+        damageTickRate: 2,
     },
     map: {
         gridSize: 16,
@@ -138,14 +138,14 @@ export const GameConfig = {
         reviveHealth: 24,
         minActiveTime: 10,
         boostDecay: 0.33,
-        boostMoveSpeed: 1.85,
+        boostMoveSpeed: 1.89,
         boostHealAmount: 0.33,
         boostBreakpoints: [1, 1, 1.5, 0.5],
         scopeDelay: 0.25,
         baseSwitchDelay: 0.25,
         freeSwitchCooldown: 1,
         headshotChance: 0.15,
-        moveSpeed: 12,
+        moveSpeed: 12.5,
         waterSpeedPenalty: 3,
         cookSpeedPenalty: 3,
         frozenSpeedPenalty: 3,

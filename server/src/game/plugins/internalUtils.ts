@@ -5,7 +5,7 @@ import { OutfitDefs } from "../../../../shared/defs/gameObjects/outfitDefs";
 import type { ThrowableDef } from "../../../../shared/defs/gameObjects/throwableDefs";
 import { MapObjectDefs } from "../../../../shared/defs/mapObjectDefs";
 import type { ObstacleDef } from "../../../../shared/defs/mapObjectsTyping";
-import { GameConfig } from "../../../../shared/gameConfig";
+import { DamageType, GameConfig } from "../../../../shared/gameConfig";
 import * as net from "../../../../shared/net/net";
 import { ObjectType } from "../../../../shared/net/objectSerializeFns";
 import { collider } from "../../../../shared/utils/collider";
@@ -348,5 +348,38 @@ export function attachLootPingNotification(
 
         plugin.game.playerBarn.addKillFeedLine(player.groupId, segments);
         lastItemPingNotif[playerId] = currentTime;
+    });
+}
+
+export function attachGasDamageScaling(
+    plugin: GamePlugin,
+    scalingFunc: (seconds: number) => number,
+) {
+    const secondsInZone: Record<number, number> = {};
+    plugin.on("gameUpdate", (event) => {
+        const { game, dt } = event.data;
+        for (const p of game.playerBarn.players) {
+            if (game.gas.isInGas(p.pos)) {
+                const timeSinceLastDamage =
+                    secondsInZone[p.__id] - Math.floor(secondsInZone[p.__id]);
+                if (timeSinceLastDamage + dt > 1) {
+                    p.damage({
+                        damageType: DamageType.Airdrop,
+                        amount: game.gas.damage * scalingFunc(secondsInZone[p.__id]),
+                        dir: v2.create(1, 0),
+                    });
+                }
+                secondsInZone[p.__id] += dt;
+            } else {
+                secondsInZone[p.__id] = 0;
+            }
+        }
+    });
+
+    plugin.on("playerWillTakeDamage", (event) => {
+        const { player, params } = event.data;
+        if (params.damageType === DamageType.Gas) {
+            event.cancel();
+        }
     });
 }
