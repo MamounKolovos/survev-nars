@@ -9,7 +9,7 @@ import { GameConfig } from "../../../../shared/gameConfig";
 import * as net from "../../../../shared/net/net";
 import { ObjectType } from "../../../../shared/net/objectSerializeFns";
 import { collider } from "../../../../shared/utils/collider";
-import { util } from "../../../../shared/utils/util";
+import { assert, util } from "../../../../shared/utils/util";
 import { v2 } from "../../../../shared/utils/v2";
 import { type TimerManager, createSimpleSegment } from "../../utils/pluginUtils";
 import type { GameMap } from "../map";
@@ -47,40 +47,82 @@ export function attachGracePeriod(
     plugin: GamePlugin & { timerManager: TimerManager },
     gracePeriod: number,
     canJoinPeriod: number,
+    countdownStart: number, //start countdown at x seconds remaining
 ) {
-    plugin.hook("game:canJoin", (hookPoint) => {
-        if (plugin.game.startedTime > canJoinPeriod) return false;
-
-        return hookPoint.original;
-    });
-
-    plugin.on("gameStarted", (event, ctx) => {
-        const countdownStart = 5; //start countdown at x seconds remaining
-        plugin.timerManager.setTimeout(() => {
-            plugin.timerManager.countdown(
-                countdownStart,
-                1,
-                (i) => {
-                    plugin.game.playerBarn.addKillFeedLine(-1, [
-                        createSimpleSegment(`${i} seconds left`, "white"),
-                    ]);
-                },
-                () => {
-                    plugin.game.playerBarn.addKillFeedLine(-1, [
-                        createSimpleSegment("round started!", "white"),
-                    ]);
-                },
-            );
-            ctx.unregister();
-        }, gracePeriod - countdownStart);
-    });
-
+    assert(canJoinPeriod >= gracePeriod, "canJoinPeriod must be larger than gracePeriod");
+    assert(
+        countdownStart <= gracePeriod,
+        "countdownStart must be smaller than gracePeriod",
+    );
     const lastInputs: Map<
         Player,
         { moveLeft: boolean; moveRight: boolean; moveUp: boolean; moveDown: boolean }
     > = new Map();
+
+    const restoreInputs = () => {
+        for (const [player, msg] of lastInputs) {
+            player.moveLeft = msg.moveLeft;
+            player.moveRight = msg.moveRight;
+            player.moveUp = msg.moveUp;
+            player.moveDown = msg.moveDown;
+        }
+    };
+
+    const gpEndCountdown = () => {
+        plugin.timerManager.countdown(
+            countdownStart,
+            1,
+            (i) => {
+                plugin.game.playerBarn.addKillFeedLine(-1, [
+                    createSimpleSegment(`${i} seconds left`, "white"),
+                ]);
+            },
+            () => {
+                plugin.game.playerBarn.addKillFeedLine(-1, [
+                    createSimpleSegment("round started!", "white"),
+                ]);
+            },
+        );
+    };
+
+    let elapsedTime = 0;
+    let countdownScheduled = false;
+
+    plugin.on("gameUpdate", (event, ctx) => {
+        const { game, dt } = event.data;
+        if (plugin.game.modeManager.aliveCount() <= 1) return;
+        elapsedTime += dt;
+
+        if (!countdownScheduled && elapsedTime >= gracePeriod - countdownStart) {
+            gpEndCountdown();
+            countdownScheduled = true;
+        }
+
+        if (elapsedTime > gracePeriod) {
+            restoreInputs();
+        }
+
+        if (elapsedTime > canJoinPeriod) {
+            ctx.unregister();
+        }
+    });
+
+    plugin.hook("gmm:isGameStarted", (hookPoint) => {
+        return elapsedTime > gracePeriod;
+    });
+
+    plugin.hook("game:canJoin", (hookPoint) => {
+        const { game } = hookPoint.data;
+
+        return (
+            game.aliveCount < game.map.mapDef.gameMode.maxPlayers &&
+            !game.over &&
+            elapsedTime <= canJoinPeriod
+        );
+    });
+
     plugin.on("playerWillInput", (event, ctx) => {
-        if (plugin.game.startedTime > gracePeriod) {
+        if (elapsedTime > gracePeriod) {
             ctx.unregister();
             return;
         }
@@ -97,20 +139,8 @@ export function attachGracePeriod(
         msg.moveDown = false;
     });
 
-    plugin.on("gameStarted", (event, ctx) => {
-        plugin.timerManager.setTimeout(() => {
-            for (const [player, msg] of lastInputs) {
-                player.moveLeft = msg.moveLeft;
-                player.moveRight = msg.moveRight;
-                player.moveUp = msg.moveUp;
-                player.moveDown = msg.moveDown;
-            }
-            ctx.unregister();
-        }, gracePeriod);
-    });
-
     plugin.on("playerWillTakeDamage", (event, ctx) => {
-        if (plugin.game.startedTime > gracePeriod) {
+        if (elapsedTime > gracePeriod) {
             ctx.unregister();
             return;
         }
