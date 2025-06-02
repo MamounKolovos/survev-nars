@@ -123,7 +123,7 @@ export const GameConfig = {
     Plane,
     HasteType,
     gas: {
-        damageTickRate: 99999, // 2
+        damageTickRate: 2,
     },
     map: {
         gridSize: 16,
