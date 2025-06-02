@@ -4582,6 +4582,11 @@ export class Player extends BaseGameObject {
             | GunDef
             | MeleeDef
             | ThrowableDef;
+            
+        if (weaponDef.type === "gun" && (weaponDef as GunDef).fireMode !== "single"){
+            (weaponDef.speed = {equip: 0, attack: -3})
+        }
+
         if (this.weaponManager.meleeAttacks.length == 0) {
             let equipSpeed = weaponDef.speed.equip;
             if (this.hasPerk("small_arms") && weaponDef.type == "gun") {
@@ -4624,7 +4629,7 @@ export class Player extends BaseGameObject {
         // decrease speed if shooting or popping adren or heals
         // field_medic perk doesn't slow you down while you heal
         if (
-            this.shotSlowdownTimer > 0 ||
+            (this.shotSlowdownTimer > 0 && (weaponDef as GunDef).fireMode === "single") ||
             (!hasFieldMedic && this.actionType == GameConfig.Action.UseItem)
         ) {
             this.speed *= 0.5;
