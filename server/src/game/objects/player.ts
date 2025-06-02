@@ -4582,11 +4582,6 @@ export class Player extends BaseGameObject {
             | GunDef
             | MeleeDef
             | ThrowableDef;
-            
-        if (weaponDef.type === "gun" && (weaponDef as GunDef).fireMode !== "single"){
-            (weaponDef.speed = {equip: 0, attack: -3})
-        }
-
         if (this.weaponManager.meleeAttacks.length == 0) {
             let equipSpeed = weaponDef.speed.equip;
             if (this.hasPerk("small_arms") && weaponDef.type == "gun") {
@@ -4597,7 +4592,10 @@ export class Player extends BaseGameObject {
         }
 
         if (this.shotSlowdownTimer > 0 && weaponDef.speed.attack !== undefined) {
-            this.speed += weaponDef.speed.attack;
+            this.speed +=
+                weaponDef.type === "gun" && (weaponDef as GunDef).fireMode !== "single"
+                    ? -3
+                    : weaponDef.speed.attack;
         }
 
         // if player is on water decrease speed
