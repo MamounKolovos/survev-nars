@@ -321,24 +321,28 @@ export function attachLootPingNotification(
     });
 }
 
-export function attachGasDamageScaling(plugin: GamePlugin, scalingFunc: (seconds: number) => number){
+export function attachGasDamageScaling(
+    plugin: GamePlugin,
+    scalingFunc: (seconds: number) => number,
+) {
     const secondsInZone: Record<number, number> = {};
-    plugin.on("gameUpdate", (event) =>{
-        const {game, dt} = event.data;
+    plugin.on("gameUpdate", (event) => {
+        const { game, dt } = event.data;
         for (const p of game.playerBarn.players) {
-                if (game.gas.isInGas(p.pos)) {
-                    const timeSinceLastDamage = secondsInZone[p.__id] - Math.floor(secondsInZone[p.__id]);
-                    if (timeSinceLastDamage + dt > 1) {
-                        p.damage({
-                            damageType: DamageType.Gas,
-                            amount: game.gas.damage * scalingFunc(secondsInZone[p.__id]),
-                            dir: v2.create(1, 0),
-                        });
-                    }
-                    secondsInZone[p.__id] += dt;
-                } else {
-                    secondsInZone[p.__id] = 0;
+            if (game.gas.isInGas(p.pos)) {
+                const timeSinceLastDamage =
+                    secondsInZone[p.__id] - Math.floor(secondsInZone[p.__id]);
+                if (timeSinceLastDamage + dt > 1) {
+                    p.damage({
+                        damageType: DamageType.Gas,
+                        amount: game.gas.damage * scalingFunc(secondsInZone[p.__id]),
+                        dir: v2.create(1, 0),
+                    });
                 }
+                secondsInZone[p.__id] += dt;
+            } else {
+                secondsInZone[p.__id] = 0;
             }
-    })
+        }
+    });
 }
