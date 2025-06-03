@@ -365,7 +365,7 @@ export function attachGasDamageScaling(
                     secondsInZone[p.__id] - Math.floor(secondsInZone[p.__id]);
                 if (timeSinceLastDamage + dt > 1) {
                     p.damage({
-                        damageType: DamageType.Airdrop,
+                        damageType: DamageType.Gas,
                         amount: game.gas.damage * scalingFunc(secondsInZone[p.__id]),
                         dir: v2.create(1, 0),
                     });
@@ -377,11 +377,8 @@ export function attachGasDamageScaling(
         }
     });
 
-    plugin.on("playerWillTakeDamage", (event) => {
-        const { player, params } = event.data;
-        if (params.damageType === DamageType.Gas) {
-            event.cancel();
-        }
+    plugin.on("gameCreated", (event) => {
+        plugin.game.gas._damageTicker = -999999;
     });
 }
 
