@@ -9,8 +9,9 @@ import { DamageType, GameConfig } from "../../../../shared/gameConfig";
 import * as net from "../../../../shared/net/net";
 import { ObjectType } from "../../../../shared/net/objectSerializeFns";
 import { collider } from "../../../../shared/utils/collider";
+import { math } from "../../../../shared/utils/math";
 import { assert, util } from "../../../../shared/utils/util";
-import { v2 } from "../../../../shared/utils/v2";
+import { type Vec2, v2 } from "../../../../shared/utils/v2";
 import { type TimerManager, createSimpleSegment } from "../../utils/pluginUtils";
 import type { GameMap } from "../map";
 import type { Loot } from "../objects/loot";
@@ -381,5 +382,131 @@ export function attachGasDamageScaling(
         if (params.damageType === DamageType.Gas) {
             event.cancel();
         }
+    });
+}
+
+export function spawnPlayer(
+    player: Player,
+    soloProvider: () => () => Vec2,
+    groupLeaderProvider: () => () => Vec2,
+    groupFollowerProvider: () => () => Vec2,
+) {
+    const getRandomSpawnPos = (getPos: () => Vec2) =>
+        player.game.map.getRandomSpawnPos(getPos, player.group, player.team);
+
+    const getSpawn = () => {
+        //solos
+        if (!player.group) {
+            return getRandomSpawnPos(soloProvider());
+        }
+
+        //first player in group to join
+        if (player.group.players[0] === player) {
+            return getRandomSpawnPos(groupLeaderProvider());
+        }
+
+        //2nd, 3rd, or 4th player in group to join
+        return getRandomSpawnPos(groupFollowerProvider());
+    };
+
+    v2.set(player.pos, getSpawn());
+    player.game.grid.updateObject(player);
+}
+
+/**
+ * Selects a point on a donut-shaped region (annulus) centered at `center` with inner radius `innerRadius` and outer radius `outerRadius`.
+ * If `points` is empty, picks a random point on the donut.
+ * Otherwise, picks the midpoint between the largest radian diff of adjacent point pairs in the `points` array,
+ * with some random angular variance applied (up to `variance` degrees) and radius between `innerRadius` and `outerRadius`.
+ */
+
+export function donut(
+    center: Vec2,
+    innerRadius: number,
+    outerRadius: number,
+    points: Vec2[],
+    variance: number,
+): Vec2 {
+    const randomRadius = util.random(innerRadius, outerRadius);
+    const pointAt = (dir: Vec2) => {
+        const randomAngle = util.random(-variance, variance);
+        const noisyDir = v2.rotate(dir, math.deg2rad(randomAngle));
+        return v2.add(center, v2.mul(noisyDir, randomRadius));
+    };
+
+    if (points.length == 0) {
+        const dir = v2.randomUnit();
+        return pointAt(dir);
+    }
+
+    if (points.length == 1) {
+        const dir = v2.neg(v2.normalize(v2.sub(points[0], center)));
+        return pointAt(dir);
+    }
+
+    const rads = points
+        .map((p) => {
+            const offset = v2.sub(p, center);
+            return Math.atan2(offset.y, offset.x);
+        })
+        .sort((a, b) => a - b);
+
+    let maxRadDiff = -Infinity;
+    let startRad = 0;
+
+    const TAU = 2 * Math.PI;
+    for (let i = 0; i < rads.length; i++) {
+        const j = (i + 1) % rads.length; // wraps to 0 after last point
+        const radDiff = (rads[j] - rads[i] + TAU) % TAU;
+        if (radDiff > maxRadDiff) {
+            maxRadDiff = radDiff;
+            startRad = rads[i];
+        }
+    }
+
+    const midpointRad = (startRad + maxRadDiff / 2) % TAU;
+    const dir = math.rad2Direction(midpointRad);
+    return pointAt(dir);
+}
+
+/**
+ * `innerRadiusScale` and `outerRadiusScale` are relative to the spawnable map size
+ */
+export function attachDonutSpawner(
+    plugin: GamePlugin,
+    innerRadiusScale: number,
+    outerRadiusScale: number,
+) {
+    plugin.on("playerDidJoin", (event, ctx) => {
+        const { player } = event.data;
+        const map = plugin.game.map;
+
+        const radius = (map.width - map.shoreInset) / 2;
+        const innerRadius = radius * innerRadiusScale;
+        const outerRadius = radius * outerRadiusScale;
+
+        spawnPlayer(
+            player,
+            () => {
+                const points = plugin.game.playerBarn.livingPlayers
+                    .filter((p) => p != player)
+                    .map((p) => p.pos);
+                return () => donut(map.center, innerRadius, outerRadius, points, 0);
+            },
+            () => {
+                const enemyGroups = plugin.game.playerBarn.groups.filter(
+                    (g) => g != player.group && !g.allDeadOrDisconnected,
+                );
+                const points = enemyGroups
+                    .map((g) => g.livingPlayers[0])
+                    .map((p) => p.pos);
+                return () => donut(map.center, innerRadius, outerRadius, points, 0);
+            },
+            () => {
+                const rad = GameConfig.player.teammateSpawnRadius;
+                const pos = player.group!.spawnPosition!;
+                return () => v2.add(pos, util.randomPointInCircle(rad));
+            },
+        );
     });
 }
