@@ -4,7 +4,7 @@ import type { MeleeDef } from "../../../../shared/defs/gameObjects/meleeDefs";
 import { OutfitDefs } from "../../../../shared/defs/gameObjects/outfitDefs";
 import type { ThrowableDef } from "../../../../shared/defs/gameObjects/throwableDefs";
 import { MapObjectDefs } from "../../../../shared/defs/mapObjectDefs";
-import type { ObstacleDef } from "../../../../shared/defs/mapObjectsTyping";
+import type { LootSpawnDef, ObstacleDef } from "../../../../shared/defs/mapObjectsTyping";
 import { DamageType, GameConfig } from "../../../../shared/gameConfig";
 import * as net from "../../../../shared/net/net";
 import { ObjectType } from "../../../../shared/net/objectSerializeFns";
@@ -505,5 +505,79 @@ export function attachDonutSpawner(
                 return () => v2.add(pos, util.randomPointInCircle(rad));
             },
         );
+    });
+}
+
+export function tierLoot(
+    tier: string,
+    min: number,
+    max: number,
+    props?: LootSpawnDef["props"],
+) {
+    props = props || {};
+    return {
+        tier,
+        min,
+        max,
+        props,
+    };
+}
+export function autoLoot(type: string, count: number, props?: any) {
+    props = props || {};
+    return { type, count, props };
+}
+
+export function attachObstacleDeathLoot(
+    plugin: GamePlugin,
+    obstacleToLoot: Record<string, LootSpawnDef[]>,
+) {
+    plugin.on("obstacleDeathAfterEffects", (event, ctx) => {
+        const { obstacle, params } = event.data;
+
+        const loot = obstacleToLoot[obstacle.type];
+        if (!loot) return;
+
+        const def = MapObjectDefs[obstacle.type] as ObstacleDef;
+        const lootPos = v2.copy(obstacle.pos);
+        if (def.lootSpawn) {
+            v2.set(
+                lootPos,
+                v2.add(obstacle.pos, v2.rotate(def.lootSpawn.offset, obstacle.rot)),
+            );
+        }
+
+        for (const lootTierOrItem of loot) {
+            if ("tier" in lootTierOrItem) {
+                const count = util.randomInt(lootTierOrItem.min!, lootTierOrItem.max!);
+
+                for (let i = 0; i < count; i++) {
+                    const items = plugin.game.lootBarn.getLootTable(lootTierOrItem.tier!);
+
+                    for (const item of items) {
+                        plugin.game.lootBarn.addLoot(
+                            item.name,
+                            v2.add(lootPos, v2.mul(v2.randomUnit(), 0.2)),
+                            obstacle.layer,
+                            item.count,
+                            undefined,
+                            undefined, // undefined to use default push speed value
+                            params.dir,
+                            lootTierOrItem.props?.preloadGuns,
+                        );
+                    }
+                }
+            } else {
+                plugin.game.lootBarn.addLoot(
+                    lootTierOrItem.type!,
+                    v2.add(lootPos, v2.mul(v2.randomUnit(), 0.2)),
+                    obstacle.layer,
+                    lootTierOrItem.count!,
+                    undefined,
+                    undefined,
+                    params.dir,
+                    lootTierOrItem.props?.preloadGuns,
+                );
+            }
+        }
     });
 }
