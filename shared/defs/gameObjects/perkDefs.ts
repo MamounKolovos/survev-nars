@@ -7,9 +7,9 @@ export const PerkProperties = {
         damageReduction: 0.5,
     },
     flak_jacket: {
-        scale: 0.2,
-        damageReduction: 0.1,
-        explosionDamageReduction: 0.9,
+        scale: 0.0,
+        damageReduction: 0.0,
+        explosionDamageReduction: 0.75,
     },
     small_arms: {
         scale: -0.25,
@@ -22,7 +22,7 @@ export const PerkProperties = {
         scale: 0.25,
     },
     final_bugle: {
-        scaleOnDeath: 0.2,
+        scaleOnDeath: 0.0,
     },
     broken_arrow: {
         bonusAirstrikes: 2,
@@ -36,7 +36,7 @@ export const PerkProperties = {
         healthRegen: 0.5, // per second
     },
     field_medic: {
-        speedBoost: 1,
+        speedBoost: 0.85,
     },
     tree_climbing: {
         waterSpeedBoost: 2,
