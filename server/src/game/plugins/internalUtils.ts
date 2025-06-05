@@ -14,7 +14,7 @@ import { assert, util } from "../../../../shared/utils/util";
 import { type Vec2, v2 } from "../../../../shared/utils/v2";
 import { type TimerManager, createSimpleSegment } from "../../utils/pluginUtils";
 import type { GameMap } from "../map";
-import { Gas } from "../objects/gas";
+import type { Gas } from "../objects/gas";
 import type { Loot } from "../objects/loot";
 import type { Player } from "../objects/player";
 import type { GamePlugin } from "../pluginManager";
@@ -586,7 +586,7 @@ export function attachObstacleDeathLoot(
 export function attachMovingGas(
     plugin: GamePlugin,
     firstMovingZone: number, //index
-    stationaryZoneRadiusMultiplier: number, 
+    stationaryZoneRadiusMultiplier: number,
     movingZoneRadiusMultiplier: number,
     damages: number[],
     initWaitTime: number,
@@ -634,7 +634,6 @@ function customGasAdvance(
     movingZoneOffset: number,
     minRadius: number,
 ) {
-
     g.stage++;
     g._running = true;
 
@@ -650,11 +649,11 @@ function customGasAdvance(
     g.radNew =
         g.radOld *
         (isMovingZone ? movingZoneRadiusMultiplier : stationaryZoneRadiusMultiplier);
-    if (g.radNew < minRadius){
+    if (g.radNew < minRadius) {
         g.radNew = 0;
     }
 
-    const isLastZone = g.radNew === 0
+    const isLastZone = g.radNew === 0;
 
     const newDuration =
         g.mode === GasMode.Moving
@@ -675,7 +674,10 @@ function customGasAdvance(
         } else if (circleIdxOld < firstMovingZone - 2) {
             g.posNew = v2.add(g.posNew, util.randomPointInCircle(g.radOld - g.radNew));
         } else {
-            g.posNew = v2.add(g.posNew, v2.mul(v2.randomUnit(), g.radOld * movingZoneOffset));
+            g.posNew = v2.add(
+                g.posNew,
+                v2.mul(v2.randomUnit(), g.radOld * movingZoneOffset),
+            );
         }
 
         const rad = g.radNew * 0.75; // ensure at least 75% of the safe zone will be inside map bounds
