@@ -5,7 +5,7 @@ import { OutfitDefs } from "../../../../shared/defs/gameObjects/outfitDefs";
 import type { ThrowableDef } from "../../../../shared/defs/gameObjects/throwableDefs";
 import { MapObjectDefs } from "../../../../shared/defs/mapObjectDefs";
 import type { LootSpawnDef, ObstacleDef } from "../../../../shared/defs/mapObjectsTyping";
-import { DamageType, GameConfig } from "../../../../shared/gameConfig";
+import { DamageType, GameConfig, GasMode } from "../../../../shared/gameConfig";
 import * as net from "../../../../shared/net/net";
 import { ObjectType } from "../../../../shared/net/objectSerializeFns";
 import { collider } from "../../../../shared/utils/collider";
@@ -14,6 +14,7 @@ import { assert, util } from "../../../../shared/utils/util";
 import { type Vec2, v2 } from "../../../../shared/utils/v2";
 import { type TimerManager, createSimpleSegment } from "../../utils/pluginUtils";
 import type { GameMap } from "../map";
+import { Gas } from "../objects/gas";
 import type { Loot } from "../objects/loot";
 import type { Player } from "../objects/player";
 import type { GamePlugin } from "../pluginManager";
@@ -580,4 +581,144 @@ export function attachObstacleDeathLoot(
             }
         }
     });
+}
+
+export function attachMovingGas(
+    plugin: GamePlugin,
+    firstMovingZone: number, //index
+    stationaryZoneRadiusMultiplier: number, 
+    movingZoneRadiusMultiplier: number,
+    damages: number[],
+    initWaitTime: number,
+    minWaitTime: number,
+    waitTimeDecrement: number,
+    initMovingTime: number,
+    minMovingTime: number,
+    movingTimeDecrement: number,
+    movingZoneOffset: number,
+    minRadius: number,
+) {
+    plugin.on("gasWillAdvance", (event) => {
+        const gas = plugin.game.gas;
+        event.cancel();
+        customGasAdvance(
+            gas,
+            firstMovingZone,
+            stationaryZoneRadiusMultiplier,
+            movingZoneRadiusMultiplier,
+            damages,
+            initWaitTime,
+            minWaitTime,
+            waitTimeDecrement,
+            initMovingTime,
+            minMovingTime,
+            movingTimeDecrement,
+            movingZoneOffset, //how far posnew is from posold in units of radold
+            minRadius, //radius snaps to 0 when below
+        );
+    });
+}
+
+function customGasAdvance(
+    g: Gas,
+    firstMovingZone: number,
+    stationaryZoneRadiusMultiplier: number,
+    movingZoneRadiusMultiplier: number,
+    damages: number[],
+    initWaitTime: number,
+    minWaitTime: number,
+    waitTimeDecrement: number,
+    initMovingTime: number,
+    minMovingTime: number,
+    movingTimeDecrement: number,
+    movingZoneOffset: number,
+    minRadius: number,
+) {
+
+    g.stage++;
+    g._running = true;
+
+    const isMovingZone = g.circleIdx - 1 >= firstMovingZone;
+
+    if (g.stage & 1) {
+        g.mode = GasMode.Waiting;
+    } else {
+        g.mode = GasMode.Moving;
+    }
+
+    g.radOld = g.currentRad;
+    g.radNew =
+        g.radOld *
+        (isMovingZone ? movingZoneRadiusMultiplier : stationaryZoneRadiusMultiplier);
+    if (g.radNew < minRadius){
+        g.radNew = 0;
+    }
+
+    const isLastZone = g.radNew === 0
+
+    const newDuration =
+        g.mode === GasMode.Moving
+            ? Math.max(initMovingTime - movingTimeDecrement * g.circleIdx, minMovingTime)
+            : Math.max(initWaitTime - waitTimeDecrement * (g.circleIdx + 1), minWaitTime);
+
+    g.duration = isLastZone ? 999 : newDuration;
+
+    g.damage = damages[Math.max(0, Math.min(damages.length - 1, g.circleIdx))];
+
+    const circleIdxOld = g.circleIdx;
+
+    if (g.mode === GasMode.Waiting) {
+        g.posOld = v2.copy(g.posNew);
+
+        if (isLastZone) {
+            g.posNew = g.posNew;
+        } else if (circleIdxOld < firstMovingZone - 2) {
+            g.posNew = v2.add(g.posNew, util.randomPointInCircle(g.radOld - g.radNew));
+        } else {
+            g.posNew = v2.add(g.posNew, v2.mul(v2.randomUnit(), g.radOld * movingZoneOffset));
+        }
+
+        const rad = g.radNew * 0.75; // ensure at least 75% of the safe zone will be inside map bounds
+        g.posNew = math.v2Clamp(
+            g.posNew,
+            v2.create(rad, rad),
+            v2.create(g.game.map.width - rad, g.game.map.height - rad),
+        );
+
+        g.currentPos = g.posOld;
+        g.currentRad = g.radOld;
+        g.circleIdx++;
+    }
+
+    if (g.circleIdx !== circleIdxOld) {
+        if (g.game.map.factionMode) {
+            if (g.circleIdx == 1) {
+                const red = g.game.playerBarn.teams[0];
+                const blue = g.game.playerBarn.teams[1];
+                red.highestAliveCount = red.livingPlayers.length;
+                blue.highestAliveCount = blue.livingPlayers.length;
+            }
+            g.handleSpecialAirdrop();
+        }
+
+        if (g.game.map.mapDef.gameConfig.roles) {
+            g.game.playerBarn.scheduleRoleAssignments();
+        }
+
+        if (g.game.map.mapDef.gameConfig.unlocks) {
+            g.game.map.scheduleUnlocks();
+        }
+
+        for (const plane of g.game.map.mapDef.gameConfig.planes.timings) {
+            if (plane.circleIdx === g.circleIdx) {
+                g.game.planeBarn.schedulePlane(plane.wait, plane.options);
+            }
+        }
+    }
+
+    g._gasTicker = 0;
+    g.gasT = 0;
+    g.dirty = true;
+    g.timeDirty = true;
+    g.game.updateData();
 }
