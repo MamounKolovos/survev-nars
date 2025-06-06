@@ -355,7 +355,7 @@ export function attachLootPingNotification(
 
 export function attachCustomGasDamage(
     plugin: GamePlugin,
-    damageFunc: (baseDamage: number, seconds: number, circleIdx: number) => number,
+    damageFunc: (baseDamage: number, seconds: number, stage: number) => number,
 ) {
     const secondsInZone: Record<number, number> = {};
     plugin.on("gameUpdate", (event) => {
