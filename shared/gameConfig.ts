@@ -144,7 +144,7 @@ export const GameConfig = {
         scopeDelay: 0.25,
         baseSwitchDelay: 0.25,
         freeSwitchCooldown: 1,
-        headshotChance: 0.15,
+        headshotChance: 0,
         moveSpeed: 12.5,
         waterSpeedPenalty: 3,
         cookSpeedPenalty: 3,
