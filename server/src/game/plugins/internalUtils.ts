@@ -587,7 +587,7 @@ export function attachObstacleDeathLoot(
     });
 }
 
-export type customGasAdvanceParams = {
+export type CustomGasAdvanceParams = {
     firstMovingZone: number;
     stationaryZoneRadiusMultiplier: number;
     movingZoneRadiusMultiplier: number;
@@ -602,7 +602,7 @@ export type customGasAdvanceParams = {
     minRadius: number; //snaps to 0 and closes directly in center when below this
 };
 
-export function attachMovingGas(plugin: GamePlugin, params: customGasAdvanceParams) {
+export function attachMovingGas(plugin: GamePlugin, params: CustomGasAdvanceParams) {
     plugin.on("gasWillAdvance", (event) => {
         const gas = plugin.game.gas;
         event.cancel();
@@ -610,11 +610,9 @@ export function attachMovingGas(plugin: GamePlugin, params: customGasAdvancePara
     });
 }
 
-function customGasAdvance(g: Gas, params: customGasAdvanceParams) {
+function customGasAdvance(g: Gas, params: CustomGasAdvanceParams) {
     g.stage++;
     g._running = true;
-
-    const isMovingZone = g.circleIdx - 1 >= params.firstMovingZone;
 
     if (g.stage & 1) {
         g.mode = GasMode.Waiting;
@@ -622,19 +620,21 @@ function customGasAdvance(g: Gas, params: customGasAdvanceParams) {
         g.mode = GasMode.Moving;
     }
 
+    const isMovingZone = g.circleIdx + 2 >= params.firstMovingZone;
+
     g.radOld = g.currentRad;
-    g.radNew =
-        g.radOld *
-        (isMovingZone
-            ? params.movingZoneRadiusMultiplier
-            : params.stationaryZoneRadiusMultiplier);
+    if (g.mode === GasMode.Waiting) {
+        g.radNew =
+            g.radOld *
+            (isMovingZone
+                ? params.movingZoneRadiusMultiplier
+                : params.stationaryZoneRadiusMultiplier);
+    }
     if (g.radNew < params.minRadius) {
         g.radNew = 0;
     }
 
-    const isLastZone = g.radNew === 0;
-
-    const newDuration =
+    g.duration =
         g.mode === GasMode.Moving
             ? Math.max(
                   params.initMovingTime - params.movingTimeDecrement * g.circleIdx,
@@ -645,7 +645,9 @@ function customGasAdvance(g: Gas, params: customGasAdvanceParams) {
                   params.minWaitTime,
               );
 
-    g.duration = isLastZone ? 999 : newDuration;
+    if (g.radOld === 0) {
+        g._running = false;
+    }
 
     g.damage =
         params.damages[Math.max(0, Math.min(params.damages.length - 1, g.circleIdx))];
@@ -655,9 +657,9 @@ function customGasAdvance(g: Gas, params: customGasAdvanceParams) {
     if (g.mode === GasMode.Waiting) {
         g.posOld = v2.copy(g.posNew);
 
-        if (isLastZone) {
+        if (g.radNew === 0) {
             g.posNew = g.posNew;
-        } else if (circleIdxOld < params.firstMovingZone - 2) {
+        } else if (!isMovingZone) {
             g.posNew = v2.add(g.posNew, util.randomPointInCircle(g.radOld - g.radNew));
         } else {
             g.posNew = v2.add(
