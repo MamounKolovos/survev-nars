@@ -353,9 +353,9 @@ export function attachLootPingNotification(
     });
 }
 
-export function attachGasDamageScaling(
+export function attachCustomGasDamage(
     plugin: GamePlugin,
-    scalingFunc: (seconds: number) => number,
+    damageFunc: (baseDamage: number, seconds: number, circleIdx: number) => number,
 ) {
     const secondsInZone: Record<number, number> = {};
     plugin.on("gameUpdate", (event) => {
@@ -367,7 +367,11 @@ export function attachGasDamageScaling(
                 if (timeSinceLastDamage + dt > 1) {
                     p.damage({
                         damageType: DamageType.Gas,
-                        amount: game.gas.damage * scalingFunc(secondsInZone[p.__id]),
+                        amount: damageFunc(
+                            game.gas.damage,
+                            secondsInZone[p.__id],
+                            game.gas.stage,
+                        ),
                         dir: v2.create(1, 0),
                     });
                 }
@@ -583,61 +587,34 @@ export function attachObstacleDeathLoot(
     });
 }
 
-export function attachMovingGas(
-    plugin: GamePlugin,
-    firstMovingZone: number, //index
-    stationaryZoneRadiusMultiplier: number,
-    movingZoneRadiusMultiplier: number,
-    damages: number[],
-    initWaitTime: number,
-    minWaitTime: number,
-    waitTimeDecrement: number,
-    initMovingTime: number,
-    minMovingTime: number,
-    movingTimeDecrement: number,
-    movingZoneOffset: number,
-    minRadius: number,
-) {
+export type customGasAdvanceParams = {
+    firstMovingZone: number;
+    stationaryZoneRadiusMultiplier: number;
+    movingZoneRadiusMultiplier: number;
+    damages: number[];
+    initWaitTime: number;
+    minWaitTime: number;
+    waitTimeDecrement: number;
+    initMovingTime: number;
+    minMovingTime: number;
+    movingTimeDecrement: number;
+    movingZoneOffset: number; //dist from posold to posnew in units of radold
+    minRadius: number; //snaps to 0 and closes directly in center when below this
+};
+
+export function attachMovingGas(plugin: GamePlugin, params: customGasAdvanceParams) {
     plugin.on("gasWillAdvance", (event) => {
         const gas = plugin.game.gas;
         event.cancel();
-        customGasAdvance(
-            gas,
-            firstMovingZone,
-            stationaryZoneRadiusMultiplier,
-            movingZoneRadiusMultiplier,
-            damages,
-            initWaitTime,
-            minWaitTime,
-            waitTimeDecrement,
-            initMovingTime,
-            minMovingTime,
-            movingTimeDecrement,
-            movingZoneOffset, //how far posnew is from posold in units of radold
-            minRadius, //radius snaps to 0 when below
-        );
+        customGasAdvance(gas, params);
     });
 }
 
-function customGasAdvance(
-    g: Gas,
-    firstMovingZone: number,
-    stationaryZoneRadiusMultiplier: number,
-    movingZoneRadiusMultiplier: number,
-    damages: number[],
-    initWaitTime: number,
-    minWaitTime: number,
-    waitTimeDecrement: number,
-    initMovingTime: number,
-    minMovingTime: number,
-    movingTimeDecrement: number,
-    movingZoneOffset: number,
-    minRadius: number,
-) {
+function customGasAdvance(g: Gas, params: customGasAdvanceParams) {
     g.stage++;
     g._running = true;
 
-    const isMovingZone = g.circleIdx - 1 >= firstMovingZone;
+    const isMovingZone = g.circleIdx - 1 >= params.firstMovingZone;
 
     if (g.stage & 1) {
         g.mode = GasMode.Waiting;
@@ -648,8 +625,10 @@ function customGasAdvance(
     g.radOld = g.currentRad;
     g.radNew =
         g.radOld *
-        (isMovingZone ? movingZoneRadiusMultiplier : stationaryZoneRadiusMultiplier);
-    if (g.radNew < minRadius) {
+        (isMovingZone
+            ? params.movingZoneRadiusMultiplier
+            : params.stationaryZoneRadiusMultiplier);
+    if (g.radNew < params.minRadius) {
         g.radNew = 0;
     }
 
@@ -657,12 +636,19 @@ function customGasAdvance(
 
     const newDuration =
         g.mode === GasMode.Moving
-            ? Math.max(initMovingTime - movingTimeDecrement * g.circleIdx, minMovingTime)
-            : Math.max(initWaitTime - waitTimeDecrement * (g.circleIdx + 1), minWaitTime);
+            ? Math.max(
+                  params.initMovingTime - params.movingTimeDecrement * g.circleIdx,
+                  params.minMovingTime,
+              )
+            : Math.max(
+                  params.initWaitTime - params.waitTimeDecrement * (g.circleIdx + 1),
+                  params.minWaitTime,
+              );
 
     g.duration = isLastZone ? 999 : newDuration;
 
-    g.damage = damages[Math.max(0, Math.min(damages.length - 1, g.circleIdx))];
+    g.damage =
+        params.damages[Math.max(0, Math.min(params.damages.length - 1, g.circleIdx))];
 
     const circleIdxOld = g.circleIdx;
 
@@ -671,12 +657,12 @@ function customGasAdvance(
 
         if (isLastZone) {
             g.posNew = g.posNew;
-        } else if (circleIdxOld < firstMovingZone - 2) {
+        } else if (circleIdxOld < params.firstMovingZone - 2) {
             g.posNew = v2.add(g.posNew, util.randomPointInCircle(g.radOld - g.radNew));
         } else {
             g.posNew = v2.add(
                 g.posNew,
-                v2.mul(v2.randomUnit(), g.radOld * movingZoneOffset),
+                v2.mul(v2.randomUnit(), g.radOld * params.movingZoneOffset),
             );
         }
 
