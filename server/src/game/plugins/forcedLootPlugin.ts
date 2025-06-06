@@ -14,6 +14,7 @@ import { GamePlugin } from "../pluginManager";
 import {
     attachCustomGasDamage,
     attachCustomQuickSwitch,
+    attachDonutSpawner,
     attachGracePeriod,
     attachKillRewards,
     attachLootDisabler,
@@ -256,9 +257,6 @@ function getUpgradedGun(g: string): string {
             if (Math.random() < 0.7) return util.weightedRandom(gt.goodSprays).gun;
             break;
         }
-        case "mk12": {
-            if (Math.random() < 0.4) return "garand";
-        }
         case "ak47":
         case "hk416":
         case "scar":
@@ -300,6 +298,7 @@ export default class focedLootPlugin extends GamePlugin {
         attachCustomQuickSwitch(this, CUSTOM_SWITCH_DELAY);
         attachTimerManagerUpdate(this);
         attachKillRewards(this, HEALTH_AND_BOOST_ON_KILL, RELOAD_ON_KILL);
+        attachDonutSpawner(this, 0.8, 0.9);
         attachGracePeriod(
             this,
             GRACE_PERIOD_DURATION,
