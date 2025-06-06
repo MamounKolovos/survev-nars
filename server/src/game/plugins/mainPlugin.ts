@@ -1,4 +1,5 @@
 import type { LootSpawnDef } from "../../../../shared/defs/mapObjectsTyping";
+import { MapId } from "../../../../shared/defs/types/misc";
 import { TimerManager } from "../../utils/pluginUtils";
 import { GamePlugin } from "../pluginManager";
 import {
@@ -27,6 +28,7 @@ export default class MainPlugin extends GamePlugin {
     timerManager = new TimerManager();
 
     override initListeners(): void {
+        if (this.game.map.mapId === MapId.ForcedLoot) return;
         attachTimerManagerUpdate(this);
 
         attachGracePeriod(this, GRACE_PERIOD, GRACE_PERIOD, 5);
