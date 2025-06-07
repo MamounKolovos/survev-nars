@@ -63,5 +63,45 @@ export default class MainPlugin extends GamePlugin {
         );
 
         attachLootPingNotification(this, 2, 5);
+
+        this.on("playerDidJoin", (event) => {
+            const player = event.data.player;
+            switch (this.game.teamMode){
+                case 4:
+                    player.weapons[3].type = "frag";
+                    player.inventory["frag"] = 2;
+                    player.inventory["snowball"] = 0;
+                    player.inventory["bandage"] = 5;
+                    player.backpack = "backpack01";
+                    break;
+                case 1:
+                    player.weapons[3].type = "frag";
+                    player.inventory["bandage"] = 99;
+                    player.inventory["soda"] = 99;
+                    player.inventory["painkiller"] = 99;
+                    player.inventory["healthkit"] = 15;
+                    player.inventory["frag"] = 4;
+                    player.addPerk("endless_ammo", false);
+                    player.addPerk("self_revive", false);
+
+                    player.backpack = "backpack02";
+                    player.chest = "chest02";
+                    player.helmet = "helmet03";
+                    player.inventory["2xscope"] = 1;
+                    player.inventory["4xscope"] = 1;
+                    player.scope = "4xscope";
+                    player.boost = 100;
+
+                    player.weaponManager.setWeapon(0,"spas12",6);
+                    player.weaponManager.setWeapon(1,"mosin",5);
+
+                    const floorguns = ["mac10", "dp28", "p30l_dual", "an94", "ak47", "model94", "garand", "ot38_dual", "saiga", "famas", "m870", "scar", "hk416", "blr", "deagle_dual", "mp220", "mk12", "scout_elite"];
+                    for (const g of floorguns){
+                        player.game.lootBarn.addLootWithoutAmmo(g, player.pos, player.layer, 1);
+                    }
+                    break
+            }
+        });
+        
     }
 }
