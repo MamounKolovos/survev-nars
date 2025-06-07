@@ -54,12 +54,22 @@ export const Main: MapDef = {
             timings: [
                 {
                     circleIdx: 1,
-                    wait: 10,
+                    wait: 0,
+                    options: { type: GameConfig.Plane.Airdrop },
+                },
+                {
+                    circleIdx: 2,
+                    wait: 0,
                     options: { type: GameConfig.Plane.Airdrop },
                 },
                 {
                     circleIdx: 3,
-                    wait: 2,
+                    wait: 0,
+                    options: { type: GameConfig.Plane.Airdrop },
+                },
+                {
+                    circleIdx: 4,
+                    wait: 0,
                     options: { type: GameConfig.Plane.Airdrop },
                 },
             ],
@@ -436,8 +446,8 @@ export const Main: MapDef = {
     },
     mapGen: {
         map: {
-            baseWidth: 512,
-            baseHeight: 512,
+            baseWidth: 430,
+            baseHeight: 430,
             scale: { small: 1.1875, large: 1.28125 },
             extension: 112,
             shoreInset: 48,
@@ -445,16 +455,17 @@ export const Main: MapDef = {
             rivers: {
                 lakes: [],
                 weights: [
-                    { weight: 0.1, widths: [4] },
-                    { weight: 0.15, widths: [8] },
-                    { weight: 0.25, widths: [8, 4] },
-                    { weight: 0.21, widths: [16] },
-                    { weight: 0.09, widths: [16, 8] },
-                    { weight: 0.2, widths: [16, 8, 4] },
-                    {
-                        weight: 1e-4,
-                        widths: [16, 16, 8, 6, 4],
-                    },
+                    {weight : 1, widths: []},
+                    // { weight: 0.1, widths: [4] },
+                    // { weight: 0.15, widths: [8] },
+                    // { weight: 0.25, widths: [8, 4] },
+                    // { weight: 0.21, widths: [16] },
+                    // { weight: 0.09, widths: [16, 8] },
+                    // { weight: 0.2, widths: [16, 8, 4] },
+                    // {
+                    //     weight: 1e-4,
+                    //     widths: [16, 16, 8, 6, 4],
+                    // },
                 ],
                 smoothness: 0.45,
                 spawnCabins: true,
@@ -508,20 +519,26 @@ export const Main: MapDef = {
                     rad: 150,
                     retryOnFailure: true,
                 },
+                {
+                    type: "stone_04",
+                    pos: v2.create(0.5,0.5),
+                    rad: 120,
+                    retryOnFailure: true,
+                },
             ],
             placeSpawns: ["warehouse_01", "house_red_01", "house_red_02", "barn_01"],
         },
         densitySpawns: [
             {
-                stone_01: 350,
-                barrel_01: 76,
+                stone_01: 300,
+                barrel_01: 55,
                 silo_01: 8,
-                crate_01: 50,
-                crate_02: 4,
+                crate_01: 60,
+                crate_02: 12,
                 crate_03: 8,
-                bush_01: 78,
+                bush_01: 60 * 0.5,
                 cache_06: 12,
-                tree_01: 320,
+                tree_01: 260,
                 hedgehog_01: 24,
                 container_01: 5,
                 container_02: 5,
@@ -537,18 +554,18 @@ export const Main: MapDef = {
             {
                 // small is spawn count for solos and duos, large is spawn count for squads
                 warehouse_01: 2,
-                house_red_01: { small: 3, large: 4 },
-                house_red_02: { small: 3, large: 4 },
-                barn_01: { small: 1, large: 3 },
+                house_red_01: { small: 2, large: 4 },
+                house_red_02: { small: 2, large: 3 },
+                barn_01: { small: 2, large: 2 },
                 barn_02: 1,
-                hut_01: 3,
+                hut_01: 1,
                 hut_02: 1, // spas hut
                 hut_03: 1, // scout hut
                 shack_03a: 2,
                 shack_03b: { small: 2, large: 3 },
                 greenhouse_01: 1,
                 cache_01: 1,
-                cache_02: 1, // mosin tree
+                cache_02: 0, // mosin tree
                 cache_07: 1,
                 bunker_structure_01: { odds: 0.05 },
                 bunker_structure_02: 1,
@@ -561,8 +578,8 @@ export const Main: MapDef = {
                 mil_crate_02: { odds: 0.25 },
                 tree_02: 3,
                 teahouse_complex_01su: {
-                    small: 1,
-                    large: 2,
+                    small: 2,
+                    large: 3,
                 },
                 stone_04: 1,
                 club_complex_01: 1,
@@ -571,7 +588,7 @@ export const Main: MapDef = {
         randomSpawns: [
             {
                 spawns: ["mansion_structure_01", "police_01", "bank_01"],
-                choose: 2,
+                choose: 3,
             },
         ],
         spawnReplacements: [{}],
