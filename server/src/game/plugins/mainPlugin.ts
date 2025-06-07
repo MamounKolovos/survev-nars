@@ -1,3 +1,5 @@
+import { GameObjectDefs } from "../../../../shared/defs/gameObjectDefs";
+import type { GunDef } from "../../../../shared/defs/gameObjects/gunDefs";
 import type { LootSpawnDef } from "../../../../shared/defs/mapObjectsTyping";
 import { MapId } from "../../../../shared/defs/types/misc";
 import { TimerManager } from "../../utils/pluginUtils";
@@ -64,9 +66,32 @@ export default class MainPlugin extends GamePlugin {
 
         attachLootPingNotification(this, 2, 5);
 
+        if (this.game.teamMode === 1) {
+            this.on("playerGotKillKnockRevived", (event) => {
+                const p = event.data.player;
+                p.health = 100;
+                p.boost = 100;
+
+                if (p.weapons[0].type) {
+                    p.weapons[0].ammo = (
+                        GameObjectDefs[p.weapons[0].type] as GunDef
+                    ).maxClip;
+                }
+                if (p.weapons[1].type) {
+                    p.weapons[1].ammo = (
+                        GameObjectDefs[p.weapons[1].type] as GunDef
+                    ).maxClip;
+                }
+                p.inventory["frag"] = 3;
+
+                p.weapsDirty = true;
+                p.inventoryDirty = true;
+            });
+        }
+
         this.on("playerDidJoin", (event) => {
             const player = event.data.player;
-            switch (this.game.teamMode){
+            switch (this.game.teamMode) {
                 case 4:
                     player.weapons[3].type = "frag";
                     player.inventory["frag"] = 2;
@@ -92,16 +117,39 @@ export default class MainPlugin extends GamePlugin {
                     player.scope = "4xscope";
                     player.boost = 100;
 
-                    player.weaponManager.setWeapon(0,"spas12",6);
-                    player.weaponManager.setWeapon(1,"mosin",5);
+                    player.weaponManager.setWeapon(0, "spas12", 6);
+                    player.weaponManager.setWeapon(1, "mosin", 5);
 
-                    const floorguns = ["mac10", "dp28", "p30l_dual", "an94", "ak47", "model94", "garand", "ot38_dual", "saiga", "famas", "m870", "scar", "hk416", "blr", "deagle_dual", "mp220", "mk12", "scout_elite"];
-                    for (const g of floorguns){
-                        player.game.lootBarn.addLootWithoutAmmo(g, player.pos, player.layer, 1);
+                    const floorguns = [
+                        "mac10",
+                        "dp28",
+                        "p30l_dual",
+                        "an94",
+                        "ak47",
+                        "model94",
+                        "garand",
+                        "ot38_dual",
+                        "saiga",
+                        "famas",
+                        "m870",
+                        "scar",
+                        "hk416",
+                        "blr",
+                        "deagle_dual",
+                        "mp220",
+                        "mk12",
+                        "scout_elite",
+                    ];
+                    for (const g of floorguns) {
+                        player.game.lootBarn.addLootWithoutAmmo(
+                            g,
+                            player.pos,
+                            player.layer,
+                            1,
+                        );
                     }
-                    break
+                    break;
             }
         });
-        
     }
 }

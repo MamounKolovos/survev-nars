@@ -455,7 +455,7 @@ export const Main: MapDef = {
             rivers: {
                 lakes: [],
                 weights: [
-                    {weight : 1, widths: []},
+                    { weight: 1, widths: [] },
                     // { weight: 0.1, widths: [4] },
                     // { weight: 0.15, widths: [8] },
                     // { weight: 0.25, widths: [8, 4] },
@@ -521,7 +521,7 @@ export const Main: MapDef = {
                 },
                 {
                     type: "stone_04",
-                    pos: v2.create(0.5,0.5),
+                    pos: v2.create(0.5, 0.5),
                     rad: 120,
                     retryOnFailure: true,
                 },

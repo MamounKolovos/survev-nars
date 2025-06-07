@@ -47,6 +47,7 @@ function makeEvent<T>(cancelable?: boolean) {
 }
 
 export const GameEvents = {
+    playerGotKillKnockRevived: makeEvent<{ player: Player }>(),
     playerWillBeRevived: makeEvent<{ player: Player }>(true),
     playerWasRevived: makeEvent<{ player: Player }>(),
 
