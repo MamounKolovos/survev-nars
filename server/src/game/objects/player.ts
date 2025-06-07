@@ -1499,12 +1499,12 @@ export class Player extends BaseGameObject {
                     const itemDef = GameObjectDefs[this.actionItem] as HealDef | BoostDef;
                     if ("heal" in itemDef) {
                         this.applyActionFunc((target: Player) => {
-                            target.health += itemDef.heal;
+                            target.health += (target === this ? 1 : 0.5) * itemDef.heal;
                         });
                     }
                     if ("boost" in itemDef) {
                         this.applyActionFunc((target: Player) => {
-                            target.boost += itemDef.boost;
+                            target.boost += (target === this ? 1 : 0.5) * itemDef.boost;
                         });
                     }
                     this.inventory[this.actionItem]--;
@@ -3174,7 +3174,8 @@ export class Player extends BaseGameObject {
         this.doAction(
             item,
             GameConfig.Action.UseItem,
-            (this.hasPerk("aoe_heal") ? 0.75 : 1) * itemDef.useTime,
+            // (this.hasPerk("aoe_heal") ? 0.75 : 1) * itemDef.useTime,
+            itemDef.useTime,
         );
     }
 
@@ -3220,7 +3221,8 @@ export class Player extends BaseGameObject {
         this.doAction(
             item,
             GameConfig.Action.UseItem,
-            (this.hasPerk("aoe_heal") ? 0.75 : 1) * itemDef.useTime,
+            // (this.hasPerk("aoe_heal") ? 0.75 : 1) * itemDef.useTime,
+            itemDef.useTime,
         );
     }
 
