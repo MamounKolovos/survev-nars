@@ -47,7 +47,6 @@ function makeEvent<T>(cancelable?: boolean) {
 }
 
 export const GameEvents = {
-    playerGotKillKnockRevived: makeEvent<{ player: Player }>(),
     playerWillBeRevived: makeEvent<{ player: Player }>(true),
     playerWasRevived: makeEvent<{ player: Player }>(),
 
@@ -66,6 +65,9 @@ export const GameEvents = {
 
     playerWillDie: makeEvent<{ player: Player; params: DamageParams }>(true),
     playerDidDie: makeEvent<{ player: Player; params: DamageParams }>(),
+
+    playerWillGetDowned: makeEvent<{ player: Player; params: DamageParams }>(true),
+    playerGotDowned: makeEvent<{ player: Player; params: DamageParams }>(),
 
     playerWillInput: makeEvent<{ player: Player; msg: net.InputMsg }>(true),
     playerDidInput: makeEvent<{ player: Player; msg: net.InputMsg }>(),

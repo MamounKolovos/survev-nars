@@ -1532,9 +1532,6 @@ export class Player extends BaseGameObject {
                         this.game.pluginManager.emit("playerWasRevived", {
                             player: target,
                         });
-                        this.game.pluginManager.emit("playerGotKillKnockRevived", {
-                            player: target,
-                        });
                     });
                 }
 
@@ -2673,6 +2670,14 @@ export class Player extends BaseGameObject {
     downedBy: Player | undefined;
     /** downs a player */
     down(params: DamageParams): void {
+        if (
+            this.game.pluginManager.emit("playerWillGetDowned", {
+                player: this,
+                params: params,
+            })
+        )
+            return;
+
         this.downed = true;
         this.downedCount++;
         this.downedDamageTicker = GameConfig.player.downedDamageBuffer;
@@ -2708,11 +2713,6 @@ export class Player extends BaseGameObject {
         downedMsg.downed = true;
 
         if (params.source instanceof Player) {
-            if (params.source != this) {
-                this.game.pluginManager.emit("playerGotKillKnockRevived", {
-                    player: params.source,
-                });
-            }
             this.downedBy = params.source;
             downedMsg.killerId = params.source.__id;
             downedMsg.killCreditId = params.source.__id;
@@ -2724,6 +2724,8 @@ export class Player extends BaseGameObject {
         if (this.game.map.factionMode) {
             this.team!.checkAndApplyLastMan();
         }
+
+        this.game.pluginManager.emit("playerGotDowned", { player: this, params: params });
     }
 
     killedBy: Player | undefined;
@@ -2786,9 +2788,6 @@ export class Player extends BaseGameObject {
         if (params.source instanceof Player) {
             const source = params.source;
             this.killedBy = source;
-            this.game.pluginManager.emit("playerGotKillKnockRevived", {
-                player: source,
-            });
 
             if (source !== this && source.teamId !== this.teamId) {
                 source.killedIds.push(this.matchDataId);

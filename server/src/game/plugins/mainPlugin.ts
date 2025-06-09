@@ -3,6 +3,7 @@ import type { GunDef } from "../../../../shared/defs/gameObjects/gunDefs";
 import type { LootSpawnDef } from "../../../../shared/defs/mapObjectsTyping";
 import { MapId } from "../../../../shared/defs/types/misc";
 import { TimerManager } from "../../utils/pluginUtils";
+import { Player } from "../objects/player";
 import { GamePlugin } from "../pluginManager";
 import {
     attachCustomGasDamage,
@@ -67,25 +68,24 @@ export default class MainPlugin extends GamePlugin {
         attachLootPingNotification(this, 2, 5);
 
         if (this.game.teamMode === 1) {
-            this.on("playerGotKillKnockRevived", (event) => {
-                const p = event.data.player;
-                p.health = 100;
-                p.boost = 100;
-
-                if (p.weapons[0].type) {
-                    p.weapons[0].ammo = (
-                        GameObjectDefs[p.weapons[0].type] as GunDef
-                    ).maxClip;
+            this.on("playerDidDie", (event) => {
+                const params = event.data.params;
+                if (params.source && params.source instanceof Player) {
+                    makeReady(params.source);
                 }
-                if (p.weapons[1].type) {
-                    p.weapons[1].ammo = (
-                        GameObjectDefs[p.weapons[1].type] as GunDef
-                    ).maxClip;
+            });
+            this.on("playerGotDowned", (event) => {
+                const params = event.data.params;
+                if (
+                    params.source &&
+                    params.source instanceof Player &&
+                    params.source !== event.data.player
+                ) {
+                    makeReady(params.source);
                 }
-                p.inventory["frag"] = 3;
-
-                p.weapsDirty = true;
-                p.inventoryDirty = true;
+            });
+            this.on("playerWasRevived", (event) => {
+                makeReady(event.data.player);
             });
         }
 
@@ -152,4 +152,22 @@ export default class MainPlugin extends GamePlugin {
             }
         });
     }
+}
+
+function makeReady(p: Player) {
+    p.health = 100;
+    p.boost = 100;
+
+    if (p.weapons[0].type) {
+        p.weapons[0].ammo = (GameObjectDefs[p.weapons[0].type] as GunDef).maxClip;
+    }
+    if (p.weapons[1].type) {
+        p.weapons[1].ammo = (GameObjectDefs[p.weapons[1].type] as GunDef).maxClip;
+    }
+
+    p.weapons[3].type = "frag";
+    p.inventory["frag"] = 3;
+
+    p.weapsDirty = true;
+    p.inventoryDirty = true;
 }
