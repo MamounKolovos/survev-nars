@@ -128,6 +128,9 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
     player.backpack = "backpack02";
     player.addPerk("endless_ammo");
 
+    player.weapons[3].type = "frag";
+    player.inventory["frag"] = 2;
+
     player.boostDirty = true;
     player.zoomDirty = true;
     player.weapsDirty = true;
