@@ -52,9 +52,9 @@ const primaryWeights = [
 const secondaryWeights = [
     { weight: 1, gun: "sv98" },
     { weight: 3, gun: "mosin" },
-    { weight: 5, gun: "model94" },
-    { weight: 3, gun: "scout_elite" },
-    { weight: 3, gun: "blr" },
+    { weight: 2, gun: "model94" },
+    { weight: 2, gun: "scout_elite" },
+    { weight: 4, gun: "blr" },
     { weight: 0.3, gun: "pkp" },
     { weight: 0.5, gun: "m249" },
     { weight: 2, gun: "qbb97" },
@@ -69,7 +69,7 @@ const secondaryWeights = [
     { weight: 1, gun: "deagle_dual" },
     { weight: 0.3, gun: "saiga" },
     { weight: 2, gun: "famas" },
-    { weight: 1, gun: "an94" },
+    { weight: 2, gun: "an94" },
     { weight: 0.5, gun: "p30l_dual" },
 ];
 
