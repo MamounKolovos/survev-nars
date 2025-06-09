@@ -170,4 +170,6 @@ function makeReady(p: Player) {
 
     p.weapsDirty = true;
     p.inventoryDirty = true;
+    p.boostDirty = true;
+    p.healthDirty = true;
 }
