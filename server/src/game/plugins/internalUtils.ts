@@ -58,11 +58,12 @@ export function attachGracePeriod(
     );
     const lastInputs: Map<
         Player,
-        { moveLeft: boolean; moveRight: boolean; moveUp: boolean; moveDown: boolean }
+        { touchMoveActive: boolean; moveLeft: boolean; moveRight: boolean; moveUp: boolean; moveDown: boolean }
     > = new Map();
 
     const restoreInputs = () => {
         for (const [player, msg] of lastInputs) {
+            player.touchMoveActive = msg.touchMoveActive;
             player.moveLeft = msg.moveLeft;
             player.moveRight = msg.moveRight;
             player.moveUp = msg.moveUp;
@@ -130,11 +131,13 @@ export function attachGracePeriod(
         }
         const { player, msg } = event.data;
         lastInputs.set(player, {
+            touchMoveActive: msg.touchMoveActive,
             moveLeft: msg.moveLeft,
             moveRight: msg.moveRight,
             moveUp: msg.moveUp,
             moveDown: msg.moveDown,
         });
+        msg.touchMoveActive = false;
         msg.moveLeft = false;
         msg.moveRight = false;
         msg.moveUp = false;
