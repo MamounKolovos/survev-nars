@@ -11,6 +11,7 @@ import {
     attachDonutSpawner,
     attachGracePeriod,
     attachKillRewards,
+    attachLootDisabler,
     attachLootPingNotification,
     attachMovingGas,
     attachObstacleDeathLoot,
@@ -68,6 +69,7 @@ export default class MainPlugin extends GamePlugin {
         attachLootPingNotification(this, 2, 5);
 
         if (this.game.teamMode === 1) {
+            attachLootDisabler(this);
             this.on("playerDidDie", (event) => {
                 const params = event.data.params;
                 if (params.source && params.source instanceof Player) {

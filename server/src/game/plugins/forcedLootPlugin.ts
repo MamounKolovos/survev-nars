@@ -301,7 +301,7 @@ export default class focedLootPlugin extends GamePlugin {
         attachCustomQuickSwitch(this, CUSTOM_SWITCH_DELAY);
         attachTimerManagerUpdate(this);
         attachKillRewards(this, HEALTH_AND_BOOST_ON_KILL, RELOAD_ON_KILL);
-        attachDonutSpawner(this, 0.8, 0.9);
+        attachDonutSpawner(this, 0.7, 0.9);
         attachGracePeriod(
             this,
             GRACE_PERIOD_DURATION,
