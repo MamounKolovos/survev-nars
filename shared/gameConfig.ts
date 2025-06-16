@@ -154,7 +154,7 @@ export const GameConfig = {
         downedMoveSpeed: 4,
         downedRezMoveSpeed: 2,
         downedDamageBuffer: 0.1, //time buffer after being downed where a player can't take damage
-        keepZoomWhileDowned: false,
+        keepZoomWhileDowned: true,
         reviveDuration: 8,
         reviveRange: 5,
         crawlTime: 0.75,
