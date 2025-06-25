@@ -66,7 +66,7 @@ const secondaryWeights = [
     { weight: 1, gun: "hk416" },
     { weight: 1, gun: "scar" },
     { weight: 1, gun: "garand" },
-    { weight: 0.5, gun: "mk12"},
+    { weight: 0.5, gun: "mk12" },
     { weight: 0.8, gun: "deagle_dual" },
     { weight: 0.3, gun: "saiga" },
     { weight: 1.5, gun: "famas" },
@@ -82,62 +82,61 @@ const meleeWeights = [
     { weight: 1, melee: "hook" },
     { weight: 1, melee: "woodaxe" },
 ];
-function getPrimaryBasedOnSecondary(secondary: string): string{
+function getPrimaryBasedOnSecondary(secondary: string): string {
     const x = Math.random();
-    switch (secondary){
+    switch (secondary) {
         case "sv98":
         case "mosin":
         case "scout_elite":
-        case "blr":{
-            if (x < 0.6){
+        case "blr": {
+            if (x < 0.6) {
                 return "spas12";
             }
-            if (x < 0.7){
+            if (x < 0.7) {
                 return "m870";
             }
-            if (x < 0.8){
+            if (x < 0.8) {
                 return util.weightedRandom(gt.bigClipSnipers).gun;
             }
-            if (x < 0.82){
+            if (x < 0.82) {
                 return "garand";
             }
             return util.weightedRandom(gt.anySprays).gun;
         }
-        case "model94":{
-            if (x < 0.2){
+        case "model94": {
+            if (x < 0.2) {
                 return "spas12";
             }
-            if (x < 0.3){
+            if (x < 0.3) {
                 return "m870";
             }
-            if (x < 0.33){
+            if (x < 0.33) {
                 return "garand";
             }
             return util.weightedRandom(gt.anySprays).gun;
         }
         case "dp28":
-        case "qbb97":{
-            if (Math.random() < 0.3){
+        case "qbb97": {
+            if (Math.random() < 0.3) {
                 return "spas12";
             }
         }
         case "m249":
-        case "pkp":{
-            if (x < 0.05){
+        case "pkp": {
+            if (x < 0.05) {
                 return "spas12";
             }
-            if (x < 0.7){
+            if (x < 0.7) {
                 return "m870";
             }
-            if (x < 0.75){
+            if (x < 0.75) {
                 return "vector";
             }
             return util.weightedRandom(gt.rifles).gun;
-            
         }
         case "famas":
-        case "an94":{
-            if (Math.random() < 0.4){
+        case "an94": {
+            if (Math.random() < 0.4) {
                 return "spas12";
             }
         }
@@ -148,29 +147,29 @@ function getPrimaryBasedOnSecondary(secondary: string): string{
         case "grozas":
         case "ak47":
         case "hk416":
-        case "scar":{
-            if (x < 0.3){
+        case "scar": {
+            if (x < 0.3) {
                 return util.weightedRandom(gt.rifles).gun;
             }
-            if (x < 0.7){
+            if (x < 0.7) {
                 return "spas12";
             }
             return "m870";
         }
-        case "saiga":{
+        case "saiga": {
             return "spas12";
         }
-        case "mk12":{
-            if (x < 0.4){
+        case "mk12": {
+            if (x < 0.4) {
                 return "m870";
             }
-            if (x < 0.5){
+            if (x < 0.5) {
                 return "spas12";
             }
             return util.weightedRandom(gt.rifles).gun;
         }
-        case "garand":{
-            if (x < 0.35){
+        case "garand": {
+            if (x < 0.35) {
                 return "m870";
             }
             if (x < 0.7) {
@@ -178,8 +177,8 @@ function getPrimaryBasedOnSecondary(secondary: string): string{
             }
             return "spas12";
         }
-        }
-    
+    }
+
     return "m9";
 }
 
@@ -193,8 +192,8 @@ function generateFairLootLoadouts(): Loadout[] {
             primary: "",
             melee: util.weightedRandom(meleeWeights).melee,
         };
-        loadout.primary = getPrimaryBasedOnSecondary(loadout.secondary),
-        loadouts.push(loadout);
+        (loadout.primary = getPrimaryBasedOnSecondary(loadout.secondary)),
+            loadouts.push(loadout);
     }
     return loadouts;
 }
@@ -392,10 +391,10 @@ const gt = {
         { weight: 1, gun: "scar" },
     ],
     bigClipSnipers: [
-        { weight: 1, gun: "sv98"},
-        { weight: 2, gun: "mosin"},
-        { weight: 4, gun: "scout_elite"},
-        { weight: 6, gun: "blr"},        
+        { weight: 1, gun: "sv98" },
+        { weight: 2, gun: "mosin" },
+        { weight: 4, gun: "scout_elite" },
+        { weight: 6, gun: "blr" },
     ],
     anySprays: [
         { weight: 1, gun: "dp28" },
@@ -405,12 +404,12 @@ const gt = {
         { weight: 1, gun: "ak47" },
         { weight: 1, gun: "hk416" },
         { weight: 1, gun: "scar" },
-        { weight: 0.5, gun: "mk12"},
+        { weight: 0.5, gun: "mk12" },
         { weight: 0.8, gun: "deagle_dual" },
         { weight: 2, gun: "famas" },
         { weight: 2, gun: "an94" },
         { weight: 0.5, gun: "p30l_dual" },
-    ]
+    ],
 };
 const GRACE_PERIOD_DURATION = 5;
 const JOIN_PERIOD_DURATION = 5;
@@ -485,9 +484,9 @@ export default class focedLootPlugin extends GamePlugin {
         });
 
         this.on("playerWillDropItem", (event) => {
-            const {player, dropMsg, itemDef} = event.data;
-            if (player.downed && player.downedBy && player.downedBy !== player){
-                return
+            const { player, dropMsg, itemDef } = event.data;
+            if (player.downed && player.downedBy && player.downedBy !== player) {
+                return;
             }
             event.cancel();
         });
