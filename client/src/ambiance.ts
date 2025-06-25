@@ -96,7 +96,7 @@ export class Ambiance {
                 track.inst = audioManager.playSound(track.sound, {
                     channel: track.channel,
                     startSilent: true,
-                    loop: track.channel == "ambient",
+                    loop: false,
                     forceStart: true,
                     filter: track.filter,
                     forceFilter: true,
