@@ -485,15 +485,22 @@ export default class focedLootPlugin extends GamePlugin {
 
         this.on("playerWillDropItem", (event) => {
             const { player, dropMsg, itemDef } = event.data;
-            if (player.downed && player.downedBy && player.downedBy !== player) {
-                return;
+            if (player.downed) {
+                if (player.downedBy && player.downedBy !== player) {
+                    return;
+                }
+                if (player.group) {
+                    let total = 0;
+                    for (const p of player.group?.players) {
+                        total += p.damageDealt;
+                    }
+                    if (total > 110) {
+                        return;
+                    }
+                }
             }
             event.cancel();
         });
 
-        // this.hook("gmm:isGameStarted", (hookPoint) => {
-        //     const gmm = hookPoint.data.gmm;
-        //     return gmm.aliveCount() > 1;
-        // });
     }
 }
