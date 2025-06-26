@@ -11,6 +11,7 @@ export enum MapId {
     Cobalt = 7,
     ForcedLoot = 8,
     Deathmatch = 9,
+    Solos = 10,
 }
 
 export const TeamModeToString = {

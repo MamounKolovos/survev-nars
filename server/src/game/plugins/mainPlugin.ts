@@ -41,7 +41,7 @@ export default class MainPlugin extends GamePlugin {
             firstMovingZone: 4,
             stationaryZoneRadiusMultiplier: 0.55,
             movingZoneRadiusMultiplier: 0.8,
-            damages: [1, 2, 4, 6, 8, 10],
+            damages: this.game.teamMode === 1 ? [5, 5, 5, 10] : [1, 2, 4, 6, 8, 10],
             initWaitTime: 100,
             minWaitTime: 20,
             waitTimeDecrement: 20,
