@@ -148,10 +148,10 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
         case "ak47":
         case "hk416":
         case "scar": {
-            if (x < 0.3) {
+            if (x < 0.25) {
                 return util.weightedRandom(gt.rifles).gun;
             }
-            if (x < 0.7) {
+            if (x < 0.75) {
                 return "spas12";
             }
             return "m870";
@@ -501,6 +501,5 @@ export default class focedLootPlugin extends GamePlugin {
             }
             event.cancel();
         });
-
     }
 }

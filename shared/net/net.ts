@@ -261,7 +261,7 @@ export const Constants = {
     PlayerNameMaxLen: 16,
     MouseMaxDist: 64,
     SmokeMaxRad: 10,
-    ActionMaxDuration: 8.5,
+    ActionMaxDuration: 10.5,
     AirstrikeZoneMaxRad: 256,
     AirstrikeZoneMaxDuration: 60,
     PlayerMinScale: 0.75,

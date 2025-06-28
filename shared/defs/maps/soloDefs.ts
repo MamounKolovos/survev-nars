@@ -27,7 +27,7 @@ const mapDef: PartialMapDef = {
             locationSpawns: [
                 {
                     type: "club_complex_01",
-                    pos: v2.create(0.2, 0.2),
+                    pos: v2.create(0.3, 0.3),
                     rad: 80,
                     retryOnFailure: true,
                 },
