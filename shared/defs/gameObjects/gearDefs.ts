@@ -340,7 +340,7 @@ const BoostDefs: Record<string, BoostDef> = {
     painkiller: {
         name: "Pills",
         type: "boost",
-        useTime: 5,
+        useTime: 4.5,
         boost: 50,
         lootImg: {
             sprite: "loot-medical-pill.img",
