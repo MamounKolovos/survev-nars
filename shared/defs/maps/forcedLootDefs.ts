@@ -39,7 +39,7 @@ const mapDef: PartialMapDef = {
         },
         densitySpawns: [
             {
-                stone_01: 675,
+                stone_01: 650,
                 barrel_01: 5,
                 silo_01: 3,
                 crate_01: 0,
@@ -47,7 +47,7 @@ const mapDef: PartialMapDef = {
                 crate_03: 0,
                 bush_01: 0,
                 cache_06: 0,
-                tree_01: 225,
+                tree_01: 200,
                 hedgehog_01: 4,
                 container_01: 4,
                 container_02: 3,
@@ -94,7 +94,7 @@ const mapDef: PartialMapDef = {
         randomSpawns: [
             {
                 spawns: ["mansion_structure_01", "police_01", "bank_01"],
-                choose: 1,
+                choose: 2,
             },
         ],
     },
