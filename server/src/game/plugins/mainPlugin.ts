@@ -33,6 +33,8 @@ export default class MainPlugin extends GamePlugin {
 
     override initListeners(): void {
         if (this.game.map.mapId === MapId.ForcedLoot) return;
+        if (this.game.map.mapId === MapId.ForcedLoot2) return;
+
         attachTimerManagerUpdate(this);
 
         attachGracePeriod(this, GRACE_PERIOD, GRACE_PERIOD, 5);

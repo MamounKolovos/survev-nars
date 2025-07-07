@@ -424,7 +424,11 @@ const CUSTOM_SWITCH_DELAY = 0.205;
 export default class focedLootPlugin extends GamePlugin {
     timerManager = new TimerManager();
     public override initListeners(): void {
-        if (this.game.map.mapId !== MapId.ForcedLoot) return;
+        if (
+            this.game.map.mapId !== MapId.ForcedLoot &&
+            this.game.map.mapId !== MapId.ForcedLoot2
+        )
+            return;
         attachLootDisabler(this);
         attachCustomQuickSwitch(this, CUSTOM_SWITCH_DELAY);
         attachTimerManagerUpdate(this);
