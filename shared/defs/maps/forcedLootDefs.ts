@@ -76,7 +76,7 @@ const mapDef: PartialMapDef = {
                 cache_02: 0, // mosin tree
                 cache_07: 0,
                 // bunker_structure_01: { odds: 0.05 },
-                // bunker_structure_02: 1,
+                bunker_structure_02: 1,
                 // bunker_structure_03: 1,
                 // bunker_structure_04: 1,
                 // bunker_structure_05: 1,

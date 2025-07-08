@@ -228,7 +228,7 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
 
     player.weapons[3].type = "frag";
     player.inventory["frag"] = 2;
-    player.inventory["smoke"] = 1;
+    player.inventory["smoke"] = 2;
 
     player.boostDirty = true;
     player.zoomDirty = true;
