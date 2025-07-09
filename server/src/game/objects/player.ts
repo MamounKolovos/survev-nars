@@ -2606,7 +2606,7 @@ export class Player extends BaseGameObject {
 
         this.damageTaken += finalDamage;
         if (sourceIsPlayer && params.source !== this) {
-            if ((params.source as Player).groupId !== this.groupId) {
+            if ((params.source as Player).groupId !== this.groupId && !this.downed) {
                 (params.source as Player).damageDealt += finalDamage;
             }
             this.lastDamagedBy = params.source as Player;
