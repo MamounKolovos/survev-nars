@@ -2,8 +2,9 @@ import { GameObjectDefs } from "../../../../shared/defs/gameObjectDefs";
 import type { GunDef } from "../../../../shared/defs/gameObjects/gunDefs";
 import type { LootSpawnDef } from "../../../../shared/defs/mapObjectsTyping";
 import { MapId } from "../../../../shared/defs/types/misc";
+import { ObjectType } from "../../../../shared/net/objectSerializeFns";
 import { TimerManager } from "../../utils/pluginUtils";
-import { Player } from "../objects/player";
+import type { Player } from "../objects/player";
 import { GamePlugin } from "../pluginManager";
 import {
     attachCustomGasDamage,
@@ -74,7 +75,7 @@ export default class MainPlugin extends GamePlugin {
             attachLootDisabler(this);
             this.on("playerDidDie", (event) => {
                 const params = event.data.params;
-                if (params.source && params.source instanceof Player) {
+                if (params.source && params.source.__type === ObjectType.Player) {
                     makeReady(params.source);
                 }
             });
@@ -82,7 +83,7 @@ export default class MainPlugin extends GamePlugin {
                 const params = event.data.params;
                 if (
                     params.source &&
-                    params.source instanceof Player &&
+                    params.source.__type === ObjectType.Player &&
                     params.source !== event.data.player
                 ) {
                     makeReady(params.source);

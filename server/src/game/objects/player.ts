@@ -3110,7 +3110,7 @@ export class Player extends BaseGameObject {
             this.doAction(
                 "",
                 GameConfig.Action.Revive,
-                GameConfig.player.reviveDuration,
+                GameConfig.player.reviveDuration * (this.game.teamMode === 1 ? 0.5 : 1),
                 this.__id,
             );
         } else {
