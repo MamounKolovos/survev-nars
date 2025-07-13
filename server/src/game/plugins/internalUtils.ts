@@ -412,18 +412,15 @@ export function spawnPlayer(
     const getSpawn = () => {
         //solos
         if (!player.group) {
-            console.log("solo", player.name);
             return getRandomSpawnPos(soloProvider());
         }
 
         //first player in group to join
         if (player.group.players[0] === player) {
-            console.log("leader", player.name);
             return getRandomSpawnPos(groupLeaderProvider());
         }
 
         //2nd, 3rd, or 4th player in group to join
-        console.log("follower", player.name);
         return getRandomSpawnPos(groupFollowerProvider());
     };
 
