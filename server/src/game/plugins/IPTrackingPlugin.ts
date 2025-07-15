@@ -1,6 +1,6 @@
+import crypto from "crypto";
 import fs from "fs";
 import { GamePlugin } from "../pluginManager";
-import crypto from "crypto";
 export default class IPTrackingPlugin extends GamePlugin {
     public override initListeners(): void {
         this.on("playerDidJoin", (event) => {
@@ -9,7 +9,10 @@ export default class IPTrackingPlugin extends GamePlugin {
                 fs.writeFileSync(path, "{}");
             }
             const playerName = event.data.player.name;
-            const hashedIP = crypto.createHash("sha256").update(event.data.player.ip).digest("hex");
+            const hashedIP = crypto
+                .createHash("sha256")
+                .update(event.data.player.ip)
+                .digest("hex");
             const playerInfo: Record<
                 string,
                 Array<{ name: string; count: number; lastJoinTime: string }>
