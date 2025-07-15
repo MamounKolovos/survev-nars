@@ -35,7 +35,7 @@ const mapDef: PartialMapDef = {
         },
         densitySpawns: [
             {
-                stone_01: 675,
+                stone_01: 1000,
                 barrel_01: 5,
                 silo_01: 2,
                 crate_01: 0,
@@ -43,7 +43,7 @@ const mapDef: PartialMapDef = {
                 crate_03: 0,
                 bush_01: 0,
                 cache_06: 0,
-                tree_01: 225,
+                tree_01: 250,
                 hedgehog_01: 4,
                 container_01: 4,
                 container_02: 3,
