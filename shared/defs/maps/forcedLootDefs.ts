@@ -93,7 +93,7 @@ const mapDef: PartialMapDef = {
         ],
         randomSpawns: [
             {
-                spawns: ["police_01", "bank_01"],
+                spawns: ["police_01", "bank_01", "club_complex_01"],
                 choose: 1,
             },
         ],
