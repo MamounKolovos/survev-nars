@@ -450,7 +450,7 @@ export default class focedLootPlugin extends GamePlugin {
             firstMovingZone: 4,
             stationaryZoneRadiusMultiplier: 0.55,
             movingZoneRadiusMultiplier: 0.7,
-            damages: [2, 4, 5, 6, 8, 10],
+            damages: [3, 4, 6, 7, 10],
             initWaitTime: 60,
             minWaitTime: 20,
             waitTimeDecrement: 15,
