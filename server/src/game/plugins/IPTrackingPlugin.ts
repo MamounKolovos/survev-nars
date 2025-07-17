@@ -42,7 +42,6 @@ export default class IPTrackingPlugin extends GamePlugin {
                 }
             }
             fs.writeFileSync(path, JSON.stringify(playerInfo, null, 3));
-            console.log(playerInfo);
         });
     }
 }
