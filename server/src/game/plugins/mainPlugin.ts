@@ -21,7 +21,7 @@ import {
     tierLoot,
 } from "./internalUtils";
 
-const GRACE_PERIOD = 10;
+const GRACE_PERIOD = 15;
 const CUSTOM_SWITCH_DELAY = 0.205;
 
 const obstacleToLoot: Record<string, LootSpawnDef[]> = {
@@ -38,7 +38,7 @@ export default class MainPlugin extends GamePlugin {
 
         attachTimerManagerUpdate(this);
 
-        attachGracePeriod(this, GRACE_PERIOD, GRACE_PERIOD, 5);
+        attachGracePeriod(this, GRACE_PERIOD, GRACE_PERIOD, GRACE_PERIOD);
 
         attachMovingGas(this, {
             firstMovingZone: 4,
@@ -55,7 +55,9 @@ export default class MainPlugin extends GamePlugin {
             minRadius: 10,
         });
 
-        attachDonutSpawner(this, 0.75, 0.9);
+        if (this.game.teamMode !== 2) {
+            attachDonutSpawner(this, 0.75, 0.9);
+        }
 
         attachCustomQuickSwitch(this, CUSTOM_SWITCH_DELAY);
 
@@ -104,6 +106,26 @@ export default class MainPlugin extends GamePlugin {
                     player.inventory["bandage"] = 5;
                     player.backpack = "backpack01";
                     break;
+                case 2:
+                    player.weaponManager.setWeapon(0, "spas12", 6);
+                    player.weaponManager.setWeapon(1, "ak47", 30);
+                    player.chest = "chest02";
+                    player.helmet = "helmet02";
+                    player.backpack = "backpack02";
+
+                    player.addPerk("endless_ammo", false);
+                    player.inventory["4xscope"] = 1;
+                    player.inventory["2xscope"] = 1;
+                    player.scope = "4xscope";
+
+                    player.inventory["bandage"] = 5;
+                    player.inventory["healthkit"] = 1;
+                    player.inventory["soda"] = 2;
+                    player.boost = 110;
+
+                    player.weapons[3].type = "frag";
+                    player.inventory["frag"] = 2;
+                    break;
                 case 1:
                     player.weapons[3].type = "frag";
                     player.inventory["bandage"] = 99;
@@ -120,7 +142,7 @@ export default class MainPlugin extends GamePlugin {
                     player.inventory["2xscope"] = 1;
                     player.inventory["4xscope"] = 1;
                     player.scope = "4xscope";
-                    player.boost = 100;
+                    player.boost = 110;
 
                     player.weaponManager.setWeapon(0, "spas12", 6);
                     player.weaponManager.setWeapon(1, "mosin", 5);
