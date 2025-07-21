@@ -21,7 +21,7 @@ import {
     tierLoot,
 } from "./internalUtils";
 
-const GRACE_PERIOD = 15;
+const GRACE_PERIOD = 10;
 const CUSTOM_SWITCH_DELAY = 0.205;
 
 const obstacleToLoot: Record<string, LootSpawnDef[]> = {

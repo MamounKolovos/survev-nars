@@ -32,7 +32,7 @@ export function getConfig(isProduction: boolean, dir: string) {
         modes: [
             { mapName: "solos", teamMode: TeamMode.Solo, enabled: true },
             { mapName: "forced_loot", teamMode: TeamMode.Squad, enabled: true },
-            { mapName: "main", teamMode: TeamMode.Duo, enabled: true },
+            { mapName: "forced_loot2", teamMode: TeamMode.Squad, enabled: true },
         ],
         clientTheme: "main",
         gameTps: 100,
