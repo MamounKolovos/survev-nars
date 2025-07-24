@@ -6206,6 +6206,93 @@ function createGrassyCover<T extends BuildingDef>(e: Partial<T>): T {
     };
     return util.mergeDeep(t, e || {});
 }
+function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
+    const t = {
+        type: "building",
+        map: {
+            display: true,
+            shapes: [
+                // View on the map
+                  {
+                    collider: collider.createAabbExtents(
+                        v2.create(0,9),
+                        v2.create(50, 27.5),
+                    ),
+                    color: 0xd2d4ac,
+                },
+                 {
+                    collider: collider.createAabbExtents(
+                        v2.create(0, -26.5),
+                        v2.create(22, 8),
+                    ),
+                    color: 0xA1A383,
+                },
+            ],
+        },
+        terrain: { grass: true, beach: false },
+        zIdx: 1,
+        floor: {
+            surfaces: [
+              
+            ],
+            imgs: [
+                {
+                    sprite: "map-building-courthouse-floor.img",
+                    pos: v2.create(0, -2.2),
+                    scale: 0.38,
+                    alpha: 1,
+                    tint: 0xffffff,
+                },
+            ],
+        },
+        ceiling: {
+            zoomRegions: [
+                {
+                    zoomIn: collider.createAabbExtents(
+                        v2.create(0,9),
+                        v2.create(50, 27.5),
+                    ),
+                },
+                {
+                    zoomIn: collider.createAabbExtents(
+                        v2.create(0, -26.5),
+                        v2.create(22, 8),
+                    ),
+                },
+            ],
+            vision: {
+                dist: 5.5,
+                width: 2.75,
+                linger: 0.5,
+                fadeRate: 6,
+            },
+            imgs: [
+                {
+                    sprite: "map-building-courthouse-ceiling.img",
+                    pos: v2.create(0, 0.75),
+                    scale: 0.38,
+                    alpha: 1,
+                    tint: 0xffffff,
+                },
+            ],
+        },
+        mapObjects: [
+             {
+                type: "house_door_01",
+                pos: v2.create(16.5, 2),
+                scale: 1,
+                ori: 3,
+            },
+             {
+                type: "house_door_01",
+                pos: v2.create(16.5, 15),
+                scale: 1,
+                ori: 3,
+            },
+        ],
+    };
+    return util.mergeDeep(t, e || {});
+}
 function createPoliceStation<T extends BuildingDef>(e: Partial<T>): T {
     const t = {
         type: "building",
@@ -17364,6 +17451,7 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
         img: wallImg("map-wall-10-rounded.img", 0x1b1f27),
     }),
     police_01: createPoliceStation({ teamId: 2 }),
+    courthouse_01: createCourtHouse({ teamId: 2 }),
     police_01x: createPoliceStation({
         ceiling: {
             imgs: [

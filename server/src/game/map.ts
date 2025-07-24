@@ -1806,7 +1806,7 @@ export class GameMap {
 
         const def = MapObjectDefs[type] as BuildingDef;
 
-        ori = ori ?? def.ori ?? util.randomInt(0, 3);
+        ori = 0;
 
         const building = new Building(this.game, type, pos, ori, layer, parentId);
 

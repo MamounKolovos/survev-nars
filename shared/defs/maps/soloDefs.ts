@@ -14,8 +14,8 @@ const mapDef: PartialMapDef = {
     },
     mapGen: {
         map: {
-            baseWidth: 256,
-            baseHeight: 256,
+            baseWidth: 35,
+            baseHeight: 35,
             scale: { small: 1.0, large: 1.0 },
             shoreInset: 10,
             grassInset: 10,
@@ -26,16 +26,15 @@ const mapDef: PartialMapDef = {
         customSpawnRules: {
             locationSpawns: [
                 {
-                    type: "club_complex_01",
-                    pos: v2.create(0.3, 0.3),
-                    rad: 80,
+                    type: "courthouse_01",
+                    pos: v2.create(25, 25),
                     retryOnFailure: true,
                 },
             ],
         },
         densitySpawns: [
             {
-                stone_01: 675,
+                /*stone_01: 675,
                 barrel_01: 5,
                 silo_01: 2,
                 crate_01: 0,
@@ -52,14 +51,14 @@ const mapDef: PartialMapDef = {
                 shack_01: 3,
                 outhouse_01: 5,
                 loot_tier_1: 0,
-                loot_tier_beach: 0,
+                loot_tier_beach: 0, */
             },
         ],
         fixedSpawns: [
             {
                 // warehouse_01: 1,
                 // house_red_01: 1,
-                house_red_02: 1,
+               // house_red_02: 1,
                 // barn_01: 1,
                 // barn_02: 1,
                 // hut_01: 0,
@@ -84,7 +83,7 @@ const mapDef: PartialMapDef = {
                 // teahouse_complex_01su: 1,
                 // stone_04: 0,
                 // mansion_structure_01: 1,
-                club_complex_01: 1,
+                courthouse_01: 1,
             },
         ],
         randomSpawns: [],
