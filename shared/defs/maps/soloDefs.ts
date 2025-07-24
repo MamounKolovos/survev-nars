@@ -14,8 +14,8 @@ const mapDef: PartialMapDef = {
     },
     mapGen: {
         map: {
-            baseWidth: 35,
-            baseHeight: 35,
+            baseWidth: 25,
+            baseHeight: 25,
             scale: { small: 1.0, large: 1.0 },
             shoreInset: 10,
             grassInset: 10,
@@ -27,7 +27,7 @@ const mapDef: PartialMapDef = {
             locationSpawns: [
                 {
                     type: "courthouse_01",
-                    pos: v2.create(25, 25),
+                    pos: v2.create(30, 30),
                     retryOnFailure: true,
                 },
             ],

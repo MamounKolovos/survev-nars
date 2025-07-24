@@ -6268,7 +6268,7 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
             },
             imgs: [
                 {
-                    sprite: "map-building-courthouse-ceiling.img",
+                   // sprite: "map-building-courthouse-ceiling.img",
                     pos: v2.create(0, 0.75),
                     scale: 0.38,
                     alpha: 1,
@@ -6288,6 +6288,72 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
                 pos: v2.create(16.5, 15),
                 scale: 1,
                 ori: 3,
+            },
+            {
+                type: "concrete_wall_ext_26",
+                pos: v2.create(-49.15, 3.5),
+                scale: 1,
+                ori: 0,
+            },
+             {
+                type: "concrete_wall_ext_27",
+                pos: v2.create(-49.15, 33.2),
+                scale: 1,
+                ori: 0,
+            },
+            {
+                type: "concrete_wall_ext_28",
+                pos: v2.create(-27.4, 35.5),
+                scale: 1,
+                ori: 0,
+            },
+             {
+                type: "concrete_wall_ext_29",
+                pos: v2.create(10.5, 35.5),
+                scale: 1,
+                ori: 0,
+            },
+            {
+                type: "concrete_wall_ext_30",
+                pos: v2.create(35.25, 35.5),
+                scale: 1,
+                ori: 0,
+            },
+            {
+                type: "concrete_wall_ext_31",
+                pos: v2.create(49.1,23.2),
+                scale: 1,
+                ori: 0,
+            },
+            {
+                type: "concrete_wall_ext_31",
+                pos: v2.create(49.1,-6.2),
+                scale: 1,
+                ori: 0,
+            },
+             {
+                type: "concrete_wall_ext_32",
+                pos: v2.create(35.25, -18.3),
+                scale: 1,
+                ori: 0,
+            },
+            {
+                type: "concrete_wall_ext_33",
+                pos: v2.create(9.9, -18.4),
+                scale: 1,
+                ori: 0,
+            },
+            {
+                type: "concrete_wall_ext_33",
+                pos: v2.create(-10, -18.4),
+                scale: 1,
+                ori: 0,
+            },
+            {
+                type: "concrete_wall_ext_34",
+                pos: v2.create(-35.25, -18.4),
+                scale: 1,
+                ori: 0,
             },
         ],
     };
@@ -16562,6 +16628,42 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
     concrete_wall_ext_25: createWall({
         material: "concrete",
         extents: v2.create(0.5, 12.5),
+    }),
+     concrete_wall_ext_26: createWall({
+        material: "concrete",
+        extents: v2.create(0.6, 22),
+    }),
+     concrete_wall_ext_27: createWall({
+        material: "concrete",
+        extents: v2.create(0.6, 2.5),
+    }),
+    concrete_wall_ext_28: createWall({
+        material: "concrete",
+        extents: v2.create(22.4, 0.6),
+    }),
+    concrete_wall_ext_29: createWall({
+        material: "concrete",
+        extents: v2.create(5.5, 0.6),
+    }),
+    concrete_wall_ext_30: createWall({
+        material: "concrete",
+        extents: v2.create(14.5, 0.6),
+    }),
+    concrete_wall_ext_31: createWall({
+        material: "concrete",
+        extents: v2.create( 0.6, 12.5),
+    }),
+     concrete_wall_ext_32: createWall({
+        material: "concrete",
+        extents: v2.create(14.5, 0.4),
+    }),
+    concrete_wall_ext_33: createWall({
+        material: "concrete",
+        extents: v2.create(6.1, 0.5),
+    }),
+    concrete_wall_ext_34: createWall({
+        material: "concrete",
+        extents: v2.create(14.5, 0.5),
     }),
     concrete_wall_column_4x8: createWall({
         material: "concrete",
