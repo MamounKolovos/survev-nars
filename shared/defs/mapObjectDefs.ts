@@ -199,6 +199,39 @@ function createBookShelf<T extends ObstacleDef>(params: Partial<T>): T {
     };
     return util.mergeDeep(ObstacleDef, params || {});
 }
+function createCourthouseBookshelf<T extends ObstacleDef>(params: Partial<T>): T {
+    const ObstacleDef = {
+        type: "obstacle",
+        obstacleType: "furniture",
+        scale: { createMin: 1, createMax: 1, destroy: 0.75 },
+        collision: collider.createAabbExtents(v2.create(0, -0.25), v2.create(4.75, 0.75)),
+        height: 0.5,
+        collidable: true,
+        destructible: true,
+        health: 75,
+        hitParticle: "woodChip",
+        explodeParticle: ["woodPlank", "book"],
+        reflectBullets: false,
+        loot: [tierLoot("tier_world", 1, 1)],
+        map: { display: false, color: 0x663300, scale: 0.875 },
+        terrain: { grass: false, beach: true },
+        img: {
+            sprite: "map-courthouse-bookshelf.img",
+            residue: "map-drawers-res.img",
+            scale: 0.5,
+            alpha: 1,
+            tint: 0xffffff,
+            zIdx: 10,
+        },
+        sound: {
+            bullet: "wood_prop_bullet",
+            punch: "wood_prop_bullet",
+            explode: "drawers_break_01",
+            enter: "none",
+        },
+    };
+    return util.mergeDeep(ObstacleDef, params || {});
+}
 function createBunkerStairs<T extends BuildingDef>(e: Partial<T>): T {
     const t = {
         type: "building",
@@ -806,7 +839,7 @@ function createCourthouseChair<T extends ObstacleDef>(e: Partial<T>): T {
         type: "obstacle",
         obstacleType: "furniture",
         scale: { createMin: 1, createMax: 1, destroy: 0.85 },
-        collision: collider.createAabbExtents(v2.create(0, 0), v2.create(1.75, 6.2)),
+        collision: collider.createAabbExtents(v2.create(0, 0), v2.create(1.70, 1.70)),
         height: 0.5,
         collidable: true,
         destructible: true,
@@ -1749,6 +1782,39 @@ function createCourthouseTable<T extends ObstacleDef>(e: Partial<T>): T {
     };
     return util.mergeDeep(t, e || {});
 }
+function createCourthouseJudgeDesk<T extends ObstacleDef>(e: Partial<T>): T {
+    const t = {
+        type: "obstacle",
+        obstacleType: "furniture",
+        scale: { createMin: 1, createMax: 1, destroy: 0.75 },
+        collision: collider.createAabbExtents(v2.create(0, 0), v2.create(2.5, 1.9)),
+        height: 0.5,
+        collidable: false,
+        destructible: true,
+        health: 100,
+        hitParticle: "woodChip",
+        explodeParticle: "woodPlank",
+        reflectBullets: false,
+        loot: [],
+        map: { display: false, color: 0x663300, scale: 0.875 },
+        terrain: { grass: true, beach: true },
+        img: {
+            sprite: "map-courthouse-judge-desk.img",
+            residue: "map-table-res.img",
+            scale: 0.5,
+            alpha: 1,
+            tint: 0xffffff,
+            zIdx: 60,
+        },
+        sound: {
+            bullet: "wood_prop_bullet",
+            punch: "wood_prop_bullet",
+            explode: "crate_break_01",
+            enter: "none",
+        },
+    };
+    return util.mergeDeep(t, e || {});
+}
 function createToilet<T extends ObstacleDef>(e: Partial<T>): T {
     const t = {
         type: "obstacle",
@@ -1915,6 +1981,34 @@ function createColumn<T extends ObstacleDef>(e: Partial<T>): T {
         },
     };
     const material = e.material as keyof typeof MaterialDefs;
+    if (!MaterialDefs[material]) {
+        throw new Error(`Invalid material ${e.material}`);
+    }
+    return util.mergeDeep(t, MaterialDefs[material], e || {});
+}
+function createCourthouseDrawer<T extends ObstacleDef>(e: Partial<T>): T {
+    const t = {
+        type: "obstacle",
+        scale: { createMin: 1, createMax: 1, destroy: 1 },
+        collision: collider.createAabbExtents(v2.create(0, 0), v2.create(11, 1.75)),
+        height: 10,
+        collidable: true,
+        destructible: false,
+        health: e.health || 150,
+        hitParticle: "woodChip",
+        explodeParticle: "woodPlank",
+        reflectBullets: true,
+        loot: [],
+        map: { display: false },
+        img: {},
+        sound: {
+            bullet: "wall_bullet",
+            punch: "wall_bullet",
+            explode: "barrel_break_01",
+            enter: "none",
+        },
+    };
+    const material = "metal";
     if (!MaterialDefs[material]) {
         throw new Error(`Invalid material ${e.material}`);
     }
@@ -6407,28 +6501,26 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
             display: true,
             shapes: [
                 // View on the map
-                  {
+                {
                     collider: collider.createAabbExtents(
-                        v2.create(0,9),
+                        v2.create(0, 9),
                         v2.create(50, 27.5),
                     ),
                     color: 0xd2d4ac,
                 },
-                 {
+                {
                     collider: collider.createAabbExtents(
                         v2.create(0, -26.5),
                         v2.create(22, 8),
                     ),
-                    color: 0xA1A383,
+                    color: 0xa1a383,
                 },
             ],
         },
         terrain: { grass: true, beach: false },
         zIdx: 1,
         floor: {
-            surfaces: [
-              
-            ],
+            surfaces: [],
             imgs: [
                 {
                     sprite: "map-building-courthouse-floor.img",
@@ -6443,7 +6535,7 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
             zoomRegions: [
                 {
                     zoomIn: collider.createAabbExtents(
-                        v2.create(0,9),
+                        v2.create(0, 9),
                         v2.create(50, 27.5),
                     ),
                 },
@@ -6462,7 +6554,7 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
             },
             imgs: [
                 {
-                   // sprite: "map-building-courthouse-ceiling.img",
+                    // sprite: "map-building-courthouse-ceiling.img",
                     pos: v2.create(0, 0.75),
                     scale: 0.38,
                     alpha: 1,
@@ -6471,17 +6563,41 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
             ],
         },
         mapObjects: [
-             {
+            {
                 type: "house_door_01",
                 pos: v2.create(16.5, 2),
                 scale: 1,
                 ori: 3,
             },
-             {
+            {
                 type: "house_door_01",
                 pos: v2.create(16.5, 15),
                 scale: 1,
                 ori: 3,
+            },
+             {
+                type: "house_door_01",
+                pos: v2.create(40.5, 2),
+                scale: 1,
+                ori: 3,
+            },
+            {
+                type: "house_door_01",
+                pos: v2.create(40.5, 15),
+                scale: 1,
+                ori: 3,
+            },
+             {
+                type: "courthouse_door",
+                pos: v2.create(49, 10.75),
+                scale: 0.85,
+                ori: 2,
+            },
+            {
+                type: "courthouse_door",
+                pos: v2.create(-49.15, 30.65),
+                scale: 0.95,
+                ori: 2,
             },
             {
                 type: "concrete_wall_ext_26",
@@ -6489,7 +6605,7 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
                 scale: 1,
                 ori: 0,
             },
-             {
+            {
                 type: "concrete_wall_ext_27",
                 pos: v2.create(-49.15, 33.2),
                 scale: 1,
@@ -6501,7 +6617,7 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
                 scale: 1,
                 ori: 0,
             },
-             {
+            {
                 type: "concrete_wall_ext_29",
                 pos: v2.create(10.5, 35.5),
                 scale: 1,
@@ -6515,17 +6631,17 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
             },
             {
                 type: "concrete_wall_ext_31",
-                pos: v2.create(49.1,23.2),
+                pos: v2.create(49.1, 23.2),
                 scale: 1,
                 ori: 0,
             },
             {
                 type: "concrete_wall_ext_31",
-                pos: v2.create(49.1,-6.2),
+                pos: v2.create(49.1, -6.2),
                 scale: 1,
                 ori: 0,
             },
-             {
+            {
                 type: "concrete_wall_ext_32",
                 pos: v2.create(35.25, -18.3),
                 scale: 1,
@@ -6544,32 +6660,44 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
                 ori: 0,
             },
             {
+                type: "courthouse_window_small",
+                pos: v2.create(-18.4, -18.4),
+                scale: 0.8,
+                ori: 1,
+            },
+            {
+                type: "courthouse_window_small",
+                pos: v2.create(18.4, -18.4),
+                scale: 0.85,
+                ori: 1,
+            },
+            {
                 type: "concrete_wall_ext_34",
                 pos: v2.create(-35.25, -18.4),
                 scale: 1,
                 ori: 0,
             },
             //Court Area Interior Walls
-             {
+            {
                 type: "concrete_wall_int_01",
                 pos: v2.create(-11.25, -7.2),
                 scale: 1,
                 ori: 0,
             },
-             {
+            {
                 type: "concrete_wall_int_01",
                 pos: v2.create(-11.25, 24),
                 scale: 1,
                 ori: 0,
             },
             // Right Side Courthouse Interior Walls
-             {
+            {
                 type: "concrete_wall_int_02",
                 pos: v2.create(11.25, -8),
                 scale: 1,
                 ori: 0,
             },
-             {
+            {
                 type: "concrete_wall_int_02",
                 pos: v2.create(11.25, 25),
                 scale: 1,
@@ -6581,7 +6709,7 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
                 scale: 1,
                 ori: 0,
             },
-             {
+            {
                 type: "concrete_wall_int_03",
                 pos: v2.create(13.5, 14.75),
                 scale: 1,
@@ -6593,7 +6721,7 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
                 scale: 1,
                 ori: 0,
             },
-             {
+            {
                 type: "concrete_wall_int_04",
                 pos: v2.create(30.5, 14.75),
                 scale: 1,
@@ -6605,7 +6733,7 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
                 scale: 1,
                 ori: 0,
             },
-             {
+            {
                 type: "concrete_wall_int_05",
                 pos: v2.create(37.95, 12.65),
                 scale: 1,
@@ -6617,26 +6745,26 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
                 scale: 1,
                 ori: 0,
             },
-             {
+            {
                 type: "concrete_wall_int_06",
                 pos: v2.create(46.65, 14.7),
                 scale: 1,
                 ori: 0,
             },
-              {
+            {
                 type: "concrete_wall_int_07",
                 pos: v2.create(25.65, -8),
                 scale: 1,
                 ori: 0,
             },
-             {
+            {
                 type: "concrete_wall_int_07",
                 pos: v2.create(25.65, 25),
                 scale: 1,
                 ori: 0,
             },
             // Left Side Pillars
-             {
+            {
                 type: "concrete_column_ext_01",
                 pos: v2.create(-18.8, -25.8),
                 scale: 1,
@@ -6662,6 +6790,18 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
                 ori: 0,
             },
             {
+                type: "courthouse_main_door",
+                pos: v2.create(4, -18.4),
+                scale: 0.9,
+                ori: 1,
+            },
+             {
+                type: "courthouse_main_door",
+                pos: v2.create(-4, -18.4),
+                scale: 0.9,
+                ori: 3,
+            },
+            {
                 type: "concrete_column_ext_01",
                 pos: v2.create(4.15, -33.6),
                 scale: 1,
@@ -6673,14 +6813,14 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
                 scale: 1,
                 ori: 0,
             },
-            // Right Side
+            // Right Side Pillars
             {
                 type: "concrete_column_ext_01",
                 pos: v2.create(18.9, -33.6),
                 scale: 1,
                 ori: 0,
             },
-              {
+            {
                 type: "concrete_column_ext_01",
                 pos: v2.create(18.9, -25.8),
                 scale: 1,
@@ -6702,11 +6842,75 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
             },
             {
                 type: "couch_04",
+                pos: v2.create(-8.5, -7.5),
+                scale: 1,
+                ori: 2,
+            },
+            {
+                type: "bush_01",
+                pos: v2.create(-8.7, -15.7),
+                scale: 1,
+                ori: 0,
+                ignoreMapSpawnReplacement: true,
+            },
+            {
+                type: "courthouse_statue",
+                pos: v2.create(6, 16),
+                zIdx: 60,
+                alpha: 1,
+                tint: 0xffffff,
+                height: 3,
+                scale: 1,
+                ori: 0,
+            },
+            {
+                type: "courthouse_statue",
+                pos: v2.create(-6, 1),
+                scale: 1,
+                ori: 2,
+            },
+            {
+                type: "courthouse_statue_02",
+                pos: v2.create(-6, 16),
+                scale: 1,
+                ori: 0,
+            },
+            {
+                type: "courthouse_statue_02",
+                pos: v2.create(6, 1),
+                scale: 1,
+                ori: 2,
+            },
+            {
+                type: "courthouse_bookshelf",
+                pos: v2.create(31.5, 3.75),
+                scale: 1,
+                ori: 0,
+            },
+            {
+                type: "couch_04",
                 pos: v2.create(8.5, 25),
                 scale: 1,
                 ori: 0,
             },
-
+            {
+                type: "courthouse_bookshelf",
+                pos: v2.create(-9.5, 25),
+                scale: 1,
+                ori: 3,
+            },
+            {
+                type: "couch_04",
+                pos: v2.create(31.5, 12),
+                scale: 1,
+                ori: 1,
+            },
+            {
+                type: "bush_01",
+                pos: v2.create(46.1, 5),
+                scale: 1,
+                ori: 0,
+            },
             // Court Room
             {
                 type: "courthouse_bench",
@@ -6739,7 +6943,7 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
                 scale: 1,
                 ori: 0,
             },
-             {
+            {
                 type: "courthouse_fence",
                 pos: v2.create(-26, -4.5),
                 scale: 1,
@@ -6778,7 +6982,7 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
                 ori: 0,
             },
 
-             {
+            {
                 type: "courthouse_table",
                 pos: v2.create(-31.5, -5.4),
                 scale: 1,
@@ -6795,6 +6999,100 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
                 pos: v2.create(-28, -2),
                 scale: 1,
                 ori: 0,
+            },
+
+            // Judge Office
+            {
+                type: "courthouse_bookshelf",
+                pos: v2.create(24.2, -4),
+                scale: 1,
+                ori: 1,
+            },
+            {
+                type: "courthouse_bookshelf",
+                pos: v2.create(12.75, -4),
+                scale: 1,
+                ori: 3,
+            },
+            {
+                type: "courthouse_judge_desk",
+                pos: v2.create(18.5, -12),
+                scale: 0.9,
+                ori: 0,
+            },
+            {
+                type: "courthouse_judge_desk",
+                pos: v2.create(18.5, -12),
+                scale: 0.9,
+                ori: 0,
+            },
+            {
+                type: "courthouse_judge_desk_chair",
+                pos: v2.create(18.5, -16),
+                scale: 0.9,
+                ori: 0,
+            },
+            // Storage Bottom
+            {
+                type: "courthouse_metal_drawers",
+                pos: v2.create(36, -16.5),
+                scale: 0.9,
+                ori: 0,
+            },
+            {
+                type: "courthouse_metal_drawers_small",
+                pos: v2.create(37.3, -10.8),
+                scale: 0.9,
+                ori: 0,
+            },
+            {
+                type: "courthouse_metal_drawers_small",
+                pos: v2.create(37.3, -4.25),
+                scale: 0.9,
+                ori: 0,
+            },
+            {
+                type: "courthouse_metal_drawers",
+                pos: v2.create(27.2, -8),
+                scale: 0.9,
+                ori: 1,
+            },
+            {
+                type: "courthouse_metal_drawers",
+                pos: v2.create(47, -8),
+                scale: 0.9,
+                ori: 1,
+            },
+            // Storage Top
+            {
+                type: "courthouse_metal_drawers",
+                pos: v2.create(36, 33.9),
+                scale: 0.9,
+                ori: 0,
+            },
+            {
+                type: "courthouse_metal_drawers_small",
+                pos: v2.create(37.3, 21.25),
+                scale: 0.9,
+                ori: 0,
+            },
+            {
+                type: "courthouse_metal_drawers_small",
+                pos: v2.create(37.3, 27.75),
+                scale: 0.9,
+                ori: 0,
+            },
+            {
+                type: "courthouse_metal_drawers",
+                pos: v2.create(27.2, 25),
+                scale: 0.9,
+                ori: 1,
+            },
+            {
+                type: "courthouse_metal_drawers",
+                pos: v2.create(47, 25),
+                scale: 0.9,
+                ori: 1,
             },
         ],
     };
@@ -9155,6 +9453,7 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
         img: { sprite: "map-bookshelf-02.img" },
         loot: [tierLoot("tier_soviet", 2, 3)],
     }),
+    courthouse_bookshelf: createCourthouseBookshelf({}),
     bush_01: createBush({}),
     bush_01b: createBush({ img: { alpha: 1 } }),
     bush_01cb: createBush({
@@ -9524,6 +9823,9 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
     courthouse_bench: createCourthouseBench({}),
     courthouse_fence: createCourthouseFence({}),
     courthouse_chair: createCourthouseChair({}),
+    courthouse_judge_desk_chair: createCourthouseChair({
+        img: { sprite: "map-courthouse-judge-desk-chair.img"}
+    }),
     crate_01: createCrate({}),
     crate_01x: createCrate({ img: { sprite: "map-crate-01x.img" } }),
     crate_02: createCrate({
@@ -11102,6 +11404,7 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
         },
     }),
     courthouse_table: createCourthouseTable({}),
+    courthouse_judge_desk: createCourthouseJudgeDesk({}),
     table_01: createTable({}),
     table_01x: createTable({ img: { sprite: "map-table-01x.img" } }),
     table_02: createTable({
@@ -11741,6 +12044,22 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
             enter: "none",
         },
     },
+    courthouse_door: createDoor({
+        material: "wood",
+        img: {
+            sprite: "map-courthouse-door.img",
+        },
+        hinge: v2.create(0, 2),
+        extents: v2.create(0.3, 2),
+    }),
+     courthouse_main_door: createDoor({
+        material: "wood",
+        img: {
+            sprite: "map-courthouse-main-door.img",
+        },
+        hinge: v2.create(0, 2),
+        extents: v2.create(0.3, 2),
+    }),
     house_door_01: createDoor({
         material: "wood",
         hinge: v2.create(0, 2),
@@ -11846,6 +12165,19 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
     lab_window_01: createWindow({
         destroyType: "lab_window_broken_01",
     }),
+    courthouse_window_small: createWindow({
+        img: {
+            sprite:  "map-courthouse-window-small.img"
+        },
+        destroyType: "courthouse_window_small_broken",
+    }),
+    courthouse_window_small_broken: createLowWall({ 
+        img: { 
+            sprite: "map-courthouse-window-small-res-01.img",
+            tint: 0x14161b,
+            scale: 0.41
+        },
+     }),
     lab_window_broken_01: createLowWall({ img: { tint: 0x14161b } }),
     container_05_collider: createWall({
         material: "metal",
@@ -15524,6 +15856,20 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
             },
         ],
     },
+    courthouse_statue: createStone({
+        scale: { createMin: 1, createMax: 1, destroy: 0.5 },
+        collision: collider.createCircle(v2.create(1.6, 0), 2.5),
+        destructible: false,
+        map: { display: true, color: 0x575757, scale: 1 },
+        img: { sprite: "map-courthouse-statue.img", scale: 0.5 },
+    }),
+    courthouse_statue_02: createStone({
+        scale: { createMin: 1, createMax: 1, destroy: 0.5 },
+        collision: collider.createCircle(v2.create(-1.6, 0), 2.5),
+        destructible: false,
+        map: { display: true, color: 0x575757, scale: 1 },
+        img: { sprite: "map-courthouse-statue-02.img", scale: 0.5 },
+    }),
     statue_01: createStone({
         scale: { createMin: 1, createMax: 1, destroy: 0.5 },
         collision: collider.createAabbExtents(v2.create(0, 0), v2.create(4.4, 4.4)),
@@ -17075,11 +17421,11 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
         material: "concrete",
         extents: v2.create(0.5, 12.5),
     }),
-     concrete_wall_ext_26: createWall({
+    concrete_wall_ext_26: createWall({
         material: "concrete",
         extents: v2.create(0.6, 22),
     }),
-     concrete_wall_ext_27: createWall({
+    concrete_wall_ext_27: createWall({
         material: "concrete",
         extents: v2.create(0.6, 2.5),
     }),
@@ -17097,9 +17443,9 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
     }),
     concrete_wall_ext_31: createWall({
         material: "concrete",
-        extents: v2.create( 0.6, 12.5),
+        extents: v2.create(0.6, 12.5),
     }),
-     concrete_wall_ext_32: createWall({
+    concrete_wall_ext_32: createWall({
         material: "concrete",
         extents: v2.create(14.5, 0.4),
     }),
@@ -17136,11 +17482,15 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
         extents: v2.create(2, 0.4),
     }),
     concrete_wall_int_07: createWall({
-       material: "concrete",
+        material: "concrete",
         extents: v2.create(0.35, 10.5),
     }),
     concrete_column_ext_01: createColumn({
         material: "concrete",
+    }),
+    courthouse_metal_drawers: createCourthouseDrawer({}),
+    courthouse_metal_drawers_small: createCourthouseDrawer({
+         collision: collider.createAabbExtents(v2.create(0, 0), v2.create(5.25, 1.75)),
     }),
     concrete_wall_column_4x8: createWall({
         material: "concrete",

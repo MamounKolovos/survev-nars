@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="111.1086mm"
+   height="36.716728mm"
+   viewBox="0 0 111.1086 36.716728"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   sodipodi:docname="map-courthouse-drawer-row.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.187507"
+     inkscape:cx="209.68297"
+     inkscape:cy="69.473274"
+     inkscape:window-width="3840"
+     inkscape:window-height="1529"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-49.477062,-130.175)">
+    <g
+       id="g2"
+       transform="rotate(180,681.87253,340.49502)">
+      <rect
+         style="fill:#6c6b68;fill-opacity:1;stroke:#191918;stroke-width:2.99855;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+         id="rect26-3-3-2"
+         width="108.11003"
+         height="28.162933"
+         x="1204.6587"
+         y="518.37518" />
+      <path
+         d="m 1238.4962,514.09831 v 36.71671 h 3.3155 v -36.71671 z"
+         style="fill:#191918;stroke-width:2.81587;paint-order:stroke fill markers"
+         id="path31-4-3-7-1-2-8" />
+      <path
+         d="m 1274.168,514.09831 v 36.71671 h 3.3155 v -36.71671 z"
+         style="fill:#191918;stroke-width:2.81587;paint-order:stroke fill markers"
+         id="path31-4-3-7-2-7-32-2-9" />
+      <path
+         d="m 1203.1594,514.09831 v 36.71673 h 3.3155 v -36.71673 z"
+         style="fill:#191918;stroke-width:2.81587;paint-order:stroke fill markers"
+         id="path31-4-3-7-1-2-4-5-3-3" />
+      <path
+         d="m 1310.9148,514.09831 v 36.71672 h 3.3155 v -36.71672 z"
+         style="fill:#191918;stroke-width:2.81587;paint-order:stroke fill markers"
+         id="path31-4-3-7-2-7-32-2-4-2-2-9" />
+    </g>
+  </g>
+</svg>
