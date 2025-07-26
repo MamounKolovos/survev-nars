@@ -6662,12 +6662,42 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
             {
                 type: "courthouse_window_small",
                 pos: v2.create(-18.4, -18.4),
-                scale: 0.8,
+                scale: 0.9,
                 ori: 1,
             },
             {
                 type: "courthouse_window_small",
-                pos: v2.create(18.4, -18.4),
+                pos: v2.create(18.35, -18.4),
+                scale: 0.9,
+                ori: 1,
+            },
+             {
+                type: "courthouse_window_small",
+                pos: v2.create(18.35, 35.6),
+                scale: 0.9,
+                ori: 1,
+            },
+             {
+                type: "courthouse_table",
+                pos: v2.create(18.35, 30),
+                scale: 0.9,
+                ori: 1,
+            },
+            {
+                type: "courthouse_table",
+                pos: v2.create(18.35, 23),
+                scale: 0.9,
+                ori: 1,
+            },
+            {
+                type: "stand_01",
+                pos: v2.create(13.4, 16.75),
+                scale: 1,
+                ori: 1,
+            },
+            {
+                type: "courthouse_window_large",
+                pos: v2.create(0, 35.6),
                 scale: 0.85,
                 ori: 1,
             },
@@ -6893,6 +6923,18 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
                 scale: 1,
                 ori: 0,
             },
+             {
+                type: "stand_01",
+                pos: v2.create(8.5, 32.5),
+                scale: 1,
+                ori: 3,
+            },
+             {
+                type: "bush_01",
+                pos: v2.create(-8.5, 32.5),
+                scale: 1,
+                ori: 3,
+            },
             {
                 type: "courthouse_bookshelf",
                 pos: v2.create(-9.5, 25),
@@ -6904,6 +6946,12 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
                 pos: v2.create(31.5, 12),
                 scale: 1,
                 ori: 1,
+            },
+            {
+                type: "stand_01",
+                pos: v2.create(24, 12),
+                scale: 1,
+                ori: 0,
             },
             {
                 type: "bush_01",
@@ -12176,6 +12224,22 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
             sprite: "map-courthouse-window-small-res-01.img",
             tint: 0x14161b,
             scale: 0.41
+        },
+     }),
+     courthouse_window_large: createWindow({
+        collision: collider.createAabbExtents(v2.create(0, 0), v2.create(0.5, 4.5)),
+        health: 100,
+        img: {
+            sprite:  "map-courthouse-window-large.img"
+        },
+        destroyType: "courthouse_window_large_broken",
+    }),
+    courthouse_window_large_broken: createLowWall({ 
+        collision: collider.createAabbExtents(v2.create(0, 0), v2.create(0.5, 4.5)),
+        img: { 
+            sprite: "map-courthouse-window-large-res-01.img",
+            tint: 0x14161b,
+            scale: 0.44
         },
      }),
     lab_window_broken_01: createLowWall({ img: { tint: 0x14161b } }),
