@@ -341,7 +341,9 @@ export function attachLootPingNotification(
             .filter(
                 (obj): obj is Loot =>
                     obj.__type == ObjectType.Loot &&
-                    obj.layer === player.layer &&
+                    (obj.layer === player.layer ||
+                        obj.layer === 2 ||
+                        player.layer === 2) &&
                     v2.distance(pos, obj.pos) < maxPingToItemDist,
             );
         if (objs.length === 0) return;
