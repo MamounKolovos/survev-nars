@@ -227,8 +227,9 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
     player.addPerk("endless_ammo");
 
     player.weapons[3].type = "frag";
-    player.inventory["frag"] = 2;
-    player.inventory["smoke"] = 2;
+    player.inventory["frag"] = 1;
+    player.inventory["smoke"] = 1;
+    player.inventory["mirv"] = 1;
 
     player.boostDirty = true;
     player.zoomDirty = true;
@@ -449,7 +450,7 @@ export default class focedLootPlugin extends GamePlugin {
             firstMovingZone: 4,
             stationaryZoneRadiusMultiplier: 0.55,
             movingZoneRadiusMultiplier: 0.7,
-            damages: [2, 4, 5, 6, 8, 10],
+            damages: [3, 4, 6, 7, 10],
             initWaitTime: 60,
             minWaitTime: 20,
             waitTimeDecrement: 15,
