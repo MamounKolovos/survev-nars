@@ -87,14 +87,14 @@ const mapDef: PartialMapDef = {
                 // tree_02: 3,
                 teahouse_complex_01su: 1,
                 stone_04: 0,
-                mansion_structure_01: 1,
+                // mansion_structure_01: 1,
                 // club_complex_01: 1,
             },
         ],
         randomSpawns: [
             {
-                spawns: ["police_01", "bank_01"],
-                choose: 1,
+                spawns: ["police_01", "bank_01", "courthouse_01", "  mansion_structure_01"],
+                choose: 2,
             },
         ],
     },
