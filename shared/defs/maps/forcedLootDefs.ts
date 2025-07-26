@@ -25,8 +25,8 @@ const mapDef: PartialMapDef = {
     },
     mapGen: {
         map: {
-            baseWidth: 272,
-            baseHeight: 272,
+            baseWidth: 256,
+            baseHeight: 256,
             scale: { small: 1.0, large: 1.0 },
             shoreInset: 10,
             grassInset: 10,
@@ -100,9 +100,9 @@ const mapDef: PartialMapDef = {
                     "police_01",
                     "bank_01",
                     "courthouse_01",
-                    "  mansion_structure_01",
+                    "mansion_structure_01",
                 ],
-                choose: 2,
+                choose: 1,
             },
         ],
     },
