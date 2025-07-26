@@ -51,7 +51,7 @@ const mapDef: PartialMapDef = {
                 shack_01: 3,
                 outhouse_01: 5, 
                 loot_tier_1: 0,*/
-                loot_tier_beach: 0, 
+                loot_tier_beach: 0,
             },
         ],
         fixedSpawns: [

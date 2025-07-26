@@ -839,7 +839,7 @@ function createCourthouseChair<T extends ObstacleDef>(e: Partial<T>): T {
         type: "obstacle",
         obstacleType: "furniture",
         scale: { createMin: 1, createMax: 1, destroy: 0.85 },
-        collision: collider.createAabbExtents(v2.create(0, 0), v2.create(1.70, 1.70)),
+        collision: collider.createAabbExtents(v2.create(0, 0), v2.create(1.7, 1.7)),
         height: 0.5,
         collidable: true,
         destructible: true,
@@ -6520,7 +6520,7 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
         terrain: { grass: true, beach: false },
         zIdx: 1,
         floor: {
-             surfaces: [
+            surfaces: [
                 {
                     type: "stone",
                     collision: [
@@ -6533,31 +6533,16 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
                 {
                     type: "tile",
                     collision: [
-                        collider.createAabbExtents(
-                            v2.create(0, 9),
-                            v2.create(10, 27),
-                        ),
-                        collider.createAabbExtents(
-                            v2.create(24, 8),
-                            v2.create(25, 6),
-                        ),
+                        collider.createAabbExtents(v2.create(0, 9), v2.create(10, 27)),
+                        collider.createAabbExtents(v2.create(24, 8), v2.create(25, 6)),
                     ],
                 },
                 {
                     type: "carpet",
                     collision: [
-                        collider.createAabbExtents(
-                            v2.create(-29, 9),
-                            v2.create(20, 27),
-                        ),
-                        collider.createAabbExtents(
-                            v2.create(30, 25),
-                            v2.create(19, 9.5),
-                        ),
-                         collider.createAabbExtents(
-                            v2.create(30, -8),
-                            v2.create(19, 9.5),
-                        ),
+                        collider.createAabbExtents(v2.create(-29, 9), v2.create(20, 27)),
+                        collider.createAabbExtents(v2.create(30, 25), v2.create(19, 9.5)),
+                        collider.createAabbExtents(v2.create(30, -8), v2.create(19, 9.5)),
                     ],
                 },
             ],
@@ -6615,7 +6600,7 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
                 scale: 1,
                 ori: 3,
             },
-             {
+            {
                 type: "house_door_01",
                 pos: v2.create(40.5, 2),
                 scale: 1,
@@ -6627,7 +6612,7 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
                 scale: 1,
                 ori: 3,
             },
-             {
+            {
                 type: "courthouse_door",
                 pos: v2.create(49, 10.75),
                 scale: 0.85,
@@ -6652,13 +6637,13 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
                 ori: 0,
             },
             // Judge Area
-             {
+            {
                 type: "courthouse_judge_desk_chair",
                 pos: v2.create(-43.5, 9.25),
                 scale: 1,
                 ori: 3,
             },
-             {
+            {
                 type: "courthouse_chair",
                 pos: v2.create(-45, 4.25),
                 scale: 1,
@@ -6752,13 +6737,13 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
                 scale: 0.9,
                 ori: 1,
             },
-             {
+            {
                 type: "courthouse_window_small",
                 pos: v2.create(18.35, 35.6),
                 scale: 0.9,
                 ori: 1,
             },
-             {
+            {
                 type: "courthouse_table",
                 pos: v2.create(18.35, 30),
                 scale: 0.9,
@@ -6906,7 +6891,7 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
                 scale: 0.9,
                 ori: 1,
             },
-             {
+            {
                 type: "courthouse_main_door",
                 pos: v2.create(-4, -18.4),
                 scale: 0.9,
@@ -7004,13 +6989,13 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
                 scale: 1,
                 ori: 0,
             },
-             {
+            {
                 type: "stand_01",
                 pos: v2.create(8.5, 32.5),
                 scale: 1,
                 ori: 3,
             },
-             {
+            {
                 type: "bush_01",
                 pos: v2.create(-8.5, 32.5),
                 scale: 1,
@@ -9953,7 +9938,7 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
     courthouse_fence: createCourthouseFence({}),
     courthouse_chair: createCourthouseChair({}),
     courthouse_judge_desk_chair: createCourthouseChair({
-        img: { sprite: "map-courthouse-judge-desk-chair.img"}
+        img: { sprite: "map-courthouse-judge-desk-chair.img" },
     }),
     crate_01: createCrate({}),
     crate_01x: createCrate({ img: { sprite: "map-crate-01x.img" } }),
@@ -12181,7 +12166,7 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
         hinge: v2.create(0, 2),
         extents: v2.create(0.3, 2),
     }),
-     courthouse_main_door: createDoor({
+    courthouse_main_door: createDoor({
         material: "wood",
         img: {
             sprite: "map-courthouse-main-door.img",
@@ -12296,33 +12281,33 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
     }),
     courthouse_window_small: createWindow({
         img: {
-            sprite:  "map-courthouse-window-small.img"
+            sprite: "map-courthouse-window-small.img",
         },
         destroyType: "courthouse_window_small_broken",
     }),
-    courthouse_window_small_broken: createLowWall({ 
-        img: { 
+    courthouse_window_small_broken: createLowWall({
+        img: {
             sprite: "map-courthouse-window-small-res-01.img",
             tint: 0x14161b,
-            scale: 0.41
+            scale: 0.41,
         },
-     }),
-     courthouse_window_large: createWindow({
+    }),
+    courthouse_window_large: createWindow({
         collision: collider.createAabbExtents(v2.create(0, 0), v2.create(0.5, 4.5)),
         health: 100,
         img: {
-            sprite:  "map-courthouse-window-large.img"
+            sprite: "map-courthouse-window-large.img",
         },
         destroyType: "courthouse_window_large_broken",
     }),
-    courthouse_window_large_broken: createLowWall({ 
+    courthouse_window_large_broken: createLowWall({
         collision: collider.createAabbExtents(v2.create(0, 0), v2.create(0.5, 4.5)),
-        img: { 
+        img: {
             sprite: "map-courthouse-window-large-res-01.img",
             tint: 0x14161b,
-            scale: 0.44
+            scale: 0.44,
         },
-     }),
+    }),
     lab_window_broken_01: createLowWall({ img: { tint: 0x14161b } }),
     container_05_collider: createWall({
         material: "metal",
@@ -17635,7 +17620,7 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
     }),
     courthouse_metal_drawers: createCourthouseDrawer({}),
     courthouse_metal_drawers_small: createCourthouseDrawer({
-         collision: collider.createAabbExtents(v2.create(0, 0), v2.create(5.25, 1.75)),
+        collision: collider.createAabbExtents(v2.create(0, 0), v2.create(5.25, 1.75)),
     }),
     concrete_wall_column_4x8: createWall({
         material: "concrete",

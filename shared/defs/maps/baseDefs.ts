@@ -587,8 +587,8 @@ export const Main: MapDef = {
         ],
         randomSpawns: [
             {
-                spawns: ["mansion_structure_01", "police_01", "bank_01"],
-                choose: 4,
+                spawns: ["mansion_structure_01", "police_01", "bank_01", "courthouse_01"],
+                choose: 3,
             },
         ],
         spawnReplacements: [{}],
