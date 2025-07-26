@@ -6594,8 +6594,8 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
             },
             imgs: [
                 {
-                    // sprite: "map-building-courthouse-ceiling.img",
-                    pos: v2.create(0, 0.75),
+                    sprite: "map-building-courthouse-ceiling.img",
+                    pos: v2.create(0, 0.5),
                     scale: 0.38,
                     alpha: 1,
                     tint: 0xffffff,
@@ -6651,6 +6651,47 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
                 scale: 1,
                 ori: 0,
             },
+            // Judge Area
+             {
+                type: "courthouse_judge_desk_chair",
+                pos: v2.create(-43.5, 9.25),
+                scale: 1,
+                ori: 3,
+            },
+             {
+                type: "courthouse_chair",
+                pos: v2.create(-45, 4.25),
+                scale: 1,
+                ori: 2,
+            },
+            {
+                type: "courthouse_chair",
+                pos: v2.create(-45, 14.25),
+                scale: 1,
+                ori: 2,
+            },
+
+            // Juror Area
+            {
+                type: "courthouse_chair",
+                pos: v2.create(-46, -14),
+                scale: 1,
+                ori: 3,
+            },
+            {
+                type: "courthouse_chair",
+                pos: v2.create(-41.5, -14),
+                scale: 1,
+                ori: 3,
+            },
+            {
+                type: "courthouse_chair",
+                pos: v2.create(-37, -14),
+                scale: 1,
+                ori: 3,
+            },
+
+            // Other exterior Walls
             {
                 type: "concrete_wall_ext_28",
                 pos: v2.create(-27.4, 35.5),
@@ -15965,14 +16006,14 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
         collision: collider.createCircle(v2.create(1.6, 0), 2.5),
         destructible: false,
         map: { display: true, color: 0x575757, scale: 1 },
-        img: { sprite: "map-courthouse-statue.img", scale: 0.5 },
+        img: { sprite: "map-courthouse-statue.img", scale: 0.5, zIdx: 60 },
     }),
     courthouse_statue_02: createStone({
         scale: { createMin: 1, createMax: 1, destroy: 0.5 },
         collision: collider.createCircle(v2.create(-1.6, 0), 2.5),
         destructible: false,
         map: { display: true, color: 0x575757, scale: 1 },
-        img: { sprite: "map-courthouse-statue-02.img", scale: 0.5 },
+        img: { sprite: "map-courthouse-statue-02.img", scale: 0.5, zIdx: 60 },
     }),
     statue_01: createStone({
         scale: { createMin: 1, createMax: 1, destroy: 0.5 },

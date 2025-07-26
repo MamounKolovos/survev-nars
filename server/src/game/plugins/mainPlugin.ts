@@ -21,7 +21,7 @@ import {
     tierLoot,
 } from "./internalUtils";
 
-const GRACE_PERIOD = 1;
+const GRACE_PERIOD = 15;
 const CUSTOM_SWITCH_DELAY = 0.205;
 
 const obstacleToLoot: Record<string, LootSpawnDef[]> = {
@@ -38,7 +38,7 @@ export default class MainPlugin extends GamePlugin {
 
         attachTimerManagerUpdate(this);
 
-        attachGracePeriod(this, GRACE_PERIOD, GRACE_PERIOD, 1);
+        attachGracePeriod(this, GRACE_PERIOD, GRACE_PERIOD, 5);
 
         attachMovingGas(this, {
             firstMovingZone: 4,
@@ -119,8 +119,6 @@ export default class MainPlugin extends GamePlugin {
                     player.helmet = "helmet03";
                     player.inventory["2xscope"] = 1;
                     player.inventory["4xscope"] = 1;
-                    player.inventory["15xscope"] = 1;
-                    player.scope = "15xscope";
                     player.boost = 100;
 
                     player.weaponManager.setWeapon(0, "spas12", 6);
