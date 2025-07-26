@@ -25,13 +25,16 @@ const mapDef: PartialMapDef = {
     },
     mapGen: {
         map: {
-            baseWidth: 256,
-            baseHeight: 256,
+            baseWidth: 272,
+            baseHeight: 272,
             scale: { small: 1.0, large: 1.0 },
             shoreInset: 10,
             grassInset: 10,
             rivers: {
-                weights: [{ weight: 1, widths: [] }],
+                weights: [
+                    { weight: 0.5, widths: [4] },
+                    { weight: 0.5, widths: [8] },
+                ],
             },
         },
         customSpawnRules: {
@@ -39,7 +42,7 @@ const mapDef: PartialMapDef = {
         },
         densitySpawns: [
             {
-                stone_01: 650,
+                stone_01: 500,
                 barrel_01: 5,
                 silo_01: 3,
                 crate_01: 0,
