@@ -6520,7 +6520,47 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
         terrain: { grass: true, beach: false },
         zIdx: 1,
         floor: {
-            surfaces: [],
+             surfaces: [
+                {
+                    type: "stone",
+                    collision: [
+                        collider.createAabbExtents(
+                            v2.create(0, -27),
+                            v2.create(22.25, -8),
+                        ),
+                    ],
+                },
+                {
+                    type: "tile",
+                    collision: [
+                        collider.createAabbExtents(
+                            v2.create(0, 9),
+                            v2.create(10, 27),
+                        ),
+                        collider.createAabbExtents(
+                            v2.create(24, 8),
+                            v2.create(25, 6),
+                        ),
+                    ],
+                },
+                {
+                    type: "carpet",
+                    collision: [
+                        collider.createAabbExtents(
+                            v2.create(-29, 9),
+                            v2.create(20, 27),
+                        ),
+                        collider.createAabbExtents(
+                            v2.create(30, 25),
+                            v2.create(19, 9.5),
+                        ),
+                         collider.createAabbExtents(
+                            v2.create(30, -8),
+                            v2.create(19, 9.5),
+                        ),
+                    ],
+                },
+            ],
             imgs: [
                 {
                     sprite: "map-building-courthouse-floor.img",
