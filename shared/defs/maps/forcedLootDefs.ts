@@ -27,14 +27,15 @@ const mapDef: PartialMapDef = {
         map: {
             baseWidth: 256,
             baseHeight: 256,
-            scale: { small: 1.0, large: 1.0 },
+            scale: { small: 1.3, large: 1.3 },
             shoreInset: 10,
             grassInset: 10,
             rivers: {
                 weights: [
-                    { weight: 0.5, widths: [4] },
-                    { weight: 0.5, widths: [8] },
+                    { weight: 1, widths: [4] },
+                    // { weight: 1, widths: [8] },
                 ],
+                spawnCabins: true,
             },
         },
         customSpawnRules: {
@@ -42,7 +43,7 @@ const mapDef: PartialMapDef = {
         },
         densitySpawns: [
             {
-                stone_01: 500,
+                stone_01: 650,
                 barrel_01: 5,
                 silo_01: 3,
                 crate_01: 0,
@@ -90,7 +91,7 @@ const mapDef: PartialMapDef = {
                 // tree_02: 3,
                 teahouse_complex_01su: 1,
                 stone_04: 0,
-                // mansion_structure_01: 1,
+                mansion_structure_01: 1,
                 // club_complex_01: 1,
             },
         ],
@@ -100,7 +101,7 @@ const mapDef: PartialMapDef = {
                     "police_01",
                     "bank_01",
                     "courthouse_01",
-                    "mansion_structure_01",
+                    "club_complex_01",
                 ],
                 choose: 1,
             },
