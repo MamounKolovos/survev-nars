@@ -104,8 +104,8 @@ class Device {
             window.innerWidth > window.innerHeight ||
             window.orientation == 90 ||
             window.orientation == -90;
-        this.screenWidth = window.innerWidth;
-        this.screenHeight = window.innerHeight;
+        this.screenWidth = Math.round(window.innerWidth * window.devicePixelRatio);
+        this.screenHeight = Math.round(window.innerHeight * window.devicePixelRatio);
         const layoutDim = this.isLandscape ? this.screenWidth : this.screenHeight;
         this.uiLayout =
             this.mobile || layoutDim <= 850 || (layoutDim <= 900 && this.pixelRatio >= 3)

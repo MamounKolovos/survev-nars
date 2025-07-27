@@ -429,16 +429,7 @@ export class Game {
         this.m_camera.m_pos = v2.copy(this.m_activePlayer.m_visualPos);
         this.m_camera.m_applyShake();
         const zoom = this.m_activePlayer.m_getZoom();
-
-        const minDim = math.min(
-            this.m_camera.m_screenWidth,
-            this.m_camera.m_screenHeight,
-        );
-        const maxDim = math.max(
-            this.m_camera.m_screenWidth,
-            this.m_camera.m_screenHeight,
-        );
-        const maxScreenDim = math.max(minDim * (16 / 9), maxDim);
+        const maxScreenDim = Math.max(this.m_camera.m_screenWidth, this.m_camera.m_screenHeight * 16 / 9);
         this.m_camera.m_targetZoom = (maxScreenDim * 0.5) / (zoom * this.m_camera.m_ppu);
         const zoomLerpIn = this.m_activePlayer.zoomFast ? 3 : 2;
         const zoomLerpOut = this.m_activePlayer.zoomFast ? 3 : 1.4;
