@@ -141,6 +141,7 @@ export default class MainPlugin extends GamePlugin {
                     player.helmet = "helmet03";
                     player.inventory["2xscope"] = 1;
                     player.inventory["4xscope"] = 1;
+                
                     player.scope = "4xscope";
                     player.boost = 110;
 

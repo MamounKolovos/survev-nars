@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="29.869289mm"
+   height="35.739853mm"
+   viewBox="0 0 29.869289 35.739853"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   sodipodi:docname="map-courthouse-chair.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.187507"
+     inkscape:cx="56.420719"
+     inkscape:cy="66.946973"
+     inkscape:window-width="3840"
+     inkscape:window-height="1529"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-89.958347,-130.70419)">
+    <g
+       id="g6-3"
+       transform="rotate(180,411.80966,335.36992)">
+      <rect
+         style="fill:#77461b;fill-opacity:1;stroke:#000000;stroke-width:2.26576;stroke-linecap:round;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+         id="rect65-9-4"
+         width="25.837385"
+         height="19.630692"
+         x="-534.86505"
+         y="710.58215"
+         transform="rotate(-90)" />
+      <rect
+         style="fill:#83542d;fill-opacity:1;stroke:#000000;stroke-width:2.39051;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+         id="rect66-0-4"
+         width="33.349342"
+         height="6.1630192"
+         x="-538.84039"
+         y="704.98694"
+         transform="rotate(-90)" />
+      <rect
+         style="fill:#83542d;fill-opacity:1;stroke:#000000;stroke-width:2.4502;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+         id="rect67-0-6"
+         width="5.1357999"
+         height="19.898886"
+         x="-537.43304"
+         y="712.53699"
+         transform="rotate(-90)" />
+      <rect
+         style="fill:#83542d;fill-opacity:1;stroke:#000000;stroke-width:2.4502;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+         id="rect67-8-6-0"
+         width="5.1357999"
+         height="19.89888"
+         x="-511.59549"
+         y="712.53699"
+         transform="rotate(-90)" />
+    </g>
+  </g>
+</svg>

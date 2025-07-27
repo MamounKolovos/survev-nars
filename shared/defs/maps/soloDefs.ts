@@ -27,16 +27,15 @@ const mapDef: PartialMapDef = {
             locationSpawns: [
                 {
                     type: "club_complex_01",
-                    pos: v2.create(0.3, 0.3),
-                    rad: 80,
+                    pos: v2.create(25, 25),
                     retryOnFailure: true,
                 },
             ],
         },
         densitySpawns: [
             {
-                stone_01: 1000,
-                barrel_01: 5,
+                stone_01: 675,
+                /*barrel_01: 5,
                 silo_01: 2,
                 crate_01: 0,
                 crate_02: 0,
@@ -50,8 +49,8 @@ const mapDef: PartialMapDef = {
                 container_03: 4,
                 container_04: 3,
                 shack_01: 3,
-                outhouse_01: 5,
-                loot_tier_1: 0,
+                outhouse_01: 5, 
+                loot_tier_1: 0,*/
                 loot_tier_beach: 0,
             },
         ],
