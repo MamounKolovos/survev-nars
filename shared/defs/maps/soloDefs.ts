@@ -27,8 +27,8 @@ const mapDef: PartialMapDef = {
             locationSpawns: [
                 {
                     type: "courthouse_01",
-                    pos: v2.create(0.3, 0.3),
-                    rad:80,
+                    pos: v2.create(0.4, 0.4),
+                    rad:10,
                     retryOnFailure: true,
                 },
             ],
