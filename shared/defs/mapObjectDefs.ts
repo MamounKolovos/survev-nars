@@ -6561,7 +6561,7 @@ function createCourtHouse<T extends BuildingDef>(e: Partial<T>): T {
                 {
                     zoomIn: collider.createAabbExtents(
                         v2.create(0, 9),
-                        v2.create(50, 27.5),
+                        v2.create(47.5, 25),
                     ),
                 },
                 {
@@ -12163,8 +12163,8 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
         img: {
             sprite: "map-courthouse-door.img",
         },
-        hinge: v2.create(0, 2),
-        extents: v2.create(0.3, 2),
+        hinge: v2.create(0.2, 2.7),
+        extents: v2.create(0.3, 2.8),
     }),
     courthouse_main_door: createDoor({
         material: "wood",
@@ -18511,7 +18511,7 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
     }),
     police_01: createPoliceStation({ teamId: 2 }),
     courthouse_01: createCourtHouse({ teamId: 2 }),
-    police_01x: createPoliceStation({
+   police_01x: createPoliceStation({
         ceiling: {
             imgs: [
                 {
