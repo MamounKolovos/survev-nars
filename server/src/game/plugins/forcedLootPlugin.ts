@@ -466,7 +466,7 @@ export default class focedLootPlugin extends GamePlugin {
             giveEveryoneFairLoot(this.game);
         });
 
-        attachLocationRevealer(this, 3);
+        attachLocationRevealer(this, 10);
 
         this.on("obstacleDidGenerate", (event) => {
             const obs = event.data.obstacle;
