@@ -28,7 +28,7 @@ const mapDef: PartialMapDef = {
                 {
                     type: "courthouse_01",
                     pos: v2.create(0.4, 0.4),
-                    rad:10,
+                    rad: 10,
                     retryOnFailure: true,
                 },
             ],
@@ -50,7 +50,7 @@ const mapDef: PartialMapDef = {
                 container_03: 4,
                 container_04: 3,
                 shack_01: 3,
-                outhouse_01: 5, 
+                outhouse_01: 5,
                 loot_tier_1: 0,
                 loot_tier_beach: 0,
             },

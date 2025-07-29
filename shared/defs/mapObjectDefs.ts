@@ -18511,7 +18511,7 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
     }),
     police_01: createPoliceStation({ teamId: 2 }),
     courthouse_01: createCourtHouse({ teamId: 2 }),
-   police_01x: createPoliceStation({
+    police_01x: createPoliceStation({
         ceiling: {
             imgs: [
                 {
