@@ -17,6 +17,7 @@ import {
     attachDonutSpawner,
     attachGracePeriod,
     attachKillRewards,
+    attachLocationRevealer,
     attachLootDisabler,
     attachLootPingNotification,
     attachMovingGas,
@@ -464,6 +465,8 @@ export default class focedLootPlugin extends GamePlugin {
         this.on("gameStarted", (event) => {
             giveEveryoneFairLoot(this.game);
         });
+
+        attachLocationRevealer(this, 3);
 
         this.on("obstacleDidGenerate", (event) => {
             const obs = event.data.obstacle;

@@ -13,6 +13,7 @@ import { math } from "../../../../shared/utils/math";
 import { assert, util } from "../../../../shared/utils/util";
 import { type Vec2, v2 } from "../../../../shared/utils/v2";
 import { type TimerManager, createSimpleSegment } from "../../utils/pluginUtils";
+import type { Game } from "../game";
 import type { GameMap } from "../map";
 import type { Gas } from "../objects/gas";
 import type { Loot } from "../objects/loot";
@@ -726,4 +727,34 @@ function customGasAdvance(g: Gas, params: CustomGasAdvanceParams) {
     g.dirty = true;
     g.timeDirty = true;
     g.game.updateData();
+}
+function getPingLocations(game: Game): Vec2[] {
+    let locations: Vec2[] = [];
+
+    for (const team of game.playerBarn.groups) {
+        locations.push(util.randomElem(team.livingPlayers).pos);
+        for (const player of team.livingPlayers) {
+            if (player.damageDealt > 0) {
+                return [];
+            }
+        }
+    }
+    return locations;
+}
+
+export function attachLocationRevealer(
+    plugin: GamePlugin & { timerManager: TimerManager },
+    delay: number,
+) {
+    plugin.on("gameStarted", (event) => {
+        const id = plugin.timerManager.setInterval(() => {
+            const locations = getPingLocations(plugin.game);
+            if (locations.length === 0) {
+                plugin.timerManager.clearTimer(id);
+            }
+            for (const pos of locations) {
+                plugin.game.playerBarn.addMapPing("ping_woodsking", pos);
+            }
+        }, delay);
+    });
 }
