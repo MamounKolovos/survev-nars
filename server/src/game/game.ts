@@ -537,7 +537,9 @@ export class Game {
         }
         this.logger.info("Game Ended");
         this.updateData();
-        this._saveGameToDatabase();
+        if(this.startedTime > 20) {
+            this._saveGameToDatabase();
+        }
     }
 
     private async _saveGameToDatabase() {
