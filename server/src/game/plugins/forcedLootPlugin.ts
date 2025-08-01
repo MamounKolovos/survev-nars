@@ -333,6 +333,7 @@ function getUpgradedGun(g: string): string {
         }
         case "blr":
         case "model94":
+        case "garand":
         case "scout_elite": {
             if (Math.random() < 0.5) return "mosin";
             break;
