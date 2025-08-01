@@ -114,6 +114,9 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
             if (x < 0.33) {
                 return "garand";
             }
+            if (x < 0.4) {
+                return "model94";
+            }
             return util.weightedRandom(gt.anySprays).gun;
         }
         case "dp28":
@@ -164,12 +167,15 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
             if (x < 0.4) {
                 return "m870";
             }
-            if (x < 0.5) {
+            if (x < 0.65) {
                 return "spas12";
             }
             return util.weightedRandom(gt.rifles).gun;
         }
         case "garand": {
+            if (x < 0.05) {
+                return "garand";
+            }
             if (x < 0.35) {
                 return "m870";
             }
