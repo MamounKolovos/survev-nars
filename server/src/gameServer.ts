@@ -36,10 +36,12 @@ process.on("uncaughtException", async (err) => {
 });
 
 import crypto from "crypto";
+import fs from "fs";
+import hjson from "hjson";
 
-const bannedIPHashes: string[] = [
-    // "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0"
-];
+const bannedIPHashes: string[] = hjson.parse(
+    fs.readFileSync("../bannedIPs.hjson").toString(),
+);
 
 class GameServer {
     readonly logger = new Logger("GameServer");
@@ -185,7 +187,11 @@ app.ws<GameSocketData>("/play", {
             return;
         }
 
-        const hashedIP = crypto.createHash("sha256").update(ip).digest("hex");
+        const hashedIP = crypto
+            .createHash("sha256")
+            .update(Config.secrets.SURVEV_IP_HASH_SALT)
+            .update(ip)
+            .digest("hex");
         if (bannedIPHashes.some((bip) => bip == hashedIP)) {
             forbidden(res);
             return;

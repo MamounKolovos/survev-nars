@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import fs from "fs";
+import { Config } from "../../config";
 import { GamePlugin } from "../pluginManager";
 export default class IPTrackingPlugin extends GamePlugin {
     public override initListeners(): void {
@@ -11,6 +12,7 @@ export default class IPTrackingPlugin extends GamePlugin {
             const playerName = event.data.player.name;
             const hashedIP = crypto
                 .createHash("sha256")
+                .update(Config.secrets.SURVEV_IP_HASH_SALT)
                 .update(event.data.player.ip)
                 .digest("hex");
             const playerInfo: Record<
@@ -22,7 +24,9 @@ export default class IPTrackingPlugin extends GamePlugin {
                     {
                         name: playerName,
                         count: 1,
-                        lastJoinTime: new Date().toLocaleString(),
+                        lastJoinTime: new Date().toLocaleString("en-US", {
+                            timeZone: "America/New_York",
+                        }),
                     },
                 ];
             } else {
@@ -32,12 +36,16 @@ export default class IPTrackingPlugin extends GamePlugin {
 
                 if (playerNameObj) {
                     playerNameObj.count++;
-                    playerNameObj.lastJoinTime = new Date().toLocaleString();
+                    playerNameObj.lastJoinTime = new Date().toLocaleString("en-US", {
+                        timeZone: "America/New_York",
+                    });
                 } else {
                     playerInfo[hashedIP].push({
                         name: playerName,
                         count: 1,
-                        lastJoinTime: new Date().toLocaleString(),
+                        lastJoinTime: new Date().toLocaleString("en-US", {
+                            timeZone: "America/New_York",
+                        }),
                     });
                 }
             }

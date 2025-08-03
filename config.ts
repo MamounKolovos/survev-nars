@@ -56,6 +56,7 @@ export function getConfig(isProduction: boolean, dir: string) {
         oauthRedirectURI: "",
         oauthBasePath: "/",
         secrets: {
+            SURVEV_IP_HASH_SALT: "",
             SURVEV_API_KEY: "",
             SURVEV_LOADOUT_SECRET: "",
             SURVEV_IP_SECRET: "",

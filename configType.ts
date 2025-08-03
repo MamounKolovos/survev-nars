@@ -237,6 +237,8 @@ export interface ConfigType {
      * API keys for accounts and other features.
      */
     secrets: {
+        SURVEV_IP_HASH_SALT: string;
+
         /**
          * API key used for game server and API server to communicate.
          * A default random one is generated when creating the config file
