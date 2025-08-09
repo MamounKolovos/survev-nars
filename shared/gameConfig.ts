@@ -355,6 +355,7 @@ export const GameConfig = {
         frag: [3, 6, 9, 12],
         smoke: [3, 6, 9, 12],
         strobe: [2, 3, 4, 5],
+        impulse: [4, 8, 12, 16],
         mirv: [2, 4, 6, 8],
         snowball: [10, 20, 30, 40],
         potato: [10, 20, 30, 40],

@@ -215,4 +215,17 @@ export const ExplosionDefs: Record<string, ExplosionDef> = {
         explosionEffectType: "bomb_iron",
         decalType: "decal_bomb_iron_explosion",
     },
+    explosion_impulse: {
+        type: "explosion",
+        damage: 0,
+        obstacleDamage: 0,
+        rad: { min: 0, max: 16 },
+        shrapnelCount: 0,
+        shrapnelType: "",
+        explosionEffectType: "impulse",
+        decalType: "decal_snowball_explosion",
+        // freezeAmount: 0,
+        // freezeDuration: 0.5,
+        // dropRandomLoot: true,
+    },
 };
