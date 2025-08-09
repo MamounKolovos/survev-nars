@@ -167,6 +167,7 @@ export default class MainPlugin extends GamePlugin {
                         "mp220",
                         "mk12",
                         "scout_elite",
+                        "m1014"
                     ];
                     for (const g of floorguns) {
                         player.game.lootBarn.addLootWithoutAmmo(
