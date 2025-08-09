@@ -8,6 +8,7 @@ import { type Vec2, v2 } from "../../../../shared/utils/v2";
 import type { Game } from "../game";
 import type { DamageParams, GameObject } from "./gameObject";
 import { EXPLOSION_LOOT_PUSH_FORCE } from "./loot";
+import type { Player } from "./player";
 
 interface LineCollision {
     obj: GameObject;
@@ -132,6 +133,19 @@ export class ExplosionBarn {
         const dist = collision.distance;
         const obj = collision.obj;
         const def = GameObjectDefs[explosion.type] as ExplosionDef;
+
+        if (def.explosionEffectType === "impulse") {
+            if (obj.__type === ObjectType.Player) {
+                if (dist > 16) {
+                    return;
+                }
+                const magnitude = 200 / Math.max(2, dist);
+                const player = obj as Player;
+                player.pushForce = v2.mul(collision.dir, magnitude);
+            }
+
+            return;
+        }
 
         if (obj.__type === ObjectType.Loot) {
             obj.push(

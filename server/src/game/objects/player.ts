@@ -561,6 +561,8 @@ export class PlayerBarn {
 export class Player extends BaseGameObject {
     override readonly __type = ObjectType.Player;
 
+    pushForce = v2.create(0, 0);
+
     bounds = collider.createAabbExtents(
         v2.create(0, 0),
         v2.create(GameConfig.player.maxVisualRadius, GameConfig.player.maxVisualRadius),
@@ -1708,17 +1710,23 @@ export class Player extends BaseGameObject {
 
         const hasTreeClimbing = this.hasPerk("tree_climbing");
 
-        let steps: number;
         if (movement.x !== 0 || movement.y !== 0) {
             this.recalculateSpeed(hasTreeClimbing);
-            steps = Math.round(math.max(this.speed * dt + 5, 5));
         } else {
             this.speed = 0;
-            steps = 1;
         }
         this.moveVel = v2.mul(movement, this.speed);
 
-        const speedToAdd = (this.speed / steps) * dt;
+        if (this.pushForce.x !== 0 || this.pushForce.y !== 0) {
+            this.moveVel = v2.add(this.moveVel, this.pushForce);
+            this.pushForce = v2.mul(this.pushForce, 1 - 5 * dt);
+            if (v2.length(this.pushForce) < 1) {
+                this.pushForce = v2.create(0, 0);
+            }
+        }
+
+        const stepCount = Math.round(math.max(v2.length(this.moveVel) * dt + 5, 5));
+        const step = v2.mul(this.moveVel, dt / stepCount);
 
         const circle = collider.createCircle(
             this.pos,
@@ -1735,8 +1743,8 @@ export class Player extends BaseGameObject {
                   )
             : this.game.grid.intersectCollider(circle);
 
-        for (let i = 0; i < steps; i++) {
-            v2.set(this.pos, v2.add(this.pos, v2.mul(movement, speedToAdd)));
+        for (let i = 0; i < stepCount; i++) {
+            v2.set(this.pos, v2.add(this.pos, step));
 
             for (let j = 0; j < objs.length; j++) {
                 const obj = objs[j];

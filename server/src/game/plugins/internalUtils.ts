@@ -732,7 +732,7 @@ function getPingLocations(game: Game): Vec2[] {
     let locations: Vec2[] = [];
 
     for (const team of game.playerBarn.groups) {
-        if (team.livingPlayers.length < 1){
+        if (team.livingPlayers.length < 1) {
             continue;
         }
         locations.push(util.randomElem(team.livingPlayers).pos);
@@ -756,7 +756,7 @@ export function attachLocationRevealer(
                 plugin.timerManager.clearTimer(id);
             }
             for (const pos of locations) {
-                if (!pos){
+                if (!pos) {
                     continue;
                 }
                 plugin.game.playerBarn.addMapPing("ping_woodsking", pos);

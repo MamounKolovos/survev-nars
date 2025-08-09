@@ -652,4 +652,26 @@ const ExplosionEffectDefs: Record<string, ExplotionDef> = {
         shakeDur: 0.4,
         lifetime: 2,
     },
+    impulse: {
+        burst: {
+            particle: "",
+            scale: 1,
+            sound: {
+                grass: "snowball_01",
+                water: "frag_water_01",
+            },
+        },
+        scatter: {
+            particle: "snowball_impact",
+            count: 5,
+            speed: {
+                min: 5,
+                max: 25,
+            },
+        },
+        rippleCount: 1,
+        shakeStr: 0,
+        shakeDur: 0,
+        lifetime: 1,
+    },
 };

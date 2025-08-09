@@ -133,6 +133,7 @@ export default class MainPlugin extends GamePlugin {
                     player.inventory["painkiller"] = 99;
                     player.inventory["healthkit"] = 15;
                     player.inventory["frag"] = 4;
+                    player.inventory["impulse"] = 99;
                     player.addPerk("endless_ammo", false);
                     player.addPerk("self_revive", false);
 
@@ -141,7 +142,6 @@ export default class MainPlugin extends GamePlugin {
                     player.helmet = "helmet03";
                     player.inventory["2xscope"] = 1;
                     player.inventory["4xscope"] = 1;
-                
                     player.scope = "4xscope";
                     player.boost = 110;
 
