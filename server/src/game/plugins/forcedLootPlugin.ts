@@ -237,6 +237,9 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
     player.inventory["frag"] = 1;
     player.inventory["smoke"] = 1;
     player.inventory["mirv"] = 1;
+    if (player.game.map.mapId === MapId.ForcedLoot2) {
+        player.inventory["impulse"] = 3;
+    }
 
     player.boostDirty = true;
     player.zoomDirty = true;
