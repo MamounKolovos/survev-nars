@@ -1719,7 +1719,7 @@ export class Player extends BaseGameObject {
 
         if (this.pushForce.x !== 0 || this.pushForce.y !== 0) {
             this.moveVel = v2.add(this.moveVel, this.pushForce);
-            this.pushForce = v2.mul(this.pushForce, 1 - 5 * dt);
+            this.pushForce = v2.mul(this.pushForce, 1 - 6 * dt);
             if (v2.length(this.pushForce) < 1) {
                 this.pushForce = v2.create(0, 0);
             }
