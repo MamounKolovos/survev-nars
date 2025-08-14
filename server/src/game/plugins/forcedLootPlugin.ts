@@ -30,7 +30,14 @@ interface Loadout {
     primary: string;
     secondary: string;
     melee: string;
+    role: string;
 }
+
+const roleWeights = [
+    { weight: 92, role: "" },
+    { weight: 4, role: "medic" },
+    { weight: 4, role: "grenadier" },
+];
 
 const vestWeights = [
     { weight: 0, vest: "chest01" },
@@ -192,22 +199,36 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
 function generateFairLootLoadouts(): Loadout[] {
     let loadouts: Loadout[] = [];
     for (let i = 0; i < 4; i++) {
+        const secondary = util.weightedRandom(secondaryWeights).gun;
         const loadout: Loadout = {
             vest: util.weightedRandom(vestWeights).vest,
             helmet: util.weightedRandom(helmetWeights).helmet,
-            secondary: util.weightedRandom(secondaryWeights).gun,
-            primary: "",
+            secondary: secondary,
+            primary: getPrimaryBasedOnSecondary(secondary),
             melee: util.weightedRandom(meleeWeights).melee,
+            role: util.weightedRandom(roleWeights).role,
         };
-        (loadout.primary = getPrimaryBasedOnSecondary(loadout.secondary)),
-            loadouts.push(loadout);
+        loadouts.push(loadout);
     }
     return loadouts;
 }
 
 function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
+    switch (loadout.role) {
+        case "medic": {
+            player.promoteToRole("medic");
+            break;
+        }
+        case "grenadier": {
+            player.promoteToRole("grenadier");
+            break;
+        }
+    }
+
     player.chest = loadout.vest;
-    player.helmet = loadout.helmet;
+    if (!player.helmet) {
+        player.helmet = loadout.helmet;
+    }
     player.weaponManager.setWeapon(
         GameConfig.WeaponSlot.Primary,
         loadout.primary,
@@ -240,6 +261,18 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
     // if (player.game.map.mapId === MapId.ForcedLoot2) {
     //     player.inventory["impulse"] = 2;
     // }
+
+    switch (loadout.role) {
+        case "medic": {
+            player.inventory["healthkit"] += 1;
+            player.inventory["smoke"] += 2;
+            break;
+        }
+        case "grenadier": {
+            player.inventory["frag"] += 4;
+            break;
+        }
+    }
 
     player.boostDirty = true;
     player.zoomDirty = true;
