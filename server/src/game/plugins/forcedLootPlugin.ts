@@ -457,9 +457,9 @@ const gt = {
         { weight: 0.5, gun: "p30l_dual" },
     ],
 };
-const GRACE_PERIOD_DURATION = 5;
-const JOIN_PERIOD_DURATION = 5;
-const COUNTDOWN_DURATION = 5;
+const GRACE_PERIOD_DURATION = 15;
+const JOIN_PERIOD_DURATION = 15;
+const COUNTDOWN_DURATION = 15;
 
 const HEALTH_AND_BOOST_ON_KILL = true;
 const RELOAD_ON_KILL = true;
