@@ -80,6 +80,7 @@ const secondaryWeights = [
     { weight: 1.5, gun: "famas" },
     { weight: 1.5, gun: "an94" },
     { weight: 0.5, gun: "p30l_dual" },
+    { weight: 0.001, gun: "awc"}
 ];
 
 const meleeWeights = [
