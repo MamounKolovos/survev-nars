@@ -457,9 +457,7 @@ const gt = {
         { weight: 0.5, gun: "p30l_dual" },
     ],
 };
-const GRACE_PERIOD_DURATION = 15;
-const JOIN_PERIOD_DURATION = 15;
-const COUNTDOWN_DURATION = 15;
+const GRACE_PERIOD_DURATION = 5;
 
 const HEALTH_AND_BOOST_ON_KILL = true;
 const RELOAD_ON_KILL = true;
@@ -478,12 +476,12 @@ export default class focedLootPlugin extends GamePlugin {
         attachCustomQuickSwitch(this, CUSTOM_SWITCH_DELAY);
         attachTimerManagerUpdate(this);
         attachKillRewards(this, HEALTH_AND_BOOST_ON_KILL, RELOAD_ON_KILL);
-        // attachDonutSpawner(this, 0.7, 0.9);
+        attachDonutSpawner(this, 0.7, 0.9);
         attachGracePeriod(
             this,
             GRACE_PERIOD_DURATION,
-            JOIN_PERIOD_DURATION,
-            COUNTDOWN_DURATION,
+            GRACE_PERIOD_DURATION,
+            GRACE_PERIOD_DURATION,
         );
         attachLootPingNotification(this, 2, 5);
         attachCustomGasDamage(
