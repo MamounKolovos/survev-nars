@@ -25,7 +25,12 @@ const mapDef: PartialMapDef = {
         },
         customSpawnRules: {
             locationSpawns: [
-            
+             {
+                    type: "courthouse_01",
+                    pos: v2.create(0.4, 0.4),
+                    rad: 10,
+                    retryOnFailure: true,
+                },
             ],
         },
         densitySpawns: [
