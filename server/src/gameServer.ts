@@ -39,9 +39,10 @@ import crypto from "crypto";
 import fs from "fs";
 import hjson from "hjson";
 
-const bannedIPHashes: string[] = hjson.parse(
-    fs.readFileSync("../bannedIPs.hjson").toString(),
-);
+const bannedIPHashes: string[] = fs.existsSync("../bannedIPs.hjson")
+  ? hjson.parse(fs.readFileSync("../bannedIPs.hjson", "utf8"))
+  : [];
+
 
 class GameServer {
     readonly logger = new Logger("GameServer");
