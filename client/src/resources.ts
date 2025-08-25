@@ -277,7 +277,7 @@ export class ResourceManager {
 
             if (loaded) {
                 console.log("Resource load complete", this.loadTicker.toFixed(2));
-                alert("Remember to Join Glxy Clan for Special Events, Private Queueing, and More! discord.gg/HvwzKh8Uth")
+                alert("Remember to Join Glxy Clan for Special Events, Private Queueing, and More! discord.gg/HvwzKh8Uth \n This pop up will disapear in a few days")
                 this.loaded = true;
             }
         }
