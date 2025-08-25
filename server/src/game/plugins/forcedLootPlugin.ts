@@ -81,7 +81,7 @@ const secondaryWeights = [
     { weight: 1.5, gun: "famas" },
     { weight: 1.5, gun: "an94" },
     { weight: 0.5, gun: "p30l_dual" },
-    { weight: 0.001, gun: "awc"}
+    { weight: 0.001, gun: "awc" },
 ];
 
 const meleeWeights = [
@@ -264,9 +264,9 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
     player.inventory["frag"] = 1;
     player.inventory["smoke"] = 1;
     player.inventory["mirv"] = 1;
-    // if (player.game.map.mapId === MapId.ForcedLoot2) {
-    //     player.inventory["impulse"] = 2;
-    // }
+    if (player.game.map.mapId === MapId.ForcedLoot2) {
+        player.inventory["impulse"] = 2;
+    }
 
     switch (loadout.role) {
         case "medic": {
@@ -520,7 +520,7 @@ export default class focedLootPlugin extends GamePlugin {
             giveEveryoneFairLoot(this.game);
         });
 
-        attachLocationRevealer(this, 10);
+        attachLocationRevealer(this, 7);
 
         this.on("obstacleDidGenerate", (event) => {
             const obs = event.data.obstacle;
