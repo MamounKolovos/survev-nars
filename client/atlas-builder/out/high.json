@@ -1394,13 +1394,13 @@
           "rotated": false,
           "trimmed": true,
           "spriteSourceSize": {
-            "x": 0,
+            "x": 410,
             "y": 0,
             "w": 1312,
             "h": 1312
           },
           "sourceSize": {
-            "w": 1312,
+            "w": 1722,
             "h": 1312
           }
         },
@@ -20212,50 +20212,50 @@
         "scale": 1
       },
       "frames": {
-        "map-bollard-01.img": {
+        "map-bed-01.img": {
           "frame": {
-            "x": 3979,
-            "y": 778,
-            "w": 112,
-            "h": 108
+            "x": 3931,
+            "y": 3210,
+            "w": 96,
+            "h": 216
           },
           "rotated": false,
           "trimmed": true,
           "spriteSourceSize": {
             "x": 0,
-            "y": 18,
-            "w": 112,
-            "h": 108
+            "y": 0,
+            "w": 96,
+            "h": 216
           },
           "sourceSize": {
-            "w": 144,
-            "h": 144
+            "w": 96,
+            "h": 216
           }
         },
-        "map-building-bank-ceiling-02.img": {
+        "map-building-bank-ceiling-03.img": {
           "frame": {
-            "x": 3223,
-            "y": 2,
-            "w": 556,
-            "h": 888
+            "x": 3821,
+            "y": 3450,
+            "w": 216,
+            "h": 360
           },
           "rotated": false,
           "trimmed": true,
           "spriteSourceSize": {
             "x": 0,
-            "y": 50,
-            "w": 556,
-            "h": 888
+            "y": 192,
+            "w": 216,
+            "h": 360
           },
           "sourceSize": {
-            "w": 556,
-            "h": 940
+            "w": 216,
+            "h": 552
           }
         },
         "map-building-bank-floor-02.img": {
           "frame": {
-            "x": 3220,
-            "y": 894,
+            "x": 2,
+            "y": 3529,
             "w": 864,
             "h": 448
           },
@@ -20272,30 +20272,10 @@
             "h": 448
           }
         },
-        "map-building-bank-window-01.img": {
-          "frame": {
-            "x": 1046,
-            "y": 3979,
-            "w": 56,
-            "h": 104
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 56,
-            "h": 104
-          },
-          "sourceSize": {
-            "w": 56,
-            "h": 104
-          }
-        },
         "map-building-bank-window-res-01.img": {
           "frame": {
-            "x": 3097,
-            "y": 3296,
+            "x": 1062,
+            "y": 2049,
             "w": 44,
             "h": 43
           },
@@ -20312,30 +20292,10 @@
             "h": 144
           }
         },
-        "map-building-barn-basement-stairs.img": {
-          "frame": {
-            "x": 3783,
-            "y": 2,
-            "w": 288,
-            "h": 384
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 288,
-            "h": 384
-          },
-          "sourceSize": {
-            "w": 288,
-            "h": 384
-          }
-        },
         "map-building-barn-ceiling-01.img": {
           "frame": {
-            "x": 2,
-            "y": 2620,
+            "x": 1318,
+            "y": 924,
             "w": 1200,
             "h": 624
           },
@@ -20354,8 +20314,8 @@
         },
         "map-building-barn-ceiling-02.img": {
           "frame": {
-            "x": 1222,
-            "y": 2428,
+            "x": 3172,
+            "y": 2278,
             "w": 416,
             "h": 144
           },
@@ -20374,7 +20334,7 @@
         },
         "map-building-bathhouse-basement-01b.img": {
           "frame": {
-            "x": 2,
+            "x": 1318,
             "y": 2,
             "w": 1304,
             "h": 918
@@ -20395,7 +20355,7 @@
         "map-building-bathhouse-sideroom-02.img": {
           "frame": {
             "x": 2,
-            "y": 3248,
+            "y": 1318,
             "w": 1110,
             "h": 727
           },
@@ -20414,8 +20374,8 @@
         },
         "map-building-boarded-window-01.img": {
           "frame": {
-            "x": 3617,
-            "y": 3979,
+            "x": 4010,
+            "y": 1570,
             "w": 44,
             "h": 113
           },
@@ -20435,7 +20395,7 @@
         "map-building-bridge-lg-ceiling.img": {
           "frame": {
             "x": 1116,
-            "y": 3248,
+            "y": 1552,
             "w": 1088,
             "h": 544
           },
@@ -20454,8 +20414,8 @@
         },
         "map-building-bridge-lg-floor.img": {
           "frame": {
-            "x": 2208,
-            "y": 2,
+            "x": 2,
+            "y": 2725,
             "w": 1011,
             "h": 704
           },
@@ -20474,8 +20434,8 @@
         },
         "map-building-bridge-md-floor.img": {
           "frame": {
-            "x": 3172,
-            "y": 2978,
+            "x": 2021,
+            "y": 3434,
             "w": 896,
             "h": 368
           },
@@ -20495,7 +20455,7 @@
         "map-building-cabin-ceiling-01a.img": {
           "frame": {
             "x": 3172,
-            "y": 1594,
+            "y": 1698,
             "w": 912,
             "h": 576
           },
@@ -20514,8 +20474,8 @@
         },
         "map-building-cabin-floor.img": {
           "frame": {
-            "x": 2,
-            "y": 1624,
+            "x": 2626,
+            "y": 702,
             "w": 1216,
             "h": 992
           },
@@ -20532,70 +20492,130 @@
             "h": 992
           }
         },
-        "map-building-club-ceiling-01b.img": {
+        "map-building-club-floor-01f.img": {
           "frame": {
-            "x": 2938,
-            "y": 2174,
-            "w": 177,
-            "h": 242
+            "x": 2208,
+            "y": 1552,
+            "w": 194,
+            "h": 130
           },
           "rotated": false,
           "trimmed": true,
           "spriteSourceSize": {
             "x": 0,
             "y": 0,
-            "w": 177,
-            "h": 242
+            "w": 194,
+            "h": 130
           },
           "sourceSize": {
-            "w": 178,
-            "h": 242
+            "w": 194,
+            "h": 130
           }
         },
-        "map-building-club-floor-01d.img": {
+        "map-building-container-ceiling-01.img": {
           "frame": {
-            "x": 1310,
-            "y": 438,
-            "w": 322,
-            "h": 193
+            "x": 3898,
+            "y": 2,
+            "w": 180,
+            "h": 380
           },
           "rotated": false,
           "trimmed": true,
           "spriteSourceSize": {
             "x": 0,
             "y": 0,
-            "w": 322,
-            "h": 193
+            "w": 180,
+            "h": 380
           },
           "sourceSize": {
-            "w": 322,
-            "h": 194
+            "w": 180,
+            "h": 536
           }
         },
-        "map-building-club-floor-01h.img": {
+        "map-building-container-ceiling-02.img": {
           "frame": {
-            "x": 1528,
-            "y": 3796,
-            "w": 321,
-            "h": 289
+            "x": 3898,
+            "y": 386,
+            "w": 180,
+            "h": 380
           },
           "rotated": false,
           "trimmed": true,
           "spriteSourceSize": {
-            "x": 1,
-            "y": 1,
-            "w": 321,
-            "h": 289
+            "x": 0,
+            "y": 0,
+            "w": 180,
+            "h": 380
           },
           "sourceSize": {
-            "w": 322,
-            "h": 290
+            "w": 180,
+            "h": 536
+          }
+        },
+        "map-building-container-ceiling-03.img": {
+          "frame": {
+            "x": 2000,
+            "y": 2100,
+            "w": 180,
+            "h": 380
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 180,
+            "h": 380
+          },
+          "sourceSize": {
+            "w": 180,
+            "h": 536
+          }
+        },
+        "map-building-container-ceiling-05.img": {
+          "frame": {
+            "x": 3846,
+            "y": 770,
+            "w": 180,
+            "h": 380
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 180,
+            "h": 380
+          },
+          "sourceSize": {
+            "w": 180,
+            "h": 536
+          }
+        },
+        "map-building-container-open-ceiling-01.img": {
+          "frame": {
+            "x": 3846,
+            "y": 1154,
+            "w": 180,
+            "h": 380
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 156,
+            "w": 180,
+            "h": 380
+          },
+          "sourceSize": {
+            "w": 180,
+            "h": 692
           }
         },
         "map-building-house-floor-01.img": {
           "frame": {
-            "x": 1310,
-            "y": 710,
+            "x": 2208,
+            "y": 1698,
             "w": 960,
             "h": 864
           },
@@ -20614,8 +20634,8 @@
         },
         "map-building-house-floor-02.img": {
           "frame": {
-            "x": 2208,
-            "y": 2428,
+            "x": 2021,
+            "y": 2566,
             "w": 960,
             "h": 864
           },
@@ -20632,50 +20652,10 @@
             "h": 864
           }
         },
-        "map-building-hut-ceiling-01.img": {
-          "frame": {
-            "x": 3693,
-            "y": 3671,
-            "w": 378,
-            "h": 393
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 15,
-            "y": 15,
-            "w": 378,
-            "h": 393
-          },
-          "sourceSize": {
-            "w": 408,
-            "h": 408
-          }
-        },
-        "map-building-mansion-ceiling.img": {
-          "frame": {
-            "x": 3172,
-            "y": 2174,
-            "w": 912,
-            "h": 800
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 32,
-            "w": 912,
-            "h": 800
-          },
-          "sourceSize": {
-            "w": 1024,
-            "h": 864
-          }
-        },
         "map-building-mansion-cellar-01c.img": {
           "frame": {
-            "x": 3604,
-            "y": 1346,
+            "x": 870,
+            "y": 3965,
             "w": 354,
             "h": 129
           },
@@ -20692,50 +20672,30 @@
             "h": 130
           }
         },
-        "map-building-mansion-floor-01a.img": {
+        "map-building-outhouse-ceiling.img": {
           "frame": {
-            "x": 3097,
-            "y": 3350,
-            "w": 802,
-            "h": 317
+            "x": 3821,
+            "y": 3814,
+            "w": 272,
+            "h": 224
           },
           "rotated": false,
           "trimmed": true,
           "spriteSourceSize": {
-            "x": 0,
-            "y": 5,
-            "w": 802,
-            "h": 317
-          },
-          "sourceSize": {
-            "w": 802,
-            "h": 322
-          }
-        },
-        "map-building-panicroom-ceiling.img": {
-          "frame": {
-            "x": 3783,
-            "y": 390,
-            "w": 288,
-            "h": 384
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
+            "x": 64,
             "y": 0,
-            "w": 288,
-            "h": 384
+            "w": 272,
+            "h": 224
           },
           "sourceSize": {
-            "w": 288,
-            "h": 384
+            "w": 400,
+            "h": 316
           }
         },
         "map-building-saferoom-ceiling.img": {
           "frame": {
-            "x": 2226,
-            "y": 2174,
+            "x": 2118,
+            "y": 3806,
             "w": 352,
             "h": 224
           },
@@ -20754,8 +20714,8 @@
         },
         "map-building-saferoom-floor.img": {
           "frame": {
-            "x": 2582,
-            "y": 2174,
+            "x": 2474,
+            "y": 3806,
             "w": 352,
             "h": 224
           },
@@ -20772,30 +20732,50 @@
             "h": 224
           }
         },
-        "map-building-shack-ceiling-01.img": {
+        "map-building-saloon-cellar-01.img": {
           "frame": {
-            "x": 1853,
-            "y": 3796,
-            "w": 315,
-            "h": 207
+            "x": 2,
+            "y": 2049,
+            "w": 1056,
+            "h": 672
           },
           "rotated": false,
           "trimmed": true,
           "spriteSourceSize": {
             "x": 0,
             "y": 0,
-            "w": 315,
-            "h": 207
+            "w": 1056,
+            "h": 672
           },
           "sourceSize": {
-            "w": 315,
-            "h": 255
+            "w": 1056,
+            "h": 672
+          }
+        },
+        "map-building-saloon-floor-01.img": {
+          "frame": {
+            "x": 2,
+            "y": 2,
+            "w": 1312,
+            "h": 1312
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 410,
+            "y": 0,
+            "w": 1312,
+            "h": 1312
+          },
+          "sourceSize": {
+            "w": 1722,
+            "h": 1312
           }
         },
         "map-building-shack-ceiling-03.img": {
           "frame": {
-            "x": 1116,
-            "y": 3796,
+            "x": 1706,
+            "y": 3806,
             "w": 408,
             "h": 288
           },
@@ -20814,8 +20794,8 @@
         },
         "map-building-teahouse-ceiling-01.img": {
           "frame": {
-            "x": 1206,
-            "y": 2620,
+            "x": 1062,
+            "y": 2100,
             "w": 934,
             "h": 608
           },
@@ -20834,8 +20814,8 @@
         },
         "map-building-teahouse-floor-01.img": {
           "frame": {
-            "x": 2226,
-            "y": 1594,
+            "x": 2921,
+            "y": 3450,
             "w": 896,
             "h": 576
           },
@@ -20852,10 +20832,30 @@
             "h": 576
           }
         },
+        "map-building-teahouse-floor-02.img": {
+          "frame": {
+            "x": 1706,
+            "y": 3714,
+            "w": 128,
+            "h": 88
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 128,
+            "h": 88
+          },
+          "sourceSize": {
+            "w": 128,
+            "h": 88
+          }
+        },
         "map-building-warehouse-ceiling-01.img": {
           "frame": {
-            "x": 1310,
-            "y": 2,
+            "x": 870,
+            "y": 3529,
             "w": 832,
             "h": 432
           },
@@ -20874,8 +20874,8 @@
         },
         "map-building-warehouse-floor-01.img": {
           "frame": {
-            "x": 1222,
-            "y": 1624,
+            "x": 1017,
+            "y": 2725,
             "w": 1000,
             "h": 800
           },
@@ -20894,8 +20894,8 @@
         },
         "map-bunker-conch-ceiling-01.img": {
           "frame": {
-            "x": 3220,
-            "y": 1346,
+            "x": 3592,
+            "y": 2278,
             "w": 380,
             "h": 180
           },
@@ -20914,8 +20914,8 @@
         },
         "map-bunker-conch-compartment-floor-01a.img": {
           "frame": {
-            "x": 2274,
-            "y": 710,
+            "x": 2985,
+            "y": 2566,
             "w": 942,
             "h": 880
           },
@@ -20932,30 +20932,30 @@
             "h": 880
           }
         },
-        "map-bunker-storm-chamber-ceiling-01.img": {
+        "map-bunker-generic-ceiling-01.img": {
           "frame": {
-            "x": 3097,
-            "y": 3671,
-            "w": 592,
-            "h": 304
+            "x": 1116,
+            "y": 1318,
+            "w": 193,
+            "h": 230
           },
           "rotated": false,
           "trimmed": true,
           "spriteSourceSize": {
-            "x": 0,
-            "y": 112,
-            "w": 592,
-            "h": 304
+            "x": 64,
+            "y": 0,
+            "w": 193,
+            "h": 230
           },
           "sourceSize": {
-            "w": 592,
-            "h": 416
+            "w": 320,
+            "h": 288
           }
         },
         "map-bunker-storm-chamber-floor-01a.img": {
           "frame": {
-            "x": 2,
-            "y": 924,
+            "x": 2626,
+            "y": 2,
             "w": 1268,
             "h": 696
           },
@@ -20974,8 +20974,8 @@
         },
         "map-bunker-vent-01.img": {
           "frame": {
-            "x": 1937,
-            "y": 4007,
+            "x": 1922,
+            "y": 3714,
             "w": 82,
             "h": 84
           },
@@ -20994,8 +20994,8 @@
         },
         "map-bush-res-02.img": {
           "frame": {
-            "x": 3220,
-            "y": 1530,
+            "x": 2118,
+            "y": 4034,
             "w": 59,
             "h": 60
           },
@@ -21014,8 +21014,8 @@
         },
         "map-case-basement-01.img": {
           "frame": {
-            "x": 858,
-            "y": 3979,
+            "x": 562,
+            "y": 3981,
             "w": 148,
             "h": 112
           },
@@ -21034,8 +21034,8 @@
         },
         "map-case-deagle-01.img": {
           "frame": {
-            "x": 3800,
-            "y": 1479,
+            "x": 714,
+            "y": 3981,
             "w": 144,
             "h": 108
           },
@@ -21054,8 +21054,8 @@
         },
         "map-control-panel-06.img": {
           "frame": {
-            "x": 3604,
-            "y": 1479,
+            "x": 2,
+            "y": 3981,
             "w": 192,
             "h": 94
           },
@@ -21074,8 +21074,8 @@
         },
         "map-couch-01.img": {
           "frame": {
-            "x": 1636,
-            "y": 598,
+            "x": 3569,
+            "y": 2462,
             "w": 288,
             "h": 96
           },
@@ -21094,8 +21094,8 @@
         },
         "map-couch-02.img": {
           "frame": {
-            "x": 3783,
-            "y": 778,
+            "x": 198,
+            "y": 3981,
             "w": 192,
             "h": 96
           },
@@ -21114,8 +21114,8 @@
         },
         "map-couch-res-01.img": {
           "frame": {
-            "x": 1853,
-            "y": 4007,
+            "x": 1838,
+            "y": 3714,
             "w": 80,
             "h": 86
           },
@@ -21134,8 +21134,8 @@
         },
         "map-courthouse-bookshelf-glass.img": {
           "frame": {
-            "x": 3990,
-            "y": 1346,
+            "x": 4058,
+            "y": 1098,
             "w": 31,
             "h": 234
           },
@@ -21154,8 +21154,8 @@
         },
         "map-courthouse-door.img": {
           "frame": {
-            "x": 2039,
-            "y": 2428,
+            "x": 4003,
+            "y": 2982,
             "w": 31,
             "h": 173
           },
@@ -21174,8 +21174,8 @@
         },
         "map-courthouse-drawer-row.img": {
           "frame": {
-            "x": 1642,
-            "y": 2428,
+            "x": 3172,
+            "y": 2426,
             "w": 393,
             "h": 130
           },
@@ -21190,52 +21190,12 @@
           "sourceSize": {
             "w": 393,
             "h": 130
-          }
-        },
-        "map-courthouse-drawers-group.img": {
-          "frame": {
-            "x": 2208,
-            "y": 3296,
-            "w": 885,
-            "h": 779
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 885,
-            "h": 779
-          },
-          "sourceSize": {
-            "w": 885,
-            "h": 779
-          }
-        },
-        "map-courthouse-table.img": {
-          "frame": {
-            "x": 3903,
-            "y": 3350,
-            "w": 118,
-            "h": 305
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 118,
-            "h": 305
-          },
-          "sourceSize": {
-            "w": 118,
-            "h": 305
           }
         },
         "map-courthouse-window-small-res-01.img": {
           "frame": {
-            "x": 2144,
-            "y": 2654,
+            "x": 3976,
+            "y": 2278,
             "w": 52,
             "h": 175
           },
@@ -21250,32 +21210,12 @@
           "sourceSize": {
             "w": 52,
             "h": 175
-          }
-        },
-        "map-courthouse-window-small.img": {
-          "frame": {
-            "x": 2144,
-            "y": 2833,
-            "w": 50,
-            "h": 174
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 50,
-            "h": 174
-          },
-          "sourceSize": {
-            "w": 50,
-            "h": 174
           }
         },
         "map-crate-06.img": {
           "frame": {
-            "x": 3449,
-            "y": 3979,
+            "x": 394,
+            "y": 3981,
             "w": 164,
             "h": 100
           },
@@ -21295,7 +21235,7 @@
         "map-crate-mil-01.img": {
           "frame": {
             "x": 2,
-            "y": 3979,
+            "y": 3433,
             "w": 172,
             "h": 89
           },
@@ -21314,8 +21254,8 @@
         },
         "map-crate-mil-02.img": {
           "frame": {
-            "x": 3097,
-            "y": 3979,
+            "x": 178,
+            "y": 3433,
             "w": 172,
             "h": 89
           },
@@ -21334,8 +21274,8 @@
         },
         "map-crate-mil-03.img": {
           "frame": {
-            "x": 178,
-            "y": 3979,
+            "x": 354,
+            "y": 3433,
             "w": 172,
             "h": 89
           },
@@ -21354,8 +21294,8 @@
         },
         "map-crate-mil-04.img": {
           "frame": {
-            "x": 3273,
-            "y": 3979,
+            "x": 530,
+            "y": 3433,
             "w": 172,
             "h": 89
           },
@@ -21374,8 +21314,8 @@
         },
         "map-crate-mil-05.img": {
           "frame": {
-            "x": 354,
-            "y": 3979,
+            "x": 706,
+            "y": 3433,
             "w": 172,
             "h": 89
           },
@@ -21392,10 +21332,30 @@
             "h": 89
           }
         },
+        "map-decal-club-02.img": {
+          "frame": {
+            "x": 2522,
+            "y": 924,
+            "w": 100,
+            "h": 358
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 2,
+            "y": 0,
+            "w": 100,
+            "h": 358
+          },
+          "sourceSize": {
+            "w": 104,
+            "h": 360
+          }
+        },
         "map-decal-flyer-01.img": {
           "frame": {
-            "x": 1642,
-            "y": 2562,
+            "x": 974,
+            "y": 3433,
             "w": 36,
             "h": 44
           },
@@ -21412,10 +21372,30 @@
             "h": 48
           }
         },
+        "map-decal-oil-03.img": {
+          "frame": {
+            "x": 882,
+            "y": 3433,
+            "w": 88,
+            "h": 92
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 20,
+            "y": 18,
+            "w": 88,
+            "h": 92
+          },
+          "sourceSize": {
+            "w": 128,
+            "h": 128
+          }
+        },
         "map-door-02.img": {
           "frame": {
-            "x": 1988,
-            "y": 438,
+            "x": 3931,
+            "y": 2754,
             "w": 80,
             "h": 224
           },
@@ -21430,52 +21410,12 @@
           "sourceSize": {
             "w": 80,
             "h": 224
-          }
-        },
-        "map-door-03.img": {
-          "frame": {
-            "x": 1010,
-            "y": 3979,
-            "w": 32,
-            "h": 112
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 32,
-            "h": 112
-          },
-          "sourceSize": {
-            "w": 32,
-            "h": 112
-          }
-        },
-        "map-door-04.img": {
-          "frame": {
-            "x": 2072,
-            "y": 576,
-            "w": 54,
-            "h": 128
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 54,
-            "h": 128
-          },
-          "sourceSize": {
-            "w": 54,
-            "h": 128
           }
         },
         "map-door-05.img": {
           "frame": {
-            "x": 4067,
-            "y": 3350,
+            "x": 4058,
+            "y": 1564,
             "w": 24,
             "h": 128
           },
@@ -21494,8 +21434,8 @@
         },
         "map-door-slot-01.img": {
           "frame": {
-            "x": 2072,
-            "y": 438,
+            "x": 2448,
+            "y": 1552,
             "w": 38,
             "h": 134
           },
@@ -21514,8 +21454,8 @@
         },
         "map-door-slot-02.img": {
           "frame": {
-            "x": 4025,
-            "y": 3514,
+            "x": 2406,
+            "y": 1552,
             "w": 38,
             "h": 136
           },
@@ -21534,8 +21474,8 @@
         },
         "map-drawers-01.img": {
           "frame": {
-            "x": 530,
-            "y": 3979,
+            "x": 3846,
+            "y": 1538,
             "w": 160,
             "h": 90
           },
@@ -21554,8 +21494,8 @@
         },
         "map-drawers-02.img": {
           "frame": {
-            "x": 694,
-            "y": 3979,
+            "x": 1520,
+            "y": 3965,
             "w": 160,
             "h": 90
           },
@@ -21574,8 +21514,8 @@
         },
         "map-fire-ext-01.img": {
           "frame": {
-            "x": 1310,
-            "y": 635,
+            "x": 2000,
+            "y": 2484,
             "w": 83,
             "h": 65
           },
@@ -21592,70 +21532,70 @@
             "h": 70
           }
         },
-        "map-potato-res.img": {
+        "map-pipes-01.img": {
           "frame": {
-            "x": 2144,
-            "y": 3175,
-            "w": 56,
-            "h": 68
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 20,
-            "y": 14,
-            "w": 56,
-            "h": 68
-          },
-          "sourceSize": {
-            "w": 96,
-            "h": 96
-          }
-        },
-        "map-recorder-03.img": {
-          "frame": {
-            "x": 2130,
-            "y": 622,
-            "w": 48,
-            "h": 80
+            "x": 3931,
+            "y": 2462,
+            "w": 90,
+            "h": 288
           },
           "rotated": false,
           "trimmed": true,
           "spriteSourceSize": {
             "x": 0,
             "y": 0,
-            "w": 48,
-            "h": 80
+            "w": 90,
+            "h": 288
           },
           "sourceSize": {
-            "w": 48,
-            "h": 80
+            "w": 90,
+            "h": 288
           }
         },
-        "map-recorder-04.img": {
+        "map-pipes-04.img": {
           "frame": {
-            "x": 2111,
-            "y": 4007,
-            "w": 48,
-            "h": 80
+            "x": 2522,
+            "y": 1286,
+            "w": 88,
+            "h": 352
           },
           "rotated": false,
           "trimmed": true,
           "spriteSourceSize": {
             "x": 0,
             "y": 0,
-            "w": 48,
-            "h": 80
+            "w": 88,
+            "h": 352
           },
           "sourceSize": {
-            "w": 48,
-            "h": 80
+            "w": 88,
+            "h": 352
+          }
+        },
+        "map-power-box-01.img": {
+          "frame": {
+            "x": 2087,
+            "y": 2484,
+            "w": 72,
+            "h": 72
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 72,
+            "h": 72
+          },
+          "sourceSize": {
+            "w": 72,
+            "h": 72
           }
         },
         "map-saloon-bar-01.img": {
           "frame": {
-            "x": 2146,
-            "y": 2,
+            "x": 4030,
+            "y": 770,
             "w": 54,
             "h": 324
           },
@@ -21672,30 +21612,70 @@
             "h": 324
           }
         },
-        "map-squash-res-01.img": {
+        "map-shack-res-01.img": {
           "frame": {
-            "x": 2023,
-            "y": 4007,
-            "w": 84,
-            "h": 82
+            "x": 1706,
+            "y": 3529,
+            "w": 305,
+            "h": 181
           },
           "rotated": false,
           "trimmed": true,
           "spriteSourceSize": {
-            "x": 5,
-            "y": 11,
-            "w": 84,
-            "h": 82
+            "x": 60,
+            "y": 49,
+            "w": 305,
+            "h": 181
           },
           "sourceSize": {
-            "w": 96,
-            "h": 96
+            "w": 420,
+            "h": 340
+          }
+        },
+        "map-stone-res-06.img": {
+          "frame": {
+            "x": 1228,
+            "y": 3965,
+            "w": 288,
+            "h": 128
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 288,
+            "h": 128
+          },
+          "sourceSize": {
+            "w": 288,
+            "h": 128
+          }
+        },
+        "map-toilet-03.img": {
+          "frame": {
+            "x": 3861,
+            "y": 2462,
+            "w": 66,
+            "h": 98
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 17,
+            "y": 1,
+            "w": 66,
+            "h": 98
+          },
+          "sourceSize": {
+            "w": 100,
+            "h": 100
           }
         },
         "map-tree-res-01.img": {
           "frame": {
-            "x": 3119,
-            "y": 2374,
+            "x": 2490,
+            "y": 1642,
             "w": 48,
             "h": 48
           },
@@ -21714,8 +21694,8 @@
         },
         "map-wall-02-rounded.img": {
           "frame": {
-            "x": 1397,
-            "y": 635,
+            "x": 3846,
+            "y": 702,
             "w": 32,
             "h": 64
           },
@@ -21734,8 +21714,8 @@
         },
         "map-wall-02.img": {
           "frame": {
-            "x": 1433,
-            "y": 635,
+            "x": 2902,
+            "y": 4030,
             "w": 32,
             "h": 64
           },
@@ -21750,92 +21730,12 @@
           "sourceSize": {
             "w": 32,
             "h": 64
-          }
-        },
-        "map-wall-04-cobalt.img": {
-          "frame": {
-            "x": 3119,
-            "y": 2210,
-            "w": 40,
-            "h": 160
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 40,
-            "h": 160
-          },
-          "sourceSize": {
-            "w": 40,
-            "h": 160
-          }
-        },
-        "map-wall-04-stone.img": {
-          "frame": {
-            "x": 2144,
-            "y": 3011,
-            "w": 40,
-            "h": 160
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 40,
-            "h": 160
-          },
-          "sourceSize": {
-            "w": 40,
-            "h": 160
-          }
-        },
-        "map-wall-05-rounded.img": {
-          "frame": {
-            "x": 2074,
-            "y": 2428,
-            "w": 32,
-            "h": 160
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 32,
-            "h": 160
-          },
-          "sourceSize": {
-            "w": 32,
-            "h": 160
-          }
-        },
-        "map-wall-05.img": {
-          "frame": {
-            "x": 4025,
-            "y": 3350,
-            "w": 32,
-            "h": 160
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 32,
-            "h": 160
-          },
-          "sourceSize": {
-            "w": 32,
-            "h": 160
           }
         },
         "map-wall-06.img": {
           "frame": {
-            "x": 2172,
-            "y": 2428,
+            "x": 3967,
+            "y": 2982,
             "w": 32,
             "h": 192
           },
@@ -21854,8 +21754,8 @@
         },
         "map-wall-07-rounded.img": {
           "frame": {
-            "x": 4025,
-            "y": 1346,
+            "x": 4058,
+            "y": 1336,
             "w": 32,
             "h": 224
           },
@@ -21874,8 +21774,8 @@
         },
         "map-wall-07.img": {
           "frame": {
-            "x": 4061,
-            "y": 1346,
+            "x": 3931,
+            "y": 2982,
             "w": 32,
             "h": 224
           },
@@ -21894,8 +21794,8 @@
         },
         "map-wall-08-rounded.img": {
           "frame": {
-            "x": 1952,
-            "y": 438,
+            "x": 4041,
+            "y": 3542,
             "w": 32,
             "h": 256
           },
@@ -21914,8 +21814,8 @@
         },
         "map-wall-09-rounded.img": {
           "frame": {
-            "x": 2172,
-            "y": 3796,
+            "x": 2830,
+            "y": 3806,
             "w": 32,
             "h": 288
           },
@@ -21934,8 +21834,8 @@
         },
         "map-wall-09.img": {
           "frame": {
-            "x": 3126,
-            "y": 1918,
+            "x": 2866,
+            "y": 3806,
             "w": 32,
             "h": 288
           },
@@ -21954,8 +21854,8 @@
         },
         "map-wall-10-rounded.img": {
           "frame": {
-            "x": 1274,
-            "y": 924,
+            "x": 4041,
+            "y": 2278,
             "w": 32,
             "h": 320
           },
@@ -21974,8 +21874,8 @@
         },
         "map-wall-10.img": {
           "frame": {
-            "x": 1274,
-            "y": 1248,
+            "x": 4041,
+            "y": 2602,
             "w": 32,
             "h": 320
           },
@@ -21994,8 +21894,8 @@
         },
         "map-wall-glass-10.img": {
           "frame": {
-            "x": 3126,
-            "y": 1594,
+            "x": 4041,
+            "y": 2926,
             "w": 32,
             "h": 320
           },
@@ -22014,8 +21914,8 @@
         },
         "map-wall-glass-9.img": {
           "frame": {
-            "x": 2146,
-            "y": 330,
+            "x": 4041,
+            "y": 3250,
             "w": 32,
             "h": 288
           },
@@ -22034,8 +21934,8 @@
         },
         "map-wall-shack-left.img": {
           "frame": {
-            "x": 2144,
-            "y": 2428,
+            "x": 4030,
+            "y": 1344,
             "w": 24,
             "h": 222
           },
@@ -22054,8 +21954,8 @@
         },
         "map-wall-shack-right.img": {
           "frame": {
-            "x": 3962,
-            "y": 1346,
+            "x": 4030,
+            "y": 1098,
             "w": 24,
             "h": 242
           },
@@ -22070,26 +21970,6 @@
           "sourceSize": {
             "w": 24,
             "h": 242
-          }
-        },
-        "map-wheel-01.img": {
-          "frame": {
-            "x": 1636,
-            "y": 438,
-            "w": 312,
-            "h": 156
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 312,
-            "h": 156
-          },
-          "sourceSize": {
-            "w": 312,
-            "h": 156
           }
         }
       }
@@ -22106,8 +21986,8 @@
       "frames": {
         "map-airdrop-01.img": {
           "frame": {
-            "x": 2702,
-            "y": 2651,
+            "x": 2138,
+            "y": 3925,
             "w": 160,
             "h": 160
           },
@@ -22126,8 +22006,8 @@
         },
         "map-airdrop-02.img": {
           "frame": {
-            "x": 2702,
-            "y": 2815,
+            "x": 2302,
+            "y": 3907,
             "w": 160,
             "h": 160
           },
@@ -22146,8 +22026,8 @@
         },
         "map-barrel-01.img": {
           "frame": {
-            "x": 3117,
-            "y": 3243,
+            "x": 3057,
+            "y": 3806,
             "w": 142,
             "h": 142
           },
@@ -22166,8 +22046,8 @@
         },
         "map-barrel-02.img": {
           "frame": {
-            "x": 3190,
-            "y": 3069,
+            "x": 3057,
+            "y": 3952,
             "w": 142,
             "h": 142
           },
@@ -22186,8 +22066,8 @@
         },
         "map-barrel-res-02.img": {
           "frame": {
-            "x": 3408,
-            "y": 3662,
+            "x": 3339,
+            "y": 3954,
             "w": 130,
             "h": 127
           },
@@ -22206,8 +22086,8 @@
         },
         "map-bathhouse-column-01.img": {
           "frame": {
-            "x": 3538,
-            "y": 3793,
+            "x": 3474,
+            "y": 3740,
             "w": 128,
             "h": 128
           },
@@ -22226,8 +22106,8 @@
         },
         "map-bathrocks-01.img": {
           "frame": {
-            "x": 3674,
-            "y": 461,
+            "x": 1009,
+            "y": 2976,
             "w": 96,
             "h": 96
           },
@@ -22242,32 +22122,12 @@
           "sourceSize": {
             "w": 96,
             "h": 96
-          }
-        },
-        "map-bed-01.img": {
-          "frame": {
-            "x": 3064,
-            "y": 236,
-            "w": 96,
-            "h": 216
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 96,
-            "h": 216
-          },
-          "sourceSize": {
-            "w": 96,
-            "h": 216
           }
         },
         "map-bed-02.img": {
           "frame": {
-            "x": 3133,
-            "y": 2,
+            "x": 3901,
+            "y": 2853,
             "w": 176,
             "h": 216
           },
@@ -22286,8 +22146,8 @@
         },
         "map-bed-res-01.img": {
           "frame": {
-            "x": 574,
-            "y": 3545,
+            "x": 3940,
+            "y": 1650,
             "w": 89,
             "h": 158
           },
@@ -22306,8 +22166,8 @@
         },
         "map-bed-res-02.img": {
           "frame": {
-            "x": 2866,
-            "y": 2633,
+            "x": 1034,
+            "y": 1934,
             "w": 89,
             "h": 158
           },
@@ -22324,10 +22184,30 @@
             "h": 192
           }
         },
+        "map-bollard-01.img": {
+          "frame": {
+            "x": 2330,
+            "y": 3791,
+            "w": 112,
+            "h": 108
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 18,
+            "w": 112,
+            "h": 108
+          },
+          "sourceSize": {
+            "w": 144,
+            "h": 144
+          }
+        },
         "map-building-bank-ceiling-01.img": {
           "frame": {
-            "x": 1218,
-            "y": 1510,
+            "x": 1131,
+            "y": 1589,
             "w": 504,
             "h": 552
           },
@@ -22344,30 +22224,50 @@
             "h": 600
           }
         },
-        "map-building-bank-ceiling-03.img": {
+        "map-building-bank-ceiling-02.img": {
           "frame": {
-            "x": 1934,
-            "y": 2601,
-            "w": 216,
-            "h": 360
+            "x": 2,
+            "y": 806,
+            "w": 556,
+            "h": 888
           },
           "rotated": false,
           "trimmed": true,
           "spriteSourceSize": {
             "x": 0,
-            "y": 192,
-            "w": 216,
-            "h": 360
+            "y": 50,
+            "w": 556,
+            "h": 888
           },
           "sourceSize": {
-            "w": 216,
-            "h": 552
+            "w": 556,
+            "h": 940
+          }
+        },
+        "map-building-bank-window-01.img": {
+          "frame": {
+            "x": 854,
+            "y": 806,
+            "w": 56,
+            "h": 104
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 56,
+            "h": 104
+          },
+          "sourceSize": {
+            "w": 56,
+            "h": 104
           }
         },
         "map-building-barn-basement-ceiling-01.img": {
           "frame": {
-            "x": 1247,
-            "y": 3889,
+            "x": 637,
+            "y": 3122,
             "w": 304,
             "h": 192
           },
@@ -22386,8 +22286,8 @@
         },
         "map-building-barn-basement-ceiling-02.img": {
           "frame": {
-            "x": 2502,
-            "y": 2376,
+            "x": 1957,
+            "y": 3117,
             "w": 164,
             "h": 192
           },
@@ -22406,8 +22306,8 @@
         },
         "map-building-barn-basement-floor-01.img": {
           "frame": {
-            "x": 2,
-            "y": 3073,
+            "x": 3274,
+            "y": 1341,
             "w": 662,
             "h": 468
           },
@@ -22426,8 +22326,8 @@
         },
         "map-building-barn-basement-floor-02.img": {
           "frame": {
-            "x": 743,
-            "y": 1510,
+            "x": 2,
+            "y": 2262,
             "w": 374,
             "h": 468
           },
@@ -22444,10 +22344,30 @@
             "h": 472
           }
         },
+        "map-building-barn-basement-stairs.img": {
+          "frame": {
+            "x": 562,
+            "y": 806,
+            "w": 288,
+            "h": 384
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 288,
+            "h": 384
+          },
+          "sourceSize": {
+            "w": 288,
+            "h": 384
+          }
+        },
         "map-building-bathhouse-basement-01a.img": {
           "frame": {
-            "x": 2675,
-            "y": 2,
+            "x": 380,
+            "y": 2474,
             "w": 225,
             "h": 290
           },
@@ -22466,8 +22386,8 @@
         },
         "map-building-bathhouse-basement-01c.img": {
           "frame": {
-            "x": 574,
-            "y": 3717,
+            "x": 562,
+            "y": 1589,
             "w": 565,
             "h": 341
           },
@@ -22486,8 +22406,8 @@
         },
         "map-building-bathhouse-basement-01d.img": {
           "frame": {
-            "x": 2148,
-            "y": 3882,
+            "x": 1035,
+            "y": 3679,
             "w": 258,
             "h": 193
           },
@@ -22506,8 +22426,8 @@
         },
         "map-building-bathhouse-sideroom-01.img": {
           "frame": {
-            "x": 1537,
-            "y": 807,
+            "x": 494,
+            "y": 1934,
             "w": 536,
             "h": 536
           },
@@ -22526,8 +22446,8 @@
         },
         "map-building-bathhouse-sideroom-ceiling-01.img": {
           "frame": {
-            "x": 2441,
-            "y": 1604,
+            "x": 1187,
+            "y": 3367,
             "w": 256,
             "h": 224
           },
@@ -22546,8 +22466,8 @@
         },
         "map-building-club-ceiling-01a.img": {
           "frame": {
-            "x": 2,
-            "y": 1388,
+            "x": 1802,
+            "y": 807,
             "w": 737,
             "h": 593
           },
@@ -22564,10 +22484,30 @@
             "h": 594
           }
         },
+        "map-building-club-ceiling-01b.img": {
+          "frame": {
+            "x": 3901,
+            "y": 2607,
+            "w": 177,
+            "h": 242
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 177,
+            "h": 242
+          },
+          "sourceSize": {
+            "w": 178,
+            "h": 242
+          }
+        },
         "map-building-club-ceiling-01c.img": {
           "frame": {
-            "x": 2271,
-            "y": 2,
+            "x": 3115,
+            "y": 2533,
             "w": 400,
             "h": 433
           },
@@ -22586,8 +22526,8 @@
         },
         "map-building-club-floor-01a.img": {
           "frame": {
-            "x": 2428,
-            "y": 3391,
+            "x": 1557,
+            "y": 3593,
             "w": 225,
             "h": 226
           },
@@ -22606,8 +22546,8 @@
         },
         "map-building-club-floor-01b.img": {
           "frame": {
-            "x": 2530,
-            "y": 2980,
+            "x": 1786,
+            "y": 3547,
             "w": 194,
             "h": 193
           },
@@ -22624,10 +22564,30 @@
             "h": 194
           }
         },
+        "map-building-club-floor-01d.img": {
+          "frame": {
+            "x": 3751,
+            "y": 1813,
+            "w": 322,
+            "h": 193
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 322,
+            "h": 193
+          },
+          "sourceSize": {
+            "w": 322,
+            "h": 194
+          }
+        },
         "map-building-club-floor-01e.img": {
           "frame": {
-            "x": 1726,
-            "y": 1347,
+            "x": 3727,
+            "y": 2121,
             "w": 353,
             "h": 482
           },
@@ -22644,30 +22604,10 @@
             "h": 482
           }
         },
-        "map-building-club-floor-01f.img": {
-          "frame": {
-            "x": 2,
-            "y": 3957,
-            "w": 194,
-            "h": 130
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 194,
-            "h": 130
-          },
-          "sourceSize": {
-            "w": 194,
-            "h": 130
-          }
-        },
         "map-building-club-floor-01g.img": {
           "frame": {
-            "x": 2,
-            "y": 806,
+            "x": 2676,
+            "y": 323,
             "w": 800,
             "h": 578
           },
@@ -22684,10 +22624,30 @@
             "h": 578
           }
         },
+        "map-building-club-floor-01h.img": {
+          "frame": {
+            "x": 618,
+            "y": 2474,
+            "w": 321,
+            "h": 289
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 1,
+            "y": 1,
+            "w": 321,
+            "h": 289
+          },
+          "sourceSize": {
+            "w": 322,
+            "h": 290
+          }
+        },
         "map-building-club-vault-ceiling.img": {
           "frame": {
-            "x": 2657,
-            "y": 3360,
+            "x": 2166,
+            "y": 3727,
             "w": 160,
             "h": 176
           },
@@ -22702,112 +22662,12 @@
           "sourceSize": {
             "w": 160,
             "h": 176
-          }
-        },
-        "map-building-container-ceiling-01.img": {
-          "frame": {
-            "x": 1750,
-            "y": 1833,
-            "w": 180,
-            "h": 380
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 180,
-            "h": 380
-          },
-          "sourceSize": {
-            "w": 180,
-            "h": 536
-          }
-        },
-        "map-building-container-ceiling-02.img": {
-          "frame": {
-            "x": 1750,
-            "y": 2217,
-            "w": 180,
-            "h": 380
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 180,
-            "h": 380
-          },
-          "sourceSize": {
-            "w": 180,
-            "h": 536
-          }
-        },
-        "map-building-container-ceiling-03.img": {
-          "frame": {
-            "x": 1750,
-            "y": 2601,
-            "w": 180,
-            "h": 380
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 180,
-            "h": 380
-          },
-          "sourceSize": {
-            "w": 180,
-            "h": 536
-          }
-        },
-        "map-building-container-ceiling-05.img": {
-          "frame": {
-            "x": 1934,
-            "y": 1833,
-            "w": 180,
-            "h": 380
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 180,
-            "h": 380
-          },
-          "sourceSize": {
-            "w": 180,
-            "h": 536
-          }
-        },
-        "map-building-container-open-ceiling-01.img": {
-          "frame": {
-            "x": 2083,
-            "y": 1292,
-            "w": 180,
-            "h": 380
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 156,
-            "w": 180,
-            "h": 380
-          },
-          "sourceSize": {
-            "w": 180,
-            "h": 692
           }
         },
         "map-building-crossing-bathroom-ceiling.img": {
           "frame": {
-            "x": 1856,
-            "y": 3889,
+            "x": 609,
+            "y": 2767,
             "w": 288,
             "h": 192
           },
@@ -22826,8 +22686,8 @@
         },
         "map-building-dock-floor-01a.img": {
           "frame": {
-            "x": 2856,
-            "y": 2469,
+            "x": 2180,
+            "y": 3495,
             "w": 160,
             "h": 160
           },
@@ -22846,8 +22706,8 @@
         },
         "map-building-house-ceiling.img": {
           "frame": {
-            "x": 2,
-            "y": 1985,
+            "x": 1802,
+            "y": 1404,
             "w": 720,
             "h": 648
           },
@@ -22866,8 +22726,8 @@
         },
         "map-building-house-window-01.img": {
           "frame": {
-            "x": 3525,
-            "y": 2,
+            "x": 4062,
+            "y": 1354,
             "w": 32,
             "h": 104
           },
@@ -22886,8 +22746,8 @@
         },
         "map-building-house-window-res-01.img": {
           "frame": {
-            "x": 3525,
-            "y": 110,
+            "x": 4062,
+            "y": 1462,
             "w": 32,
             "h": 104
           },
@@ -22904,10 +22764,30 @@
             "h": 104
           }
         },
+        "map-building-hut-ceiling-01.img": {
+          "frame": {
+            "x": 3519,
+            "y": 2607,
+            "w": 378,
+            "h": 393
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 15,
+            "y": 15,
+            "w": 378,
+            "h": 393
+          },
+          "sourceSize": {
+            "w": 408,
+            "h": 408
+          }
+        },
         "map-building-hut-ceiling-02.img": {
           "frame": {
-            "x": 1281,
-            "y": 3492,
+            "x": 3067,
+            "y": 2970,
             "w": 378,
             "h": 393
           },
@@ -22926,8 +22806,8 @@
         },
         "map-building-hut-ceiling-03.img": {
           "frame": {
-            "x": 1663,
-            "y": 3492,
+            "x": 2058,
+            "y": 2720,
             "w": 379,
             "h": 393
           },
@@ -22946,8 +22826,8 @@
         },
         "map-building-hut-floor-01.img": {
           "frame": {
-            "x": 2077,
-            "y": 516,
+            "x": 2663,
+            "y": 2236,
             "w": 448,
             "h": 448
           },
@@ -22964,9 +22844,29 @@
             "h": 512
           }
         },
+        "map-building-mansion-ceiling.img": {
+          "frame": {
+            "x": 2,
+            "y": 2,
+            "w": 912,
+            "h": 800
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 32,
+            "w": 912,
+            "h": 800
+          },
+          "sourceSize": {
+            "w": 1024,
+            "h": 864
+          }
+        },
         "map-building-mansion-cellar-01a.img": {
           "frame": {
-            "x": 886,
+            "x": 1807,
             "y": 2,
             "w": 865,
             "h": 801
@@ -22986,8 +22886,8 @@
         },
         "map-building-mansion-cellar-01b.img": {
           "frame": {
-            "x": 2904,
-            "y": 2,
+            "x": 1504,
+            "y": 3122,
             "w": 225,
             "h": 230
           },
@@ -23002,12 +22902,32 @@
           "sourceSize": {
             "w": 226,
             "h": 230
+          }
+        },
+        "map-building-mansion-floor-01a.img": {
+          "frame": {
+            "x": 2676,
+            "y": 2,
+            "w": 802,
+            "h": 317
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 5,
+            "w": 802,
+            "h": 317
+          },
+          "sourceSize": {
+            "w": 802,
+            "h": 322
           }
         },
         "map-building-mansion-floor-01c.img": {
           "frame": {
-            "x": 2301,
-            "y": 3159,
+            "x": 1537,
+            "y": 3855,
             "w": 225,
             "h": 228
           },
@@ -23024,30 +22944,10 @@
             "h": 228
           }
         },
-        "map-building-outhouse-ceiling.img": {
-          "frame": {
-            "x": 2258,
-            "y": 2148,
-            "w": 272,
-            "h": 224
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 64,
-            "y": 0,
-            "w": 272,
-            "h": 224
-          },
-          "sourceSize": {
-            "w": 400,
-            "h": 316
-          }
-        },
         "map-building-outhouse-floor.img": {
           "frame": {
-            "x": 2267,
-            "y": 1292,
+            "x": 942,
+            "y": 3367,
             "w": 241,
             "h": 308
           },
@@ -23064,10 +22964,30 @@
             "h": 316
           }
         },
+        "map-building-panicroom-ceiling.img": {
+          "frame": {
+            "x": 562,
+            "y": 1194,
+            "w": 288,
+            "h": 384
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 288,
+            "h": 384
+          },
+          "sourceSize": {
+            "w": 288,
+            "h": 384
+          }
+        },
         "map-building-panicroom-floor.img": {
           "frame": {
-            "x": 1685,
-            "y": 3058,
+            "x": 2,
+            "y": 3367,
             "w": 288,
             "h": 384
           },
@@ -23086,8 +23006,8 @@
         },
         "map-building-police-ceiling-03.img": {
           "frame": {
-            "x": 1242,
-            "y": 2066,
+            "x": 2155,
+            "y": 2236,
             "w": 504,
             "h": 480
           },
@@ -23106,8 +23026,8 @@
         },
         "map-building-police-floor-02.img": {
           "frame": {
-            "x": 668,
-            "y": 3073,
+            "x": 3482,
+            "y": 2,
             "w": 609,
             "h": 640
           },
@@ -23124,10 +23044,70 @@
             "h": 1570
           }
         },
+        "map-building-saloon-ceiling-01.img": {
+          "frame": {
+            "x": 2526,
+            "y": 1608,
+            "w": 625,
+            "h": 624
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 625,
+            "h": 624
+          },
+          "sourceSize": {
+            "w": 656,
+            "h": 656
+          }
+        },
+        "map-building-saloon-ceiling-02.img": {
+          "frame": {
+            "x": 1907,
+            "y": 3367,
+            "w": 192,
+            "h": 160
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 192,
+            "h": 160
+          },
+          "sourceSize": {
+            "w": 192,
+            "h": 160
+          }
+        },
+        "map-building-shack-ceiling-01.img": {
+          "frame": {
+            "x": 2,
+            "y": 3122,
+            "w": 315,
+            "h": 207
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 315,
+            "h": 207
+          },
+          "sourceSize": {
+            "w": 315,
+            "h": 255
+          }
+        },
         "map-building-shack-ceiling-02.img": {
           "frame": {
-            "x": 2258,
-            "y": 2376,
+            "x": 1035,
+            "y": 3876,
             "w": 240,
             "h": 192
           },
@@ -23146,8 +23126,8 @@
         },
         "map-building-shack-floor-01.img": {
           "frame": {
-            "x": 2077,
-            "y": 968,
+            "x": 2,
+            "y": 3755,
             "w": 382,
             "h": 320
           },
@@ -23166,8 +23146,8 @@
         },
         "map-building-shack-floor-02.img": {
           "frame": {
-            "x": 2154,
-            "y": 2601,
+            "x": 618,
+            "y": 3367,
             "w": 320,
             "h": 320
           },
@@ -23186,8 +23166,8 @@
         },
         "map-building-shack-floor-03.img": {
           "frame": {
-            "x": 2,
-            "y": 3545,
+            "x": 3155,
+            "y": 2121,
             "w": 568,
             "h": 408
           },
@@ -23204,30 +23184,10 @@
             "h": 448
           }
         },
-        "map-building-teahouse-floor-02.img": {
-          "frame": {
-            "x": 2534,
-            "y": 2273,
-            "w": 128,
-            "h": 88
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 128,
-            "h": 88
-          },
-          "sourceSize": {
-            "w": 128,
-            "h": 88
-          }
-        },
         "map-building-teahouse-res-01.img": {
           "frame": {
-            "x": 2140,
-            "y": 3670,
+            "x": 2,
+            "y": 2734,
             "w": 282,
             "h": 208
           },
@@ -23246,8 +23206,8 @@
         },
         "map-building-vault-ceiling.img": {
           "frame": {
-            "x": 1977,
-            "y": 2965,
+            "x": 388,
+            "y": 3751,
             "w": 320,
             "h": 337
           },
@@ -23266,8 +23226,8 @@
         },
         "map-building-warehouse-ceiling-02.img": {
           "frame": {
-            "x": 2,
-            "y": 2637,
+            "x": 3274,
+            "y": 905,
             "w": 720,
             "h": 432
           },
@@ -23286,8 +23246,8 @@
         },
         "map-building-warehouse-floor-02.img": {
           "frame": {
-            "x": 2,
-            "y": 2,
+            "x": 918,
+            "y": 785,
             "w": 880,
             "h": 800
           },
@@ -23306,8 +23266,8 @@
         },
         "map-bunker-conch-compartment-ceiling-01.img": {
           "frame": {
-            "x": 726,
-            "y": 1985,
+            "x": 2,
+            "y": 1698,
             "w": 488,
             "h": 560
           },
@@ -23326,8 +23286,8 @@
         },
         "map-bunker-conch-compartment-floor-01b.img": {
           "frame": {
-            "x": 1281,
-            "y": 3058,
+            "x": 2663,
+            "y": 2688,
             "w": 400,
             "h": 430
           },
@@ -23346,8 +23306,8 @@
         },
         "map-bunker-egg-chamber-ceiling-01.img": {
           "frame": {
-            "x": 2118,
-            "y": 1676,
+            "x": 712,
+            "y": 3691,
             "w": 319,
             "h": 304
           },
@@ -23366,8 +23326,8 @@
         },
         "map-bunker-egg-chamber-floor-01a.img": {
           "frame": {
-            "x": 806,
-            "y": 807,
+            "x": 2543,
+            "y": 905,
             "w": 727,
             "h": 699
           },
@@ -23386,8 +23346,8 @@
         },
         "map-bunker-egg-chamber-floor-01b.img": {
           "frame": {
-            "x": 2530,
-            "y": 3177,
+            "x": 2125,
+            "y": 3117,
             "w": 192,
             "h": 179
           },
@@ -23404,30 +23364,10 @@
             "h": 180
           }
         },
-        "map-bunker-generic-ceiling-01.img": {
-          "frame": {
-            "x": 2301,
-            "y": 2925,
-            "w": 193,
-            "h": 230
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 64,
-            "y": 0,
-            "w": 193,
-            "h": 230
-          },
-          "sourceSize": {
-            "w": 320,
-            "h": 288
-          }
-        },
         "map-bunker-generic-floor-01.img": {
           "frame": {
-            "x": 2463,
-            "y": 968,
+            "x": 945,
+            "y": 3078,
             "w": 295,
             "h": 281
           },
@@ -23446,8 +23386,8 @@
         },
         "map-bunker-generic-floor-02.img": {
           "frame": {
-            "x": 2529,
-            "y": 439,
+            "x": 1244,
+            "y": 2812,
             "w": 295,
             "h": 281
           },
@@ -23464,10 +23404,30 @@
             "h": 288
           }
         },
+        "map-bunker-storm-chamber-ceiling-01.img": {
+          "frame": {
+            "x": 3155,
+            "y": 1813,
+            "w": 592,
+            "h": 304
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 112,
+            "w": 592,
+            "h": 304
+          },
+          "sourceSize": {
+            "w": 592,
+            "h": 416
+          }
+        },
         "map-bunker-storm-chamber-floor-01b.img": {
           "frame": {
-            "x": 2534,
-            "y": 2092,
+            "x": 1970,
+            "y": 3744,
             "w": 192,
             "h": 177
           },
@@ -23486,8 +23446,8 @@
         },
         "map-bunker-storm-floor-02.img": {
           "frame": {
-            "x": 1934,
-            "y": 2217,
+            "x": 294,
+            "y": 3367,
             "w": 320,
             "h": 380
           },
@@ -23506,8 +23466,8 @@
         },
         "map-bunker-vent-02.img": {
           "frame": {
-            "x": 3272,
-            "y": 3750,
+            "x": 3203,
+            "y": 3818,
             "w": 132,
             "h": 134
           },
@@ -23526,8 +23486,8 @@
         },
         "map-bunker-vent-03.img": {
           "frame": {
-            "x": 3293,
-            "y": 3524,
+            "x": 3203,
+            "y": 3956,
             "w": 132,
             "h": 134
           },
@@ -23546,8 +23506,8 @@
         },
         "map-bush-01f.img": {
           "frame": {
-            "x": 3408,
-            "y": 3793,
+            "x": 3473,
+            "y": 3954,
             "w": 126,
             "h": 130
           },
@@ -23566,8 +23526,8 @@
         },
         "map-bush-07.img": {
           "frame": {
-            "x": 3113,
-            "y": 3391,
+            "x": 2918,
+            "y": 3806,
             "w": 135,
             "h": 143
           },
@@ -23586,8 +23546,8 @@
         },
         "map-bush-07x.img": {
           "frame": {
-            "x": 3414,
-            "y": 3927,
+            "x": 3347,
+            "y": 3606,
             "w": 126,
             "h": 130
           },
@@ -23606,8 +23566,8 @@
         },
         "map-case-chrys-01.img": {
           "frame": {
-            "x": 2657,
-            "y": 3540,
+            "x": 1639,
+            "y": 1589,
             "w": 156,
             "h": 120
           },
@@ -23626,8 +23586,8 @@
         },
         "map-case-deagle-02.img": {
           "frame": {
-            "x": 2675,
-            "y": 296,
+            "x": 2494,
+            "y": 3596,
             "w": 144,
             "h": 108
           },
@@ -23646,8 +23606,8 @@
         },
         "map-case-flare-01.img": {
           "frame": {
-            "x": 2762,
-            "y": 1143,
+            "x": 3751,
+            "y": 2010,
             "w": 140,
             "h": 102
           },
@@ -23666,8 +23626,8 @@
         },
         "map-case-flare-res-01.img": {
           "frame": {
-            "x": 3544,
-            "y": 3925,
+            "x": 3603,
+            "y": 3872,
             "w": 128,
             "h": 115
           },
@@ -23686,8 +23646,8 @@
         },
         "map-case-hatchet-01.img": {
           "frame": {
-            "x": 3126,
-            "y": 3935,
+            "x": 3895,
+            "y": 2010,
             "w": 140,
             "h": 102
           },
@@ -23706,8 +23666,8 @@
         },
         "map-case-hatchet-res-01.img": {
           "frame": {
-            "x": 3429,
-            "y": 3484,
+            "x": 3735,
+            "y": 3004,
             "w": 128,
             "h": 115
           },
@@ -23726,8 +23686,8 @@
         },
         "map-case-ring-01.img": {
           "frame": {
-            "x": 2670,
-            "y": 3947,
+            "x": 1639,
+            "y": 1713,
             "w": 156,
             "h": 120
           },
@@ -23746,8 +23706,8 @@
         },
         "map-chest-01.img": {
           "frame": {
-            "x": 3270,
-            "y": 3935,
+            "x": 2770,
+            "y": 3954,
             "w": 140,
             "h": 102
           },
@@ -23766,8 +23726,8 @@
         },
         "map-chest-02.img": {
           "frame": {
-            "x": 3149,
-            "y": 3538,
+            "x": 3086,
+            "y": 3367,
             "w": 140,
             "h": 102
           },
@@ -23786,8 +23746,8 @@
         },
         "map-chest-03.img": {
           "frame": {
-            "x": 3149,
-            "y": 3644,
+            "x": 3203,
+            "y": 3712,
             "w": 140,
             "h": 102
           },
@@ -23806,8 +23766,8 @@
         },
         "map-chimney-01.img": {
           "frame": {
-            "x": 3785,
-            "y": 130,
+            "x": 3477,
+            "y": 3124,
             "w": 120,
             "h": 118
           },
@@ -23826,8 +23786,8 @@
         },
         "map-chute-01.img": {
           "frame": {
-            "x": 2828,
-            "y": 296,
+            "x": 1447,
+            "y": 3357,
             "w": 232,
             "h": 232
           },
@@ -23846,8 +23806,8 @@
         },
         "map-control-panel-01.img": {
           "frame": {
-            "x": 2817,
-            "y": 3540,
+            "x": 2508,
+            "y": 3396,
             "w": 144,
             "h": 110
           },
@@ -23866,8 +23826,8 @@
         },
         "map-control-panel-02.img": {
           "frame": {
-            "x": 2705,
-            "y": 3814,
+            "x": 2601,
+            "y": 3248,
             "w": 144,
             "h": 110
           },
@@ -23886,8 +23846,8 @@
         },
         "map-control-panel-03.img": {
           "frame": {
-            "x": 3674,
-            "y": 561,
+            "x": 1109,
+            "y": 2976,
             "w": 96,
             "h": 94
           },
@@ -23906,8 +23866,8 @@
         },
         "map-control-panel-04.img": {
           "frame": {
-            "x": 2823,
-            "y": 3654,
+            "x": 2645,
+            "y": 3122,
             "w": 144,
             "h": 110
           },
@@ -23926,8 +23886,8 @@
         },
         "map-control-panel-05.img": {
           "frame": {
-            "x": 2830,
-            "y": 3928,
+            "x": 2620,
+            "y": 3708,
             "w": 144,
             "h": 110
           },
@@ -23946,8 +23906,8 @@
         },
         "map-couch-03.img": {
           "frame": {
-            "x": 3674,
-            "y": 659,
+            "x": 3210,
+            "y": 3606,
             "w": 96,
             "h": 96
           },
@@ -23966,8 +23926,8 @@
         },
         "map-courthouse-chair.img": {
           "frame": {
-            "x": 3676,
-            "y": 3867,
+            "x": 380,
+            "y": 2262,
             "w": 105,
             "h": 126
           },
@@ -23984,10 +23944,30 @@
             "h": 126
           }
         },
+        "map-courthouse-drawers-group.img": {
+          "frame": {
+            "x": 918,
+            "y": 2,
+            "w": 885,
+            "h": 779
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 885,
+            "h": 779
+          },
+          "sourceSize": {
+            "w": 885,
+            "h": 779
+          }
+        },
         "map-courthouse-judge-desk-chair.img": {
           "frame": {
-            "x": 3252,
-            "y": 3389,
+            "x": 2914,
+            "y": 3954,
             "w": 139,
             "h": 131
           },
@@ -24006,8 +23986,8 @@
         },
         "map-courthouse-judge-desk.img": {
           "frame": {
-            "x": 1537,
-            "y": 1347,
+            "x": 943,
+            "y": 2659,
             "w": 185,
             "h": 141
           },
@@ -24026,8 +24006,8 @@
         },
         "map-courthouse-statue-02.img": {
           "frame": {
-            "x": 2140,
-            "y": 3491,
+            "x": 3768,
+            "y": 646,
             "w": 284,
             "h": 175
           },
@@ -24046,8 +24026,8 @@
         },
         "map-courthouse-statue.img": {
           "frame": {
-            "x": 2529,
-            "y": 724,
+            "x": 3480,
+            "y": 646,
             "w": 284,
             "h": 175
           },
@@ -24064,10 +24044,50 @@
             "h": 175
           }
         },
+        "map-courthouse-table.img": {
+          "frame": {
+            "x": 3940,
+            "y": 1341,
+            "w": 118,
+            "h": 305
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 118,
+            "h": 305
+          },
+          "sourceSize": {
+            "w": 118,
+            "h": 305
+          }
+        },
+        "map-courthouse-window-small.img": {
+          "frame": {
+            "x": 2471,
+            "y": 2056,
+            "w": 50,
+            "h": 174
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 50,
+            "h": 174
+          },
+          "sourceSize": {
+            "w": 50,
+            "h": 174
+          }
+        },
         "map-crate-01.img": {
           "frame": {
-            "x": 2853,
-            "y": 3768,
+            "x": 2642,
+            "y": 3510,
             "w": 144,
             "h": 144
           },
@@ -24086,8 +24106,8 @@
         },
         "map-crate-02.img": {
           "frame": {
-            "x": 2978,
-            "y": 3916,
+            "x": 2656,
+            "y": 3362,
             "w": 144,
             "h": 144
           },
@@ -24106,8 +24126,8 @@
         },
         "map-crate-02sv.img": {
           "frame": {
-            "x": 2821,
-            "y": 3345,
+            "x": 2793,
+            "y": 3122,
             "w": 144,
             "h": 144
           },
@@ -24126,8 +24146,8 @@
         },
         "map-crate-03.img": {
           "frame": {
-            "x": 2965,
-            "y": 3493,
+            "x": 2804,
+            "y": 3270,
             "w": 144,
             "h": 144
           },
@@ -24146,8 +24166,8 @@
         },
         "map-crate-04.img": {
           "frame": {
-            "x": 2726,
-            "y": 3177,
+            "x": 1970,
+            "y": 3925,
             "w": 164,
             "h": 164
           },
@@ -24166,8 +24186,8 @@
         },
         "map-crate-05.img": {
           "frame": {
-            "x": 3785,
-            "y": 2,
+            "x": 3606,
+            "y": 3004,
             "w": 124,
             "h": 124
           },
@@ -24186,8 +24206,8 @@
         },
         "map-crate-07.img": {
           "frame": {
-            "x": 2894,
-            "y": 3095,
+            "x": 2768,
+            "y": 3658,
             "w": 144,
             "h": 144
           },
@@ -24206,8 +24226,8 @@
         },
         "map-crate-08.img": {
           "frame": {
-            "x": 2969,
-            "y": 3243,
+            "x": 2790,
+            "y": 3510,
             "w": 144,
             "h": 144
           },
@@ -24226,8 +24246,8 @@
         },
         "map-crate-09.img": {
           "frame": {
-            "x": 3042,
-            "y": 3095,
+            "x": 2770,
+            "y": 3806,
             "w": 144,
             "h": 144
           },
@@ -24246,8 +24266,8 @@
         },
         "map-crate-10.img": {
           "frame": {
-            "x": 2892,
-            "y": 2943,
+            "x": 2466,
+            "y": 3927,
             "w": 148,
             "h": 148
           },
@@ -24266,8 +24286,8 @@
         },
         "map-crate-11.img": {
           "frame": {
-            "x": 3026,
-            "y": 2769,
+            "x": 2618,
+            "y": 3927,
             "w": 148,
             "h": 148
           },
@@ -24286,8 +24306,8 @@
         },
         "map-crate-14.img": {
           "frame": {
-            "x": 3164,
-            "y": 380,
+            "x": 1639,
+            "y": 1837,
             "w": 156,
             "h": 144
           },
@@ -24306,8 +24326,8 @@
         },
         "map-crate-14a.img": {
           "frame": {
-            "x": 2866,
-            "y": 2795,
+            "x": 2441,
+            "y": 3248,
             "w": 156,
             "h": 144
           },
@@ -24326,8 +24346,8 @@
         },
         "map-crate-20.img": {
           "frame": {
-            "x": 3785,
-            "y": 596,
+            "x": 3859,
+            "y": 3205,
             "w": 108,
             "h": 108
           },
@@ -24346,8 +24366,8 @@
         },
         "map-crate-res-01.img": {
           "frame": {
-            "x": 3263,
-            "y": 3215,
+            "x": 3210,
+            "y": 3473,
             "w": 138,
             "h": 129
           },
@@ -24366,8 +24386,8 @@
         },
         "map-crate-res-03.img": {
           "frame": {
-            "x": 3164,
-            "y": 222,
+            "x": 2441,
+            "y": 2720,
             "w": 216,
             "h": 154
           },
@@ -24386,8 +24406,8 @@
         },
         "map-decal-club-01.img": {
           "frame": {
-            "x": 3674,
-            "y": 242,
+            "x": 3449,
+            "y": 3362,
             "w": 100,
             "h": 106
           },
@@ -24404,30 +24424,10 @@
             "h": 360
           }
         },
-        "map-decal-club-02.img": {
-          "frame": {
-            "x": 1143,
-            "y": 3717,
-            "w": 100,
-            "h": 358
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 2,
-            "y": 0,
-            "w": 100,
-            "h": 358
-          },
-          "sourceSize": {
-            "w": 104,
-            "h": 360
-          }
-        },
         "map-decal-initiative.img": {
           "frame": {
-            "x": 3909,
-            "y": 247,
+            "x": 3735,
+            "y": 3123,
             "w": 120,
             "h": 120
           },
@@ -24446,8 +24446,8 @@
         },
         "map-decal-oil-01.img": {
           "frame": {
-            "x": 3001,
-            "y": 3789,
+            "x": 943,
+            "y": 2474,
             "w": 86,
             "h": 122
           },
@@ -24466,8 +24466,8 @@
         },
         "map-decal-oil-02.img": {
           "frame": {
-            "x": 2046,
-            "y": 3783,
+            "x": 2620,
+            "y": 3822,
             "w": 90,
             "h": 100
           },
@@ -24484,30 +24484,50 @@
             "h": 128
           }
         },
-        "map-decal-oil-03.img": {
+        "map-door-03.img": {
           "frame": {
-            "x": 3405,
-            "y": 364,
-            "w": 88,
-            "h": 92
+            "x": 4062,
+            "y": 1238,
+            "w": 32,
+            "h": 112
           },
           "rotated": false,
           "trimmed": true,
           "spriteSourceSize": {
-            "x": 20,
-            "y": 18,
-            "w": 88,
-            "h": 92
+            "x": 0,
+            "y": 0,
+            "w": 32,
+            "h": 112
           },
           "sourceSize": {
-            "w": 128,
+            "w": 32,
+            "h": 112
+          }
+        },
+        "map-door-04.img": {
+          "frame": {
+            "x": 1488,
+            "y": 2659,
+            "w": 54,
+            "h": 128
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 54,
+            "h": 128
+          },
+          "sourceSize": {
+            "w": 54,
             "h": 128
           }
         },
         "map-grill-01.img": {
           "frame": {
-            "x": 3785,
-            "y": 252,
+            "x": 3230,
+            "y": 3367,
             "w": 120,
             "h": 102
           },
@@ -24526,8 +24546,8 @@
         },
         "map-hedgehog-01.img": {
           "frame": {
-            "x": 2670,
-            "y": 2273,
+            "x": 1984,
+            "y": 3531,
             "w": 192,
             "h": 192
           },
@@ -24546,8 +24566,8 @@
         },
         "map-hut-res-01.img": {
           "frame": {
-            "x": 2762,
-            "y": 903,
+            "x": 1297,
+            "y": 3855,
             "w": 236,
             "h": 236
           },
@@ -24566,8 +24586,8 @@
         },
         "map-outhouse-res.img": {
           "frame": {
-            "x": 2959,
-            "y": 2633,
+            "x": 2466,
+            "y": 3791,
             "w": 150,
             "h": 132
           },
@@ -24586,8 +24606,8 @@
         },
         "map-oven-01.img": {
           "frame": {
-            "x": 2286,
-            "y": 3391,
+            "x": 2543,
+            "y": 807,
             "w": 108,
             "h": 94
           },
@@ -24602,32 +24622,12 @@
           "sourceSize": {
             "w": 108,
             "h": 94
-          }
-        },
-        "map-pipes-01.img": {
-          "frame": {
-            "x": 2046,
-            "y": 3491,
-            "w": 90,
-            "h": 288
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 90,
-            "h": 288
-          },
-          "sourceSize": {
-            "w": 90,
-            "h": 288
           }
         },
         "map-pipes-02.img": {
           "frame": {
-            "x": 2817,
-            "y": 724,
+            "x": 2,
+            "y": 2946,
             "w": 236,
             "h": 172
           },
@@ -24644,30 +24644,10 @@
             "h": 172
           }
         },
-        "map-pipes-04.img": {
-          "frame": {
-            "x": 1121,
-            "y": 1510,
-            "w": 88,
-            "h": 352
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 88,
-            "h": 352
-          },
-          "sourceSize": {
-            "w": 88,
-            "h": 352
-          }
-        },
         "map-pot-01.img": {
           "frame": {
-            "x": 3561,
-            "y": 428,
+            "x": 936,
+            "y": 3999,
             "w": 94,
             "h": 94
           },
@@ -24686,8 +24666,8 @@
         },
         "map-pot-02.img": {
           "frame": {
-            "x": 3561,
-            "y": 526,
+            "x": 3999,
+            "y": 3073,
             "w": 94,
             "h": 94
           },
@@ -24706,8 +24686,8 @@
         },
         "map-pot-03.img": {
           "frame": {
-            "x": 3561,
-            "y": 624,
+            "x": 3971,
+            "y": 3314,
             "w": 94,
             "h": 94
           },
@@ -24726,8 +24706,8 @@
         },
         "map-pot-04.img": {
           "frame": {
-            "x": 3561,
-            "y": 722,
+            "x": 3606,
+            "y": 3254,
             "w": 94,
             "h": 94
           },
@@ -24746,8 +24726,8 @@
         },
         "map-pot-05.img": {
           "frame": {
-            "x": 3405,
-            "y": 168,
+            "x": 3606,
+            "y": 3352,
             "w": 94,
             "h": 94
           },
@@ -24766,8 +24746,8 @@
         },
         "map-pot-res-01.img": {
           "frame": {
-            "x": 3293,
-            "y": 3662,
+            "x": 1187,
+            "y": 3595,
             "w": 80,
             "h": 80
           },
@@ -24784,30 +24764,30 @@
             "h": 144
           }
         },
-        "map-power-box-01.img": {
+        "map-potato-res.img": {
           "frame": {
-            "x": 3064,
-            "y": 456,
-            "w": 72,
-            "h": 72
+            "x": 3519,
+            "y": 2533,
+            "w": 56,
+            "h": 68
           },
           "rotated": false,
           "trimmed": true,
           "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 72,
-            "h": 72
+            "x": 20,
+            "y": 14,
+            "w": 56,
+            "h": 68
           },
           "sourceSize": {
-            "w": 72,
-            "h": 72
+            "w": 96,
+            "h": 96
           }
         },
         "map-recorder-01.img": {
           "frame": {
-            "x": 3039,
-            "y": 3391,
+            "x": 494,
+            "y": 1698,
             "w": 64,
             "h": 96
           },
@@ -24826,8 +24806,8 @@
         },
         "map-recorder-02.img": {
           "frame": {
-            "x": 4027,
-            "y": 371,
+            "x": 494,
+            "y": 1798,
             "w": 64,
             "h": 96
           },
@@ -24844,10 +24824,50 @@
             "h": 96
           }
         },
+        "map-recorder-03.img": {
+          "frame": {
+            "x": 3553,
+            "y": 3362,
+            "w": 48,
+            "h": 80
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 48,
+            "h": 80
+          },
+          "sourceSize": {
+            "w": 48,
+            "h": 80
+          }
+        },
+        "map-recorder-04.img": {
+          "frame": {
+            "x": 3553,
+            "y": 3446,
+            "w": 48,
+            "h": 80
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 48,
+            "h": 80
+          },
+          "sourceSize": {
+            "w": 48,
+            "h": 80
+          }
+        },
         "map-refrigerator-01.img": {
           "frame": {
-            "x": 3676,
-            "y": 3997,
+            "x": 712,
+            "y": 3999,
             "w": 108,
             "h": 94
           },
@@ -24866,8 +24886,8 @@
         },
         "map-saloon-bar-02.img": {
           "frame": {
-            "x": 3503,
-            "y": 218,
+            "x": 4039,
+            "y": 2010,
             "w": 54,
             "h": 92
           },
@@ -24886,8 +24906,8 @@
         },
         "map-sandbags-01.img": {
           "frame": {
-            "x": 2410,
-            "y": 3947,
+            "x": 567,
+            "y": 2963,
             "w": 256,
             "h": 146
           },
@@ -24906,8 +24926,8 @@
         },
         "map-sandbags-02.img": {
           "frame": {
-            "x": 2705,
-            "y": 3664,
+            "x": 3155,
+            "y": 1608,
             "w": 114,
             "h": 146
           },
@@ -24924,30 +24944,10 @@
             "h": 148
           }
         },
-        "map-shack-res-01.img": {
-          "frame": {
-            "x": 1977,
-            "y": 3306,
-            "w": 305,
-            "h": 181
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 60,
-            "y": 49,
-            "w": 305,
-            "h": 181
-          },
-          "sourceSize": {
-            "w": 420,
-            "h": 340
-          }
-        },
         "map-shack-res-02.img": {
           "frame": {
-            "x": 2828,
-            "y": 532,
+            "x": 1683,
+            "y": 3367,
             "w": 220,
             "h": 176
           },
@@ -24966,8 +24966,8 @@
         },
         "map-shack-res-03.img": {
           "frame": {
-            "x": 3052,
-            "y": 532,
+            "x": 1733,
+            "y": 3122,
             "w": 220,
             "h": 176
           },
@@ -24986,8 +24986,8 @@
         },
         "map-silo-01.img": {
           "frame": {
-            "x": 1242,
-            "y": 2550,
+            "x": 1550,
+            "y": 2570,
             "w": 504,
             "h": 504
           },
@@ -25006,8 +25006,8 @@
         },
         "map-smoke-res.img": {
           "frame": {
-            "x": 2682,
-            "y": 2469,
+            "x": 2103,
+            "y": 3313,
             "w": 170,
             "h": 178
           },
@@ -25026,8 +25026,8 @@
         },
         "map-squash-01.img": {
           "frame": {
-            "x": 3913,
-            "y": 2,
+            "x": 3477,
+            "y": 3004,
             "w": 124,
             "h": 116
           },
@@ -25044,10 +25044,30 @@
             "h": 144
           }
         },
+        "map-squash-res-01.img": {
+          "frame": {
+            "x": 2508,
+            "y": 3510,
+            "w": 84,
+            "h": 82
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 5,
+            "y": 11,
+            "w": 84,
+            "h": 82
+          },
+          "sourceSize": {
+            "w": 96,
+            "h": 96
+          }
+        },
         "map-stairs-broken-01.img": {
           "frame": {
-            "x": 200,
-            "y": 3957,
+            "x": 2277,
+            "y": 3300,
             "w": 160,
             "h": 128
           },
@@ -25066,8 +25086,8 @@
         },
         "map-stand-01.img": {
           "frame": {
-            "x": 3405,
-            "y": 460,
+            "x": 3064,
+            "y": 3712,
             "w": 80,
             "h": 90
           },
@@ -25086,8 +25106,8 @@
         },
         "map-stone-01.img": {
           "frame": {
-            "x": 3126,
-            "y": 3789,
+            "x": 3064,
+            "y": 3566,
             "w": 142,
             "h": 142
           },
@@ -25106,8 +25126,8 @@
         },
         "map-stone-03.img": {
           "frame": {
-            "x": 2426,
-            "y": 3670,
+            "x": 288,
+            "y": 2768,
             "w": 275,
             "h": 273
           },
@@ -25126,8 +25146,8 @@
         },
         "map-stone-04.img": {
           "frame": {
-            "x": 3044,
-            "y": 2921,
+            "x": 2916,
+            "y": 3658,
             "w": 144,
             "h": 144
           },
@@ -25146,8 +25166,8 @@
         },
         "map-stone-05.img": {
           "frame": {
-            "x": 3001,
-            "y": 3641,
+            "x": 2938,
+            "y": 3418,
             "w": 144,
             "h": 144
           },
@@ -25166,8 +25186,8 @@
         },
         "map-stone-res-01.img": {
           "frame": {
-            "x": 3785,
-            "y": 358,
+            "x": 3606,
+            "y": 3132,
             "w": 118,
             "h": 118
           },
@@ -25186,8 +25206,8 @@
         },
         "map-stone-res-02.img": {
           "frame": {
-            "x": 2478,
-            "y": 2572,
+            "x": 2441,
+            "y": 3044,
             "w": 200,
             "h": 200
           },
@@ -25206,8 +25226,8 @@
         },
         "map-stone-res-04.img": {
           "frame": {
-            "x": 3907,
-            "y": 371,
+            "x": 2321,
+            "y": 3117,
             "w": 116,
             "h": 116
           },
@@ -25224,30 +25244,10 @@
             "h": 120
           }
         },
-        "map-stone-res-06.img": {
-          "frame": {
-            "x": 1755,
-            "y": 669,
-            "w": 288,
-            "h": 128
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 288,
-            "h": 128
-          },
-          "sourceSize": {
-            "w": 288,
-            "h": 128
-          }
-        },
         "map-stove-01.img": {
           "frame": {
-            "x": 3313,
-            "y": 2,
+            "x": 2441,
+            "y": 2878,
             "w": 208,
             "h": 162
           },
@@ -25266,8 +25266,8 @@
         },
         "map-stove-02.img": {
           "frame": {
-            "x": 3674,
-            "y": 352,
+            "x": 3971,
+            "y": 3205,
             "w": 98,
             "h": 105
           },
@@ -25286,8 +25286,8 @@
         },
         "map-table-01.img": {
           "frame": {
-            "x": 364,
-            "y": 3957,
+            "x": 2330,
+            "y": 3659,
             "w": 160,
             "h": 128
           },
@@ -25306,8 +25306,8 @@
         },
         "map-table-02.img": {
           "frame": {
-            "x": 2118,
-            "y": 1984,
+            "x": 901,
+            "y": 2812,
             "w": 288,
             "h": 160
           },
@@ -25326,8 +25326,8 @@
         },
         "map-table-03.img": {
           "frame": {
-            "x": 2728,
-            "y": 2979,
+            "x": 2344,
+            "y": 3432,
             "w": 160,
             "h": 160
           },
@@ -25346,8 +25346,8 @@
         },
         "map-table-res.img": {
           "frame": {
-            "x": 3395,
-            "y": 3348,
+            "x": 3339,
+            "y": 3818,
             "w": 131,
             "h": 132
           },
@@ -25366,8 +25366,8 @@
         },
         "map-toilet-01.img": {
           "frame": {
-            "x": 3674,
-            "y": 2,
+            "x": 2952,
+            "y": 3122,
             "w": 96,
             "h": 124
           },
@@ -25386,8 +25386,8 @@
         },
         "map-toilet-02.img": {
           "frame": {
-            "x": 3561,
-            "y": 2,
+            "x": 2952,
+            "y": 3250,
             "w": 96,
             "h": 124
           },
@@ -25404,30 +25404,10 @@
             "h": 128
           }
         },
-        "map-toilet-03.img": {
-          "frame": {
-            "x": 2894,
-            "y": 3243,
-            "w": 66,
-            "h": 98
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 17,
-            "y": 1,
-            "w": 66,
-            "h": 98
-          },
-          "sourceSize": {
-            "w": 100,
-            "h": 100
-          }
-        },
         "map-toilet-04.img": {
           "frame": {
-            "x": 2969,
-            "y": 3391,
+            "x": 939,
+            "y": 2976,
             "w": 66,
             "h": 98
           },
@@ -25446,8 +25426,8 @@
         },
         "map-toilet-res-01.img": {
           "frame": {
-            "x": 3674,
-            "y": 130,
+            "x": 3735,
+            "y": 3247,
             "w": 98,
             "h": 108
           },
@@ -25466,8 +25446,8 @@
         },
         "map-toilet-res-02.img": {
           "frame": {
-            "x": 3405,
-            "y": 266,
+            "x": 1550,
+            "y": 2145,
             "w": 80,
             "h": 94
           },
@@ -25486,8 +25466,8 @@
         },
         "map-tree-03.img": {
           "frame": {
-            "x": 2441,
-            "y": 1832,
+            "x": 1244,
+            "y": 3097,
             "w": 256,
             "h": 256
           },
@@ -25506,8 +25486,8 @@
         },
         "map-tree-04.img": {
           "frame": {
-            "x": 3785,
-            "y": 480,
+            "x": 3477,
+            "y": 3246,
             "w": 112,
             "h": 112
           },
@@ -25526,8 +25506,8 @@
         },
         "map-tree-07su.img": {
           "frame": {
-            "x": 2512,
-            "y": 1253,
+            "x": 1297,
+            "y": 3595,
             "w": 256,
             "h": 256
           },
@@ -25546,8 +25526,8 @@
         },
         "map-tree-08f.img": {
           "frame": {
-            "x": 726,
-            "y": 2549,
+            "x": 1639,
+            "y": 2056,
             "w": 512,
             "h": 510
           },
@@ -25566,8 +25546,8 @@
         },
         "map-tree-08su.img": {
           "frame": {
-            "x": 1755,
-            "y": 2,
+            "x": 1034,
+            "y": 2145,
             "w": 512,
             "h": 510
           },
@@ -25586,8 +25566,8 @@
         },
         "map-tree-09.img": {
           "frame": {
-            "x": 3901,
-            "y": 491,
+            "x": 3352,
+            "y": 3473,
             "w": 112,
             "h": 112
           },
@@ -25606,8 +25586,8 @@
         },
         "map-tree-res-02.img": {
           "frame": {
-            "x": 3561,
-            "y": 228,
+            "x": 3603,
+            "y": 3991,
             "w": 96,
             "h": 96
           },
@@ -25626,8 +25606,8 @@
         },
         "map-vat-01.img": {
           "frame": {
-            "x": 3542,
-            "y": 3603,
+            "x": 3867,
+            "y": 3073,
             "w": 128,
             "h": 128
           },
@@ -25646,8 +25626,8 @@
         },
         "map-vat-02.img": {
           "frame": {
-            "x": 2498,
-            "y": 2776,
+            "x": 1766,
+            "y": 3823,
             "w": 200,
             "h": 200
           },
@@ -25666,8 +25646,8 @@
         },
         "map-vat-res.img": {
           "frame": {
-            "x": 3913,
-            "y": 122,
+            "x": 827,
+            "y": 2976,
             "w": 108,
             "h": 121
           },
@@ -25686,8 +25666,8 @@
         },
         "map-vending-soda-01.img": {
           "frame": {
-            "x": 3561,
-            "y": 130,
+            "x": 824,
+            "y": 3999,
             "w": 108,
             "h": 94
           },
@@ -25706,8 +25686,8 @@
         },
         "map-wall-03-rounded.img": {
           "frame": {
-            "x": 3113,
-            "y": 3538,
+            "x": 4062,
+            "y": 1570,
             "w": 32,
             "h": 96
           },
@@ -25726,8 +25706,8 @@
         },
         "map-wall-03.img": {
           "frame": {
-            "x": 1121,
-            "y": 1866,
+            "x": 3310,
+            "y": 3606,
             "w": 32,
             "h": 96
           },
@@ -25742,12 +25722,32 @@
           "sourceSize": {
             "w": 32,
             "h": 96
+          }
+        },
+        "map-wall-04-cobalt.img": {
+          "frame": {
+            "x": 242,
+            "y": 2946,
+            "w": 40,
+            "h": 160
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 40,
+            "h": 160
+          },
+          "sourceSize": {
+            "w": 40,
+            "h": 160
           }
         },
         "map-wall-04-rounded.img": {
           "frame": {
-            "x": 528,
-            "y": 3957,
+            "x": 4062,
+            "y": 974,
             "w": 32,
             "h": 128
           },
@@ -25762,12 +25762,32 @@
           "sourceSize": {
             "w": 32,
             "h": 128
+          }
+        },
+        "map-wall-04-stone.img": {
+          "frame": {
+            "x": 3067,
+            "y": 2688,
+            "w": 40,
+            "h": 160
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 40,
+            "h": 160
+          },
+          "sourceSize": {
+            "w": 40,
+            "h": 160
           }
         },
         "map-wall-04.img": {
           "frame": {
-            "x": 3670,
-            "y": 3735,
+            "x": 4062,
+            "y": 1106,
             "w": 32,
             "h": 128
           },
@@ -25784,10 +25804,70 @@
             "h": 128
           }
         },
+        "map-wall-05-rounded.img": {
+          "frame": {
+            "x": 4062,
+            "y": 646,
+            "w": 32,
+            "h": 160
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 32,
+            "h": 160
+          },
+          "sourceSize": {
+            "w": 32,
+            "h": 160
+          }
+        },
+        "map-wall-05.img": {
+          "frame": {
+            "x": 4062,
+            "y": 810,
+            "w": 32,
+            "h": 160
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 32,
+            "h": 160
+          },
+          "sourceSize": {
+            "w": 32,
+            "h": 160
+          }
+        },
+        "map-wheel-01.img": {
+          "frame": {
+            "x": 2155,
+            "y": 2056,
+            "w": 312,
+            "h": 156
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 312,
+            "h": 156
+          },
+          "sourceSize": {
+            "w": 312,
+            "h": 156
+          }
+        },
         "map-wheel-02.img": {
           "frame": {
-            "x": 1555,
-            "y": 3889,
+            "x": 1187,
+            "y": 2659,
             "w": 297,
             "h": 149
           },
@@ -25806,8 +25886,8 @@
         },
         "map-wheel-03.img": {
           "frame": {
-            "x": 1755,
-            "y": 516,
+            "x": 321,
+            "y": 3122,
             "w": 312,
             "h": 149
           },
@@ -25826,8 +25906,8 @@
         },
         "map-woodpile-01.img": {
           "frame": {
-            "x": 3561,
-            "y": 328,
+            "x": 3703,
+            "y": 3991,
             "w": 96,
             "h": 96
           },

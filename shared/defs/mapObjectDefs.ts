@@ -19249,7 +19249,12 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
     }),
     wood_perm_wall_ext_35: createWall({
         material: "woodPerm",
-        extents: v2.create(0.5, 17.5),
+        extents: v2.create(0.5, 14.6),
+        hitParticle: "blackChip",
+    }),
+    wood_perm_wall_ext_36: createWall({
+        material: "woodPerm",
+        extents: v2.create(0.5, 0.9),
         hitParticle: "blackChip",
     }),
     wood_perm_wall_ext_thicker_6: createWall({
@@ -19332,6 +19337,7 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
             collider.createAabbExtents(v2.create(0, 0), v2.create(22.5, 22.5)),
         ],
         zIdx: 1,
+        ori: 0,
         floor: {
             surfaces: [
                 {
@@ -19348,6 +19354,7 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
             imgs: [
                 {
                     sprite: "map-building-saloon-floor-01.img",
+                    pos: v2.create(-6.5, 0),
                     scale: 0.5,
                     alpha: 1,
                     tint: 0xffffff,
@@ -19467,7 +19474,13 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
             },
             {
                 type: "wood_perm_wall_ext_35",
-                pos: v2.create(-3, 20),
+                pos: v2.create(-0.1, 20),
+                scale: 1,
+                ori: 1,
+            },
+             {
+                type: "wood_perm_wall_ext_36",
+                pos: v2.create(-19.6, 20),
                 scale: 1,
                 ori: 1,
             },
@@ -19512,6 +19525,12 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
                 pos: v2.create(14.25, 12),
                 scale: 1,
                 ori: 0,
+            },
+            {
+                type: "house_door_01",
+                pos: v2.create(-18.75, 20.25),
+                scale: 1.05,
+                ori: 3,
             },
             {
                 type: "wood_perm_wall_ext_7",
@@ -19682,13 +19701,6 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
                 scale: 1,
                 ori: 0,
                 inheritOri: false,
-            },
-            {
-                type: "barrel_02",
-                pos: v2.create(-17.5, 17.5),
-                scale: 1,
-                ori: 0,
-                puzzlePiece: "barrel",
             },
             {
                 type: "piano_01",

@@ -68,6 +68,7 @@ const mapDef: PartialMapDef = {
                 warehouse_01: 1,
                 house_red_01: 1,
                 house_red_02: 1,
+                saloon_01: 1,
                 barn_01: 1,
                 // barn_02: 1,
                 hut_01: 0,
@@ -99,6 +100,10 @@ const mapDef: PartialMapDef = {
             {
                 spawns: ["police_01", "bank_01", "club_complex_01"],
                 choose: 1,
+            },
+            {
+                spawns: ["house_red_02", "house_red_01", "saloon_01"],
+                choose: 2,
             },
         ],
     },
