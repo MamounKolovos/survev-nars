@@ -1,5 +1,4 @@
 import { util } from "../../utils/util";
-import { v2 } from "../../utils/v2";
 import type { MapDef } from "../mapDefs";
 import { MapId } from "../types/misc";
 import { Main, type PartialMapDef } from "./baseDefs";
@@ -25,12 +24,12 @@ const mapDef: PartialMapDef = {
         },
         customSpawnRules: {
             locationSpawns: [
-                {
-                    type: "courthouse_01",
-                    pos: v2.create(0.4, 0.4),
-                    rad: 10,
-                    retryOnFailure: true,
-                },
+                // {
+                //     type: "courthouse_01",
+                //     pos: v2.create(0.4, 0.4),
+                //     rad: 10,
+                //     retryOnFailure: true,
+                // },
             ],
         },
         densitySpawns: [
@@ -85,7 +84,7 @@ const mapDef: PartialMapDef = {
                 // stone_04: 0,
                 // mansion_structure_01: 1,
                 // club_complex_01: 1,
-                courthouse_01: 1,
+                // courthouse_01: 1,
             },
         ],
         randomSpawns: [],
