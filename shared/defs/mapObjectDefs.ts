@@ -19478,7 +19478,7 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
                 scale: 1,
                 ori: 1,
             },
-             {
+            {
                 type: "wood_perm_wall_ext_36",
                 pos: v2.create(-19.6, 20),
                 scale: 1,

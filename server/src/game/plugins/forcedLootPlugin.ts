@@ -280,10 +280,10 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
         }
         case "bugler": {
             player.weaponManager.setWeapon(
-        GameConfig.WeaponSlot.Secondary,
-        "bugle",
-        (GameObjectDefs["bugle"] as GunDef).maxClip,
-    );
+                GameConfig.WeaponSlot.Secondary,
+                "bugle",
+                (GameObjectDefs["bugle"] as GunDef).maxClip,
+            );
         }
     }
 

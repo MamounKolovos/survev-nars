@@ -24,6 +24,7 @@ export interface RoomData {
     findingGame: boolean;
     lastError: TeamMenuErrorType | "";
     region: string;
+    roomPair: string;
     autoFill: boolean;
     enabledGameModeIdxs: number[];
     gameModeIdx: number;
@@ -59,6 +60,7 @@ export interface TeamStateMsg {
         localPlayerId: number; // always -1 by default since it can only be set when the socket is actually sending state to each individual client
         room: RoomData;
         players: TeamMenuPlayer[];
+        rooms: string[];
     };
 }
 
