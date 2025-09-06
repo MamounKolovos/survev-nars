@@ -75,6 +75,7 @@ const secondaryWeights = [
     { weight: 1, gun: "hk416" },
     { weight: 1, gun: "scar" },
     { weight: 1, gun: "garand" },
+    { weight: 1, gun: "m1014" },
     { weight: 0.5, gun: "mk12" },
     { weight: 0.8, gun: "deagle_dual" },
     { weight: 0.3, gun: "saiga" },
@@ -97,6 +98,7 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
     switch (secondary) {
         case "sv98":
         case "mosin":
+        case "m1014":
         case "scout_elite":
         case "blr": {
             if (x < 0.6) {
@@ -382,6 +384,7 @@ function getUpgradedGun(g: string): string {
         case "m870": {
             return "spas12";
         }
+        case "m1014":
         case "mosin": {
             if (Math.random() < 0.3) return "sv98";
             break;
