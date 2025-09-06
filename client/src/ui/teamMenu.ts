@@ -71,7 +71,6 @@ export class TeamMenu {
     }> = [];
     rooms: string[] = [];
 
-
     prevPlayerCount = 0;
     localPlayerId = 0;
     isLeader = true;
@@ -421,23 +420,24 @@ export class TeamMenu {
         this.serverWarning.css("opacity", hasError ? 1 : 0);
         this.serverWarning.html(errorTxt);
 
-  const optGroup = document.getElementById("team-pair-opts") as HTMLOptGroupElement | null;
-  if (!optGroup) return;
+        const optGroup = document.getElementById(
+            "team-pair-opts",
+        ) as HTMLOptGroupElement | null;
+        if (!optGroup) return;
 
- this.rooms.forEach(team => {
-    const value = team.toLowerCase().replace(/\s+/g, "-");
+        this.rooms.forEach((team) => {
+            const value = team.toLowerCase().replace(/\s+/g, "-");
 
-    // Skip if option with same value already exists
-    if (optGroup.querySelector(`option[value="${value}"]`)) {
-      return;
-    }
+            // Skip if option with same value already exists
+            if (optGroup.querySelector(`option[value="${value}"]`)) {
+                return;
+            }
 
-    const option = document.createElement("option");
-    option.value = value;
-    option.textContent = team;
-    optGroup.appendChild(option);
-  });
-
+            const option = document.createElement("option");
+            option.value = value;
+            option.textContent = team;
+            optGroup.appendChild(option);
+        });
 
         if (
             this.roomData.lastError == "find_game_invalid_protocol" &&
