@@ -166,6 +166,7 @@ export default class MainPlugin extends GamePlugin {
                         "deagle_dual",
                         "mp220",
                         "mk12",
+                        "m1014",
                         "scout_elite",
                     ];
                     for (const g of floorguns) {

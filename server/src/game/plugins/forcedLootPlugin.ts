@@ -37,7 +37,7 @@ const roleWeights = [
     { weight: 88, role: "" },
     { weight: 4, role: "medic" },
     { weight: 4, role: "grenadier" },
-    { weight: 4, role: "bugler" },
+    { weight: 4, role: "lieutenant" },
 ];
 
 const vestWeights = [
@@ -75,6 +75,7 @@ const secondaryWeights = [
     { weight: 1, gun: "hk416" },
     { weight: 1, gun: "scar" },
     { weight: 1, gun: "garand" },
+    { weight: 1, gun: "m1014" },
     { weight: 0.5, gun: "mk12" },
     { weight: 0.8, gun: "deagle_dual" },
     { weight: 0.3, gun: "saiga" },
@@ -97,6 +98,7 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
     switch (secondary) {
         case "sv98":
         case "mosin":
+        case "m1014":
         case "scout_elite":
         case "blr": {
             if (x < 0.6) {
@@ -225,8 +227,8 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
             player.promoteToRole("grenadier");
             break;
         }
-        case "bugler": {
-            player.promoteToRole("bugler");
+        case "lieutenant": {
+            player.promoteToRole("lieutenant");
             break;
         }
     }
@@ -278,12 +280,9 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
             player.inventory["frag"] += 4;
             break;
         }
-        case "bugler": {
-            player.weaponManager.setWeapon(
-                GameConfig.WeaponSlot.Secondary,
-                "bugle",
-                (GameObjectDefs["bugle"] as GunDef).maxClip,
-            );
+        case "lieutenant": {
+           player.inventory["frag"] += 2;
+           player.inventory["smoke"] += 2;
         }
     }
 
@@ -382,6 +381,7 @@ function getUpgradedGun(g: string): string {
         case "m870": {
             return "spas12";
         }
+        case "m1014":
         case "mosin": {
             if (Math.random() < 0.3) return "sv98";
             break;
