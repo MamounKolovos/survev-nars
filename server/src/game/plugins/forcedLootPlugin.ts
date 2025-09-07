@@ -34,10 +34,9 @@ interface Loadout {
 }
 
 const roleWeights = [
-    { weight: 88, role: "" },
+    { weight: 92, role: "" },
     { weight: 4, role: "medic" },
     { weight: 4, role: "grenadier" },
-    { weight: 4, role: "bugler" },
 ];
 
 const vestWeights = [
@@ -281,7 +280,7 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
             break;
         }
         case "bugler": {
-            player.weaponManager.setWeapon(
+           player.weaponManager.setWeapon(
                 GameConfig.WeaponSlot.Secondary,
                 "bugle",
                 (GameObjectDefs["bugle"] as GunDef).maxClip,
