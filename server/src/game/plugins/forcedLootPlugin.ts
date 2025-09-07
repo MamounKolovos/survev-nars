@@ -34,9 +34,10 @@ interface Loadout {
 }
 
 const roleWeights = [
-    { weight: 92, role: "" },
+    { weight: 88, role: "" },
     { weight: 4, role: "medic" },
     { weight: 4, role: "grenadier" },
+    { weight: 4, role: "lieutenant" },
 ];
 
 const vestWeights = [
@@ -226,8 +227,8 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
             player.promoteToRole("grenadier");
             break;
         }
-        case "bugler": {
-            player.promoteToRole("bugler");
+        case "lieutenant": {
+            player.promoteToRole("lieutenant");
             break;
         }
     }
@@ -279,12 +280,9 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
             player.inventory["frag"] += 4;
             break;
         }
-        case "bugler": {
-           player.weaponManager.setWeapon(
-                GameConfig.WeaponSlot.Secondary,
-                "bugle",
-                (GameObjectDefs["bugle"] as GunDef).maxClip,
-            );
+        case "lieutenant": {
+           player.inventory["frag"] += 2;
+           player.inventory["smoke"] += 2;
         }
     }
 

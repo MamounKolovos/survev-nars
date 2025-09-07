@@ -2822,7 +2822,6 @@ export class Player extends BaseGameObject {
 
         if (this.hasPerk("final_bugle")) {
             this.initLastBreath();
-            this.playBugle();
         }
 
         if (
