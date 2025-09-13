@@ -81,6 +81,7 @@ const secondaryWeights = [
     { weight: 0.3, gun: "saiga" },
     { weight: 1.5, gun: "famas" },
     { weight: 1.5, gun: "an94" },
+    { weight: 1.5, gun: "bar" },
     { weight: 0.5, gun: "p30l_dual" },
     { weight: 0.001, gun: "awc" },
 ];
@@ -281,8 +282,8 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
             break;
         }
         case "lieutenant": {
-           player.inventory["frag"] += 2;
-           player.inventory["smoke"] += 2;
+            player.inventory["frag"] += 2;
+            player.inventory["smoke"] += 2;
         }
     }
 
