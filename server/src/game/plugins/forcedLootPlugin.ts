@@ -156,6 +156,11 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
                 return "spas12";
             }
         }
+         case "bar": {
+            if (Math.random() < 0.4) {
+                return "spas12";
+            }
+        }
         case "p30l_dual":
         case "deagle_dual":
         case "m4a1":
@@ -399,6 +404,7 @@ function getUpgradedGun(g: string): string {
             break;
         }
         case "an94":
+        case "bar":
         case "qbb97": {
             if (Math.random() < 0.4) return "pkp";
             break;
@@ -439,6 +445,7 @@ const gt = {
     ],
     decentSprays: [
         { gun: "scorpion", weight: 1 },
+        { gun: "bar", weight: 1 },
         { gun: "m4a1", weight: 1 },
         { gun: "grozas", weight: 1 },
     ],
@@ -468,6 +475,7 @@ const gt = {
         { weight: 0.8, gun: "deagle_dual" },
         { weight: 2, gun: "famas" },
         { weight: 2, gun: "an94" },
+        { weight: 2, gun: "bar" },
         { weight: 0.5, gun: "p30l_dual" },
     ],
 };
