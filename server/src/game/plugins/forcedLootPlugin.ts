@@ -34,8 +34,9 @@ interface Loadout {
 }
 
 const roleWeights = [
-    { weight: 88, role: "" },
+    { weight: 4, role: "" },
     { weight: 4, role: "medic" },
+    { weight: 84, role: "recon" },
     { weight: 4, role: "grenadier" },
     { weight: 4, role: "lieutenant" },
 ];
@@ -75,7 +76,6 @@ const secondaryWeights = [
     { weight: 1, gun: "hk416" },
     { weight: 1, gun: "scar" },
     { weight: 1, gun: "garand" },
-    { weight: 1, gun: "m1014" },
     { weight: 0.5, gun: "mk12" },
     { weight: 0.8, gun: "deagle_dual" },
     { weight: 0.3, gun: "saiga" },
@@ -99,7 +99,6 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
     switch (secondary) {
         case "sv98":
         case "mosin":
-        case "m1014":
         case "scout_elite":
         case "blr": {
             if (x < 0.6) {
@@ -229,6 +228,10 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
             player.promoteToRole("medic");
             break;
         }
+        case "recon": {
+            player.promoteToRole("recon");
+            break;
+        }
         case "grenadier": {
             player.promoteToRole("grenadier");
             break;
@@ -280,6 +283,10 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
         case "medic": {
             player.inventory["healthkit"] += 1;
             player.inventory["smoke"] += 2;
+            break;
+        }
+        case "recon": {
+            player.inventory["impulse"] += 3;
             break;
         }
         case "grenadier": {
@@ -387,7 +394,6 @@ function getUpgradedGun(g: string): string {
         case "m870": {
             return "spas12";
         }
-        case "m1014":
         case "mosin": {
             if (Math.random() < 0.3) return "sv98";
             break;

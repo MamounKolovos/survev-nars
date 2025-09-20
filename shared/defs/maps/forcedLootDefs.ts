@@ -43,7 +43,7 @@ const mapDef: PartialMapDef = {
         },
         densitySpawns: [
             {
-                stone_01: 650,
+                stone_01: 500,
                 barrel_01: 5,
                 silo_01: 3,
                 crate_01: 0,
@@ -51,7 +51,7 @@ const mapDef: PartialMapDef = {
                 crate_03: 0,
                 bush_01: 0,
                 cache_06: 0,
-                tree_01: 200,
+                tree_01: 250,
                 hedgehog_01: 4,
                 container_01: 4,
                 container_02: 3,
@@ -65,11 +65,11 @@ const mapDef: PartialMapDef = {
         ],
         fixedSpawns: [
             {
-                warehouse_01: 1,
-                house_red_01: 1,
-                house_red_02: 1,
-                saloon_01: 1,
-                barn_01: 1,
+                // warehouse_01: 1,
+                // house_red_01: 1,
+                // house_red_02: 1,
+                // saloon_01: 1,
+                //barn_01: 1,
                 // barn_02: 1,
                 hut_01: 0,
                 hut_02: 0, // spas hut
@@ -81,7 +81,7 @@ const mapDef: PartialMapDef = {
                 cache_02: 0, // mosin tree
                 cache_07: 0,
                 // bunker_structure_01: { odds: 0.05 },
-                bunker_structure_02: 1,
+                //bunker_structure_02: 1,
                 // bunker_structure_03: 1,
                 // bunker_structure_04: 1,
                 // bunker_structure_05: 1,
@@ -90,19 +90,27 @@ const mapDef: PartialMapDef = {
                 // chest_03: { odds: 0.2 },
                 // mil_crate_02: { odds: 0.25 },
                 // tree_02: 3,
-                teahouse_complex_01su: 1,
+                //teahouse_complex_01su: 1,
                 stone_04: 0,
-                mansion_structure_01: 1,
+                //mansion_structure_01: 1,
                 // club_complex_01: 1,
             },
         ],
         randomSpawns: [
             {
-                spawns: ["police_01", "bank_01", "club_complex_01"],
+                spawns: ["police_01", "bank_01"],
                 choose: 1,
             },
             {
-                spawns: ["house_red_02", "house_red_01", "saloon_01"],
+                spawns: ["club_complex_01", "mansion_structure_01", "bunker_structure_02"],
+                choose: 2,
+            },
+            {
+                spawns: ["house_red_02", "house_red_01", "saloon_01", "teahouse_complex_01su"],
+                choose: 3,
+            },
+            {
+                spawns: ["warehouse_01", "warehouse_02", "barn_01"],
                 choose: 2,
             },
         ],
