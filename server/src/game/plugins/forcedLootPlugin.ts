@@ -34,9 +34,9 @@ interface Loadout {
 }
 
 const roleWeights = [
-    { weight: 4, role: "" },
+    { weight: 84, role: "" },
     { weight: 4, role: "medic" },
-    { weight: 84, role: "recon" },
+    { weight: 4, role: "recon" },
     { weight: 4, role: "grenadier" },
     { weight: 4, role: "lieutenant" },
 ];
