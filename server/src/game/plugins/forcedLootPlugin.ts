@@ -286,7 +286,7 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
             break;
         }
         case "recon": {
-            player.inventory["impulse"] += 3;
+            player.inventory["impulse"] += 6;
             break;
         }
         case "grenadier": {
