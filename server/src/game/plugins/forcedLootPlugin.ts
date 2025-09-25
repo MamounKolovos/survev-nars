@@ -34,9 +34,10 @@ interface Loadout {
 }
 
 const roleWeights = [
-    { weight: 92, role: "" },
+    { weight: 88, role: "" },
     { weight: 4, role: "medic" },
     { weight: 4, role: "grenadier" },
+    { weight: 4, role: "lieutenant" },
 ];
 
 const vestWeights = [
@@ -74,11 +75,13 @@ const secondaryWeights = [
     { weight: 1, gun: "hk416" },
     { weight: 1, gun: "scar" },
     { weight: 1, gun: "garand" },
+    { weight: 1, gun: "m1014" },
     { weight: 0.5, gun: "mk12" },
     { weight: 0.8, gun: "deagle_dual" },
     { weight: 0.3, gun: "saiga" },
     { weight: 1.5, gun: "famas" },
     { weight: 1.5, gun: "an94" },
+    { weight: 1.5, gun: "bar" },
     { weight: 0.5, gun: "p30l_dual" },
     { weight: 0.001, gun: "awc" },
 ];
@@ -96,6 +99,7 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
     switch (secondary) {
         case "sv98":
         case "mosin":
+        case "m1014":
         case "scout_elite":
         case "blr": {
             if (x < 0.6) {
@@ -148,6 +152,11 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
         }
         case "famas":
         case "an94": {
+            if (Math.random() < 0.4) {
+                return "spas12";
+            }
+        }
+         case "bar": {
             if (Math.random() < 0.4) {
                 return "spas12";
             }
@@ -224,6 +233,10 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
             player.promoteToRole("grenadier");
             break;
         }
+        case "lieutenant": {
+            player.promoteToRole("lieutenant");
+            break;
+        }
     }
 
     player.chest = loadout.vest;
@@ -272,6 +285,10 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
         case "grenadier": {
             player.inventory["frag"] += 4;
             break;
+        }
+        case "lieutenant": {
+            player.inventory["frag"] += 2;
+            player.inventory["smoke"] += 2;
         }
     }
 
@@ -370,6 +387,7 @@ function getUpgradedGun(g: string): string {
         case "m870": {
             return "spas12";
         }
+        case "m1014":
         case "mosin": {
             if (Math.random() < 0.3) return "sv98";
             break;
@@ -386,6 +404,7 @@ function getUpgradedGun(g: string): string {
             break;
         }
         case "an94":
+        case "bar":
         case "qbb97": {
             if (Math.random() < 0.4) return "pkp";
             break;
@@ -426,6 +445,7 @@ const gt = {
     ],
     decentSprays: [
         { gun: "scorpion", weight: 1 },
+        { gun: "bar", weight: 1 },
         { gun: "m4a1", weight: 1 },
         { gun: "grozas", weight: 1 },
     ],
@@ -455,6 +475,7 @@ const gt = {
         { weight: 0.8, gun: "deagle_dual" },
         { weight: 2, gun: "famas" },
         { weight: 2, gun: "an94" },
+        { weight: 2, gun: "bar" },
         { weight: 0.5, gun: "p30l_dual" },
     ],
 };

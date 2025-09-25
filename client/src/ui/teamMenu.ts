@@ -47,6 +47,7 @@ export class TeamMenu {
     );
 
     serverSelect = $("#team-server-select");
+    pairSelect = $("#team-pair-select");
     queueMode1 = $("#btn-team-queue-mode-1");
     queueMode2 = $("#btn-team-queue-mode-2");
     fillAuto = $("#btn-team-fill-auto");
@@ -68,6 +69,7 @@ export class TeamMenu {
         name: string;
         isLeader: boolean;
     }> = [];
+    rooms: string[] = [];
 
     prevPlayerCount = 0;
     localPlayerId = 0;
@@ -91,6 +93,11 @@ export class TeamMenu {
             const e = this.serverSelect.find(":selected").val() as string;
             this.pingTest.start([e]);
             this.setRoomProperty("region", e);
+        });
+        this.pairSelect.change(() => {
+            const e = this.pairSelect.find(":selected").val() as string;
+            this.pingTest.start([e]);
+            this.setRoomProperty("roomPair", e);
         });
         this.queueMode1.click(() => {
             this.setRoomProperty("gameModeIdx", 1);
@@ -199,6 +206,7 @@ export class TeamMenu {
             this.roomData = {
                 roomUrl,
                 region: this.config.get("region")!,
+                roomPair: this.config.get("roomPair")!,
                 gameModeIdx: this.config.get("gameModeIdx")!,
                 autoFill: this.config.get("teamAutoFill")!,
                 findingGame: false,
@@ -298,6 +306,7 @@ export class TeamMenu {
                 const ourRoomData = this.roomData;
                 this.roomData = stateData.room;
                 this.players = stateData.players;
+                this.rooms = stateData.rooms;
                 this.localPlayerId = stateData.localPlayerId;
                 this.isLeader = this.getPlayerById(this.localPlayerId)!.isLeader;
 
@@ -411,6 +420,25 @@ export class TeamMenu {
         this.serverWarning.css("opacity", hasError ? 1 : 0);
         this.serverWarning.html(errorTxt);
 
+        const optGroup = document.getElementById(
+            "team-pair-opts",
+        ) as HTMLOptGroupElement | null;
+        if (!optGroup) return;
+
+        this.rooms.forEach((team) => {
+            const value = team.toLowerCase().replace(/\s+/g, "-");
+
+            // Skip if option with same value already exists
+            if (optGroup.querySelector(`option[value="${value}"]`)) {
+                return;
+            }
+
+            const option = document.createElement("option");
+            option.value = value;
+            option.textContent = team;
+            optGroup.appendChild(option);
+        });
+
         if (
             this.roomData.lastError == "find_game_invalid_protocol" &&
             !this.displayedInvalidProtocolModal
@@ -451,6 +479,10 @@ export class TeamMenu {
                 ele.selected = ele.value == this.roomData.region;
             });
 
+            this.pairSelect.find("option").each((_idx, ele) => {
+                ele.selected = ele.value == this.roomData.roomPair;
+            });
+
             // Modes btns
             setButtonState(
                 this.queueMode1,
@@ -467,6 +499,7 @@ export class TeamMenu {
             setButtonState(this.fillAuto, this.roomData.autoFill, this.isLeader);
             setButtonState(this.fillNone, !this.roomData.autoFill, this.isLeader);
             this.serverSelect.prop("disabled", !this.isLeader);
+            this.pairSelect.prop("disabled", !this.isLeader);
 
             // Invite link
             if (this.roomData.roomUrl) {

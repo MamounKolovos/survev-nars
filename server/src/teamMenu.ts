@@ -103,6 +103,7 @@ class Room {
         findingGame: false,
         lastError: "",
         region: "",
+        roomPair: "",
         autoFill: true,
         enabledGameModeIdxs: [],
         gameModeIdx: 1,
@@ -330,7 +331,7 @@ class Room {
         this.sendState();
     }
 
-    sendState() {
+    sendState(rs?: string[]) {
         const players = this.players.map((p) => p.data);
         // all players must be logged in to disable it
         this.data.captchaEnabled =
@@ -340,6 +341,7 @@ class Room {
                 localPlayerId: player.playerId,
                 room: this.data,
                 players,
+                rooms: rs ? rs : [],
             });
         }
     }
@@ -364,6 +366,9 @@ export class TeamMenu {
     constructor(public server: ApiServer) {
         setInterval(() => {
             for (const room of this.rooms.values()) {
+                const roomUrls = [...this.rooms.values()].map(
+                    (room) => room.data.roomUrl,
+                );
                 // just making sure ig
                 if (!room.players.length) {
                     this.removeRoom(room);
@@ -371,8 +376,8 @@ export class TeamMenu {
                 }
                 if (room.data.findingGame && room.findGameCooldown < Date.now()) {
                     room.data.findingGame = false;
-                    room.sendState();
                 }
+                room.sendState(roomUrls);
 
                 // kick players that haven't sent a keep alive msg in over a minute
                 // client sends it every 45 seconds
