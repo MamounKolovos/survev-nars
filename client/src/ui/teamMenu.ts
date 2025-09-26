@@ -277,6 +277,7 @@ export class TeamMenu {
             this.config.set("teamAutoFill", this.roomData.autoFill);
             if (this.isLeader) {
                 this.config.set("region", this.roomData.region);
+                this.config.set("roomPair", this.roomData.roomPair);
             }
             let errTxt = "";
             if (errType && errType != "") {
@@ -319,6 +320,7 @@ export class TeamMenu {
                 // most recent change request.
                 if (this.isLeader) {
                     this.roomData.region = ourRoomData.region;
+                    this.roomData.roomPair = ourRoomData.roomPair;
                     this.roomData.autoFill = ourRoomData.autoFill;
                 }
                 this.refreshUi();
@@ -365,9 +367,14 @@ export class TeamMenu {
         if (this.isLeader && !this.roomData.findingGame) {
             const version = GameConfig.protocolVersion;
             let region = this.roomData.region;
+            let roomPair = this.roomData.roomPair;
             const paramRegion = helpers.getParameterByName("region");
+            const paramPair = helpers.getParameterByName("roomPair");
             if (paramRegion !== undefined && paramRegion.length > 0) {
                 region = paramRegion;
+            }
+            if (paramPair !== undefined && paramPair.length > 0) {
+                roomPair = paramPair;
             }
             let zones = this.pingTest.getZones(region);
             const paramZone = helpers.getParameterByName("zone");
@@ -378,6 +385,7 @@ export class TeamMenu {
                 version,
                 region,
                 zones,
+                roomPair,
             };
 
             helpers.verifyTurnstile(this.roomData.captchaEnabled, (token) => {
@@ -425,6 +433,12 @@ export class TeamMenu {
         ) as HTMLOptGroupElement | null;
         if (!optGroup) return;
 
+        const currentTeams = new Set(
+            this.rooms.map((team: string) => team.toLowerCase().replace(/\s+/g, "-")),
+        );
+
+        this.roomData.roomPair = "";
+
         this.rooms.forEach((team) => {
             const value = team.toLowerCase().replace(/\s+/g, "-");
 
@@ -437,6 +451,12 @@ export class TeamMenu {
             option.value = value;
             option.textContent = team;
             optGroup.appendChild(option);
+
+            optGroup.querySelectorAll("option").forEach((opt) => {
+                if (!currentTeams.has(opt.value)) {
+                    opt.remove();
+                }
+            });
         });
 
         if (
