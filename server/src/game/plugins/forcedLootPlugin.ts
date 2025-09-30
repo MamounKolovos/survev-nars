@@ -508,7 +508,7 @@ export default class focedLootPlugin extends GamePlugin {
         attachLootPingNotification(this, 2, 5);
         attachCustomGasDamage(
             this,
-            (dmg: number, n: number, stage: number) => dmg * (1 + Math.min(n, 20) / 10),
+            (dmg: number, n: number, stage: number) => dmg * (1 + Math.min(n, 40) / 20),
         );
         attachMovingGas(this, {
             firstMovingZone: 4,
