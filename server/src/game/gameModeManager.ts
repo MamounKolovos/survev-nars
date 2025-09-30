@@ -266,8 +266,6 @@ export class GameModeManager {
     }
 
     isReviving(player: Player): boolean {
-        if (this.isSolo) return false;
-
         return player.actionType == GameConfig.Action.Revive && !!player.action.targetId;
     }
 
