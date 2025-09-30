@@ -419,7 +419,7 @@ const HealDefs: Record<string, HealDef> = {
     healthkit: {
         name: "Med Kit",
         type: "heal",
-        useTime: 6,
+        useTime: 7,
         heal: 100,
         maxHeal: 100,
         lootImg: {

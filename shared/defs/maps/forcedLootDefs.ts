@@ -90,7 +90,7 @@ const mapDef: PartialMapDef = {
                 // chest_03: { odds: 0.2 },
                 // mil_crate_02: { odds: 0.25 },
                 // tree_02: 3,
-                teahouse_complex_01su: 1,
+                // teahouse_complex_01su: 1,
                 stone_04: 0,
                 mansion_structure_01: 1,
                 // club_complex_01: 1,

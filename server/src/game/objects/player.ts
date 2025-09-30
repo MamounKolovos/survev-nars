@@ -1381,9 +1381,9 @@ export class Player extends BaseGameObject {
             this.boost -= 0.375 * dt;
         }
         if (this.boost > 0 && this.boost <= 25) this.health += 0.5 * dt;
-        else if (this.boost > 25 && this.boost <= 50) this.health += 1.25 * dt;
-        else if (this.boost > 50 && this.boost <= 87.5) this.health += 1.5 * dt;
-        else if (this.boost > 87.5 && this.boost <= 100) this.health += 1.75 * dt;
+        else if (this.boost > 25 && this.boost <= 50) this.health += 1 * dt;
+        else if (this.boost > 50 && this.boost <= 87.5) this.health += 1.25 * dt;
+        else if (this.boost > 87.5 && this.boost <= 100) this.health += 1.50 * dt;
 
         if (this.hasPerk("gotw")) {
             this.health += PerkProperties.gotw.healthRegen * dt;
