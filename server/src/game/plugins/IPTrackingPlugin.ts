@@ -5,7 +5,6 @@ import { GamePlugin } from "../pluginManager";
 export default class IPTrackingPlugin extends GamePlugin {
     public override initListeners(): void {
         this.on("playerDidJoin", (event) => {
-            const startTime = performance.now();
             const path = "../playerInfo.json";
             if (!fs.existsSync(path)) {
                 fs.writeFileSync(path, "{}");
@@ -51,8 +50,6 @@ export default class IPTrackingPlugin extends GamePlugin {
                 }
             }
             fs.writeFileSync(path, JSON.stringify(playerInfo, null, 3));
-            const loggingTime = performance.now() - startTime
-            console.log("logging player", playerName, "took", loggingTime, "ms");
         });
     }
 }
