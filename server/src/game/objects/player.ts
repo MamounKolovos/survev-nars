@@ -1383,7 +1383,7 @@ export class Player extends BaseGameObject {
         if (this.boost > 0 && this.boost <= 25) this.health += 0.5 * dt;
         else if (this.boost > 25 && this.boost <= 50) this.health += 1 * dt;
         else if (this.boost > 50 && this.boost <= 87.5) this.health += 1.25 * dt;
-        else if (this.boost > 87.5 && this.boost <= 100) this.health += 1.50 * dt;
+        else if (this.boost > 87.5 && this.boost <= 100) this.health += 1.5 * dt;
 
         if (this.hasPerk("gotw")) {
             this.health += PerkProperties.gotw.healthRegen * dt;
@@ -3263,7 +3263,8 @@ export class Player extends BaseGameObject {
             ? (input === GameConfig.Input.Revive && this.hasPerk("self_revive")) || // Players can revive themselves if they have the self-revive perk.
                   (input === GameConfig.Input.Cancel &&
                       this.game.modeManager.isReviving(this)) || // Players can cancel their own revives (if they are reviving themself, which is only true if they have the perk).
-                  (input === GameConfig.Input.Interact || input === GameConfig.Input.Use) // Players can interact with obstacles while downed.
+                  input === GameConfig.Input.Interact ||
+                  input === GameConfig.Input.Use // Players can interact with obstacles while downed.
             : true;
     }
 
@@ -3377,7 +3378,7 @@ export class Player extends BaseGameObject {
                     const loot = this.getClosestLoot();
                     const obstacles = this.getInteractableObstacles();
                     const playerToRevive = this.getPlayerToRevive();
-                    
+
                     const interactables = [
                         !this.downed && loot,
                         ...obstacles,

@@ -156,7 +156,7 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
                 return "spas12";
             }
         }
-         case "bar": {
+        case "bar": {
             if (Math.random() < 0.4) {
                 return "spas12";
             }
@@ -554,10 +554,10 @@ export default class focedLootPlugin extends GamePlugin {
                 event.cancel();
             }
         });
-        const alwaysAllowedDrops: string[] = ["Pills", "Soda", "Bandage", "Med Kit"]; 
+        const alwaysAllowedDrops: string[] = ["Pills", "Soda", "Bandage", "Med Kit"];
         this.on("playerWillDropItem", (event) => {
             const { player, dropMsg, itemDef } = event.data;
-            if (alwaysAllowedDrops.includes(itemDef.name)){
+            if (alwaysAllowedDrops.includes(itemDef.name)) {
                 return;
             }
             if (player.downed) {
