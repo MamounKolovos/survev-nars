@@ -479,7 +479,8 @@ const gt = {
         { weight: 0.5, gun: "p30l_dual" },
     ],
 };
-const GRACE_PERIOD_DURATION = 5;
+const GRACE_PERIOD_DURATION = 5
+const GRACE_PERIOD_DURATION_DUOS = 15;
 
 const HEALTH_AND_BOOST_ON_KILL = true;
 const RELOAD_ON_KILL = true;
@@ -501,9 +502,9 @@ export default class focedLootPlugin extends GamePlugin {
         attachDonutSpawner(this, 0.7, 0.9);
         attachGracePeriod(
             this,
-            GRACE_PERIOD_DURATION,
-            GRACE_PERIOD_DURATION,
-            GRACE_PERIOD_DURATION,
+            (this.game.map.mapId !== MapId.ForcedLoot2) ? GRACE_PERIOD_DURATION : GRACE_PERIOD_DURATION_DUOS,
+            (this.game.map.mapId !== MapId.ForcedLoot2) ? GRACE_PERIOD_DURATION : GRACE_PERIOD_DURATION_DUOS,
+            (this.game.map.mapId !== MapId.ForcedLoot2) ? GRACE_PERIOD_DURATION : GRACE_PERIOD_DURATION_DUOS,
         );
         attachLootPingNotification(this, 2, 5);
         attachCustomGasDamage(
