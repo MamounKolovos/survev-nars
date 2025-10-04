@@ -36,8 +36,8 @@ const mapDef: PartialMapDef = {
         },
     mapGen: {
         map: {
-            baseWidth: 312,
-            baseHeight: 312,
+            baseWidth: 296,
+            baseHeight: 296,
             scale: { small: 1.3, large: 1.3 },
             shoreInset: 10,
             grassInset: 10,
@@ -63,7 +63,7 @@ const mapDef: PartialMapDef = {
                 crate_03: 0,
                 bush_01: 0,
                 cache_06: 0,
-                tree_01: 200,
+                tree_01: 250,
                 hedgehog_01: 4,
                 container_01: 4,
                 container_02: 3,
