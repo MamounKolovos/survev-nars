@@ -43,7 +43,7 @@ const mapDef: PartialMapDef = {
         },
         densitySpawns: [
             {
-                stone_01: 650,
+                stone_01: 600,
                 barrel_01: 5,
                 silo_01: 3,
                 crate_01: 0,
@@ -65,11 +65,7 @@ const mapDef: PartialMapDef = {
         ],
         fixedSpawns: [
             {
-                warehouse_01: 1,
-                house_red_01: 1,
-                house_red_02: 1,
-                saloon_01: 1,
-                barn_01: 1,
+                //barn_01: 1,
                 // barn_02: 1,
                 hut_01: 0,
                 hut_02: 0, // spas hut
@@ -81,7 +77,7 @@ const mapDef: PartialMapDef = {
                 cache_02: 0, // mosin tree
                 cache_07: 0,
                 // bunker_structure_01: { odds: 0.05 },
-                bunker_structure_02: 1,
+                //bunker_structure_02: 1,
                 // bunker_structure_03: 1,
                 // bunker_structure_04: 1,
                 // bunker_structure_05: 1,
@@ -92,17 +88,25 @@ const mapDef: PartialMapDef = {
                 // tree_02: 3,
                 // teahouse_complex_01su: 1,
                 stone_04: 0,
-                mansion_structure_01: 1,
+                //mansion_structure_01: 1,
                 // club_complex_01: 1,
             },
         ],
         randomSpawns: [
             {
-                spawns: ["police_01", "bank_01", "club_complex_01"],
+                spawns: ["police_01", "bank_01"],
                 choose: 1,
             },
             {
+                spawns: ["club_complex_01", "mansion_structure_01", "bunker_structure_02"],
+                choose: 2,
+            },
+            {
                 spawns: ["house_red_02", "house_red_01", "saloon_01"],
+                choose: 2,
+            },
+            {
+                spawns: ["warehouse_01", "warehouse_02", "barn_01"],
                 choose: 2,
             },
         ],
