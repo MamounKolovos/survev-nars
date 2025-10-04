@@ -11,6 +11,11 @@ const mapDef: PartialMapDef = {
         planes: {
             timings: [
                 {
+                    circleIdx: 1,
+                    wait: 0,
+                    options: { type: GameConfig.Plane.Airdrop },
+                },
+                {
                     circleIdx: 2,
                     wait: 0,
                     options: { type: GameConfig.Plane.Airdrop },

@@ -1,3 +1,4 @@
+import { GameConfig } from "../../gameConfig";
 import { util } from "../../utils/util";
 import type { MapDef } from "../mapDefs";
 import { MapId } from "../types/misc";
@@ -7,6 +8,32 @@ import { ForcedLoot } from "./forcedLootDefs";
 const mapDef: PartialMapDef = {
     mapId: MapId.ForcedLoot2,
     desc: { name: "Fair Loot", icon: "", buttonCss: "" },
+    gameConfig: {
+            planes: {
+                timings: [
+                    {
+                        circleIdx: 1,
+                        wait: 0,
+                        options: { type: GameConfig.Plane.Airdrop },
+                    },
+                    {
+                        circleIdx: 2,
+                        wait: 0,
+                        options: { type: GameConfig.Plane.Airdrop },
+                    },
+                    {
+                        circleIdx: 3,
+                        wait: 0,
+                        options: { type: GameConfig.Plane.Airdrop },
+                    },
+                    {
+                        circleIdx: 4,
+                        wait: 0,
+                        options: { type: GameConfig.Plane.Airdrop },
+                    },
+                ],
+            },
+        },
     mapGen: {
         map: {
             baseWidth: 312,
@@ -22,6 +49,7 @@ const mapDef: PartialMapDef = {
                 spawnCabins: true,
             },
         },
+        
         customSpawnRules: {
             locationSpawns: [],
         },
