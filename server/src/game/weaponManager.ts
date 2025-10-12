@@ -1139,6 +1139,10 @@ export class WeaponManager {
             ),
         );
 
+        if (throwableDef.explosionType === "explos"){
+            v2.set(pos,v2.add(this.player.pos, this.player.dir));
+        }
+
         let dir = v2.copy(this.player.dir);
         // Aim toward a point some distance infront of the player
         if (throwableDef.aimDistance > 0.0) {
