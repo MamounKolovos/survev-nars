@@ -285,7 +285,7 @@ export const RoleDefs: Record<string, RoleDef> = {
         announce: true,
         killFeed: { assign: true },
         sound: { assign: "recon_assigned_01" },
-        perks: ["small_arms"],
+        perks: ["tree_climbing"],
         defaultItems: createDefaultItems({
             weapons: [
                 { type: "", ammo: 0 },

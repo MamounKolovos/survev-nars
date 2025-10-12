@@ -34,10 +34,11 @@ interface Loadout {
 }
 
 const roleWeights = [
-    { weight: 88, role: "" },
+    { weight: 84, role: "" },
     { weight: 4, role: "medic" },
     { weight: 4, role: "grenadier" },
     { weight: 4, role: "lieutenant" },
+    { weight: 4, role: "recon"},
 ];
 
 const vestWeights = [
@@ -48,8 +49,8 @@ const vestWeights = [
 
 const helmetWeights = [
     { weight: 0, helmet: "helmet01" },
-    { weight: 70, helmet: "helmet02" },
-    { weight: 30, helmet: "helmet03" },
+    { weight: 75, helmet: "helmet02" },
+    { weight: 25, helmet: "helmet03" },
 ];
 
 const primaryWeights = [
@@ -75,7 +76,7 @@ const secondaryWeights = [
     { weight: 1, gun: "hk416" },
     { weight: 1, gun: "scar" },
     { weight: 1, gun: "garand" },
-    { weight: 1, gun: "m1014" },
+    // { weight: 1, gun: "m1014" },
     { weight: 0.5, gun: "mk12" },
     { weight: 0.8, gun: "deagle_dual" },
     { weight: 0.3, gun: "saiga" },
@@ -237,6 +238,10 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
             player.promoteToRole("lieutenant");
             break;
         }
+        case "recon":{
+            player.promoteToRole("recon");
+            break;
+        }
     }
 
     player.chest = loadout.vest;
@@ -286,10 +291,14 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
             player.inventory["frag"] += 4;
             break;
         }
-        case "lieutenant": {
-            player.inventory["frag"] += 2;
-            player.inventory["smoke"] += 2;
+        case "recon": {
+            player.inventory["impulse"] = 2;
+            player.inventory["frag"] = 2;
+            player.inventory["smoke"] = 0;
+            player.inventory["mirv"] = 0;
+            break;
         }
+        
     }
 
     player.boostDirty = true;
@@ -480,7 +489,6 @@ const gt = {
     ],
 };
 const GRACE_PERIOD_DURATION = 5
-const GRACE_PERIOD_DURATION_DUOS = 15;
 
 const HEALTH_AND_BOOST_ON_KILL = true;
 const RELOAD_ON_KILL = true;
@@ -502,9 +510,9 @@ export default class focedLootPlugin extends GamePlugin {
         attachDonutSpawner(this, 0.7, 0.9);
         attachGracePeriod(
             this,
-            (this.game.map.mapId !== MapId.ForcedLoot2) ? GRACE_PERIOD_DURATION : GRACE_PERIOD_DURATION_DUOS,
-            (this.game.map.mapId !== MapId.ForcedLoot2) ? GRACE_PERIOD_DURATION : GRACE_PERIOD_DURATION_DUOS,
-            (this.game.map.mapId !== MapId.ForcedLoot2) ? GRACE_PERIOD_DURATION : GRACE_PERIOD_DURATION_DUOS,
+            GRACE_PERIOD_DURATION,
+            GRACE_PERIOD_DURATION,
+            GRACE_PERIOD_DURATION,
         );
         attachLootPingNotification(this, 2, 5);
         attachCustomGasDamage(
