@@ -34,9 +34,8 @@ interface Loadout {
 }
 
 const roleWeights = [
-    { weight: 4, role: "" },
+    { weight: 88, role: "" },
     { weight: 4, role: "medic" },
-    { weight: 84, role: "recon" },
     { weight: 4, role: "grenadier" },
     { weight: 4, role: "lieutenant" },
 ];
@@ -230,10 +229,6 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
             player.promoteToRole("medic");
             break;
         }
-         case "recon": {
-            player.promoteToRole("recon");
-            break;
-        }
         case "grenadier": {
             player.promoteToRole("grenadier");
             break;
@@ -287,19 +282,13 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
             player.inventory["smoke"] += 2;
             break;
         }
-        case "recon": {
-            player.inventory["smoke"] += 2;
-            player.inventory["impulse"] += 3;
-            break;
-        }
         case "grenadier": {
-            player.inventory["frag"] += 3;
-            player.inventory["mirv"] += 1;
+            player.inventory["frag"] += 4;
             break;
         }
         case "lieutenant": {
-            player.inventory["frag"] += 1;
-            player.inventory["smoke"] += 1;
+            player.inventory["frag"] += 2;
+            player.inventory["smoke"] += 2;
         }
     }
 
@@ -491,7 +480,7 @@ const gt = {
     ],
 };
 const GRACE_PERIOD_DURATION = 5
-const GRACE_PERIOD_DURATION_DUOS = 5;
+const GRACE_PERIOD_DURATION_DUOS = 15;
 
 const HEALTH_AND_BOOST_ON_KILL = true;
 const RELOAD_ON_KILL = true;
