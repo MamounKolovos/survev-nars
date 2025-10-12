@@ -38,7 +38,7 @@ const roleWeights = [
     { weight: 4, role: "medic" },
     { weight: 4, role: "grenadier" },
     { weight: 4, role: "lieutenant" },
-    { weight: 4, role: "recon"},
+    { weight: 4, role: "recon" },
 ];
 
 const vestWeights = [
@@ -238,7 +238,7 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
             player.promoteToRole("lieutenant");
             break;
         }
-        case "recon":{
+        case "recon": {
             player.promoteToRole("recon");
             break;
         }
@@ -298,7 +298,6 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
             player.inventory["mirv"] = 0;
             break;
         }
-        
     }
 
     player.boostDirty = true;
@@ -488,7 +487,7 @@ const gt = {
         { weight: 0.5, gun: "p30l_dual" },
     ],
 };
-const GRACE_PERIOD_DURATION = 5
+const GRACE_PERIOD_DURATION = 5;
 
 const HEALTH_AND_BOOST_ON_KILL = true;
 const RELOAD_ON_KILL = true;

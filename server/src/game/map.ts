@@ -755,21 +755,21 @@ export class GameMap {
         const fixedSpawns = { ...mapDef.mapGen.fixedSpawns[0] };
         const importantSpawns = mapDef.mapGen.importantSpawns;
 
-        for(let i = 0; i < mapDef.mapGen.randomSpawns.length; i++) {
+        for (let i = 0; i < mapDef.mapGen.randomSpawns.length; i++) {
             const randomSpawns = mapDef.mapGen.randomSpawns[i];
-             if (randomSpawns) {
-            const spawns = [...randomSpawns.spawns];
-            for (let i = 0; i < randomSpawns.choose; i++) {
-                const idx = util.randomInt(0, spawns.length - 1);
-                const spawn = spawns.splice(idx, 1)[0];
+            if (randomSpawns) {
+                const spawns = [...randomSpawns.spawns];
+                for (let i = 0; i < randomSpawns.choose; i++) {
+                    const idx = util.randomInt(0, spawns.length - 1);
+                    const spawn = spawns.splice(idx, 1)[0];
 
-                if (typeof fixedSpawns[spawn] === "number") {
-                    fixedSpawns[spawn]++;
-                } else {
-                    fixedSpawns[spawn] = 1;
+                    if (typeof fixedSpawns[spawn] === "number") {
+                        fixedSpawns[spawn]++;
+                    } else {
+                        fixedSpawns[spawn] = 1;
+                    }
                 }
             }
-        }
         }
 
         const types = Object.keys(fixedSpawns)

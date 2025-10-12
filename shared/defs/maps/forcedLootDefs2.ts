@@ -10,4 +10,3 @@ const mapDef: PartialMapDef = {
 };
 
 export const ForcedLoot2 = util.mergeDeep({}, ForcedLoot, mapDef) as MapDef;
-        

@@ -98,7 +98,11 @@ const mapDef: PartialMapDef = {
                 choose: 1,
             },
             {
-                spawns: ["club_complex_01", "mansion_structure_01", "bunker_structure_02"],
+                spawns: [
+                    "club_complex_01",
+                    "mansion_structure_01",
+                    "bunker_structure_02",
+                ],
                 choose: 2,
             },
             {
