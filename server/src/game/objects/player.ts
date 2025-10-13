@@ -1752,7 +1752,7 @@ export class Player extends BaseGameObject {
                 if (!obj.collidable) continue;
                 if (obj.dead) continue;
                 if (!util.sameLayer(obj.layer, this.layer)) continue;
-                if (obj.isTree && hasTreeClimbing) continue;
+                // if (obj.isTree && hasTreeClimbing) continue;
 
                 const collision = collider.intersectCircle(
                     obj.collider,
