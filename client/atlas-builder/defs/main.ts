@@ -60,5 +60,7 @@ export const MainAtlas: AtlasDef = {
         "map/map-planter-res-01.svg",
         "map/map-tree-07sp.svg",
         "map/map-tree-08sp.svg",
+        "map/map-statue-03.svg",
+        "map/map-statue-04.svg",
     ],
 };
