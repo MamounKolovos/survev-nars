@@ -16496,8 +16496,8 @@
         },
         "map-bunker-chrys-chamber-floor-01a.img": {
           "frame": {
-            "x": 1954,
-            "y": 1678,
+            "x": 525,
+            "y": 1954,
             "w": 80,
             "h": 74
           },
@@ -16756,8 +16756,8 @@
         },
         "map-bunker-crossing-ceiling-01.img": {
           "frame": {
-            "x": 1942,
-            "y": 1440,
+            "x": 1198,
+            "y": 1549,
             "w": 96,
             "h": 115
           },
@@ -16836,8 +16836,8 @@
         },
         "map-bunker-crossing-chamber-floor-01c.img": {
           "frame": {
-            "x": 1854,
-            "y": 1678,
+            "x": 1125,
+            "y": 1942,
             "w": 96,
             "h": 96
           },
@@ -16996,8 +16996,8 @@
         },
         "map-bunker-generic-ceiling-02.img": {
           "frame": {
-            "x": 1882,
-            "y": 1559,
+            "x": 1125,
+            "y": 1823,
             "w": 80,
             "h": 115
           },
@@ -17016,8 +17016,8 @@
         },
         "map-bunker-generic-floor-03.img": {
           "frame": {
-            "x": 1966,
-            "y": 1559,
+            "x": 1209,
+            "y": 1823,
             "w": 80,
             "h": 115
           },
@@ -17336,8 +17336,8 @@
         },
         "map-bunker-hydra-floor-04.img": {
           "frame": {
-            "x": 1750,
-            "y": 1678,
+            "x": 1942,
+            "y": 1440,
             "w": 100,
             "h": 100
           },
@@ -17396,8 +17396,8 @@
         },
         "map-complex-warehouse-floor-03.img": {
           "frame": {
-            "x": 853,
-            "y": 182,
+            "x": 1257,
+            "y": 1691,
             "w": 30,
             "h": 112
           },
@@ -17534,10 +17534,50 @@
             "h": 68
           }
         },
-        "map-tree-07sp.img": {
+        "map-statue-03.img": {
           "frame": {
             "x": 1750,
             "y": 1546,
+            "w": 144,
+            "h": 141
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 33,
+            "y": 33,
+            "w": 144,
+            "h": 141
+          },
+          "sourceSize": {
+            "w": 208,
+            "h": 208
+          }
+        },
+        "map-statue-04.img": {
+          "frame": {
+            "x": 1898,
+            "y": 1546,
+            "w": 144,
+            "h": 141
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 33,
+            "y": 33,
+            "w": 144,
+            "h": 141
+          },
+          "sourceSize": {
+            "w": 208,
+            "h": 208
+          }
+        },
+        "map-tree-07sp.img": {
+          "frame": {
+            "x": 1125,
+            "y": 1691,
             "w": 128,
             "h": 128
           },
