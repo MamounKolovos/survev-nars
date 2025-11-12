@@ -79,6 +79,8 @@ class GameServer {
 
         const gameId = await this.manager.findGame({
             region: data.region,
+            roomPair: data.roomPair,
+            room: data.room,
             version: data.version,
             autoFill: data.autoFill,
             mapName: data.mapName,

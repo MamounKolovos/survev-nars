@@ -27,6 +27,7 @@ class GameProcess implements GameData {
 
     canJoin = true;
     teamMode: TeamMode = 1;
+    roomPair: string = "";
     mapName = "";
     id = "";
     aliveCount = 0;
@@ -43,6 +44,7 @@ class GameProcess implements GameData {
     stoppedTime = Date.now();
 
     avaliableSlots = 0;
+    room: string = "";
 
     constructor(manager: GameProcessManager, id: string, config: ServerGameConfig) {
         this.manager = manager;
@@ -67,6 +69,7 @@ class GameProcess implements GameData {
                 case ProcessMsgType.UpdateData:
                     this.canJoin = msg.canJoin;
                     this.teamMode = msg.teamMode;
+                    this.roomPair = msg.roomPair;
                     this.mapName = msg.mapName;
                     if (this.id !== msg.id) {
                         this.manager.processById.delete(this.id);
@@ -125,6 +128,8 @@ class GameProcess implements GameData {
         this.id = id;
         this.teamMode = config.teamMode;
         this.mapName = config.mapName;
+        this.roomPair = (config.roomPair) ? config.roomPair : "";
+        this.room = (config.room) ? config.room : "";
         this.stopped = false;
 
         const mapDef = MapDefs[this.mapName as keyof typeof MapDefs] as MapDef;
@@ -285,7 +290,12 @@ export class GameProcessManager implements GameManager {
                     proc.canJoin &&
                     proc.avaliableSlots > 0 &&
                     proc.teamMode === body.teamMode &&
-                    proc.mapName === body.mapName
+                    proc.mapName === body.mapName &&
+                    ((proc.roomPair !== "") ? (
+                        ((proc.room === body.roomPair) && (proc.roomPair === body.room)) 
+                        || 
+                        ((body.room === proc.roomPair) && (body.roomPair === proc.room))) 
+                        : true)
                 );
             })
             .sort((a, b) => {
@@ -296,6 +306,8 @@ export class GameProcessManager implements GameManager {
             game = await this.newGame({
                 teamMode: body.teamMode,
                 mapName: body.mapName as keyof typeof MapDefs,
+                roomPair: body.roomPair,
+                room: body.room
             });
         }
 

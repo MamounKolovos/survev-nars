@@ -94,11 +94,12 @@ export class TeamMenu {
             this.pingTest.start([e]);
             this.setRoomProperty("region", e);
         });
-        this.pairSelect.change(() => {
-            const e = this.pairSelect.find(":selected").val() as string;
-            this.pingTest.start([e]);
-            this.setRoomProperty("roomPair", e);
+        this.pairSelect.on("change", () => {
+        const selectedValue = this.pairSelect.find(":selected").val() as string;
+        this.setRoomProperty("roomPair", selectedValue);
+        console.log(selectedValue + "the value is being set to this")
         });
+
         this.queueMode1.click(() => {
             this.setRoomProperty("gameModeIdx", 1);
         });
@@ -357,6 +358,7 @@ export class TeamMenu {
     setRoomProperty<T extends keyof RoomData>(prop: T, val: RoomData[T]) {
         if (this.isLeader && this.roomData[prop] != val) {
             this.roomData[prop] = val;
+            console.log(val + "the room prop value is being set to this")
             this.sendMessage("setRoomProps", this.roomData);
         }
     }
@@ -365,9 +367,14 @@ export class TeamMenu {
         if (this.isLeader && !this.roomData.findingGame) {
             const version = GameConfig.protocolVersion;
             let region = this.roomData.region;
+            let roomPair = this.roomData.roomPair;
             const paramRegion = helpers.getParameterByName("region");
             if (paramRegion !== undefined && paramRegion.length > 0) {
                 region = paramRegion;
+            }
+            const paramPair = helpers.getParameterByName("roomPair");
+            if (paramPair !== undefined && paramPair.length > 0) {
+                roomPair = paramPair;
             }
             let zones = this.pingTest.getZones(region);
             const paramZone = helpers.getParameterByName("zone");
@@ -377,8 +384,10 @@ export class TeamMenu {
             const matchArgs: TeamPlayGameMsg["data"] = {
                 version,
                 region,
+                roomPair,
                 zones,
             };
+            console.log(roomPair + "this is being sent to the server");
 
             helpers.verifyTurnstile(this.roomData.captchaEnabled, (token) => {
                 matchArgs.turnstileToken = token;
@@ -439,6 +448,26 @@ export class TeamMenu {
             optGroup.appendChild(option);
         });
 
+        // Loop through each <option> in the optgroup
+       // Option 2: Or use querySelectorAll for clarity (returns NodeList)
+const options = Array.from(optGroup.children) as HTMLOptionElement[];
+
+// Example: log all option values
+options.forEach(opt => {
+  let remove = true;
+  for(let i = 0; i < this.rooms.length; i++) {
+     if(this.rooms[i].toLowerCase().replace(/\s+/g, "-") == opt.value) {
+        remove = false;
+     }
+  }
+
+  if(remove) {
+    opt.remove();
+  }
+});
+
+
+
         if (
             this.roomData.lastError == "find_game_invalid_protocol" &&
             !this.displayedInvalidProtocolModal
@@ -481,6 +510,7 @@ export class TeamMenu {
 
             this.pairSelect.find("option").each((_idx, ele) => {
                 ele.selected = ele.value == this.roomData.roomPair;
+                console.log(ele.value + "was selected in the ui") 
             });
 
             // Modes btns

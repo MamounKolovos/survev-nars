@@ -242,6 +242,9 @@ class Room {
         }
         this.data.region = region;
 
+        this.data.roomPair = data.roomPair;
+ 
+
         const tokenMap = new Map<Player, string>();
 
         const playerData = this.players.map((p) => {
@@ -285,9 +288,14 @@ class Room {
             teamMode: mode.teamMode,
             autoFill: this.data.autoFill,
             region: region,
+            roomPair: this.data.roomPair,
+            room: this.data.roomUrl.toLowerCase(),
             version: data.version,
             playerData,
         });
+
+        this.teamMenu.logger.debug(this.data.roomPair);
+        this.teamMenu.logger.debug(this.data.roomUrl.toLowerCase());
 
         if ("error" in res) {
             const errMap: Partial<Record<FindGameError, TeamMenuErrorType>> = {
