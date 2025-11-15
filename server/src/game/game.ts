@@ -126,8 +126,8 @@ export class Game {
         this.config = config;
 
         this.teamMode = config.teamMode;
-        this.roomPair = (config.roomPair) ? config.roomPair : "";
-        this.room = (config.room) ? config.room : "";
+        this.roomPair = config.roomPair ? config.roomPair : "";
+        this.room = config.room ? config.room : "";
         this.mapName = config.mapName;
         this.isTeamMode = this.teamMode !== TeamMode.Solo;
 

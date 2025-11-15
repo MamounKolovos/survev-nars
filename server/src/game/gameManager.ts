@@ -136,10 +136,8 @@ export class SingleThreadGameManager implements GameManager {
                     game.canJoin &&
                     game.teamMode === body.teamMode &&
                     game.mapName === body.mapName &&
-                     (
-                        ((game.room === body.roomPair) && (game.roomPair === body.room)) 
-                        || 
-                        ((body.room === game.roomPair) && (body.roomPair === game.room))) 
+                    ((game.room === body.roomPair && game.roomPair === body.room) ||
+                        (body.room === game.roomPair && body.roomPair === game.room))
                 );
             })
             .sort((a, b) => {
@@ -151,7 +149,7 @@ export class SingleThreadGameManager implements GameManager {
                 teamMode: body.teamMode,
                 mapName: body.mapName as keyof typeof MapDefs,
                 roomPair: body.roomPair,
-                room: body.room
+                room: body.room,
             });
         }
 

@@ -1139,8 +1139,8 @@ export class WeaponManager {
             ),
         );
 
-        if (throwableDef.explosionType === "explosion_impulse"){
-            v2.set(pos,v2.add(this.player.pos, this.player.dir));
+        if (throwableDef.explosionType === "explosion_impulse") {
+            v2.set(pos, v2.add(this.player.pos, this.player.dir));
         }
 
         let dir = v2.copy(this.player.dir);

@@ -352,7 +352,7 @@ export class TeamMenu {
     setRoomProperty<T extends keyof RoomData>(prop: T, val: RoomData[T]) {
         if (this.isLeader && this.roomData[prop] != val) {
             this.roomData[prop] = val;
-            console.log(val + "the room prop value is being set to this")
+            console.log(val + "the room prop value is being set to this");
             this.sendMessage("setRoomProps", this.roomData);
         }
     }
@@ -423,34 +423,33 @@ export class TeamMenu {
         this.serverWarning.css("opacity", hasError ? 1 : 0);
         this.serverWarning.html(errorTxt);
 
-const optGroup = document.getElementById("team-pair-opts") as HTMLOptGroupElement | null;
-if (!optGroup) return;
+        const optGroup = document.getElementById(
+            "team-pair-opts",
+        ) as HTMLOptGroupElement | null;
+        if (!optGroup) return;
 
-// Step 1: normalize rooms to values
-const roomValues = this.rooms.map(r => r.toLowerCase().replace(/\s+/g, "-"));
+        // Step 1: normalize rooms to values
+        const roomValues = this.rooms.map((r) => r.toLowerCase().replace(/\s+/g, "-"));
 
-// Step 2: Add missing options
-roomValues.forEach((value, i) => {
-    if (!optGroup.querySelector(`option[value="${value}"]`)) {
-        const option = document.createElement("option");
-        option.value = value;
-        option.textContent = this.rooms[i];
-        optGroup.appendChild(option);
-        option.addEventListener("click", () => {
-            this.roomData.roomPair = option.value;
-        })
-    }
-});
+        // Step 2: Add missing options
+        roomValues.forEach((value, i) => {
+            if (!optGroup.querySelector(`option[value="${value}"]`)) {
+                const option = document.createElement("option");
+                option.value = value;
+                option.textContent = this.rooms[i];
+                optGroup.appendChild(option);
+                option.addEventListener("click", () => {
+                    this.roomData.roomPair = option.value;
+                });
+            }
+        });
 
-// Step 3: Remove options NOT in this.rooms
-optGroup.querySelectorAll("option").forEach(opt => {
-    if (!roomValues.includes(opt.value)) {
-        opt.remove();
-    }
-});
-
-
-
+        // Step 3: Remove options NOT in this.rooms
+        optGroup.querySelectorAll("option").forEach((opt) => {
+            if (!roomValues.includes(opt.value)) {
+                opt.remove();
+            }
+        });
 
         if (
             this.roomData.lastError == "find_game_invalid_protocol" &&

@@ -128,8 +128,8 @@ class GameProcess implements GameData {
         this.id = id;
         this.teamMode = config.teamMode;
         this.mapName = config.mapName;
-        this.roomPair = (config.roomPair) ? config.roomPair : "";
-        this.room = (config.room) ? config.room : "";
+        this.roomPair = config.roomPair ? config.roomPair : "";
+        this.room = config.room ? config.room : "";
         this.stopped = false;
 
         const mapDef = MapDefs[this.mapName as keyof typeof MapDefs] as MapDef;
@@ -291,10 +291,9 @@ export class GameProcessManager implements GameManager {
                     proc.avaliableSlots > 0 &&
                     proc.teamMode === body.teamMode &&
                     proc.mapName === body.mapName &&
-                    ((proc.roomPair !== "") ? (
-                        ((proc.room === body.roomPair) && (proc.roomPair === body.room)) 
-                        || 
-                        ((body.room === proc.roomPair) && (body.roomPair === proc.room))) 
+                    (proc.roomPair !== ""
+                        ? (proc.room === body.roomPair && proc.roomPair === body.room) ||
+                          (body.room === proc.roomPair && body.roomPair === proc.room)
                         : true)
                 );
             })
@@ -307,7 +306,7 @@ export class GameProcessManager implements GameManager {
                 teamMode: body.teamMode,
                 mapName: body.mapName as keyof typeof MapDefs,
                 roomPair: body.roomPair,
-                room: body.room
+                room: body.room,
             });
         }
 

@@ -112,7 +112,15 @@ const mapDef: PartialMapDef = {
                 choose: 2,
             },
             {
-                spawns: ["statue_03", "statue_03", "statue_04", "statue_04", "silo_01", "silo_01", "silo_01"],
+                spawns: [
+                    "statue_03",
+                    "statue_03",
+                    "statue_04",
+                    "statue_04",
+                    "silo_01",
+                    "silo_01",
+                    "silo_01",
+                ],
                 choose: 5,
             },
         ],

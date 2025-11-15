@@ -243,7 +243,6 @@ class Room {
         this.data.region = region;
 
         this.data.roomPair = data.roomPair;
- 
 
         const tokenMap = new Map<Player, string>();
 

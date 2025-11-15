@@ -92,8 +92,8 @@ const meleeWeights = [
     { weight: 15, melee: "stonehammer" },
     { weight: 15, melee: "machete" },
     { weight: 10, melee: "hook" },
-    { weight: 5, melee:  "katana" },
-    { weight: 5, melee:  "naginata" },
+    { weight: 5, melee: "katana" },
+    { weight: 5, melee: "naginata" },
 ];
 function getPrimaryBasedOnSecondary(secondary: string): string {
     const x = Math.random();
