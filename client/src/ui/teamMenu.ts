@@ -94,12 +94,6 @@ export class TeamMenu {
             this.pingTest.start([e]);
             this.setRoomProperty("region", e);
         });
-        this.pairSelect.on("change", () => {
-        const selectedValue = this.pairSelect.find(":selected").val() as string;
-        this.setRoomProperty("roomPair", selectedValue);
-        console.log(selectedValue + "the value is being set to this")
-        });
-
         this.queueMode1.click(() => {
             this.setRoomProperty("gameModeIdx", 1);
         });
@@ -429,42 +423,32 @@ export class TeamMenu {
         this.serverWarning.css("opacity", hasError ? 1 : 0);
         this.serverWarning.html(errorTxt);
 
-        const optGroup = document.getElementById(
-            "team-pair-opts",
-        ) as HTMLOptGroupElement | null;
-        if (!optGroup) return;
+const optGroup = document.getElementById("team-pair-opts") as HTMLOptGroupElement | null;
+if (!optGroup) return;
 
-        this.rooms.forEach((team) => {
-            const value = team.toLowerCase().replace(/\s+/g, "-");
+// Step 1: normalize rooms to values
+const roomValues = this.rooms.map(r => r.toLowerCase().replace(/\s+/g, "-"));
 
-            // Skip if option with same value already exists
-            if (optGroup.querySelector(`option[value="${value}"]`)) {
-                return;
-            }
-
-            const option = document.createElement("option");
-            option.value = value;
-            option.textContent = team;
-            optGroup.appendChild(option);
-        });
-
-        // Loop through each <option> in the optgroup
-       // Option 2: Or use querySelectorAll for clarity (returns NodeList)
-const options = Array.from(optGroup.children) as HTMLOptionElement[];
-
-// Example: log all option values
-options.forEach(opt => {
-  let remove = true;
-  for(let i = 0; i < this.rooms.length; i++) {
-     if(this.rooms[i].toLowerCase().replace(/\s+/g, "-") == opt.value) {
-        remove = false;
-     }
-  }
-
-  if(remove) {
-    opt.remove();
-  }
+// Step 2: Add missing options
+roomValues.forEach((value, i) => {
+    if (!optGroup.querySelector(`option[value="${value}"]`)) {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = this.rooms[i];
+        optGroup.appendChild(option);
+        option.addEventListener("click", () => {
+            this.roomData.roomPair = option.value;
+        })
+    }
 });
+
+// Step 3: Remove options NOT in this.rooms
+optGroup.querySelectorAll("option").forEach(opt => {
+    if (!roomValues.includes(opt.value)) {
+        opt.remove();
+    }
+});
+
 
 
 
@@ -506,11 +490,6 @@ options.forEach(opt => {
 
             this.serverSelect.find("option").each((_idx, ele) => {
                 ele.selected = ele.value == this.roomData.region;
-            });
-
-            this.pairSelect.find("option").each((_idx, ele) => {
-                ele.selected = ele.value == this.roomData.roomPair;
-                console.log(ele.value + "was selected in the ui") 
             });
 
             // Modes btns

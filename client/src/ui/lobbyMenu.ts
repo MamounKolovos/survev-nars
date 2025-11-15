@@ -369,6 +369,7 @@ export class LobbyMenu {
                 version,
                 region,
                 zones,
+                roomPair: ""
             };
 
             helpers.verifyTurnstile(this.roomData.captchaEnabled, (token) => {
