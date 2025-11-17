@@ -289,6 +289,7 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
         }
         case "grenadier": {
             player.inventory["frag"] += 4;
+            player.inventory["strobe"] += 1;
             break;
         }
         case "recon": {
