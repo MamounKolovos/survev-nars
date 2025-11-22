@@ -272,6 +272,7 @@ export class TeamMenu {
             this.config.set("teamAutoFill", this.roomData.autoFill);
             if (this.isLeader) {
                 this.config.set("region", this.roomData.region);
+                this.config.set("roomPair", this.roomData.roomPair);
             }
             let errTxt = "";
             if (errType && errType != "") {
@@ -315,6 +316,7 @@ export class TeamMenu {
                 if (this.isLeader) {
                     this.roomData.region = ourRoomData.region;
                     this.roomData.autoFill = ourRoomData.autoFill;
+                    this.roomData.roomPair = ourRoomData.roomPair;
                 }
                 this.refreshUi();
                 // Since the only way to get the roomID (ig?) is from state, each time receiving state, we can show the invite button
@@ -366,9 +368,10 @@ export class TeamMenu {
             if (paramRegion !== undefined && paramRegion.length > 0) {
                 region = paramRegion;
             }
-            const paramPair = helpers.getParameterByName("roomPair");
-            if (paramPair !== undefined && paramPair.length > 0) {
-                roomPair = paramPair;
+            if (roomPair == undefined || roomPair.length == 0) {
+                 const e = this.pairSelect.find(":selected").val() as string;
+                 this.pingTest.start([e]);
+                 roomPair = e;
             }
             let zones = this.pingTest.getZones(region);
             const paramZone = helpers.getParameterByName("zone");
@@ -438,18 +441,15 @@ export class TeamMenu {
                 option.value = value;
                 option.textContent = this.rooms[i];
                 optGroup.appendChild(option);
-                option.addEventListener("click", () => {
-                    this.roomData.roomPair = option.value;
-                });
             }
         });
 
         // Step 3: Remove options NOT in this.rooms
-        optGroup.querySelectorAll("option").forEach((opt) => {
+        /*optGroup.querySelectorAll("option").forEach((opt) => {
             if (!roomValues.includes(opt.value)) {
                 opt.remove();
             }
-        });
+        });*/
 
         if (
             this.roomData.lastError == "find_game_invalid_protocol" &&

@@ -356,6 +356,7 @@ export class LobbyMenu {
         if (this.isLeader && !this.roomData.findingGame) {
             const version = GameConfig.protocolVersion;
             let region = this.roomData.region;
+            let roomPair =  this.roomData.roomPair;
             const paramRegion = helpers.getParameterByName("region");
             if (paramRegion !== undefined && paramRegion.length > 0) {
                 region = paramRegion;
@@ -369,7 +370,7 @@ export class LobbyMenu {
                 version,
                 region,
                 zones,
-                roomPair: "",
+                roomPair
             };
 
             helpers.verifyTurnstile(this.roomData.captchaEnabled, (token) => {
