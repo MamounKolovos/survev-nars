@@ -431,8 +431,11 @@ export class TeamMenu {
         ) as HTMLOptGroupElement | null;
         if (!optGroup) return;
 
+        if (!this.rooms.includes("No Room Pair")) {
+    this.rooms.unshift("No Room Pair");
+}
         // Step 1: normalize rooms to values
-        const roomValues = this.rooms.map((r) => r.toLowerCase().replace(/\s+/g, "-"));
+        let roomValues = this.rooms.map((r) => r.toLowerCase().replace(/\s+/g, "-"));
 
         // Step 2: Add missing options
         roomValues.forEach((value, i) => {
@@ -445,11 +448,12 @@ export class TeamMenu {
         });
 
         // Step 3: Remove options NOT in this.rooms
-        /*optGroup.querySelectorAll("option").forEach((opt) => {
-            if (!roomValues.includes(opt.value)) {
+        optGroup.querySelectorAll("option").forEach((opt) => {
+            if (!roomValues.includes(opt.value) || opt.value == "No Room Pair") {
                 opt.remove();
             }
-        });*/
+        });
+
 
         if (
             this.roomData.lastError == "find_game_invalid_protocol" &&
