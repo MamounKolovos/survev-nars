@@ -293,9 +293,6 @@ class Room {
             playerData,
         });
 
-        this.teamMenu.logger.debug(this.data.roomPair);
-        this.teamMenu.logger.debug(this.data.roomUrl.toLowerCase());
-
         if ("error" in res) {
             const errMap: Partial<Record<FindGameError, TeamMenuErrorType>> = {
                 full: "find_game_full",

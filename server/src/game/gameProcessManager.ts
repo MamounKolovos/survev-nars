@@ -291,7 +291,7 @@ export class GameProcessManager implements GameManager {
                     proc.avaliableSlots > 0 &&
                     proc.teamMode === body.teamMode &&
                     proc.mapName === body.mapName &&
-                    ((proc.roomPair !== "")
+                    (proc.roomPair !== ""
                         ? (proc.room === body.roomPair && proc.roomPair === body.room) ||
                           (body.room === proc.roomPair && body.roomPair === proc.room)
                         : true)

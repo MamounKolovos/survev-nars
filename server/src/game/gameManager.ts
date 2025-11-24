@@ -136,7 +136,7 @@ export class SingleThreadGameManager implements GameManager {
                     game.canJoin &&
                     game.teamMode === body.teamMode &&
                     game.mapName === body.mapName &&
-                    ((game.roomPair !== "")
+                    (game.roomPair !== ""
                         ? (game.room === body.roomPair && game.roomPair === body.room) ||
                           (body.room === game.roomPair && body.roomPair === game.room)
                         : true)
