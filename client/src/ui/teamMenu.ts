@@ -371,7 +371,7 @@ export class TeamMenu {
             if (roomPair == undefined || roomPair.length == 0) {
                  const e = this.pairSelect.find(":selected").val() as string;
                  this.pingTest.start([e]);
-                 roomPair = e;
+                 roomPair = (e == "No Room Pair" ? e : "");
             }
             let zones = this.pingTest.getZones(region);
             const paramZone = helpers.getParameterByName("zone");

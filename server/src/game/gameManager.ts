@@ -136,8 +136,10 @@ export class SingleThreadGameManager implements GameManager {
                     game.canJoin &&
                     game.teamMode === body.teamMode &&
                     game.mapName === body.mapName &&
-                    ((game.room === body.roomPair && game.roomPair === body.room) ||
-                        (body.room === game.roomPair && body.roomPair === game.room))
+                    ((game.roomPair !== "")
+                        ? (game.room === body.roomPair && game.roomPair === body.room) ||
+                          (body.room === game.roomPair && body.roomPair === game.room)
+                        : true)
                 );
             })
             .sort((a, b) => {
