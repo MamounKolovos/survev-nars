@@ -157,6 +157,7 @@ app.post("/api/find_game", validateParams(zFindGameBody), async (c) => {
 
     const data = await server.findGame({
         region: body.region,
+        roomPair: "",
         version: body.version,
         mapName: mode.mapName,
         teamMode: mode.teamMode,
@@ -168,6 +169,7 @@ app.post("/api/find_game", validateParams(zFindGameBody), async (c) => {
                 ip,
             },
         ],
+        room: ""
     });
 
     if ("error" in data) {
