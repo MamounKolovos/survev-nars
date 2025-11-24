@@ -354,6 +354,7 @@ export class TeamMenu {
     setRoomProperty<T extends keyof RoomData>(prop: T, val: RoomData[T]) {
         if (this.isLeader && this.roomData[prop] != val) {
             this.roomData[prop] = val;
+            console.log(val + "the room prop value is being set to this");
             this.sendMessage("setRoomProps", this.roomData);
         }
     }
@@ -368,9 +369,9 @@ export class TeamMenu {
                 region = paramRegion;
             }
             if (roomPair == undefined || roomPair.length == 0) {
-                const e = this.pairSelect.find(":selected").val() as string;
-                this.pingTest.start([e]);
-                roomPair = e == "No Room Pair" ? e : "";
+                 const e = this.pairSelect.find(":selected").val() as string;
+                 this.pingTest.start([e]);
+                 roomPair = (e == "no-room-pair") ? "" : e;
             }
             let zones = this.pingTest.getZones(region);
             const paramZone = helpers.getParameterByName("zone");
@@ -383,6 +384,7 @@ export class TeamMenu {
                 roomPair,
                 zones,
             };
+            console.log(roomPair + "this is being sent to the server");
 
             helpers.verifyTurnstile(this.roomData.captchaEnabled, (token) => {
                 matchArgs.turnstileToken = token;
@@ -430,8 +432,8 @@ export class TeamMenu {
         if (!optGroup) return;
 
         if (!this.rooms.includes("No Room Pair")) {
-            this.rooms.unshift("No Room Pair");
-        }
+    this.rooms.unshift("No Room Pair");
+}
         // Step 1: normalize rooms to values
         let roomValues = this.rooms.map((r) => r.toLowerCase().replace(/\s+/g, "-"));
 
@@ -451,6 +453,7 @@ export class TeamMenu {
                 opt.remove();
             }
         });
+
 
         if (
             this.roomData.lastError == "find_game_invalid_protocol" &&
