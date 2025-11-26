@@ -177,6 +177,7 @@ class Room {
             region = Object.keys(Config.regions)[0];
         }
         this.data.region = region;
+        this.data.roomPair = props.roomPair;
 
         let gameModeIdx = props.gameModeIdx;
 

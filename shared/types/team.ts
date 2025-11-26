@@ -95,6 +95,7 @@ export const zClientRoomData = z.object({
     findingGame: z.boolean(),
     lastError: z.string(),
     region: z.string(),
+    roomPair: z.string(),
     autoFill: z.boolean(),
     gameModeIdx: z.number(),
 });

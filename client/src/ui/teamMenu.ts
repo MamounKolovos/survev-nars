@@ -94,6 +94,12 @@ export class TeamMenu {
             this.pingTest.start([e]);
             this.setRoomProperty("region", e);
         });
+        this.pairSelect.on("change", () => {
+            let e = this.pairSelect.find(":selected").val() as string;
+            e = (e == "no-room-pair") ? "" : e;
+            this.setRoomProperty("roomPair", e);
+            this.config.set("roomPair", e);
+        });
         this.queueMode1.click(() => {
             this.setRoomProperty("gameModeIdx", 1);
         });
@@ -318,6 +324,7 @@ export class TeamMenu {
                     this.roomData.autoFill = ourRoomData.autoFill;
                     this.roomData.roomPair = ourRoomData.roomPair;
                 }
+                console.log(this.roomData.roomPair);
                 this.refreshUi();
                 // Since the only way to get the roomID (ig?) is from state, each time receiving state, we can show the invite button
                 SDK.showInviteButton(stateData.room.roomUrl.replace("#", ""));
@@ -354,7 +361,7 @@ export class TeamMenu {
     setRoomProperty<T extends keyof RoomData>(prop: T, val: RoomData[T]) {
         if (this.isLeader && this.roomData[prop] != val) {
             this.roomData[prop] = val;
-            console.log(val + "the room prop value is being set to this");
+            console.log(this.roomData[prop] + "the room prop value is being set to this");
             this.sendMessage("setRoomProps", this.roomData);
         }
     }
@@ -367,13 +374,6 @@ export class TeamMenu {
             const paramRegion = helpers.getParameterByName("region");
             if (paramRegion !== undefined && paramRegion.length > 0) {
                 region = paramRegion;
-            }
-            if (roomPair == undefined || roomPair.length == 0) {
-                 const e = this.pairSelect.find(":selected").val() as string;
-                 this.pingTest.start([e]);
-                 roomPair = (e == "no-room-pair") ? "" : e;
-                 this.config.set("roomPair", roomPair);
-                 console.log(this.config.get("roomPair"));
             }
             let zones = this.pingTest.getZones(region);
             const paramZone = helpers.getParameterByName("zone");
@@ -433,9 +433,6 @@ export class TeamMenu {
         ) as HTMLOptGroupElement | null;
         if (!optGroup) return;
 
-        if (!this.rooms.includes("No Room Pair")) {
-    this.rooms.unshift("No Room Pair");
-}
         // Step 1: normalize rooms to values
         let roomValues = this.rooms.map((r) => r.toLowerCase().replace(/\s+/g, "-"));
 
@@ -446,7 +443,7 @@ export class TeamMenu {
                 option.value = value;
                 option.textContent = this.rooms[i];
                 optGroup.appendChild(option);
-                if(option.value == this.config.get("roomPair")) {
+                if(option.value == this.roomData.roomPair) {
                     option.selected = true;
                 }
             }
@@ -454,7 +451,7 @@ export class TeamMenu {
 
         // Step 3: Remove options NOT in this.rooms
         optGroup.querySelectorAll("option").forEach((opt) => {
-            if (!roomValues.includes(opt.value) || opt.value == "No Room Pair") {
+            if (!roomValues.includes(opt.value) || opt.value == "No Room Pair" || opt.value == this.roomData.roomUrl.toLowerCase().replace(/\s+/g, "-")) {
                 opt.remove();
             }
         });
