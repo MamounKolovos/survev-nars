@@ -309,6 +309,9 @@ export class TeamMenu {
                 this.roomData = stateData.room;
                 this.players = stateData.players;
                 this.rooms = stateData.rooms;
+                   if (!this.rooms.includes("No Room Pair")) {
+    this.rooms.unshift("No Room Pair");
+}
                 this.localPlayerId = stateData.localPlayerId;
                 this.isLeader = this.getPlayerById(this.localPlayerId)!.isLeader;
 
