@@ -372,6 +372,8 @@ export class TeamMenu {
                  const e = this.pairSelect.find(":selected").val() as string;
                  this.pingTest.start([e]);
                  roomPair = (e == "no-room-pair") ? "" : e;
+                 this.config.set("roomPair", roomPair);
+                 console.log(this.config.get("roomPair"));
             }
             let zones = this.pingTest.getZones(region);
             const paramZone = helpers.getParameterByName("zone");
@@ -444,6 +446,9 @@ export class TeamMenu {
                 option.value = value;
                 option.textContent = this.rooms[i];
                 optGroup.appendChild(option);
+                if(option.value == this.config.get("roomPair")) {
+                    option.selected = true;
+                }
             }
         });
 
