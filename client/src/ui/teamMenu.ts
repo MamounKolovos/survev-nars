@@ -96,7 +96,7 @@ export class TeamMenu {
         });
         this.pairSelect.on("change", () => {
             let e = this.pairSelect.find(":selected").val() as string;
-            e = (e == "no-room-pair") ? "" : e;
+            e = e == "no-room-pair" ? "" : e;
             this.setRoomProperty("roomPair", e);
             this.config.set("roomPair", e);
         });
@@ -309,9 +309,9 @@ export class TeamMenu {
                 this.roomData = stateData.room;
                 this.players = stateData.players;
                 this.rooms = stateData.rooms;
-                   if (!this.rooms.includes("No Room Pair")) {
-    this.rooms.unshift("No Room Pair");
-}
+                if (!this.rooms.includes("No Room Pair")) {
+                    this.rooms.unshift("No Room Pair");
+                }
                 this.localPlayerId = stateData.localPlayerId;
                 this.isLeader = this.getPlayerById(this.localPlayerId)!.isLeader;
 
@@ -364,7 +364,7 @@ export class TeamMenu {
     setRoomProperty<T extends keyof RoomData>(prop: T, val: RoomData[T]) {
         if (this.isLeader && this.roomData[prop] != val) {
             this.roomData[prop] = val;
-            console.log(this.roomData[prop] + "the room prop value is being set to this");
+            console.log(`${this.roomData[prop]}the room prop value is being set to this`);
             this.sendMessage("setRoomProps", this.roomData);
         }
     }
@@ -389,7 +389,7 @@ export class TeamMenu {
                 roomPair,
                 zones,
             };
-            console.log(roomPair + "this is being sent to the server");
+            console.log(`${roomPair}this is being sent to the server`);
 
             helpers.verifyTurnstile(this.roomData.captchaEnabled, (token) => {
                 matchArgs.turnstileToken = token;
@@ -446,7 +446,7 @@ export class TeamMenu {
                 option.value = value;
                 option.textContent = this.rooms[i];
                 optGroup.appendChild(option);
-                if(option.value == this.roomData.roomPair) {
+                if (option.value == this.roomData.roomPair) {
                     option.selected = true;
                 }
             }
@@ -454,11 +454,14 @@ export class TeamMenu {
 
         // Step 3: Remove options NOT in this.rooms
         optGroup.querySelectorAll("option").forEach((opt) => {
-            if (!roomValues.includes(opt.value) || opt.value == "No Room Pair" || opt.value == this.roomData.roomUrl.toLowerCase().replace(/\s+/g, "-")) {
+            if (
+                !roomValues.includes(opt.value) ||
+                opt.value == "No Room Pair" ||
+                opt.value == this.roomData.roomUrl.toLowerCase().replace(/\s+/g, "-")
+            ) {
                 opt.remove();
             }
         });
-
 
         if (
             this.roomData.lastError == "find_game_invalid_protocol" &&

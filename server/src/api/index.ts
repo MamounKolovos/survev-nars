@@ -169,7 +169,7 @@ app.post("/api/find_game", validateParams(zFindGameBody), async (c) => {
                 ip,
             },
         ],
-        room: ""
+        room: "",
     });
 
     if ("error" in data) {
