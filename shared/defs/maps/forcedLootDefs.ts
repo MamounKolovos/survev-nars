@@ -3,6 +3,7 @@ import { util } from "../../utils/util";
 import type { MapDef } from "../mapDefs";
 import { MapId } from "../types/misc";
 import { Main, type PartialMapDef } from "./baseDefs";
+import { Snow } from "./snowDefs";
 
 const mapDef: PartialMapDef = {
     mapId: MapId.ForcedLoot,
@@ -127,4 +128,4 @@ const mapDef: PartialMapDef = {
     },
 };
 
-export const ForcedLoot = util.mergeDeep({}, Main, mapDef) as MapDef;
+export const ForcedLoot = util.mergeDeep({}, Main, mapDef, Snow) as MapDef;

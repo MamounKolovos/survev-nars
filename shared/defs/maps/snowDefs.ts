@@ -34,79 +34,7 @@ const mapDef: PartialMapDef = {
         },
         frozenSprites: ["player-snow-01.img", "player-snow-02.img", "player-snow-03.img"],
     },
-    /* STRIP_FROM_PROD_CLIENT:START */
-    gameConfig: {
-        planes: {
-            timings: [
-                {
-                    circleIdx: 0,
-                    wait: 10,
-                    options: { type: GameConfig.Plane.Airdrop },
-                },
-                {
-                    circleIdx: 1,
-                    wait: 10,
-                    options: { type: GameConfig.Plane.Airdrop },
-                },
-                {
-                    circleIdx: 2,
-                    wait: 6,
-                    options: { type: GameConfig.Plane.Airdrop },
-                },
-                {
-                    circleIdx: 3,
-                    wait: 2,
-                    options: { type: GameConfig.Plane.Airdrop },
-                },
-            ],
-            crates: [
-                { name: "airdrop_crate_01x", weight: 10 },
-                { name: "airdrop_crate_02x", weight: 1 },
-            ],
-        },
-    },
-    lootTable: {
-        tier_airdrop_outfits: [
-            { name: "", count: 1, weight: 3 },
-            { name: "outfitElf", count: 1, weight: 1 },
-        ],
-        tier_throwables: [
-            { name: "frag", count: 2, weight: 1 },
-            { name: "smoke", count: 1, weight: 1 },
-            { name: "mirv", count: 2, weight: 0.05 },
-            { name: "snowball", count: 5, weight: 0.5 },
-        ],
-        tier_airdrop_throwables: [
-            { name: "frag", count: 2, weight: 1 },
-            { name: "mirv", count: 2, weight: 0.5 },
-            { name: "snowball", count: 10, weight: 0.5 },
-        ],
-    },
     mapGen: {
-        densitySpawns: [
-            {
-                stone_01x: 350,
-                barrel_01: 76,
-                silo_01: 8,
-                crate_01: 38,
-                crate_02: 4,
-                crate_03: 8,
-                crate_03x: 1,
-                bush_01: 78,
-                cache_06: 12,
-                tree_01: 320,
-                hedgehog_01: 24,
-                container_01: 5,
-                container_02: 5,
-                container_03: 5,
-                container_04: 5,
-                shack_01: 7,
-                outhouse_01: 5,
-                loot_tier_1: 24,
-                loot_tier_beach: 4,
-            },
-        ],
-        randomSpawns: [],
         spawnReplacements: [
             {
                 bank_01: "bank_01x",
@@ -145,4 +73,4 @@ const mapDef: PartialMapDef = {
     /* STRIP_FROM_PROD_CLIENT:END */
 };
 
-export const Snow = util.mergeDeep({}, Main, mapDef) as MapDef;
+export const Snow = util.mergeDeep({}, mapDef) as MapDef;
