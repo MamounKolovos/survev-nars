@@ -29,11 +29,14 @@ export interface SaveGameBody {
 export interface ServerGameConfig {
     readonly mapName: keyof typeof MapDefs;
     readonly teamMode: TeamMode;
+    readonly roomPair?: string;
+    readonly room?: string;
 }
 
 export interface GameData {
     id: string;
     teamMode: TeamMode;
+    roomPair: string;
     mapName: string;
     canJoin: boolean;
     aliveCount: number;
@@ -43,6 +46,8 @@ export interface GameData {
 
 export const zFindGamePrivateBody = z.object({
     region: z.string(),
+    roomPair: z.string(),
+    room: z.string(),
     version: z.number(),
     autoFill: z.boolean(),
     mapName: z.string(),

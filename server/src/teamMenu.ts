@@ -177,6 +177,7 @@ class Room {
             region = Object.keys(Config.regions)[0];
         }
         this.data.region = region;
+        this.data.roomPair = props.roomPair;
 
         let gameModeIdx = props.gameModeIdx;
 
@@ -242,6 +243,8 @@ class Room {
         }
         this.data.region = region;
 
+        this.data.roomPair = data.roomPair;
+
         const tokenMap = new Map<Player, string>();
 
         const playerData = this.players.map((p) => {
@@ -285,6 +288,8 @@ class Room {
             teamMode: mode.teamMode,
             autoFill: this.data.autoFill,
             region: region,
+            roomPair: this.data.roomPair,
+            room: this.data.roomUrl.toLowerCase(),
             version: data.version,
             playerData,
         });

@@ -95,6 +95,7 @@ export const zClientRoomData = z.object({
     findingGame: z.boolean(),
     lastError: z.string(),
     region: z.string(),
+    roomPair: z.string(),
     autoFill: z.boolean(),
     gameModeIdx: z.number(),
 });
@@ -160,6 +161,7 @@ export const zTeamPlayGameMsg = z.object({
     data: z.object({
         version: z.number(),
         region: z.string(),
+        roomPair: z.string(),
         zones: z.array(z.string()),
         turnstileToken: z.string().optional(),
     }),
