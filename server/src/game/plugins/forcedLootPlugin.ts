@@ -87,7 +87,6 @@ const secondaryWeights = [
     { weight: 0.3, gun: "saiga" },
     { weight: 1.5, gun: "famas" },
     { weight: 1.5, gun: "an94" },
-    { weight: 1.5, gun: "bar" },
     { weight: 0.5, gun: "p30l_dual" },
     { weight: 0.001, gun: "awc" },
 ];
@@ -97,8 +96,8 @@ const meleeWeights = [
     { weight: 15, melee: "stonehammer" },
     { weight: 15, melee: "machete" },
     { weight: 10, melee: "hook" },
-    { weight: 5, melee:  "katana" },
-    { weight: 5, melee:  "naginata" },
+    { weight: 5, melee: "katana" },
+    { weight: 5, melee: "naginata" },
 ];
 function getPrimaryBasedOnSecondary(secondary: string): string {
     const x = Math.random();
@@ -158,11 +157,6 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
         }
         case "famas":
         case "an94": {
-            if (Math.random() < 0.4) {
-                return "spas12";
-            }
-        }
-        case "bar": {
             if (Math.random() < 0.4) {
                 return "spas12";
             }
@@ -434,7 +428,6 @@ function getUpgradedGun(g: string): string {
             break;
         }
         case "an94":
-        case "bar":
         case "qbb97": {
             if (Math.random() < 0.4) return "pkp";
             break;
@@ -599,7 +592,6 @@ const gt = {
     ],
     decentSprays: [
         { gun: "scorpion", weight: 1 },
-        { gun: "bar", weight: 1 },
         { gun: "m4a1", weight: 1 },
         { gun: "grozas", weight: 1 },
     ],
@@ -629,7 +621,6 @@ const gt = {
         { weight: 0.8, gun: "deagle_dual" },
         { weight: 2, gun: "famas" },
         { weight: 2, gun: "an94" },
-        { weight: 2, gun: "bar" },
         { weight: 0.5, gun: "p30l_dual" },
     ],
 };

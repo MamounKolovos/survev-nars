@@ -94,10 +94,11 @@ export class TeamMenu {
             this.pingTest.start([e]);
             this.setRoomProperty("region", e);
         });
-        this.pairSelect.change(() => {
-            const e = this.pairSelect.find(":selected").val() as string;
-            this.pingTest.start([e]);
+        this.pairSelect.on("change", () => {
+            let e = this.pairSelect.find(":selected").val() as string;
+            e = e == "no-room-pair" ? "" : e;
             this.setRoomProperty("roomPair", e);
+            this.config.set("roomPair", e);
         });
         this.queueMode1.click(() => {
             this.setRoomProperty("gameModeIdx", 1);
@@ -277,6 +278,7 @@ export class TeamMenu {
             this.config.set("teamAutoFill", this.roomData.autoFill);
             if (this.isLeader) {
                 this.config.set("region", this.roomData.region);
+                this.config.set("roomPair", this.roomData.roomPair);
             }
             let errTxt = "";
             if (errType && errType != "") {
@@ -307,6 +309,9 @@ export class TeamMenu {
                 this.roomData = stateData.room;
                 this.players = stateData.players;
                 this.rooms = stateData.rooms;
+                if (!this.rooms.includes("No Room Pair")) {
+                    this.rooms.unshift("No Room Pair");
+                }
                 this.localPlayerId = stateData.localPlayerId;
                 this.isLeader = this.getPlayerById(this.localPlayerId)!.isLeader;
 
@@ -320,7 +325,9 @@ export class TeamMenu {
                 if (this.isLeader) {
                     this.roomData.region = ourRoomData.region;
                     this.roomData.autoFill = ourRoomData.autoFill;
+                    this.roomData.roomPair = ourRoomData.roomPair;
                 }
+                console.log(this.roomData.roomPair);
                 this.refreshUi();
                 // Since the only way to get the roomID (ig?) is from state, each time receiving state, we can show the invite button
                 SDK.showInviteButton(stateData.room.roomUrl.replace("#", ""));
@@ -357,6 +364,7 @@ export class TeamMenu {
     setRoomProperty<T extends keyof RoomData>(prop: T, val: RoomData[T]) {
         if (this.isLeader && this.roomData[prop] != val) {
             this.roomData[prop] = val;
+            console.log(`${this.roomData[prop]}the room prop value is being set to this`);
             this.sendMessage("setRoomProps", this.roomData);
         }
     }
@@ -365,10 +373,18 @@ export class TeamMenu {
         if (this.isLeader && !this.roomData.findingGame) {
             const version = GameConfig.protocolVersion;
             let region = this.roomData.region;
+            let roomPair = this.roomData.roomPair;
             const paramRegion = helpers.getParameterByName("region");
             if (paramRegion !== undefined && paramRegion.length > 0) {
                 region = paramRegion;
             }
+
+            //This is same exact code as the event listener but just adding an extra check in case the event listener was never triggered
+            let e = this.pairSelect.find(":selected").val() as string;
+            e = e == "no-room-pair" ? "" : e;
+            this.setRoomProperty("roomPair", e);
+            this.config.set("roomPair", e);
+
             let zones = this.pingTest.getZones(region);
             const paramZone = helpers.getParameterByName("zone");
             if (paramZone !== undefined && paramZone.length > 0) {
@@ -377,8 +393,10 @@ export class TeamMenu {
             const matchArgs: TeamPlayGameMsg["data"] = {
                 version,
                 region,
+                roomPair,
                 zones,
             };
+            console.log(`${roomPair}this is being sent to the server`);
 
             helpers.verifyTurnstile(this.roomData.captchaEnabled, (token) => {
                 matchArgs.turnstileToken = token;
@@ -425,18 +443,31 @@ export class TeamMenu {
         ) as HTMLOptGroupElement | null;
         if (!optGroup) return;
 
-        this.rooms.forEach((team) => {
-            const value = team.toLowerCase().replace(/\s+/g, "-");
+        // Step 1: normalize rooms to values
+        let roomValues = this.rooms.map((r) => r.toLowerCase().replace(/\s+/g, "-"));
 
-            // Skip if option with same value already exists
-            if (optGroup.querySelector(`option[value="${value}"]`)) {
-                return;
+        // Step 2: Add missing options
+        roomValues.forEach((value, i) => {
+            if (!optGroup.querySelector(`option[value="${value}"]`)) {
+                const option = document.createElement("option");
+                option.value = value;
+                option.textContent = this.rooms[i];
+                optGroup.appendChild(option);
+                if (option.value == this.roomData.roomPair) {
+                    option.selected = true;
+                }
             }
+        });
 
-            const option = document.createElement("option");
-            option.value = value;
-            option.textContent = team;
-            optGroup.appendChild(option);
+        // Step 3: Remove options NOT in this.rooms
+        optGroup.querySelectorAll("option").forEach((opt) => {
+            if (
+                !roomValues.includes(opt.value) ||
+                opt.value == "No Room Pair" ||
+                opt.value == this.roomData.roomUrl.toLowerCase().replace(/\s+/g, "-")
+            ) {
+                opt.remove();
+            }
         });
 
         if (
@@ -477,10 +508,6 @@ export class TeamMenu {
 
             this.serverSelect.find("option").each((_idx, ele) => {
                 ele.selected = ele.value == this.roomData.region;
-            });
-
-            this.pairSelect.find("option").each((_idx, ele) => {
-                ele.selected = ele.value == this.roomData.roomPair;
             });
 
             // Modes btns

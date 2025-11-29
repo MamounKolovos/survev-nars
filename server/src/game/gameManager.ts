@@ -135,7 +135,11 @@ export class SingleThreadGameManager implements GameManager {
                 return (
                     game.canJoin &&
                     game.teamMode === body.teamMode &&
-                    game.mapName === body.mapName
+                    game.mapName === body.mapName &&
+                    (game.roomPair !== ""
+                        ? (game.room === body.roomPair && game.roomPair === body.room) ||
+                          (body.room === game.roomPair && body.roomPair === game.room)
+                        : true)
                 );
             })
             .sort((a, b) => {
@@ -146,6 +150,8 @@ export class SingleThreadGameManager implements GameManager {
             game = await this.newGame({
                 teamMode: body.teamMode,
                 mapName: body.mapName as keyof typeof MapDefs,
+                roomPair: body.roomPair,
+                room: body.room,
             });
         }
 

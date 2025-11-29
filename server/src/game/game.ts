@@ -52,6 +52,7 @@ export class Game {
     stopTicker = 0;
     id: string;
     teamMode: TeamMode;
+    roomPair: string;
     mapName: string;
     isTeamMode: boolean;
     config: ServerGameConfig;
@@ -68,6 +69,7 @@ export class Game {
     objectRegister: ObjectRegister;
 
     joinTokens = new Map<string, JoinTokenData>();
+    room: string | undefined;
 
     get aliveCount(): number {
         return this.playerBarn.livingPlayers.length;
@@ -124,6 +126,8 @@ export class Game {
         this.config = config;
 
         this.teamMode = config.teamMode;
+        this.roomPair = config.roomPair ? config.roomPair : "";
+        this.room = config.room ? config.room : "";
         this.mapName = config.mapName;
         this.isTeamMode = this.teamMode !== TeamMode.Solo;
 
@@ -518,6 +522,7 @@ export class Game {
             type: ProcessMsgType.UpdateData,
             id: this.id,
             teamMode: this.teamMode,
+            roomPair: this.roomPair,
             mapName: this.mapName,
             canJoin: this.canJoin,
             aliveCount: this.aliveCount,
