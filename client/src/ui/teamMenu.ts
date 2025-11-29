@@ -378,6 +378,13 @@ export class TeamMenu {
             if (paramRegion !== undefined && paramRegion.length > 0) {
                 region = paramRegion;
             }
+
+            //This is same exact code as the event listener but just adding an extra check in case the event listener was never triggered
+            let e = this.pairSelect.find(":selected").val() as string;
+            e = e == "no-room-pair" ? "" : e;
+            this.setRoomProperty("roomPair", e);
+            this.config.set("roomPair", e);
+
             let zones = this.pingTest.getZones(region);
             const paramZone = helpers.getParameterByName("zone");
             if (paramZone !== undefined && paramZone.length > 0) {
