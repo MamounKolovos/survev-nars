@@ -99,6 +99,7 @@ export function attachGracePeriod(
 
     let elapsedTime = 0;
     let countdownScheduled = false;
+    let inputsRestored = false;
 
     plugin.on("gameUpdate", (event, ctx) => {
         const { game, dt } = event.data;
@@ -110,8 +111,9 @@ export function attachGracePeriod(
             countdownScheduled = true;
         }
 
-        if (elapsedTime > gracePeriod) {
+        if (!inputsRestored && elapsedTime > gracePeriod) {
             restoreInputs();
+            inputsRestored = true;
         }
 
         if (elapsedTime > canJoinPeriod) {
@@ -172,12 +174,10 @@ export function attachLootDisabler(plugin: GamePlugin) {
             loot.destroy();
         }
     });
-
-    //prevent obstacles with loot from dropping it
+    // prevent obstacles with loot from dropping it
     plugin.on("obstacleDeathBeforeEffects", (event, ctx) => {
         const { obstacle, params } = event.data;
         const def = MapObjectDefs[obstacle.type] as ObstacleDef;
-
         if (def.loot.length != 0) {
             event.cancel();
         }
