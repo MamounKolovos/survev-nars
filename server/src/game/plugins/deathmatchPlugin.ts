@@ -12,7 +12,7 @@ import { assert, util } from "../../../../shared/utils/util";
 import { v2 } from "../../../../shared/utils/v2";
 import { TimerManager, createSimpleSegment } from "../../utils/pluginUtils";
 import type { Game } from "../game";
-import { Player } from "../objects/player";
+import type { Player } from "../objects/player";
 import { GamePlugin } from "../pluginManager";
 import { attachCustomQuickSwitch, attachGracePeriod } from "./internalUtils";
 
@@ -569,7 +569,7 @@ export default class DeathmatchPlugin extends GamePlugin {
             killMsg.targetId = player.__id;
             killMsg.killed = true;
 
-            if (params.source instanceof Player) {
+            if (params.source && params.source.__type == ObjectType.Player) {
                 const killer = params.source;
                 player.killedBy = killer;
 
@@ -664,7 +664,8 @@ export default class DeathmatchPlugin extends GamePlugin {
 
             // end game before respawn logic gets a chance to run
             if (
-                params.source instanceof Player &&
+                params.source &&
+                params.source.__type == ObjectType.Player &&
                 WIN_CONDITION.kind == "killThreshold" &&
                 params.source.kills >= WIN_CONDITION.targetKills
             ) {
