@@ -21,6 +21,15 @@ export class DeadBodyBarn {
         this.deadBodies.push(deadBody);
         this.game.objectRegister.register(deadBody);
     }
+
+    removeDeadBody(playerId: number) {
+        const idx = this.deadBodies.findIndex((body) => body.playerId == playerId);
+        if (idx != -1) {
+            const deadBody = this.deadBodies[idx];
+            this.deadBodies.splice(idx, 1);
+            deadBody.destroy();
+        }
+    }
 }
 
 export class DeadBody extends BaseGameObject {

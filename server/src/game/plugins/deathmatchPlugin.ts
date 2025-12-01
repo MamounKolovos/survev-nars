@@ -39,6 +39,9 @@ const RESPAWN_DELAY = 5;
 // seconds remaining when respawn countdown begins in the killfeed
 const RESPAWN_COUNTDOWN_START = 3;
 
+// how long to wait after a player dies before deleting dead body
+const DESTROY_DEAD_BODY_DELAY = 20;
+
 type WinCondition =
     // Game ends when any team reaches this kill count.
     | { kind: "killThreshold"; targetKills: number }
@@ -661,6 +664,10 @@ export default class DeathmatchPlugin extends GamePlugin {
                 player.layer,
                 params.dir,
             );
+
+            this.timerManager.setTimeout(() => {
+                this.game.deadBodyBarn.removeDeadBody(player.__id);
+            }, DESTROY_DEAD_BODY_DELAY);
 
             // end game before respawn logic gets a chance to run
             if (
