@@ -34,7 +34,7 @@ interface Loadout {
 }
 //raise above 0.5 to artifically boost the strength of most non sniper/shotgun loadouts, vice versa also applies
 //added only because tweaking this is easier than going through the whole strength function if you want to tweak strength distrubutions for role/armor distribution purposes
-const BETTER_STRENGTH_WEIGHT = 0.5; 
+const BETTER_STRENGTH_WEIGHT = 0.5;
 
 const MELEE_STRENGTH_WEIGHT = 0.04; //how much melee strength impacts total strength (relative to guns)
 
@@ -49,8 +49,6 @@ const roleWeights = [
     { weight: 1, role: "lieutenant" },
     { weight: 1, role: "recon" },
 ];
-
-
 
 // const vestWeights = [
 //     { weight: 0, vest: "chest01" },
@@ -216,16 +214,25 @@ function generateFairLootLoadouts(): Loadout[] {
         const totalWeaponStrength = getTotalWeaponStrength(primary, secondary, melee);
         console.log(totalWeaponStrength, primary, secondary, melee);
 
-        const modifiedRoleChance = MAX_ROLE_CHANCE - (totalWeaponStrength * (MAX_ROLE_CHANCE-MIN_ROLE_CHANCE))
-        const role = Math.random() < modifiedRoleChance ? util.weightedRandom(roleWeights).role : "";
+        const modifiedRoleChance =
+            MAX_ROLE_CHANCE - totalWeaponStrength * (MAX_ROLE_CHANCE - MIN_ROLE_CHANCE);
+        const role =
+            Math.random() < modifiedRoleChance
+                ? util.weightedRandom(roleWeights).role
+                : "";
 
-        const modifiedlvl3armorchance = MAX_LEVEL_3_ARMOR_CHANCE - (totalWeaponStrength * (MAX_LEVEL_3_ARMOR_CHANCE-MIN_LEVEL_3_ARMOR_CHANCE))
-        const helmet = Math.random() < (modifiedlvl3armorchance - modifiedRoleChance) ? "helmet03" : "helmet02"; 
-        //role chance subtracted since roles come with level 3 helmet 
+        const modifiedlvl3armorchance =
+            MAX_LEVEL_3_ARMOR_CHANCE -
+            totalWeaponStrength * (MAX_LEVEL_3_ARMOR_CHANCE - MIN_LEVEL_3_ARMOR_CHANCE);
+        const helmet =
+            Math.random() < modifiedlvl3armorchance - modifiedRoleChance
+                ? "helmet03"
+                : "helmet02";
+        //role chance subtracted since roles come with level 3 helmet
         const vest = Math.random() < modifiedlvl3armorchance ? "chest03" : "chest02";
 
         console.log(vest, helmet, role);
-        
+
         const loadout: Loadout = {
             vest: vest,
             helmet: helmet,
@@ -459,129 +466,187 @@ function getUpgradedGun(g: string): string {
     }
     return "";
 }
-const sniperStrengths :Record<string,number> = {
-    "sv98":1,
-    "mosin":0.95,
-    "blr":0.9,
-    "scout_elite":0.8,
-    "model": 0.8, 
-    "garand":0.9,
-}
-const gunStrengths : Record<string,number> = {
-    "spas12": 0.9,
-    "m870": 0.3,
-    "sv98": 1,
-    "mosin": 0.9,
-    "model94": 0.9,
-    "scout_elite": 0.6,
-    "blr": 0.7,
-    "garand":0.9,
-    "pkp": 0.9,
-    "m249": 0.75,
-    "qbb":0.65,
-    "dp28": 0.0,
-    "m4a1":0.45,
-    "scorpion":0.4,
-    "grozas":0.4,
-    "ak47":0.2,
-    "hk416":0.1,
-    "scar":0.0,
-    "mk12":0.1,
-    "deagle_dual":0.2,
-    "famas":0.3,
-    "an94": 0.6,
-    "bar":0.0,
-    "p30l_dual":0.75,
-    "vector":0.1,
-    "awc":0, //xd
-    "m9": 0,
-}
-function getTotalGunStrength(primary: string, secondary: string) : number {
-    if (primary == "spas12"){
-        switch(secondary){
-            case "sv98": return 1;
-            case "mosin": return 0.95;
-            case "m1014": return 0.92;
-            case "scout_elite": return 0.85;
-            case "blr": return 0.88;
-            case "model": return 0.75;
-            case "pkp": return 0.95;
-            case "m249": return 0.9;
-            case "qbb": return 0.75;
-            case "dp28": return 0.5;
-            case "famas": return 0.65;
-            case "an94": return 0.75;
-            case "bar": return 0.45;
-            case "garand": return 0.9;
-            case "mk12": return 0.35;
-            case "saiga": return 0.0; //i dont think spas saiga is actually this weak but i want it to have more armor/rolescase 
-            case "p30l_dual": 0.8;
-            case "deagle_dual": return 0.45;
-            case "m4a1": return 0.6;
-            case "scorpion": return 0.6;
-            case "grozas": return 0.6
-            case "ak47": return 0.5;
-            case "hk416": return 0.5;
-            case "scar":  return 0.45;
-            default: return -1;
+const sniperStrengths: Record<string, number> = {
+    sv98: 1,
+    mosin: 0.95,
+    blr: 0.9,
+    scout_elite: 0.8,
+    model: 0.8,
+    garand: 0.9,
+};
+const gunStrengths: Record<string, number> = {
+    spas12: 0.9,
+    m870: 0.3,
+    sv98: 1,
+    mosin: 0.9,
+    model94: 0.9,
+    scout_elite: 0.6,
+    blr: 0.7,
+    garand: 0.9,
+    pkp: 0.9,
+    m249: 0.75,
+    qbb: 0.65,
+    dp28: 0.0,
+    m4a1: 0.45,
+    scorpion: 0.4,
+    grozas: 0.4,
+    ak47: 0.2,
+    hk416: 0.1,
+    scar: 0.0,
+    mk12: 0.1,
+    deagle_dual: 0.2,
+    famas: 0.3,
+    an94: 0.6,
+    bar: 0.0,
+    p30l_dual: 0.75,
+    vector: 0.1,
+    awc: 0, //xd
+    m9: 0,
+};
+function getTotalGunStrength(primary: string, secondary: string): number {
+    if (primary == "spas12") {
+        switch (secondary) {
+            case "sv98":
+                return 1;
+            case "mosin":
+                return 0.95;
+            case "m1014":
+                return 0.92;
+            case "scout_elite":
+                return 0.85;
+            case "blr":
+                return 0.88;
+            case "model":
+                return 0.75;
+            case "pkp":
+                return 0.95;
+            case "m249":
+                return 0.9;
+            case "qbb":
+                return 0.75;
+            case "dp28":
+                return 0.5;
+            case "famas":
+                return 0.65;
+            case "an94":
+                return 0.75;
+            case "bar":
+                return 0.45;
+            case "garand":
+                return 0.9;
+            case "mk12":
+                return 0.35;
+            case "saiga":
+                return 0.0; //i dont think spas saiga is actually this weak but i want it to have more armor/rolescase
+            case "p30l_dual":
+                0.8;
+            case "deagle_dual":
+                return 0.45;
+            case "m4a1":
+                return 0.6;
+            case "scorpion":
+                return 0.6;
+            case "grozas":
+                return 0.6;
+            case "ak47":
+                return 0.5;
+            case "hk416":
+                return 0.5;
+            case "scar":
+                return 0.45;
+            default:
+                return -1;
         }
     }
-    if (primary == "m870"){
-        switch(secondary){
-            case "sv98": return 0.75;
-            case "mosin": return 0.7;
-            case "m1014": return 0.75;
-            case "scout_elite": return 0.5;
-            case "blr": return 0.55;
-            case "model": return 0.7;
-            case "pkp": return 0.9;
-            case "m249": return 0.75;
-            case "qbb": return 0.65;
-            case "dp28": return 0.35;
-            case "famas": return 0.4;
-            case "an94": return 0.45;
-            case "bar": return 0.0;
-            case "garand": return 0.8;
-            case "mk12": return 0.25;
-            case "deagle_dual": return 0.0;
-            case "m4a1": return 0.25;
-            case "scorpion": return 0.2;
-            case "grozas": return 0.2
-            case "ak47": return 0.1;
-            case "hk416": return 0.05;
-            case "scar": return  0.0;
-            default: return -1;
+    if (primary == "m870") {
+        switch (secondary) {
+            case "sv98":
+                return 0.75;
+            case "mosin":
+                return 0.7;
+            case "m1014":
+                return 0.75;
+            case "scout_elite":
+                return 0.5;
+            case "blr":
+                return 0.55;
+            case "model":
+                return 0.7;
+            case "pkp":
+                return 0.9;
+            case "m249":
+                return 0.75;
+            case "qbb":
+                return 0.65;
+            case "dp28":
+                return 0.35;
+            case "famas":
+                return 0.4;
+            case "an94":
+                return 0.45;
+            case "bar":
+                return 0.0;
+            case "garand":
+                return 0.8;
+            case "mk12":
+                return 0.25;
+            case "deagle_dual":
+                return 0.0;
+            case "m4a1":
+                return 0.25;
+            case "scorpion":
+                return 0.2;
+            case "grozas":
+                return 0.2;
+            case "ak47":
+                return 0.1;
+            case "hk416":
+                return 0.05;
+            case "scar":
+                return 0.0;
+            default:
+                return -1;
         }
     }
-    if (secondary == "model94" && primary == "garand"){
+    if (secondary == "model94" && primary == "garand") {
         return 0.9;
     }
-    if (sniperStrengths[primary] !== undefined && sniperStrengths[secondary] !== undefined){
+    if (
+        sniperStrengths[primary] !== undefined &&
+        sniperStrengths[secondary] !== undefined
+    ) {
         return 0.5 * sniperStrengths[primary] + 0.5 * sniperStrengths[secondary];
     }
-    if (gunStrengths[primary] !== undefined && gunStrengths[secondary] !== undefined){
-        return BETTER_STRENGTH_WEIGHT * Math.max(gunStrengths[primary],gunStrengths[secondary]) + (1-BETTER_STRENGTH_WEIGHT) * Math.max(gunStrengths[primary], gunStrengths[secondary]);
+    if (gunStrengths[primary] !== undefined && gunStrengths[secondary] !== undefined) {
+        return (
+            BETTER_STRENGTH_WEIGHT *
+                Math.max(gunStrengths[primary], gunStrengths[secondary]) +
+            (1 - BETTER_STRENGTH_WEIGHT) *
+                Math.max(gunStrengths[primary], gunStrengths[secondary])
+        );
     }
     return -1;
-    
 }
 
-
-
-function getTotalWeaponStrength(primary: string, secondary: string, melee: string) : number{
+function getTotalWeaponStrength(
+    primary: string,
+    secondary: string,
+    melee: string,
+): number {
     const meleeStrength = meleeStrengths[melee];
-    const gunStrength = getTotalGunStrength(primary,secondary);
-    return MELEE_STRENGTH_WEIGHT * meleeStrength + (1-MELEE_STRENGTH_WEIGHT) * gunStrength;
-
+    const gunStrength = getTotalGunStrength(primary, secondary);
+    return (
+        MELEE_STRENGTH_WEIGHT * meleeStrength + (1 - MELEE_STRENGTH_WEIGHT) * gunStrength
+    );
 }
 
 const meleeStrengths: Record<string, number> = {
-    "" : 0,
-    "stonehammer" : 0.4,
-    "machete" : 0.7,
-    "hook" : 0.1,
-    "katana" : 1.0,
-    "naginata" : 0.9,
+    "": 0,
+    stonehammer: 0.4,
+    machete: 0.7,
+    hook: 0.1,
+    katana: 1.0,
+    naginata: 0.9,
 };
 
 const gt = {
@@ -639,6 +704,7 @@ export default class focedLootPlugin extends GamePlugin {
             this.game.map.mapId !== MapId.ForcedLoot2
         )
             return;
+
         attachLootDisabler(this);
         attachCustomQuickSwitch(this, CUSTOM_SWITCH_DELAY);
         attachTimerManagerUpdate(this);
