@@ -143,6 +143,7 @@ function createLoadout<T extends Loadout>(extension: DeepPartial<T>): T {
             frag: 0,
             smoke: 0,
             strobe: 0,
+            impulse: 0,
             mirv: 0,
             snowball: 0,
             potato: 0,
