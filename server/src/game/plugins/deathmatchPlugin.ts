@@ -654,16 +654,6 @@ export default class DeathmatchPlugin extends GamePlugin {
 
             this.game.broadcastMsg(net.MsgType.Kill, killMsg);
 
-            if (player.role) {
-                const roleMsg = new net.RoleAnnouncementMsg();
-                roleMsg.role = player.role;
-                roleMsg.assigned = false;
-                roleMsg.killed = true;
-                roleMsg.playerId = player.__id;
-                roleMsg.killerId = params.source?.__id ?? 0;
-                this.game.broadcastMsg(net.MsgType.RoleAnnouncement, roleMsg);
-            }
-
             if (this.game.map.mapDef.gameMode.killLeaderEnabled) {
                 const killLeader = this.game.playerBarn.killLeader;
 

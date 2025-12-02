@@ -28,6 +28,7 @@ const mapDef: PartialMapDef = {
             },
         },
     },
+    gameMode: { sniperMode: true },
     /* STRIP_FROM_PROD_CLIENT:END */
 };
 
