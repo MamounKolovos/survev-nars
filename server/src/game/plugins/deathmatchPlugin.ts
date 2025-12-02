@@ -286,11 +286,11 @@ function attachGasResizer(
         const { player } = event.data;
 
         // only increase zone size once per group
-        if (
-            player.group &&
-            player.group.players.filter((p) => !p.disconnected).length > 1
-        )
-            return;
+        // if (
+        //     player.group &&
+        //     player.group.players.filter((p) => !p.disconnected).length > 1
+        // )
+        //     return;
 
         if (gas.mode == GasMode.Waiting) {
             gas._gasTicker = 0;
@@ -315,11 +315,11 @@ function attachGasResizer(
         const { player } = event.data;
 
         // only decrease zone size once per group
-        if (
-            player.group &&
-            player.group.players.filter((p) => !p.disconnected).length > 0
-        )
-            return;
+        // if (
+        //     player.group &&
+        //     player.group.players.filter((p) => !p.disconnected).length > 0
+        // )
+        //     return;
 
         if (gas.mode == GasMode.Waiting) {
             gas._gasTicker = 0;
