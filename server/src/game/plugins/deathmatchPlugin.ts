@@ -40,6 +40,11 @@ const RESPAWN_DELAY = 5;
 // seconds remaining when respawn countdown begins in the killfeed
 const RESPAWN_COUNTDOWN_START = 3;
 
+assert(
+    RESPAWN_COUNTDOWN_START <= RESPAWN_DELAY,
+    "the respawn delay countdown must appear while the respawn is still active",
+);
+
 // how long to wait after a player dies before deleting dead body
 const DESTROY_DEAD_BODY_DELAY = 20;
 
