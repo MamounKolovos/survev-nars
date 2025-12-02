@@ -8,6 +8,7 @@ import * as net from "../../../../shared/net/net";
 import { ObjectType } from "../../../../shared/net/objectSerializeFns";
 import { type Collider, coldet } from "../../../../shared/utils/coldet";
 import { collider } from "../../../../shared/utils/collider";
+import { math } from "../../../../shared/utils/math";
 import { assert, util } from "../../../../shared/utils/util";
 import { v2 } from "../../../../shared/utils/v2";
 import { TimerManager, createSimpleSegment } from "../../utils/pluginUtils";
@@ -153,12 +154,18 @@ function createLoadout<T extends Loadout>(extension: DeepPartial<T>): T {
 
 //non weapons defaults
 const defaultGearLoadout = createLoadout({
+    backpack: "backpack03",
     helmet: "helmet02",
     chest: "chest02",
     scope: "4xscope",
     perks: [{ type: "endless_ammo", droppable: false }],
     inventory: {
+        "2xscope": 1,
         "4xscope": 1,
+        bandage: 10,
+        healthkit: 1,
+        soda: 2,
+        painkiller: 0,
     },
 });
 
@@ -212,8 +219,6 @@ function applyLoadout(player: Player, loadout: Loadout) {
         player.weaponManager.setWeapon(i, type, ammo);
     }
 
-    player.weaponManager.showNextThrowable();
-
     const perkTypes = [...player.perkTypes];
     for (const perk of perkTypes) {
         player.removePerk(perk);
@@ -232,6 +237,9 @@ function applyLoadout(player: Player, loadout: Loadout) {
     player.scope = loadout.scope;
 
     Object.assign(player.inventory, loadout.inventory);
+
+    // need to fill inventory before showing next throwable
+    player.weaponManager.showNextThrowable();
 
     player.inventoryDirty = true;
     player.weapsDirty = true;
@@ -383,6 +391,14 @@ function endGameByKillCount(game: Game) {
     game.stopTicker = 2;
 
     game.updateData();
+}
+
+function addToInventory(player: Player, type: string, amount: number) {
+    if (!player.bagSizes[type]) return;
+    const backpackLevel = player.getGearLevel(player.backpack);
+    const spaceLeft = player.bagSizes[type][backpackLevel] - player.inventory[type];
+    player.inventory[type] += math.clamp(amount, 0, spaceLeft);
+    player.inventoryDirty = true;
 }
 
 export default class DeathmatchPlugin extends GamePlugin {
@@ -607,6 +623,14 @@ export default class DeathmatchPlugin extends GamePlugin {
                     killer.health += 25;
                     killer.boost += 25;
                 }
+
+                addToInventory(killer, "impulse", 1);
+                if (!killer.weapons[GameConfig.WeaponSlot.Throwable].type) {
+                    killer.weaponManager.showNextThrowable();
+                }
+                addToInventory(killer, "bandage", 5);
+                addToInventory(killer, "healthkit", 1);
+                addToInventory(killer, "soda", 1);
 
                 // loop over all slots to make it generic i guess
                 for (let i = 0; i < GameConfig.WeaponSlot.Count; i++) {
