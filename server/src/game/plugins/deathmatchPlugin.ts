@@ -578,6 +578,12 @@ export default class DeathmatchPlugin extends GamePlugin {
 
             player.shotSlowdownTimer = 0;
 
+            // so inputs don't carry over into the next life
+            player.moveLeft = false;
+            player.moveRight = false;
+            player.moveUp = false;
+            player.moveDown = false;
+
             //clears loadout
             applyLoadout(player, createLoadout({}));
 
