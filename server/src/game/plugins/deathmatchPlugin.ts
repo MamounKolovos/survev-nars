@@ -99,6 +99,7 @@ type DeepPartial<T> = T extends object
       }
     : T;
 
+//TODO: inline this instead of using Omit
 type Loadout = Omit<typeof GameConfig.player.defaultItems, "weapons"> & {
     //undefined is def.maxClip
     weapons: [
@@ -107,6 +108,8 @@ type Loadout = Omit<typeof GameConfig.player.defaultItems, "weapons"> & {
         { type: string | (() => string); ammo: 0 },
         { type: string | (() => string); ammo: 0 },
     ];
+    role: string;
+    weight: number;
 };
 
 function createLoadout<T extends Loadout>(extension: DeepPartial<T>): T {
@@ -148,6 +151,10 @@ function createLoadout<T extends Loadout>(extension: DeepPartial<T>): T {
             "8xscope": 0,
             "15xscope": 0,
         },
+        //TODO: does not work as expected currently since kill leader (the_hunted)
+        // overrides any role you start out with
+        role: "",
+        weight: 1,
     };
     return util.mergeDeep(emptyLoadout, extension || {});
 }
@@ -155,10 +162,9 @@ function createLoadout<T extends Loadout>(extension: DeepPartial<T>): T {
 //non weapons defaults
 const defaultGearLoadout = createLoadout({
     backpack: "backpack03",
-    helmet: "helmet02",
+    helmet: "helmet03",
     chest: "chest02",
     scope: "4xscope",
-    perks: [{ type: "endless_ammo", droppable: false }],
     inventory: {
         "2xscope": 1,
         "4xscope": 1,
@@ -173,10 +179,13 @@ const tiers = {
     tier_sprays: [
         { name: "ak47", count: 1, weight: 1 },
         { name: "hk416", count: 1, weight: 1 },
+        { name: "mp5", count: 1, weight: 1.2 },
+        { name: "famas", count: 1, weight: 1.2 },
     ],
     tier_snipers: [
         { name: "blr", count: 1, weight: 1 },
         { name: "scout_elite", count: 1, weight: 1 },
+        { name: "model94", count: 1, weight: 0.3 },
     ],
 };
 
@@ -192,6 +201,8 @@ const loadouts: Loadout[] = [
             { type: "fists", ammo: 0 },
             { type: "", ammo: 0 },
         ],
+        perks: [{ type: "endless_ammo", droppable: false }],
+        weight: 1,
     }),
     createLoadout({
         ...defaultGearLoadout,
@@ -204,6 +215,50 @@ const loadouts: Loadout[] = [
             { type: "fists", ammo: 0 },
             { type: "", ammo: 0 },
         ],
+        perks: [{ type: "endless_ammo", droppable: false }],
+        weight: 1,
+    }),
+    createLoadout({
+        ...defaultGearLoadout,
+        weapons: [
+            { type: "model94", ammo: undefined },
+            { type: "deagle", ammo: undefined },
+            { type: "fists", ammo: 0 },
+            { type: "frag", ammo: 0 },
+        ],
+        perks: [{ type: "endless_ammo", droppable: false }],
+        inventory: {
+            frag: 1,
+        },
+        weight: 0.5,
+    }),
+    createLoadout({
+        ...defaultGearLoadout,
+        weapons: [
+            { type: "m249", ammo: undefined },
+            { type: "", ammo: 0 },
+            { type: "fists", ammo: 0 },
+            { type: "", ammo: 0 },
+        ],
+        perks: [{ type: "endless_ammo", droppable: false }],
+        weight: 0.2,
+    }),
+    createLoadout({
+        ...defaultGearLoadout,
+        weapons: [
+            { type: "mosin", ammo: undefined },
+            { type: "bugle", ammo: undefined },
+            { type: "fists", ammo: 0 },
+            { type: "impulse", ammo: 0 },
+        ],
+        perks: [
+            { type: "endless_ammo", droppable: false },
+            { type: "inspiration", droppable: false },
+        ],
+        inventory: {
+            impulse: 2,
+        },
+        weight: 0.1,
     }),
 ];
 
@@ -219,9 +274,12 @@ function applyLoadout(player: Player, loadout: Loadout) {
         player.weaponManager.setWeapon(i, type, ammo);
     }
 
-    const perkTypes = [...player.perkTypes];
-    for (const perk of perkTypes) {
-        player.removePerk(perk);
+    const perks = [...player.perks];
+    for (const perk of perks) {
+        // hunted can only be removed when player loses "the_hunted" role
+        if (perk.type == "hunted") continue;
+
+        player.removePerk(perk.type);
     }
 
     if (loadout.perks.length) {
@@ -229,6 +287,10 @@ function applyLoadout(player: Player, loadout: Loadout) {
             player.addPerk(perk.type, perk.droppable);
         }
         player.setDirty();
+    }
+
+    if (loadout.role) {
+        player.promoteToRole(loadout.role);
     }
 
     player.helmet = loadout.helmet;
@@ -552,7 +614,7 @@ export default class DeathmatchPlugin extends GamePlugin {
             player.boost = 100;
             player.health = 100;
 
-            applyLoadout(player, util.randomElem(loadouts));
+            applyLoadout(player, util.weightedRandom(loadouts));
         });
 
         this.on("playerWillDie", (event, ctx) => {
@@ -659,7 +721,8 @@ export default class DeathmatchPlugin extends GamePlugin {
 
                 let killLeaderKills = 0;
 
-                if (killLeader && !killLeader.dead) {
+                // `player.kill() also checks !dead here but we don't care about that
+                if (killLeader) {
                     killLeaderKills = killLeader.kills;
                 }
 
