@@ -450,6 +450,8 @@ export class WeaponManager {
             !this.player.inventory[weaponDef.ammo] && !this.isInfinite(weaponDef),
             this.curWeapIdx == WeaponSlot.Melee ||
                 this.curWeapIdx == WeaponSlot.Throwable,
+            // impossible for the bugle to be reloaded by the player
+            this.weapons[this.curWeapIdx].type == "bugle",
         ];
         if (conditions.some((c) => c)) {
             return;
