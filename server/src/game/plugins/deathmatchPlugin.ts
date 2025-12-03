@@ -162,34 +162,8 @@ const EMPTY_LOADOUT: Loadout = {
     weight: 1,
 };
 
-function cloneDeep<T>(source: T): T {
-    // primitives and functions stay as-is
-    if (source === null || typeof source !== "object") {
-        return source;
-    }
-
-    if (Array.isArray(source)) {
-        const arr: any[] = [];
-        for (let i = 0; i < source.length; i++) {
-            arr[i] = cloneDeep(source[i]);
-        }
-        return arr as any;
-    }
-
-    // plain objects
-    const target: any = {};
-    for (const key in source) {
-        // check if safe to copy
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-            target[key] = cloneDeep((source as any)[key]);
-        }
-    }
-
-    return target;
-}
-
 function extendLoadout(base: Loadout, patch: DeepPartial<Loadout>): Loadout {
-    return util.mergeDeep(cloneDeep(base), patch);
+    return util.mergeDeep(structuredClone(base), patch);
 }
 
 //non weapons defaults
