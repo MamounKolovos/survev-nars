@@ -117,56 +117,83 @@ type Loadout = Omit<typeof GameConfig.player.defaultItems, "weapons"> & {
     weight: number;
 };
 
-function createLoadout<T extends Loadout>(extension: DeepPartial<T>): T {
-    const emptyLoadout: Loadout = {
-        weapons: [
-            { type: "", ammo: 0 },
-            { type: "", ammo: 0 },
-            { type: "fists", ammo: 0 },
-            { type: "", ammo: 0 },
-        ],
-        outfit: "outfitBase",
-        backpack: "backpack00",
-        helmet: "",
-        chest: "",
-        scope: "1xscope",
-        perks: [] as Array<{ type: string; droppable?: boolean }>,
-        inventory: {
-            "9mm": 0,
-            "762mm": 0,
-            "556mm": 0,
-            "12gauge": 0,
-            "50AE": 0,
-            "308sub": 0,
-            flare: 0,
-            "45acp": 0,
-            frag: 0,
-            smoke: 0,
-            strobe: 0,
-            impulse: 0,
-            mirv: 0,
-            snowball: 0,
-            potato: 0,
-            bandage: 0,
-            healthkit: 0,
-            soda: 0,
-            painkiller: 0,
-            "1xscope": 1,
-            "2xscope": 0,
-            "4xscope": 0,
-            "8xscope": 0,
-            "15xscope": 0,
-        },
-        //TODO: does not work as expected currently since kill leader (the_hunted)
-        // overrides any role you start out with
-        role: "",
-        weight: 1,
-    };
-    return util.mergeDeep(emptyLoadout, extension || {});
+const EMPTY_LOADOUT: Loadout = {
+    weapons: [
+        { type: "", ammo: 0 },
+        { type: "", ammo: 0 },
+        { type: "fists", ammo: 0 },
+        { type: "", ammo: 0 },
+    ],
+    outfit: "outfitBase",
+    backpack: "backpack00",
+    helmet: "",
+    chest: "",
+    scope: "1xscope",
+    perks: [] as Array<{ type: string; droppable?: boolean }>,
+    inventory: {
+        "9mm": 0,
+        "762mm": 0,
+        "556mm": 0,
+        "12gauge": 0,
+        "50AE": 0,
+        "308sub": 0,
+        flare: 0,
+        "45acp": 0,
+        frag: 0,
+        smoke: 0,
+        strobe: 0,
+        impulse: 0,
+        mirv: 0,
+        snowball: 0,
+        potato: 0,
+        bandage: 0,
+        healthkit: 0,
+        soda: 0,
+        painkiller: 0,
+        "1xscope": 1,
+        "2xscope": 0,
+        "4xscope": 0,
+        "8xscope": 0,
+        "15xscope": 0,
+    },
+    //TODO: does not work as expected currently since kill leader (the_hunted)
+    // overrides any role you start out with
+    role: "",
+    weight: 1,
+};
+
+function cloneDeep<T>(source: T): T {
+    // primitives and functions stay as-is
+    if (source === null || typeof source !== "object") {
+        return source;
+    }
+
+    if (Array.isArray(source)) {
+        const arr: any[] = [];
+        for (let i = 0; i < source.length; i++) {
+            arr[i] = cloneDeep(source[i]);
+        }
+        return arr as any;
+    }
+
+    // plain objects
+    const target: any = {};
+    for (const key in source) {
+        // check if safe to copy
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+            target[key] = cloneDeep((source as any)[key]);
+        }
+    }
+
+    return target;
+}
+
+function extendLoadout(base: Loadout, patch: DeepPartial<Loadout>): Loadout {
+    return util.mergeDeep(cloneDeep(base), patch);
 }
 
 //non weapons defaults
-const defaultGearLoadout = createLoadout({
+const DEFAULT_GEAR_LOADOUT = extendLoadout(EMPTY_LOADOUT, {
     backpack: "backpack03",
     helmet: "helmet03",
     chest: "chest02",
@@ -196,8 +223,7 @@ const tiers = {
 };
 
 const loadouts: Loadout[] = [
-    createLoadout({
-        ...defaultGearLoadout,
+    extendLoadout(DEFAULT_GEAR_LOADOUT, {
         weapons: [
             { type: "spas12", ammo: undefined },
             {
@@ -210,8 +236,7 @@ const loadouts: Loadout[] = [
         perks: [{ type: "endless_ammo", droppable: false }],
         weight: 1,
     }),
-    createLoadout({
-        ...defaultGearLoadout,
+    extendLoadout(DEFAULT_GEAR_LOADOUT, {
         weapons: [
             { type: "m870", ammo: undefined },
             {
@@ -224,8 +249,7 @@ const loadouts: Loadout[] = [
         perks: [{ type: "endless_ammo", droppable: false }],
         weight: 1,
     }),
-    createLoadout({
-        ...defaultGearLoadout,
+    extendLoadout(DEFAULT_GEAR_LOADOUT, {
         weapons: [
             { type: "model94", ammo: undefined },
             { type: "deagle", ammo: undefined },
@@ -238,8 +262,7 @@ const loadouts: Loadout[] = [
         },
         weight: 0.5,
     }),
-    createLoadout({
-        ...defaultGearLoadout,
+    extendLoadout(DEFAULT_GEAR_LOADOUT, {
         weapons: [
             { type: "m249", ammo: undefined },
             { type: "", ammo: 0 },
@@ -249,8 +272,7 @@ const loadouts: Loadout[] = [
         perks: [{ type: "endless_ammo", droppable: false }],
         weight: 0.2,
     }),
-    createLoadout({
-        ...defaultGearLoadout,
+    extendLoadout(DEFAULT_GEAR_LOADOUT, {
         weapons: [
             { type: "mosin", ammo: undefined },
             { type: "bugle", ammo: undefined },
@@ -653,7 +675,7 @@ export default class DeathmatchPlugin extends GamePlugin {
             player.moveDown = false;
 
             //clears loadout
-            applyLoadout(player, createLoadout({}));
+            applyLoadout(player, EMPTY_LOADOUT);
 
             const killMsg = new net.KillMsg();
             killMsg.damageType = params.damageType;
