@@ -63,6 +63,13 @@ export interface MeleeDef {
     };
     armorPiercing?: boolean;
     stonePiercing?: boolean;
+    // currently for impulse_gloves only
+    charge?: {
+        // maximum amount of charges
+        amount: number;
+        // amount of time in seconds it takes to recharge once
+        rechargeTime: number;
+    };
 }
 
 export interface Img {
@@ -1290,6 +1297,28 @@ const SkinDefs: Record<string, MeleeDef> = {
         worldImg: {
             sprite: "loot-melee-warhammer-tank.img",
             pos: { x: -10.5, y: -3 },
+        },
+    }),
+    impulse_gloves: defineMeleeSkin("knuckles", {
+        name: "Impulse Gloves",
+        attack: {
+            damageTimes: [0.25],
+            cooldownTime: 0.5,
+        },
+        anim: {
+            idlePose: "fists",
+            attackAnims: ["heavy_fists"],
+        },
+        noPotatoSwap: true,
+        lootImg: {
+            sprite: "loot-melee-knuckles-heroic.img",
+        },
+        worldImg: {
+            sprite: "loot-melee-knuckles-heroic.img",
+        },
+        charge: {
+            amount: 3,
+            rechargeTime: 5,
         },
     }),
 };

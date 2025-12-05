@@ -229,6 +229,12 @@ export class WeaponManager {
             this.weapons[idx].cooldown = weaponDef.switchDelay;
         }
 
+        // disregards passed in ammo since melees don't have ammo in the traditional sense
+        // just uses the ammo system to keep track of charges
+        if (weaponDef?.type == "melee" && weaponDef.charge) {
+            this.weapons[idx].ammo = weaponDef.charge.amount;
+        }
+
         if (idx === this.curWeapIdx) {
             this.bursts.length = 0;
             this.player.setDirty();
@@ -1049,6 +1055,29 @@ export class WeaponManager {
                     dir: hit.dir,
                 });
             }
+        }
+
+        if (
+            this.activeWeapon == "impulse_gloves" &&
+            this.weapons[this.curWeapIdx].ammo > 0 &&
+            // hits at least one collidable obstacle
+            hits.filter(
+                (hit) => hit.obj.__type == ObjectType.Obstacle && hit.obj.collidable,
+            ).length != 0
+        ) {
+            this.player.game.explosionBarn.addExplosion(
+                "explosion_impulse",
+                v2.add(this.player.pos, this.player.dir),
+                this.player.layer,
+                {
+                    damageType: GameConfig.DamageType.Player,
+                    source: this.player,
+                },
+            );
+
+            this.weapons[this.curWeapIdx].ammo--;
+            this.player.weapsDirty = true;
+            this.player.impulseGlovesTicker = meleeDef.charge!.rechargeTime;
         }
     }
 

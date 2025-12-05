@@ -20,8 +20,10 @@ export const Main: MapDef = {
             { name: "ambient_steam_01", channel: "ambient" },
             { name: "log_11", channel: "sfx" },
             { name: "log_12", channel: "sfx" },
+            { name: "snowball_01", channel: "sfx" },
         ],
-        atlases: ["gradient", "loadout", "shared", "main"],
+        // snow because impulses use snowball textures
+        atlases: ["gradient", "loadout", "shared", "main", "snow"],
     },
     biome: {
         colors: {

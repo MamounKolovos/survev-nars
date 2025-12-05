@@ -274,6 +274,7 @@ export class Player implements AbstractObject {
     useItemEmitter: Emitter | null = null;
     hasteEmitter: Emitter | null = null;
     passiveHealEmitter: Emitter | null = null;
+    impulseGlovesAuraEmitter: Emitter | null = null;
     downed = false;
     wasDowned = false;
     bleedTicker = 0;
@@ -525,6 +526,11 @@ export class Player implements AbstractObject {
         if (this.passiveHealEmitter) {
             this.passiveHealEmitter.stop();
             this.passiveHealEmitter = null;
+        }
+
+        if (this.impulseGlovesAuraEmitter) {
+            this.impulseGlovesAuraEmitter.stop();
+            this.impulseGlovesAuraEmitter = null;
         }
     }
 
@@ -1166,6 +1172,25 @@ export class Player implements AbstractObject {
             this.hasteEmitter.zOrd = this.renderZOrd + 1;
         }
 
+        // Start effect
+        if (
+            !this.impulseGlovesAuraEmitter &&
+            this.m_netData.m_activeWeapon == "impulse_gloves" &&
+            this.m_localData.m_weapons[this.m_localData.m_curWeapIdx]?.ammo > 0
+        ) {
+            this.impulseGlovesAuraEmitter = particleBarn.addEmitter("impulse_star", {
+                layer: this.layer,
+            });
+        } else if (
+            this.impulseGlovesAuraEmitter &&
+            (this.m_netData.m_activeWeapon != "impulse_gloves" ||
+                this.m_localData.m_weapons[this.m_localData.m_curWeapIdx]?.ammo == 0)
+        ) {
+            // Stop effect
+            this.impulseGlovesAuraEmitter.stop();
+            this.impulseGlovesAuraEmitter = null;
+        }
+
         // Passive heal effect
         if (this.m_netData.m_healEffect && !this.passiveHealEmitter) {
             this.passiveHealEmitter = particleBarn.addEmitter("heal_basic", {
@@ -1243,6 +1268,21 @@ export class Player implements AbstractObject {
             } else {
                 this.bones[boneIdx].copy(idleBonePose);
             }
+        }
+
+        if (this.impulseGlovesAuraEmitter) {
+            const rightHand = this.bones[Bones.HandR];
+            const offset = v2.create(
+                rightHand.pivot.x / camera.m_ppu,
+                -rightHand.pivot.y / camera.m_ppu,
+            );
+            const pos = v2.add(
+                this.m_pos,
+                v2.rotate(offset, Math.atan2(this.m_dir.y, this.m_dir.x)),
+            );
+            this.impulseGlovesAuraEmitter.pos = pos;
+            this.impulseGlovesAuraEmitter.layer = this.renderLayer;
+            this.impulseGlovesAuraEmitter.zOrd = this.renderZOrd + 1;
         }
 
         // Update sprite components

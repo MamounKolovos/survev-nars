@@ -179,6 +179,34 @@ export const Animations: Record<
             effect(def.fists.attack.damageTimes[0], "animMeleeCollision", {}),
         ],
     },
+    heavy_fists: {
+        keyframes: [
+            frame(0, {
+                [Bones.HandL]: new Pose(v2.create(14, -12.25)),
+                [Bones.HandR]: new Pose(v2.create(14, 12.25)),
+            }),
+            frame(0.1, {
+                [Bones.HandL]: new Pose(v2.create(25, -5)),
+                [Bones.HandR]: new Pose(v2.create(-10.5, 20)).rotate(Math.PI / 8),
+            }),
+            frame(0.2, {
+                [Bones.HandL]: new Pose(v2.create(27, -5)),
+                [Bones.HandR]: new Pose(v2.create(-12.5, 20)).rotate(Math.PI / 5.5),
+            }),
+            frame(0.25, {
+                [Bones.HandL]: new Pose(v2.create(10, -16.25)),
+                [Bones.HandR]: new Pose(v2.create(29.75, 1.75)),
+            }),
+            frame(0.5, {
+                [Bones.HandL]: new Pose(v2.create(14, -12.25)),
+                [Bones.HandR]: new Pose(v2.create(14, 12.25)),
+            }),
+        ],
+        effects: [
+            effect(0, "animPlaySound", { sound: "swing" }),
+            effect(0.25, "animMeleeCollision", {}),
+        ],
+    },
     cut: {
         keyframes: [
             frame(0, { [Bones.HandR]: new Pose(v2.create(14, 12.25)) }),

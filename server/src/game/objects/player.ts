@@ -1104,6 +1104,8 @@ export class Player extends BaseGameObject {
     bugleTickerActive = false;
     private _bugleTicker = 0;
 
+    impulseGlovesTicker = 0;
+
     perks: Array<{
         type: string;
         droppable: boolean;
@@ -1629,6 +1631,22 @@ export class Player extends BaseGameObject {
                     }
                 }
                 this.weapsDirty = true;
+            }
+        }
+
+        if (this.impulseGlovesTicker > 0) {
+            this.impulseGlovesTicker -= dt;
+            if (this.impulseGlovesTicker <= 0) {
+                this.impulseGlovesTicker = 0;
+                const gloves = this.weapons.find((w) => w.type == "impulse_gloves");
+                const def = GameObjectDefs["impulse_gloves"] as MeleeDef;
+                if (gloves) {
+                    gloves.ammo++;
+                    if (gloves.ammo < def.charge!.amount) {
+                        this.impulseGlovesTicker = def.charge!.rechargeTime;
+                    }
+                    this.weapsDirty = true;
+                }
             }
         }
 
