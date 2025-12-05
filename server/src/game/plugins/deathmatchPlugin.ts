@@ -217,7 +217,7 @@ const loadouts: Loadout[] = [
                 type: () => util.weightedRandom(tiers["tier_snipers"]).name,
                 ammo: undefined,
             },
-            { type: "fists", ammo: 0 },
+            { type: "impulse_gloves", ammo: 0 },
             { type: "", ammo: 0 },
         ],
         perks: [{ type: "endless_ammo", droppable: false }],
