@@ -346,6 +346,7 @@ export class Player implements AbstractObject {
             type: string;
             droppable: boolean;
         }>;
+        m_hasMeleeCharges: boolean;
     };
 
     m_localData!: {
@@ -496,6 +497,7 @@ export class Player implements AbstractObject {
             m_scale: 1,
             m_role: "",
             m_perks: [],
+            m_hasMeleeCharges: false,
         };
 
         this.m_localData = {
@@ -583,6 +585,7 @@ export class Player implements AbstractObject {
             if (data.animSeq != this.anim.seq) {
                 this.playAnim(data.animType, data.animSeq);
             }
+            this.m_netData.m_hasMeleeCharges = data.hasMeleeCharges;
             this.m_action.type = data.actionType;
             this.m_action.seq = data.actionSeq;
             this.m_action.item = data.actionItem;
@@ -1176,7 +1179,7 @@ export class Player implements AbstractObject {
         if (
             !this.impulseGlovesAuraEmitter &&
             this.m_netData.m_activeWeapon == "impulse_gloves" &&
-            this.m_localData.m_weapons[this.m_localData.m_curWeapIdx]?.ammo > 0
+            this.m_netData.m_hasMeleeCharges
         ) {
             this.impulseGlovesAuraEmitter = particleBarn.addEmitter("impulse_star", {
                 layer: this.layer,
@@ -1184,7 +1187,7 @@ export class Player implements AbstractObject {
         } else if (
             this.impulseGlovesAuraEmitter &&
             (this.m_netData.m_activeWeapon != "impulse_gloves" ||
-                this.m_localData.m_weapons[this.m_localData.m_curWeapIdx]?.ammo == 0)
+                !this.m_netData.m_hasMeleeCharges)
         ) {
             // Stop effect
             this.impulseGlovesAuraEmitter.stop();

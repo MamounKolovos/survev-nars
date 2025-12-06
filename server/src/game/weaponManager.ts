@@ -233,6 +233,8 @@ export class WeaponManager {
         // just uses the ammo system to keep track of charges
         if (weaponDef?.type == "melee" && weaponDef.charge) {
             this.weapons[idx].ammo = weaponDef.charge.amount;
+            this.player.hasMeleeCharges = true;
+            this.player.setDirty();
         }
 
         if (idx === this.curWeapIdx) {
@@ -1057,27 +1059,31 @@ export class WeaponManager {
             }
         }
 
-        if (
-            this.activeWeapon == "impulse_gloves" &&
-            this.weapons[this.curWeapIdx].ammo > 0 &&
-            // hits at least one collidable obstacle
-            hits.filter(
-                (hit) => hit.obj.__type == ObjectType.Obstacle && hit.obj.collidable,
-            ).length != 0
-        ) {
-            this.player.game.explosionBarn.addExplosion(
-                "explosion_impulse",
-                v2.add(this.player.pos, this.player.dir),
-                this.player.layer,
-                {
-                    damageType: GameConfig.DamageType.Player,
-                    source: this.player,
-                },
-            );
+        if (this.player.hasMeleeCharges) {
+            if (
+                this.activeWeapon == "impulse_gloves" &&
+                // hits at least one collidable obstacle
+                hits.filter(
+                    (hit) => hit.obj.__type == ObjectType.Obstacle && hit.obj.collidable,
+                ).length != 0
+            ) {
+                this.player.game.explosionBarn.addExplosion(
+                    "explosion_impulse",
+                    v2.add(this.player.pos, this.player.dir),
+                    this.player.layer,
+                    {
+                        damageType: GameConfig.DamageType.Player,
+                        source: this.player,
+                    },
+                );
 
-            this.weapons[this.curWeapIdx].ammo--;
-            this.player.weapsDirty = true;
-            this.player.impulseGlovesTicker = meleeDef.charge!.rechargeTime;
+                this.weapons[this.curWeapIdx].ammo--;
+                if (this.weapons[this.curWeapIdx].ammo == 0) {
+                    this.player.hasMeleeCharges = false;
+                }
+                this.player.weapsDirty = true;
+                this.player.impulseGlovesTicker = meleeDef.charge!.rechargeTime;
+            }
         }
     }
 

@@ -107,6 +107,7 @@ export interface ObjectsFullData {
             type: string;
             droppable: boolean;
         }>;
+        hasMeleeCharges: boolean;
     };
     [ObjectType.Obstacle]: {
         healthT: number;
@@ -254,6 +255,8 @@ export const ObjectSerializeFns: {
                 }
             }
 
+            s.writeBoolean(data.hasMeleeCharges);
+
             s.writeAlignToNextByte();
         },
         deserializePart: (s, data) => {
@@ -309,6 +312,9 @@ export const ObjectSerializeFns: {
                     });
                 }
             }
+
+            data.hasMeleeCharges = s.readBoolean();
+
             s.readAlignToNextByte();
         },
     },
