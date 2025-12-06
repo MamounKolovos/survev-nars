@@ -128,7 +128,7 @@ export class TimerManager {
         let ticksLeft = n;
         const id = this.setIntervalImmediately(() => {
             onTick(ticksLeft);
-            ticksLeft -= 1;
+            ticksLeft -= interval;
 
             if (ticksLeft <= 0) {
                 this.clearTimer(id);

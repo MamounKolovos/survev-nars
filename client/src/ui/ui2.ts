@@ -844,7 +844,7 @@ export class UiManager2 {
             if (device.mobile) {
                 ne.opacity = ce;
             }
-            if (ne.type == "bugle" && ne.ammo == 0) {
+            if ((ne.type == "bugle" || ne.type == "impulse_gloves") && ne.ammo == 0) {
                 ne.opacity = 0.25;
             }
             ne.ticker += dt;
@@ -875,7 +875,8 @@ export class UiManager2 {
                 : 0;
         state.ammo.current = we;
         state.ammo.remaining = fe;
-        state.ammo.displayCurrent = weaponDef.type != "melee";
+        state.ammo.displayCurrent =
+            weaponDef.type != "melee" || ge.type == "impulse_gloves";
         state.ammo.displayRemaining = fe > 0;
         for (let _e = 0; _e < state.scopes.length; _e++) {
             const be = state.scopes[_e];

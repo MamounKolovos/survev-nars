@@ -861,6 +861,11 @@ export class Player extends BaseGameObject {
     fatModifier = 0;
     fatTicker = 0;
 
+    /** for chargeable melees, the only reason this exists on the server is
+     * because all clients need to see the charge particles
+     */
+    hasMeleeCharges = false;
+
     promoteToRole(role: string) {
         const roleDef = GameObjectDefs[role] as RoleDef;
         if (!roleDef || roleDef.type !== "role") {
@@ -1103,6 +1108,8 @@ export class Player extends BaseGameObject {
 
     bugleTickerActive = false;
     private _bugleTicker = 0;
+
+    impulseGlovesTicker = 0;
 
     perks: Array<{
         type: string;
@@ -1629,6 +1636,24 @@ export class Player extends BaseGameObject {
                     }
                 }
                 this.weapsDirty = true;
+            }
+        }
+
+        if (this.impulseGlovesTicker > 0) {
+            this.impulseGlovesTicker -= dt;
+            if (this.impulseGlovesTicker <= 0) {
+                this.impulseGlovesTicker = 0;
+                const gloves = this.weapons.find((w) => w.type == "impulse_gloves");
+                const def = GameObjectDefs["impulse_gloves"] as MeleeDef;
+                if (gloves) {
+                    gloves.ammo++;
+                    if (gloves.ammo < def.charge!.amount) {
+                        this.impulseGlovesTicker = def.charge!.rechargeTime;
+                    }
+                    this.hasMeleeCharges = true;
+                    this.weapsDirty = true;
+                    this.setDirty();
+                }
             }
         }
 

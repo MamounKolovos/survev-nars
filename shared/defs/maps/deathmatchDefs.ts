@@ -8,6 +8,17 @@ const mapDef: PartialMapDef = {
     desc: {
         name: "Deathmatch",
     },
+    assets: {
+        audio: [
+            { name: "club_music_01", channel: "ambient" },
+            { name: "club_music_02", channel: "ambient" },
+            { name: "ambient_steam_01", channel: "ambient" },
+            { name: "log_11", channel: "sfx" },
+            { name: "log_12", channel: "sfx" },
+            { name: "snowball_01", channel: "sfx" },
+        ],
+        atlases: ["gradient", "loadout", "shared", "main", "snow"],
+    },
     /* STRIP_FROM_PROD_CLIENT:START */
     gameConfig: {
         planes: {
@@ -28,6 +39,7 @@ const mapDef: PartialMapDef = {
             },
         },
     },
+    gameMode: { sniperMode: true },
     /* STRIP_FROM_PROD_CLIENT:END */
 };
 
