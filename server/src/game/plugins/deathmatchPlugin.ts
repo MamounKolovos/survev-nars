@@ -238,8 +238,8 @@ const loadouts: Loadout[] = [
     }),
     extendLoadout(DEFAULT_GEAR_LOADOUT, {
         weapons: [
+            { type: "mp220", ammo: undefined },
             { type: "m249", ammo: undefined },
-            { type: "", ammo: 0 },
             { type: "fists", ammo: 0 },
             { type: "", ammo: 0 },
         ],
@@ -261,6 +261,29 @@ const loadouts: Loadout[] = [
             impulse: 2,
         },
         weight: 0.1,
+    }),
+    extendLoadout(DEFAULT_GEAR_LOADOUT, {
+        weapons: [
+            { type: "m870", ammo: undefined },
+            { type: "p30l", ammo: undefined },
+            { type: "impulse_gloves", ammo: 0 },
+            { type: "", ammo: 0 },
+        ],
+        perks: [{ type: "endless_ammo", droppable: false }],
+        weight: 0.7,
+    }),
+    extendLoadout(DEFAULT_GEAR_LOADOUT, {
+        weapons: [
+            { type: "dp28", ammo: undefined },
+            { type: "vector", ammo: undefined },
+            { type: "fists", ammo: 0 },
+            { type: "", ammo: 0 },
+        ],
+        perks: [{ type: "endless_ammo", droppable: false }],
+        inventory: {
+            mirv: 1,
+        },
+        weight: 0.5,
     }),
 ];
 
