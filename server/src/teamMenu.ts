@@ -343,7 +343,7 @@ class Room {
         // all players must be logged in to disable it
         this.data.captchaEnabled =
             this.teamMenu.server.captchaEnabled && !this.players.every((p) => !!p.userId);
-        if(rs) {
+        if (rs) {
             this.rooms = rs;
         }
         for (const player of this.players) {

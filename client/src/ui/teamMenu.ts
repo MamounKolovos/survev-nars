@@ -326,7 +326,6 @@ export class TeamMenu {
                 if (!this.rooms.includes("No Room Pair")) {
                     this.rooms.unshift("No Room Pair");
                 }
-                
                 console.log(this.rooms);
                 this.refreshUi();
                 // Since the only way to get the roomID (ig?) is from state, each time receiving state, we can show the invite button
@@ -452,7 +451,8 @@ export class TeamMenu {
         optGroup.querySelectorAll("option").forEach((opt) => {
             if (
                 !roomValues.includes(opt.value) ||
-                opt.value == "No Room Pair"
+                opt.value == "No Room Pair" ||
+                opt.value == this.roomData.roomUrl.toLowerCase().replace(/\s+/g, "-")
             ) {
                 opt.remove();
             }
