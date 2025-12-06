@@ -11963,7 +11963,7 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
         collision: collider.createCircle(v2.create(0, 0), 1.25),
         scale: { createMin: 0.9, createMax: 1.1 },
         map: { color: 0x73895f, scale: 2.5 },
-        img: { sprite: "map-tree-10.img" },
+        img: { sprite: "map-tree-10.img", alpha: 0.9 },
     } as unknown as Partial<ObstacleDef>),
     tree_11: createTree({
         collision: collider.createCircle(v2.create(0, 0), 1.25),
