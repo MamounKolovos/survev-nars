@@ -684,15 +684,8 @@ export default class DeathmatchPlugin extends GamePlugin {
                 killMsg.killCreditId = killer.__id;
                 killMsg.killerKills = killer.kills;
 
-                if (killer.group) {
-                    const groupAliveCount = killer.group.livingPlayers.length;
-                    const bonus = 25 - groupAliveCount * 5;
-                    killer.health += bonus;
-                    killer.boost += bonus;
-                } else {
-                    killer.health += 25;
-                    killer.boost += 25;
-                }
+                killer.health += 40;
+                killer.boost += 25;
 
                 addToInventory(killer, "impulse", 1);
                 if (!killer.weapons[GameConfig.WeaponSlot.Throwable].type) {
