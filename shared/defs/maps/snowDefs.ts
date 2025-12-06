@@ -1,7 +1,6 @@
-import { GameConfig } from "../../gameConfig";
 import { util } from "../../utils/util";
 import type { MapDef } from "../mapDefs";
-import { Main, type PartialMapDef } from "./baseDefs";
+import type { PartialMapDef } from "./baseDefs";
 
 const mapDef: PartialMapDef = {
     assets: {
