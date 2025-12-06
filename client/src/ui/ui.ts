@@ -697,9 +697,9 @@ export class UiManager {
         this.spectatorCount = player.m_localData.m_spectatorCount;
         this.updateSpectatorCountDisplay(false);
 
-        if (player.m_netData.m_dead && !this.dead) {
-            this.dead = true;
-            this.m_pieTimer.stop();
+        if (player.m_netData.m_dead != this.dead) {
+            this.dead = player.m_netData.m_dead;
+            if (this.dead) this.m_pieTimer.stop();
         }
 
         if (localPlayer.downed || this.dead) {
