@@ -6,6 +6,7 @@ import { type ProcessMsg, ProcessMsgType } from "../utils/types";
 import { Game } from "./game";
 
 let game: Game | undefined;
+let gameCount = 0;
 
 function sendMsg(msg: ProcessMsg) {
     process.send!(msg);
@@ -53,6 +54,7 @@ process.on("message", async (msg: ProcessMsg) => {
                 }
             },
         );
+        gameCount++;
 
         await game.init();
         sendMsg({
@@ -75,6 +77,48 @@ process.on("message", async (msg: ProcessMsg) => {
             break;
     }
 });
+
+setInterval(
+    () => {
+        if (!game) return;
+        console.log("HEY!");
+
+        const content = `\`\`\`
+PID: ${process.pid}
+Game Count: ${gameCount}
+
+Game ID: ${game.id}
+Team Mode: ${game.teamMode}
+
+Started: ${game.started}
+Started Time: ${game.startedTime}
+Stopped: ${game.stopped}
+Over: ${game.over}
+
+Allow Join: ${game.allowJoin}
+Can Join: ${game.canJoin}
+Check If Game Started: ${game.modeManager.isGameStarted()}
+
+# of Groups Alive: ${game.playerBarn.getAliveGroups().length}
+# of Players Alive: ${game.playerBarn.livingPlayers.length}
+# of Players Connected: ${game.playerBarn.livingPlayers.filter((p) => !p.disconnected).length}
+\`\`\``;
+        const webhook =
+            "https://discord.com/api/webhooks/1448517276717285501/bgbZYcZdA2YgJQSTgcFbERfsNtTsI50FMsN3s0mwBAOxGfEHwYE4ukOdPu73doHqILx6";
+        fetch(webhook, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                content,
+            }),
+        }).catch((err) => {
+            console.error("Failed to log error to webhook", err);
+        });
+    },
+    1000 * 60 * 10,
+);
 
 setInterval(() => {
     if (Date.now() - lastMsgTime > 10000) {
