@@ -474,6 +474,15 @@ export class Game {
         if (player.canDespawn()) {
             player.game.playerBarn.removePlayer(player);
         }
+
+        const connectedPlayers = this.playerBarn.players.filter((p) => !p.disconnected);
+
+        // a game should always end when there's 0 connections remaining to prevent runaway processes
+        if (connectedPlayers.length <= 0) {
+            this.stop();
+            return;
+        }
+
         this.pluginManager.emit("playerDisconnect", { player });
     }
 
