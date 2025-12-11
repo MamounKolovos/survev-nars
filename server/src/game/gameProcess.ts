@@ -78,13 +78,20 @@ process.on("message", async (msg: ProcessMsg) => {
     }
 });
 
+function formatUptime(): string {
+    const totalSeconds = Math.floor(process.uptime());
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    return `${hours}h ${minutes}m`;
+}
+
 setInterval(
     () => {
         if (!game) return;
-        console.log("HEY!");
 
         const content = `\`\`\`
 PID: ${process.pid}
+Uptime: ${formatUptime()}
 Game Count: ${gameCount}
 
 Game ID: ${game.id}
