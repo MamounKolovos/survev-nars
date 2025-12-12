@@ -479,6 +479,7 @@ export class Game {
 
         // a game should always end when there's 0 connections remaining to prevent runaway processes
         if (connectedPlayers.length <= 0) {
+            this.over = true;
             this.stop();
             return;
         }
