@@ -485,7 +485,7 @@ const gunStrengths: Record<string, number> = {
     garand: 0.9,
     pkp: 0.9,
     m249: 0.75,
-    qbb: 0.65,
+    qbb97: 0.65,
     dp28: 0.0,
     m4a1: 0.45,
     scorpion: 0.4,
@@ -522,7 +522,7 @@ function getTotalGunStrength(primary: string, secondary: string): number {
                 return 0.95;
             case "m249":
                 return 0.9;
-            case "qbb":
+            case "qbb97":
                 return 0.75;
             case "dp28":
                 return 0.5;
@@ -576,7 +576,7 @@ function getTotalGunStrength(primary: string, secondary: string): number {
                 return 0.9;
             case "m249":
                 return 0.75;
-            case "qbb":
+            case "qbb97":
                 return 0.65;
             case "dp28":
                 return 0.35;

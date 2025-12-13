@@ -52,6 +52,7 @@ const mapDef: PartialMapDef = {
                 cache_06: 0,
                 tree_01: 200,
                 hedgehog_01: 4,
+                hedgehog_02: 20,
                 container_01: 4,
                 container_02: 3,
                 container_03: 4,

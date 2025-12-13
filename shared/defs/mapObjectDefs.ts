@@ -14001,6 +14001,38 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
             },
         ],
     },
+    hedgehog_02: {
+        //same as hedgehog_01 but different spawn rule so we can use in different map defs
+        type: "building",
+        map: { display: false, color: 0x665a4e, scale: 1 },
+        terrain: { grass: true, beach: false },
+        floor: {
+            surfaces: [],
+            imgs: [
+                {
+                    sprite: "map-hedgehog-01.img",
+                    scale: 0.5,
+                    alpha: 1,
+                    tint: 0xffffff,
+                },
+            ],
+        },
+        ceiling: { zoomRegions: [], imgs: [] },
+        mapObjects: [
+            {
+                type: "hedgehog_wall",
+                pos: v2.create(0, 0),
+                scale: 1,
+                ori: 1,
+            },
+            {
+                type: "hedgehog_wall",
+                pos: v2.create(0, 0),
+                scale: 1,
+                ori: 0,
+            },
+        ],
+    },
     cache_01: createCache({}),
     cache_01sv: createCache({
         mapObjects: [

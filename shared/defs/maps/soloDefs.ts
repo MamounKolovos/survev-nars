@@ -1,4 +1,5 @@
 import { util } from "../../utils/util";
+import { v2 } from "../../utils/v2";
 import type { MapDef } from "../mapDefs";
 import { MapId } from "../types/misc";
 import { Main, type PartialMapDef } from "./baseDefs";
@@ -24,12 +25,12 @@ const mapDef: PartialMapDef = {
         },
         customSpawnRules: {
             locationSpawns: [
-                // {
-                //     type: "courthouse_01",
-                //     pos: v2.create(0.4, 0.4),
-                //     rad: 10,
-                //     retryOnFailure: true,
-                // },
+                {
+                    type: "club_complex_01",
+                    pos: v2.create(0.2, 0.2),
+                    rad: 25,
+                    retryOnFailure: true,
+                },
             ],
         },
         densitySpawns: [
@@ -44,6 +45,7 @@ const mapDef: PartialMapDef = {
                 cache_06: 0,
                 tree_01: 250,
                 hedgehog_01: 4,
+                hedgehog_02: 15,
                 container_01: 4,
                 container_02: 3,
                 container_03: 4,
@@ -83,11 +85,49 @@ const mapDef: PartialMapDef = {
                 // teahouse_complex_01su: 1,
                 // stone_04: 0,
                 // mansion_structure_01: 1,
-                // club_complex_01: 1,
+                club_complex_01: 1,
                 // courthouse_01: 1,
             },
         ],
         randomSpawns: [],
+        places: [
+            {
+                name: "The Killpit",
+                pos: v2.create(0.53, 0.64),
+            },
+            {
+                name: "Sweatbath",
+                pos: v2.create(0.84, 0.18),
+            },
+            {
+                name: "Tarkhany",
+                pos: v2.create(0.15, 0.11),
+            },
+            {
+                name: "Ytyk-Kyuyol",
+                pos: v2.create(0.25, 0.42),
+            },
+            {
+                name: "Todesfelde",
+                pos: v2.create(0.81, 0.85),
+            },
+            {
+                name: "Pineapple",
+                pos: v2.create(0.21, 0.79),
+            },
+            {
+                name: "Fowl Forest",
+                pos: v2.create(0.73, 0.47),
+            },
+            {
+                name: "Ranchito Pollo",
+                pos: v2.create(0.53, 0.25),
+            },
+            {
+                name: ":)",
+                pos: v2.create(0.5, 0.5),
+            },
+        ],
     },
 };
 
