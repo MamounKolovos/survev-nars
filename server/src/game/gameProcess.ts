@@ -97,6 +97,9 @@ Game Count: ${gameCount}
 Game ID: ${game.id}
 Team Mode: ${game.teamMode}
 
+Room: ${game.room}
+Room Pair: ${game.roomPair}
+
 Started: ${game.started}
 Started Time: ${game.startedTime}
 Stopped: ${game.stopped}
