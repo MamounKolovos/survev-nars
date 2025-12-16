@@ -81,6 +81,8 @@ const secondaryWeights = [
     { weight: 1, gun: "garand" },
     // { weight: 1, gun: "m1014" },
     { weight: 0.5, gun: "mk12" },
+    { weight: 0.5, gun: "m39" },
+
     { weight: 0.8, gun: "deagle_dual" },
     { weight: 0.3, gun: "saiga" },
     { weight: 1.5, gun: "famas" },
@@ -178,6 +180,7 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
         case "saiga": {
             return "spas12";
         }
+        case "m39":
         case "mk12": {
             if (x < 0.4) {
                 return "m870";
@@ -439,11 +442,12 @@ function getUpgradedGun(g: string): string {
             if (Math.random() < 0.4) return "pkp";
             break;
         }
+        case "m39":
         case "mk12": {
             if (Math.random() < 0.4) return "garand";
         }
         case "famas": {
-            if (Math.random() < 0.5 && g !== "mk12") return "an94";
+            if (Math.random() < 0.5 && g !== "mk12" && g !== "m39") return "an94";
         }
 
         case "deagle_dual":
@@ -494,6 +498,7 @@ const gunStrengths: Record<string, number> = {
     hk416: 0.1,
     scar: 0.0,
     mk12: 0.1,
+    m39: 0.1,
     deagle_dual: 0.2,
     famas: 0.3,
     an94: 0.6,
@@ -535,6 +540,8 @@ function getTotalGunStrength(primary: string, secondary: string): number {
             case "garand":
                 return 0.9;
             case "mk12":
+                return 0.35;
+            case "m39":
                 return 0.35;
             case "saiga":
                 return 0.0; //i dont think spas saiga is actually this weak but i want it to have more armor/rolescase
@@ -589,6 +596,8 @@ function getTotalGunStrength(primary: string, secondary: string): number {
             case "garand":
                 return 0.8;
             case "mk12":
+                return 0.25;
+            case "m39":
                 return 0.25;
             case "deagle_dual":
                 return 0.0;
@@ -683,6 +692,7 @@ const gt = {
         { weight: 1, gun: "hk416" },
         { weight: 1, gun: "scar" },
         { weight: 0.5, gun: "mk12" },
+        { weight: 0.5, gun: "m39" },
         { weight: 0.8, gun: "deagle_dual" },
         { weight: 2, gun: "famas" },
         { weight: 2, gun: "an94" },
