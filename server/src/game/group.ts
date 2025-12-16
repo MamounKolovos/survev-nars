@@ -100,7 +100,7 @@ export class Group {
      * kills all teammates, only called after last player on team thats not knocked gets knocked
      */
     killAllTeammates() {
-        const alivePlayers = this.getAlivePlayers();
+        const alivePlayers = this.getPlayers((p) => !p.dead);
         for (const p of alivePlayers) {
             p.kill({
                 damageType: GameConfig.DamageType.Bleeding,
