@@ -1958,6 +1958,7 @@ export class Player extends BaseGameObject {
                         if (zoomRegion.zoom) {
                             zoomRegionZoom = zoomRegion.zoom;
                         }
+                        zoomRegionZoom = 40;
                     }
 
                     if (
@@ -1974,6 +1975,7 @@ export class Player extends BaseGameObject {
                             if (zoomRegion.zoom) {
                                 zoomRegionZoom = zoomRegion.zoom;
                             }
+                            zoomRegionZoom = 40;
                         }
                     }
                 }

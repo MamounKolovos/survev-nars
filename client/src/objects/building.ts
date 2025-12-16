@@ -305,6 +305,7 @@ export class Building implements AbstractObject {
             }
 
             for (let i = 0; i < def.ceiling.imgs.length; i++) {
+                break;
                 const imgDef = def.ceiling.imgs[i];
                 this.imgs.push({
                     sprite: createSpriteFromDef(imgDef),
