@@ -6,7 +6,7 @@ import { ObjectType } from "../../../../shared/net/objectSerializeFns";
 import { collider } from "../../../../shared/utils/collider";
 import { util } from "../../../../shared/utils/util";
 import { v2 } from "../../../../shared/utils/v2";
-import { TimerManager } from "../../utils/pluginUtils";
+import { TimerManager, createSimpleSegment } from "../../utils/pluginUtils";
 import type { Game } from "../game";
 import type { Obstacle } from "../objects/obstacle";
 import type { Player } from "../objects/player";
@@ -32,6 +32,8 @@ interface Loadout {
     melee: string;
     role: string;
 }
+const MIN_NUM_ROLES_TO_NOT_NAME_PLAYERS = 2;
+
 //raise above 0.5 to artifically boost the strength of most non sniper/shotgun loadouts, vice versa also applies
 //added only because tweaking this is easier than going through the whole strength function if you want to tweak strength distrubutions for role/armor distribution purposes
 const BETTER_STRENGTH_WEIGHT = 0.5;
@@ -337,6 +339,15 @@ function giveEveryoneFairLoot(game: Game) {
         for (let i = 0; i < players.length; i++) {
             givePlayerFairLootLoadout(players[i], loadouts[i]);
         }
+    }
+    let roleCount = 0;
+    for (let i = 0; i < 4; i++) {
+        if (loadouts[i].role !== "") {
+            roleCount += 1;
+        }
+    }
+    if (roleCount < MIN_NUM_ROLES_TO_NOT_NAME_PLAYERS) {
+        listSquadNames(game);
     }
 }
 
@@ -794,5 +805,21 @@ export default class focedLootPlugin extends GamePlugin {
             }
             event.cancel();
         });
+    }
+}
+
+function listSquadNames(game: Game) {
+    for (const group of game.playerBarn.groups) {
+        if (
+            group.players.filter((p) => !p.disconnected && !p.downed && !p.dead)
+                .length === 0
+        ) {
+            continue;
+        }
+        let kfline = group.players[0].name;
+        for (let i = 1; i < group.players.length; i++) {
+            kfline += `-${group.players[i].name}`;
+        }
+        game.playerBarn.addKillFeedLine(-1, [createSimpleSegment(kfline, "white")]);
     }
 }
