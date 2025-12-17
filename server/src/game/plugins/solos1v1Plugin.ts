@@ -2,7 +2,7 @@ import { GameObjectDefs } from "../../../../shared/defs/gameObjectDefs";
 import type { GunDef } from "../../../../shared/defs/gameObjects/gunDefs";
 import { MapId } from "../../../../shared/defs/types/misc";
 import { ObjectType } from "../../../../shared/net/objectSerializeFns";
-import { TimerManager } from "../../utils/pluginUtils";
+import { TimerManager, createSimpleSegment } from "../../utils/pluginUtils";
 import type { Player } from "../objects/player";
 import { GamePlugin } from "../pluginManager";
 import {
@@ -72,6 +72,18 @@ export default class Solos1v1Plugin extends GamePlugin {
         });
         this.on("playerWasRevived", (event) => {
             makeReady(event.data.player);
+        });
+
+        this.on("gameStarted", (event) => {
+            for (const p of this.game.playerBarn.livingPlayers) {
+                if (p.disconnected) {
+                    continue;
+                }
+                this.game.playerBarn.addKillFeedLine(-1, [
+                    createSimpleSegment(`${p.name} is in the game`, "white"),
+                ]);
+                this.game.playerBarn.addMapPing("ping_woodsking", p.pos);
+            }
         });
 
         this.on("playerDidJoin", (event) => {
