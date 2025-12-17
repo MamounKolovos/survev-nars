@@ -67,6 +67,12 @@ export default class Solos1v1Plugin extends GamePlugin {
                 params.source.__type === ObjectType.Player &&
                 params.source !== event.data.player
             ) {
+                this.game.playerBarn.addKillFeedLine(event.data.player.__id, [
+                    createSimpleSegment(
+                        `${params.source.name} had ${Math.round(params.source.health)} health remaining`,
+                        "white",
+                    ),
+                ]);
                 makeReady(params.source);
             }
         });
