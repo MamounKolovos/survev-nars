@@ -215,7 +215,6 @@ function generateFairLootLoadouts(): Loadout[] {
         const melee = util.weightedRandom(meleeWeights).melee;
 
         const totalWeaponStrength = getTotalWeaponStrength(primary, secondary, melee);
-        console.log(totalWeaponStrength, primary, secondary, melee);
 
         const modifiedRoleChance =
             MAX_ROLE_CHANCE - totalWeaponStrength * (MAX_ROLE_CHANCE - MIN_ROLE_CHANCE);
@@ -233,8 +232,6 @@ function generateFairLootLoadouts(): Loadout[] {
                 : "helmet02";
         //role chance subtracted since roles come with level 3 helmet
         const vest = Math.random() < modifiedlvl3armorchance ? "chest03" : "chest02";
-
-        console.log(vest, helmet, role);
 
         const loadout: Loadout = {
             vest: vest,
