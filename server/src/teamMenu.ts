@@ -621,11 +621,13 @@ export class TeamMenu {
         // paired with the removed room, clear that pairing and notify the
         // room's players immediately so clients don't need to rely solely
         // on local heuristics.
-        for (const r of this.rooms.values()) {
-            if (r.data.roomPair === room.data.roomUrl) {
-                r.data.roomPair = "";
-                r.sendState();
-            }
-        }
+
+        //seol commented this out just trying shit
+        // for (const r of this.rooms.values()) { 
+        //     if (r.data.roomPair === room.data.roomUrl) {
+        //         r.data.roomPair = "";
+        //         r.sendState();
+        //     }
+        // }
     }
 }
