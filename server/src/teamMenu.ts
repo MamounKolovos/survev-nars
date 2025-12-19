@@ -622,12 +622,11 @@ export class TeamMenu {
         // room's players immediately so clients don't need to rely solely
         // on local heuristics.
 
-        //seol commented this out just trying shit
-        // for (const r of this.rooms.values()) {
-        //     if (r.data.roomPair === room.data.roomUrl) {
-        //         r.data.roomPair = "";
-        //         r.sendState();
-        //     }
-        // }
+        for (const r of this.rooms.values()) {
+            if (r.data.roomPair === room.data.roomUrl) {
+                r.data.roomPair = "";
+                r.sendState();
+            }
+        }
     }
 }
