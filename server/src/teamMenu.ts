@@ -291,7 +291,7 @@ class Room {
             autoFill: this.data.autoFill,
             region: region,
             roomPair: this.data.roomPair,
-            room: this.data.roomUrl.toLowerCase(),
+            room: this.data.roomUrl,
             version: data.version,
             playerData,
         });
@@ -375,10 +375,10 @@ export class TeamMenu {
 
     constructor(public server: ApiServer) {
         setInterval(() => {
-            for (const room of this.rooms.values()) {
-                const roomUrls = [...this.rooms.values()].map(
-                    (room) => room.data.roomUrl,
-                );
+            const rooms = [...this.rooms.values()];
+            const roomCodes = rooms.map((r) => r.data.roomUrl);
+
+            for (const room of rooms) {
                 // just making sure ig
                 if (!room.players.length) {
                     this.removeRoom(room);
@@ -387,7 +387,7 @@ export class TeamMenu {
                 if (room.data.findingGame && room.findGameCooldown < Date.now()) {
                     room.data.findingGame = false;
                 }
-                room.sendState(roomUrls);
+                room.sendState(roomCodes);
 
                 // kick players that haven't sent a keep alive msg in over a minute
                 // client sends it every 45 seconds
@@ -616,5 +616,16 @@ export class TeamMenu {
 
     removeRoom(room: Room) {
         this.rooms.delete(room.id);
+
+        // Server is authoritative about pairing. If any remaining room was
+        // paired with the removed room, clear that pairing and notify the
+        // room's players immediately so clients don't need to rely solely
+        // on local heuristics.
+        for (const r of this.rooms.values()) {
+            if (r.data.roomPair === room.data.roomUrl) {
+                r.data.roomPair = "";
+                r.sendState();
+            }
+        }
     }
 }

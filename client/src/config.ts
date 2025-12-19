@@ -49,7 +49,6 @@ const defaultConfig = {
     touchAimLine: true,
     profile: null as { slug: string } | null,
     playerName: "",
-    roomPair: "",
     region: "na",
     gameModeIdx: 2,
     teamAutoFill: true,

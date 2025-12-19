@@ -132,14 +132,14 @@ export class SingleThreadGameManager implements GameManager {
     async findGame(body: FindGamePrivateBody): Promise<string> {
         let game = this.games
             .filter((game) => {
+                const roomPairMatches = game.roomPair
+                    ? game.room === body.roomPair && game.roomPair === body.room
+                    : true;
                 return (
                     game.canJoin &&
                     game.teamMode === body.teamMode &&
                     game.mapName === body.mapName &&
-                    (game.roomPair !== ""
-                        ? (game.room === body.roomPair && game.roomPair === body.room) ||
-                          (body.room === game.roomPair && body.roomPair === game.room)
-                        : true)
+                    roomPairMatches
                 );
             })
             .sort((a, b) => {

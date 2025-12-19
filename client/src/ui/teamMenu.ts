@@ -206,7 +206,7 @@ export class TeamMenu {
             this.roomData = {
                 roomUrl,
                 region: this.config.get("region")!,
-                roomPair: this.config.get("roomPair")!,
+                roomPair: "",
                 gameModeIdx: this.config.get("gameModeIdx")!,
                 autoFill: this.config.get("teamAutoFill")!,
                 findingGame: false,
@@ -277,7 +277,6 @@ export class TeamMenu {
             this.config.set("teamAutoFill", this.roomData.autoFill);
             if (this.isLeader) {
                 this.config.set("region", this.roomData.region);
-                this.config.set("roomPair", this.roomData.roomPair);
             }
             let errTxt = "";
             if (errType && errType != "") {
@@ -321,12 +320,7 @@ export class TeamMenu {
                 if (this.isLeader) {
                     this.roomData.region = ourRoomData.region;
                     this.roomData.autoFill = ourRoomData.autoFill;
-                    this.roomData.roomPair = ourRoomData.roomPair;
                 }
-                if (!this.rooms.includes("No Room Pair")) {
-                    this.rooms.unshift("No Room Pair");
-                }
-                console.log(this.rooms);
                 this.refreshUi();
                 // Since the only way to get the roomID (ig?) is from state, each time receiving state, we can show the invite button
                 SDK.showInviteButton(stateData.room.roomUrl.replace("#", ""));
@@ -363,7 +357,6 @@ export class TeamMenu {
     setRoomProperty<T extends keyof RoomData>(prop: T, val: RoomData[T]) {
         if (this.isLeader && this.roomData[prop] != val) {
             this.roomData[prop] = val;
-            console.log(`${this.roomData[prop]}the room prop value is being set to this`);
             this.sendMessage("setRoomProps", this.roomData);
         }
     }
@@ -429,35 +422,6 @@ export class TeamMenu {
         this.serverWarning.css("opacity", hasError ? 1 : 0);
         this.serverWarning.html(errorTxt);
 
-        const optGroup = document.getElementById(
-            "team-pair-opts",
-        ) as HTMLOptGroupElement | null;
-        if (!optGroup) return;
-
-        // Step 1: normalize rooms to values
-        let roomValues = this.rooms.map((r) => r.toLowerCase().replace(/\s+/g, "-"));
-
-        // Step 2: Add missing options
-        roomValues.forEach((value, i) => {
-            if (!optGroup.querySelector(`option[value="${value}"]`)) {
-                const option = document.createElement("option");
-                option.value = value;
-                option.textContent = this.rooms[i];
-                optGroup.appendChild(option);
-            }
-        });
-
-        // Step 3: Remove options NOT in this.rooms
-        optGroup.querySelectorAll("option").forEach((opt) => {
-            if (
-                !roomValues.includes(opt.value) ||
-                opt.value == "No Room Pair" ||
-                opt.value == this.roomData.roomUrl.toLowerCase().replace(/\s+/g, "-")
-            ) {
-                opt.remove();
-            }
-        });
-
         if (
             this.roomData.lastError == "find_game_invalid_protocol" &&
             !this.displayedInvalidProtocolModal
@@ -498,9 +462,31 @@ export class TeamMenu {
                 ele.selected = ele.value == this.roomData.region;
             });
 
-            this.pairSelect.find("option").each((_idx, ele) => {
-                ele.selected = ele.value == this.roomData.roomPair;
-            });
+            const optGroup = $("#team-pair-opts");
+
+            optGroup.empty();
+
+            optGroup.append(
+                $("<option>", {
+                    value: "no-room-pair",
+                    text: "No Room Pair",
+                }),
+            );
+
+            for (let i = 0; i < this.rooms.length; i++) {
+                const roomCode = this.rooms[i];
+
+                // can't pair with yourself
+                if (this.roomData.roomUrl == roomCode) continue;
+
+                const option = $("<option>", {
+                    value: roomCode,
+                    text: roomCode,
+                });
+                optGroup.append(option);
+            }
+
+            this.pairSelect.val(this.roomData.roomPair || "no-room-pair");
 
             // Modes btns
             setButtonState(

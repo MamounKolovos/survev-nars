@@ -286,15 +286,15 @@ export class GameProcessManager implements GameManager {
     async findGame(body: FindGamePrivateBody): Promise<string> {
         let game = this.processes
             .filter((proc) => {
+                const roomPairMatches = proc.roomPair
+                    ? proc.room === body.roomPair && proc.roomPair === body.room
+                    : true;
                 return (
                     proc.canJoin &&
                     proc.avaliableSlots > 0 &&
                     proc.teamMode === body.teamMode &&
                     proc.mapName === body.mapName &&
-                    (proc.roomPair !== ""
-                        ? (proc.room === body.roomPair && proc.roomPair === body.room) ||
-                          (body.room === proc.roomPair && body.roomPair === proc.room)
-                        : true)
+                    roomPairMatches
                 );
             })
             .sort((a, b) => {

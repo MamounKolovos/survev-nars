@@ -77,6 +77,13 @@ class GameServer {
             };
         }
 
+        // cannot pair with yourself
+        if (data.room == data.roomPair) {
+            return {
+                error: "join_game_failed",
+            };
+        }
+
         const gameId = await this.manager.findGame({
             region: data.region,
             roomPair: data.roomPair,
