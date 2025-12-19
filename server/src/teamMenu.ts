@@ -623,7 +623,7 @@ export class TeamMenu {
         // on local heuristics.
 
         //seol commented this out just trying shit
-        // for (const r of this.rooms.values()) { 
+        // for (const r of this.rooms.values()) {
         //     if (r.data.roomPair === room.data.roomUrl) {
         //         r.data.roomPair = "";
         //         r.sendState();
