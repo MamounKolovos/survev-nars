@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 import { App, SSLApp, type WebSocket } from "uWebSockets.js";
 import { version } from "../../package.json";
-import { GameConfig } from "../../shared/gameConfig";
+import { GameConfig, TeamMode } from "../../shared/gameConfig";
 import * as net from "../../shared/net/net";
 import { Config } from "./config";
 import { SingleThreadGameManager } from "./game/gameManager";
@@ -78,7 +78,11 @@ class GameServer {
         }
 
         // cannot pair with yourself
-        if (data.room == data.roomPair) {
+        if (
+            body.teamMode != TeamMode.Solo &&
+            data.roomPair &&
+            data.room == data.roomPair
+        ) {
             return {
                 error: "join_game_failed",
             };
