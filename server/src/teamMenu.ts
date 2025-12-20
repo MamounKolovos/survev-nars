@@ -375,8 +375,21 @@ export class TeamMenu {
 
     constructor(public server: ApiServer) {
         setInterval(() => {
+            // if a -> b and b -> a, both of those pairings will be present in map
+            // map does not store partial pairs, only full/confirmed pairs like the name suggests
+            const confirmedPairOf = new Map<string, string>();
+
             const rooms = [...this.rooms.values()];
-            const roomCodes = rooms.map((r) => r.data.roomUrl);
+
+            for (const room of rooms) {
+                if (!room.data.roomPair) continue;
+
+                const other = this.rooms.get(room.data.roomPair.slice(1));
+                if (other && other.data.roomPair == room.data.roomUrl) {
+                    confirmedPairOf.set(room.data.roomUrl, room.data.roomPair);
+                    confirmedPairOf.set(other.data.roomUrl, other.data.roomPair);
+                }
+            }
 
             for (const room of rooms) {
                 // just making sure ig
@@ -387,7 +400,24 @@ export class TeamMenu {
                 if (room.data.findingGame && room.findGameCooldown < Date.now()) {
                     room.data.findingGame = false;
                 }
-                room.sendState(roomCodes);
+
+                const pairableForRoom = rooms
+                    .filter((r) => {
+                        // cannot pair with yourself
+                        if (r.data.roomUrl == room.data.roomUrl) return false;
+
+                        const pair = confirmedPairOf.get(r.data.roomUrl);
+                        // pairable if has no pair or if it's your pair
+                        return !pair || pair == room.data.roomUrl;
+                    })
+                    .map((r) => r.data.roomUrl);
+
+                // need to clear pair if for whatever reason it's not selectable anymore
+                if (!pairableForRoom.includes(room.data.roomPair)) {
+                    room.data.roomPair = "";
+                }
+
+                room.sendState(pairableForRoom);
 
                 // kick players that haven't sent a keep alive msg in over a minute
                 // client sends it every 45 seconds

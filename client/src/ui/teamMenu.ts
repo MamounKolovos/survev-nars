@@ -476,9 +476,6 @@ export class TeamMenu {
             for (let i = 0; i < this.rooms.length; i++) {
                 const roomCode = this.rooms[i];
 
-                // can't pair with yourself
-                if (this.roomData.roomUrl == roomCode) continue;
-
                 const option = $("<option>", {
                     value: roomCode,
                     text: roomCode,
