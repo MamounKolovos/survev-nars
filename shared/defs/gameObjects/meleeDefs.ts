@@ -1301,7 +1301,12 @@ const SkinDefs: Record<string, MeleeDef> = {
     }),
     impulse_gloves: defineMeleeSkin("knuckles", {
         name: "Impulse Gloves",
+        noDropOnDeath: false,
         attack: {
+            offset: {
+                x: 1.55,
+                y: 0,
+            },
             damageTimes: [0.25],
             cooldownTime: 0.5,
         },
