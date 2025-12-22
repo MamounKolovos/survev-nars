@@ -69,7 +69,6 @@ class GameProcess implements GameData {
                 case ProcessMsgType.UpdateData:
                     this.canJoin = msg.canJoin;
                     this.teamMode = msg.teamMode;
-                    this.roomPair = msg.roomPair;
                     this.mapName = msg.mapName;
                     if (this.id !== msg.id) {
                         this.manager.processById.delete(this.id);

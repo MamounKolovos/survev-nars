@@ -161,6 +161,7 @@ export class Game {
     }
 
     async init() {
+        this.updateData();
         await this.pluginManager.loadPlugins();
         this.map.init();
         this.pluginManager.emit("gameCreated", { game: this });
@@ -532,7 +533,6 @@ export class Game {
             type: ProcessMsgType.UpdateData,
             id: this.id,
             teamMode: this.teamMode,
-            roomPair: this.roomPair,
             mapName: this.mapName,
             canJoin: this.canJoin,
             aliveCount: this.aliveCount,
