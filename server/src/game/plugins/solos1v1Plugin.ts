@@ -115,7 +115,7 @@ export default class Solos1v1Plugin extends GamePlugin {
             player.weaponManager.setWeapon(0, "spas12", 6);
             player.weaponManager.setWeapon(1, "mosin", 5);
 
-            const floorguns = [
+            const floorLoot = [
                 "mac10",
                 "mp5",
                 "m39",
@@ -157,8 +157,9 @@ export default class Solos1v1Plugin extends GamePlugin {
                 "chest01",
                 "helmet01",
                 "helmet02",
+                "impulse_gloves",
             ];
-            for (const g of floorguns) {
+            for (const g of floorLoot) {
                 player.game.lootBarn.addLootWithoutAmmo(g, player.pos, player.layer, 1);
             }
         });
