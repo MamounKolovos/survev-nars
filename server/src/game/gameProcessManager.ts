@@ -26,6 +26,7 @@ class GameProcess implements GameData {
     process: ChildProcess;
 
     canJoin = true;
+    creating = false;
     teamMode: TeamMode = 1;
     roomPair: string = "";
     mapName = "";
@@ -61,6 +62,7 @@ class GameProcess implements GameData {
                 case ProcessMsgType.Created:
                     this.created = true;
                     this.stopped = false;
+                    this.creating = false;
                     for (const cb of this.onCreatedCbs) {
                         cb(this);
                     }
@@ -130,6 +132,7 @@ class GameProcess implements GameData {
         this.roomPair = config.roomPair ? config.roomPair : "";
         this.room = config.room ? config.room : "";
         this.stopped = false;
+        this.creating = true;
 
         const mapDef = MapDefs[this.mapName as keyof typeof MapDefs] as MapDef;
         this.avaliableSlots = mapDef.gameMode.maxPlayers;
@@ -289,7 +292,7 @@ export class GameProcessManager implements GameManager {
                     ? proc.room === body.roomPair && proc.roomPair === body.room
                     : true;
                 return (
-                    proc.canJoin &&
+                    (proc.canJoin || proc.creating) &&
                     proc.avaliableSlots > 0 &&
                     proc.teamMode === body.teamMode &&
                     proc.mapName === body.mapName &&
