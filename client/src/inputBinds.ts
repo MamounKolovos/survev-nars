@@ -288,7 +288,7 @@ export class InputBindUi {
                     event.stopPropagation();
                     const disallowKeys: number[] = [
                         Key.Control,
-                        Key.Shift,
+                        // Key.Shift,
                         Key.Alt,
                         Key.Windows,
                         Key.ContextMenu,
