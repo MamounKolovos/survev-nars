@@ -13,14 +13,15 @@ import { assert, util } from "../../../../shared/utils/util";
 import { v2 } from "../../../../shared/utils/v2";
 import { TimerManager, createSimpleSegment } from "../../utils/pluginUtils";
 import type { Game } from "../game";
+import type { DamageParams } from "../objects/gameObject";
 import type { Player } from "../objects/player";
 import { GamePlugin } from "../pluginManager";
 import { attachCustomQuickSwitch, attachGracePeriod } from "./internalUtils";
 
 const CUSTOM_SWITCH_DELAY = 0.205;
 
-const GRACE_PERIOD = 10;
-const CAN_JOIN_PERIOD = 30;
+const GRACE_PERIOD = 15;
+const CAN_JOIN_PERIOD = 15;
 
 assert(
     GRACE_PERIOD <= CAN_JOIN_PERIOD,
@@ -28,7 +29,7 @@ assert(
 );
 
 // the amount of seconds left in the grace period timer when it shows up in the killfeed
-const GRACE_PERIOD_COUNTDOWN_START = 5;
+const GRACE_PERIOD_COUNTDOWN_START = 10;
 
 assert(
     GRACE_PERIOD_COUNTDOWN_START <= GRACE_PERIOD,
@@ -488,6 +489,19 @@ function addToInventory(player: Player, type: string, amount: number) {
     player.inventoryDirty = true;
 }
 
+function resolveKiller(player: Player, params: DamageParams): Player | undefined {
+    if (params.source && params.source.__type == ObjectType.Player) {
+        return params.source;
+    }
+
+    // attribute gas deaths to the last attacker to prevent evading kill credit
+    if (params.damageType == GameConfig.DamageType.Gas && player.lastDamagedBy) {
+        return player.lastDamagedBy;
+    }
+
+    return undefined;
+}
+
 export default class DeathmatchPlugin extends GamePlugin {
     timerManager = new TimerManager();
 
@@ -681,8 +695,9 @@ export default class DeathmatchPlugin extends GamePlugin {
             killMsg.targetId = player.__id;
             killMsg.killed = true;
 
-            if (params.source && params.source.__type == ObjectType.Player) {
-                const killer = params.source;
+            const killer = resolveKiller(player, params);
+
+            if (killer) {
                 player.killedBy = killer;
 
                 if (killer !== player && killer.teamId !== player.teamId) {
