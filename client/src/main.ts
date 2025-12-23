@@ -300,7 +300,7 @@ class Application {
             this.pixi.ticker.add(this.update, this);
 
             // for people who uncap fps
-            this.pixi.ticker.maxFPS = 600;
+            this.pixi.ticker.maxFPS = 360;
 
             this.pixi.renderer.background.color = 7378501;
             this.resourceManager = new ResourceManager(
