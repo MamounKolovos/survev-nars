@@ -121,7 +121,13 @@ export class Game {
     ) {
         this.id = id;
         this.logger = new Logger(`Game #${this.id.substring(0, 4)}`);
-        this.logger.info("Creating");
+        if (config.teamMode != TeamMode.Solo) {
+            this.logger.info(
+                `Creating for room "${config.room ?? ""}" with "${config.roomPair ?? ""}"`,
+            );
+        } else {
+            this.logger.info("Creating");
+        }
 
         this.config = config;
 
