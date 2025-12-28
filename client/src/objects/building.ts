@@ -320,6 +320,7 @@ export class Building implements AbstractObject {
             const defEmitters = def.occupiedEmitters || [];
             for (let z = 0; z < defEmitters.length; z++) {
                 const defEmitter = defEmitters[z];
+                if (defEmitter.type === "cabin_smoke_parent") continue;
                 const defRot = defEmitter.rot !== undefined ? defEmitter.rot : 0;
                 const rot = this.rot + defRot;
                 let pos = v2.add(this.pos, v2.rotate(defEmitter.pos, rot));
