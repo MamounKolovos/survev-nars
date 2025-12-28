@@ -9,6 +9,7 @@ import { ForcedLoot2 } from "./maps/forcedLootDefs2";
 import { Halloween } from "./maps/halloweenDefs";
 import { MainSpring } from "./maps/mainSpringDefs";
 import { MainSummer } from "./maps/mainSummerDefs";
+import { MiniWalls } from "./maps/miniWallsDefs";
 import { Potato } from "./maps/potatoDefs";
 import { PotatoSpring } from "./maps/potatoSpringDefs";
 import { Savannah } from "./maps/savannahDefs";
@@ -56,6 +57,7 @@ export const MapDefs = {
     deathmatch: Deathmatch,
     solos: SolosMap,
     forced_loot2: ForcedLoot2,
+    mini_walls: MiniWalls,
 } satisfies Record<string, MapDef>;
 
 export interface MapDef {

@@ -355,6 +355,10 @@ export class GameMap {
 
         this.riverMasks = [];
 
+        if (this.game.pluginManager.emit("mapWillCreate", { map: this })) {
+            return;
+        }
+
         this.timerStart();
         this.generateRiverMasks();
         this.timerEnd("Generating river masks");

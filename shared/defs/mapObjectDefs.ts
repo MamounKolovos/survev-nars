@@ -12062,6 +12062,37 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
             enter: "none",
         },
     },
+    vat_03: {
+        //same as vat_01 but modified a bit for mini walls
+        type: "obstacle",
+        scale: { createMin: 1.5, createMax: 1.5, destroy: 0.3 },
+        collision: collider.createCircle(v2.create(0, 0), 2),
+        mapObstacleBounds: [collider.createAabb(v2.create(-6, -6), v2.create(6, 6), 0)],
+        height: 0.5,
+        collidable: true,
+        destructible: true,
+        health: 1000,
+        reflectBullets: false,
+        hitParticle: "glassChip",
+        explodeParticle: "windowBreak",
+        loot: [],
+        map: { display: true, color: 0x00ffff, scale: 1 },
+        terrain: { grass: false, beach: false },
+        img: {
+            sprite: "map-vat-01.img",
+            residue: "map-vat-res.img",
+            scale: 0.5,
+            alpha: 1,
+            tint: 0xffffff,
+            zIdx: 10,
+        },
+        sound: {
+            bullet: "glass_bullet",
+            punch: "glass_bullet",
+            explode: "window_break_01",
+            enter: "none",
+        },
+    },
     vending_01: (function () {
         const t = {
             type: "obstacle",
@@ -17354,6 +17385,14 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
         };
         return util.mergeDeep(t, e || {});
     })({}),
+    brick_wall_test: createWall({
+        map: { display: true, color: 0x6d7645 },
+        img: wallImg("map-wall-07-rounded.img", 0x6d7645),
+        destructible: false,
+        terrain: { grass: true },
+        material: "brick",
+        extents: v2.create(0.5, 3.5),
+    }),
     brick_wall_ext_1: createWall({
         material: "brick",
         extents: v2.create(0.5, 0.5),

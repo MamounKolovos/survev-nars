@@ -164,6 +164,7 @@ export const GameEvents = {
     gasWillAdvance: makeEvent<{ gas: Gas }>(true),
     gasDidAdvance: makeEvent<{ gas: Gas }>(),
 
+    mapWillCreate: makeEvent<{ map: GameMap }>(true),
     mapCreated: makeEvent<{ map: GameMap }>(),
 };
 

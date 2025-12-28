@@ -13,6 +13,7 @@ export enum MapId {
     Deathmatch = 9,
     Solos = 10,
     ForcedLoot2 = 11,
+    MiniWalls = 12,
 }
 
 export const TeamModeToString = {

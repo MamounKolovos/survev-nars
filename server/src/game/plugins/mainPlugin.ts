@@ -37,6 +37,7 @@ export default class MainPlugin extends GamePlugin {
         if (this.game.map.mapId === MapId.ForcedLoot) return;
         if (this.game.map.mapId === MapId.ForcedLoot2) return;
         if (this.game.map.mapId === MapId.Deathmatch) return;
+        return; //dont want to add a new line to this every time because this doesnt have a unique map and is completely unused
 
         attachTimerManagerUpdate(this);
 
