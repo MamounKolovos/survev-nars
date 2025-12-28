@@ -26,6 +26,7 @@ class GameProcess implements GameData {
     process: ChildProcess;
 
     canJoin = true;
+    creating = false;
     teamMode: TeamMode = 1;
     roomPair: string = "";
     mapName = "";
@@ -61,6 +62,7 @@ class GameProcess implements GameData {
                 case ProcessMsgType.Created:
                     this.created = true;
                     this.stopped = false;
+                    this.creating = false;
                     for (const cb of this.onCreatedCbs) {
                         cb(this);
                     }
@@ -69,7 +71,6 @@ class GameProcess implements GameData {
                 case ProcessMsgType.UpdateData:
                     this.canJoin = msg.canJoin;
                     this.teamMode = msg.teamMode;
-                    this.roomPair = msg.roomPair;
                     this.mapName = msg.mapName;
                     if (this.id !== msg.id) {
                         this.manager.processById.delete(this.id);
@@ -131,6 +132,7 @@ class GameProcess implements GameData {
         this.roomPair = config.roomPair ? config.roomPair : "";
         this.room = config.room ? config.room : "";
         this.stopped = false;
+        this.creating = true;
 
         const mapDef = MapDefs[this.mapName as keyof typeof MapDefs] as MapDef;
         this.avaliableSlots = mapDef.gameMode.maxPlayers;
@@ -286,11 +288,23 @@ export class GameProcessManager implements GameManager {
     async findGame(body: FindGamePrivateBody): Promise<string> {
         let game = this.processes
             .filter((proc) => {
-                const roomPairMatches = proc.roomPair
-                    ? proc.room === body.roomPair && proc.roomPair === body.room
-                    : true;
+                // Room pairing is an explicit, mutual contract
+                // A paired player may ONLY join a game that is paired with them,
+                // and an unpaired player may ONLY join an unpaired game
+                //
+                // In other words:
+                // - paired <> paired (must match symmetrically)
+                // - unpaired <> unpaired
+                // - mixed (paired <> unpaired) is never allowed
+                const roomPairMatches =
+                    proc.roomPair && body.roomPair
+                        ? // both sides opted into pairing: require an exact symmetric match
+                          proc.room === body.roomPair && proc.roomPair === body.room
+                        : // neither side opted into pairing: pairing is irrelevant
+                          !proc.roomPair && !body.roomPair;
+
                 return (
-                    proc.canJoin &&
+                    (proc.canJoin || proc.creating) &&
                     proc.avaliableSlots > 0 &&
                     proc.teamMode === body.teamMode &&
                     proc.mapName === body.mapName &&

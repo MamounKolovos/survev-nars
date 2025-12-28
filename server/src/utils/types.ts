@@ -36,7 +36,6 @@ export interface ServerGameConfig {
 export interface GameData {
     id: string;
     teamMode: TeamMode;
-    roomPair: string;
     mapName: string;
     canJoin: boolean;
     aliveCount: number;

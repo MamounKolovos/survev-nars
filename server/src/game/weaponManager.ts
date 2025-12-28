@@ -229,12 +229,8 @@ export class WeaponManager {
             this.weapons[idx].cooldown = weaponDef.switchDelay;
         }
 
-        // disregards passed in ammo since melees don't have ammo in the traditional sense
-        // just uses the ammo system to keep track of charges
         if (weaponDef?.type == "melee" && weaponDef.charge) {
-            this.weapons[idx].ammo = weaponDef.charge.amount;
-            this.player.hasMeleeCharges = true;
-            this.player.setDirty();
+            this.player.impulseGlovesTicker = weaponDef.charge.rechargeTime;
         }
 
         if (idx === this.curWeapIdx) {
@@ -593,6 +589,12 @@ export class WeaponManager {
     dropMelee(): void {
         const slot = WeaponSlot.Melee;
         if (this.weapons[slot].type != "fists") {
+            const def = GameObjectDefs[this.weapons[slot].type] as MeleeDef;
+            if (def.charge) {
+                this.player.impulseGlovesTicker = 0;
+                this.player.hasMeleeCharges = false;
+            }
+
             this.player.dropLoot(this.weapons[slot].type);
             this.setWeapon(slot, "fists", 0);
             if (slot === this.curWeapIdx) this.player.setDirty();
@@ -1077,8 +1079,9 @@ export class WeaponManager {
                     },
                 );
 
-                this.weapons[this.curWeapIdx].ammo--;
-                if (this.weapons[this.curWeapIdx].ammo == 0) {
+                const curWeapon = this.weapons[this.curWeapIdx];
+                curWeapon.ammo--;
+                if (curWeapon.ammo <= 0) {
                     this.player.hasMeleeCharges = false;
                 }
                 this.player.weapsDirty = true;

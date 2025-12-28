@@ -121,7 +121,13 @@ export class Game {
     ) {
         this.id = id;
         this.logger = new Logger(`Game #${this.id.substring(0, 4)}`);
-        this.logger.info("Creating");
+        if (config.teamMode != TeamMode.Solo) {
+            this.logger.info(
+                `Creating for room "${config.room ?? ""}" with "${config.roomPair ?? ""}"`,
+            );
+        } else {
+            this.logger.info("Creating");
+        }
 
         this.config = config;
 
@@ -532,7 +538,6 @@ export class Game {
             type: ProcessMsgType.UpdateData,
             id: this.id,
             teamMode: this.teamMode,
-            roomPair: this.roomPair,
             mapName: this.mapName,
             canJoin: this.canJoin,
             aliveCount: this.aliveCount,

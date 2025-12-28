@@ -1179,7 +1179,8 @@ export class Player implements AbstractObject {
         if (
             !this.impulseGlovesAuraEmitter &&
             this.m_netData.m_activeWeapon == "impulse_gloves" &&
-            this.m_netData.m_hasMeleeCharges
+            this.m_netData.m_hasMeleeCharges &&
+            !this.m_netData.m_downed
         ) {
             this.impulseGlovesAuraEmitter = particleBarn.addEmitter("impulse_star", {
                 layer: this.layer,
@@ -1187,7 +1188,8 @@ export class Player implements AbstractObject {
         } else if (
             this.impulseGlovesAuraEmitter &&
             (this.m_netData.m_activeWeapon != "impulse_gloves" ||
-                !this.m_netData.m_hasMeleeCharges)
+                !this.m_netData.m_hasMeleeCharges ||
+                this.m_netData.m_downed)
         ) {
             // Stop effect
             this.impulseGlovesAuraEmitter.stop();
