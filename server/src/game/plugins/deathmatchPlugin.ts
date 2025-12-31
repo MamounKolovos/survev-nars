@@ -3,7 +3,7 @@ import type { GunDef } from "../../../../shared/defs/gameObjects/gunDefs";
 import { MapObjectDefs } from "../../../../shared/defs/mapObjectDefs";
 import type { ObstacleDef } from "../../../../shared/defs/mapObjectsTyping";
 import { MapId } from "../../../../shared/defs/types/misc";
-import { GameConfig, GasMode } from "../../../../shared/gameConfig";
+import { GameConfig, GasMode, TeamMode } from "../../../../shared/gameConfig";
 import * as net from "../../../../shared/net/net";
 import { ObjectType } from "../../../../shared/net/objectSerializeFns";
 import { type Collider, coldet } from "../../../../shared/utils/coldet";
@@ -12,7 +12,6 @@ import { math } from "../../../../shared/utils/math";
 import { assert, util } from "../../../../shared/utils/util";
 import { v2 } from "../../../../shared/utils/v2";
 import { TimerManager, createSimpleSegment } from "../../utils/pluginUtils";
-import type { Game } from "../game";
 import type { DamageParams } from "../objects/gameObject";
 import type { Player } from "../objects/player";
 import { GamePlugin } from "../pluginManager";
@@ -429,58 +428,6 @@ function attachGasResizer(
     });
 }
 
-function endGameByKillCount(game: Game) {
-    const rankedTeams = Object.values(
-        game.playerBarn.players
-            .filter((p) => !p.disconnected)
-            //aggregate team kills
-            .reduce(
-                (acc, p) => {
-                    acc[p.teamId] ??= { teamId: p.teamId, kills: 0 };
-                    acc[p.teamId].kills += p.kills;
-                    return acc;
-                },
-                {} as Record<number, { teamId: number; kills: number }>,
-            ),
-    ).sort((a, b) => b.kills - a.kills); //descending
-
-    for (const p of game.playerBarn.players) {
-        if (p.disconnected) continue;
-
-        const gameOverMsg = new net.GameOverMsg();
-
-        const statsArr: net.PlayerStatsMsg["playerStats"][] =
-            game.modeManager.getGameoverPlayers(p);
-        gameOverMsg.playerStats = statsArr;
-
-        const teamRank = rankedTeams.findIndex((t) => t.teamId == p.teamId) + 1;
-        gameOverMsg.teamRank = teamRank;
-        gameOverMsg.teamId = p.teamId;
-        // 99% sure rankedTeams is guaranteed to be non empty
-        gameOverMsg.winningTeamId = rankedTeams[0].teamId;
-        gameOverMsg.gameOver = true;
-        p.msgsToSend.push({
-            type: net.MsgType.GameOver,
-            msg: gameOverMsg,
-        });
-
-        for (const spectator of p.spectators) {
-            spectator.msgsToSend.push({
-                type: net.MsgType.GameOver,
-                msg: gameOverMsg,
-            });
-        }
-    }
-
-    game.over = true;
-
-    // send win emoji after 1 second
-    game.playerBarn.sendWinEmoteTicker = 1;
-    game.stopTicker = 2;
-
-    game.updateData();
-}
-
 function addToInventory(player: Player, type: string, amount: number) {
     if (!player.bagSizes[type]) return;
     const backpackLevel = player.getGearLevel(player.backpack);
@@ -502,8 +449,436 @@ function resolveKiller(player: Player, params: DamageParams): Player | undefined
     return undefined;
 }
 
+class GracePeriod {
+    private ticker = 0;
+    active = false;
+
+    constructor(public plugin: GamePlugin & { timerManager: TimerManager }) {}
+
+    update(dt: number) {
+        if (!this.active) return;
+
+        this.ticker -= dt;
+        if (this.ticker <= 0) {
+            this.active = false;
+            this.ticker = 0;
+        }
+    }
+
+    start(duration: number, onComplete?: () => void) {
+        // can't start a grace period if one is already in progress
+        if (this.active) return;
+        this.active = true;
+        this.ticker = duration;
+        this.plugin.timerManager.countdown(
+            duration,
+            1,
+            (i) => {
+                this.plugin.game.playerBarn.addKillFeedLine(-1, [
+                    createSimpleSegment(`${i} seconds left`, "white"),
+                ]);
+            },
+            onComplete,
+        );
+    }
+}
+
 export default class DeathmatchPlugin extends GamePlugin {
     timerManager = new TimerManager();
+
+    gracePeriod = new GracePeriod(this);
+    overtime = false;
+
+    respawnTimerIds: Set<number> = new Set();
+
+    handleNormalDeath(player: Player, params: DamageParams) {
+        player.dead = true;
+
+        player.boost = 0;
+        player.boostDirty = true;
+
+        player.setDirty();
+
+        player.shootStart = false;
+        player.shootHold = false;
+        player.actionType = GameConfig.Action.None;
+        player.actionSeq++;
+        player.hasteType = GameConfig.HasteType.None;
+        player.hasteSeq++;
+        player.animType = GameConfig.Anim.None;
+        player.animSeq++;
+
+        if (player.weaponManager.cookingThrowable) {
+            player.weaponManager.throwThrowable(true);
+        }
+
+        player.shotSlowdownTimer = 0;
+
+        // so inputs don't carry over into the next life
+        player.moveLeft = false;
+        player.moveRight = false;
+        player.moveUp = false;
+        player.moveDown = false;
+
+        //clears loadout
+        applyLoadout(player, EMPTY_LOADOUT);
+
+        const killMsg = new net.KillMsg();
+        killMsg.damageType = params.damageType;
+        killMsg.itemSourceType = params.gameSourceType ?? "";
+        killMsg.mapSourceType = params.mapSourceType ?? "";
+        killMsg.targetId = player.__id;
+        killMsg.killed = true;
+
+        const killer = resolveKiller(player, params);
+
+        if (killer) {
+            player.killedBy = killer;
+
+            if (killer !== player && killer.teamId !== player.teamId) {
+                killer.killedIds.push(player.matchDataId);
+                killer.kills++;
+
+                if (killer.isKillLeader) {
+                    player.game.playerBarn.killLeaderDirty = true;
+                }
+
+                if (killer.hasPerk("takedown")) {
+                    killer.health += 25;
+                    killer.boost += 25;
+                    killer.giveHaste(GameConfig.HasteType.Takedown, 3);
+                }
+
+                if (killer.role === "woods_king") {
+                    player.game.playerBarn.addMapPing("ping_woodsking", player.pos);
+                }
+            }
+            killMsg.killerId = killer.__id;
+            killMsg.killCreditId = killer.__id;
+            killMsg.killerKills = killer.kills;
+
+            killer.health += 40;
+            killer.boost += 25;
+
+            addToInventory(killer, "impulse", 1);
+            if (!killer.weapons[GameConfig.WeaponSlot.Throwable].type) {
+                killer.weaponManager.showNextThrowable();
+            }
+            addToInventory(killer, "bandage", 5);
+            addToInventory(killer, "healthkit", 1);
+            addToInventory(killer, "soda", 1);
+
+            // loop over all slots to make it generic i guess
+            for (let i = 0; i < GameConfig.WeaponSlot.Count; i++) {
+                if (GameConfig.WeaponType[i] != "gun") continue;
+                const gun = killer.weapons[i];
+                if (!gun.type) continue;
+                const gunDef = GameObjectDefs[gun.type] as GunDef;
+                const halfClip = Math.ceil(gunDef.maxClip / 2);
+                if (gun.ammo < halfClip) {
+                    gun.ammo = halfClip;
+                    killer.weapsDirty = true;
+                }
+            }
+        }
+
+        this.game.broadcastMsg(net.MsgType.Kill, killMsg);
+
+        if (this.game.map.mapDef.gameMode.killLeaderEnabled) {
+            const killLeader = this.game.playerBarn.killLeader;
+
+            let killLeaderKills = 0;
+
+            // `player.kill() also checks !dead here but we don't care about that
+            if (killLeader) {
+                killLeaderKills = killLeader.kills;
+            }
+
+            const newKillLeader = this.game.playerBarn.getPlayerWithHighestKills();
+            if (
+                killLeader !== newKillLeader &&
+                params.source &&
+                newKillLeader === params.source &&
+                newKillLeader.kills > killLeaderKills
+            ) {
+                if (killLeader && killLeader.role === "the_hunted") {
+                    killLeader.removeRole();
+                }
+
+                params.source.promoteToKillLeader();
+            }
+        }
+
+        this.game.deadBodyBarn.addDeadBody(
+            player.pos,
+            player.__id,
+            player.layer,
+            params.dir,
+        );
+
+        this.timerManager.setTimeout(() => {
+            this.game.deadBodyBarn.removeDeadBody(player.__id);
+        }, DESTROY_DEAD_BODY_DELAY);
+
+        //dont respawn disconnected players
+        if (!player.disconnected) {
+            const respawnTimerDisplayId = this.timerManager.setTimeout(() => {
+                this.respawnTimerIds.delete(respawnTimerDisplayId);
+                this.timerManager.countdown(
+                    RESPAWN_COUNTDOWN_START,
+                    1,
+                    (i) => {
+                        this.game.playerBarn.addKillFeedLine(player.__id, [
+                            createSimpleSegment(`${i} seconds left`, "white"),
+                        ]);
+                    },
+                    () => {
+                        this.game.playerBarn.addKillFeedLine(player.__id, [
+                            createSimpleSegment("respawned!", "white"),
+                        ]);
+                    },
+                );
+            }, RESPAWN_DELAY - RESPAWN_COUNTDOWN_START);
+            this.respawnTimerIds.add(respawnTimerDisplayId);
+
+            const respawnTimerId = this.timerManager.setTimeout(() => {
+                this.respawnTimerIds.delete(respawnTimerId);
+                player.dead = false;
+                player.setDirty();
+
+                player.boost = 100;
+                player.health = 100;
+
+                applyLoadout(player, util.randomElem(loadouts));
+
+                v2.set(
+                    player.pos,
+                    // undefined because players dont respawn next to teammates when not in overtime
+                    this.game.map.getSpawnPos(undefined, undefined),
+                );
+
+                this.game.grid.updateObject(player);
+                // make sure player doesn't spawn in bunker or something
+                player.layer = 0;
+            }, RESPAWN_DELAY);
+            this.respawnTimerIds.add(respawnTimerId);
+        }
+    }
+
+    handleTransitionDeath(player: Player) {
+        player.dead = true;
+
+        player.boost = 0;
+        player.boostDirty = true;
+
+        player.setDirty();
+
+        player.shootStart = false;
+        player.shootHold = false;
+        player.actionType = GameConfig.Action.None;
+        player.actionSeq++;
+        player.hasteType = GameConfig.HasteType.None;
+        player.hasteSeq++;
+        player.animType = GameConfig.Anim.None;
+        player.animSeq++;
+
+        player.group?.checkPlayers();
+
+        if (player.weaponManager.cookingThrowable) {
+            player.weaponManager.throwThrowable(true);
+        }
+
+        player.shotSlowdownTimer = 0;
+
+        // so inputs don't carry over into the next life
+        player.moveLeft = false;
+        player.moveRight = false;
+        player.moveUp = false;
+        player.moveDown = false;
+
+        this.game.playerBarn.aliveCountDirty = true;
+        this.game.playerBarn.livingPlayers.splice(
+            this.game.playerBarn.livingPlayers.indexOf(player),
+            1,
+        );
+
+        //clears loadout
+        applyLoadout(player, EMPTY_LOADOUT);
+
+        if (player.isKillLeader) {
+            this.game.playerBarn.killLeader = undefined;
+            this.game.playerBarn.killLeaderDirty = true;
+            player.isKillLeader = false;
+
+            if (player.role === "the_hunted") {
+                player.removeRole();
+            }
+        }
+    }
+
+    handleOvertimeDeath(player: Player, params: DamageParams) {
+        if (!this.overtime) return;
+
+        player.dead = true;
+
+        player.boost = 0;
+        player.boostDirty = true;
+
+        player.setDirty();
+
+        player.shootStart = false;
+        player.shootHold = false;
+        player.actionType = GameConfig.Action.None;
+        player.actionSeq++;
+        player.hasteType = GameConfig.HasteType.None;
+        player.hasteSeq++;
+        player.animType = GameConfig.Anim.None;
+        player.animSeq++;
+
+        player.group?.checkPlayers();
+
+        if (player.weaponManager.cookingThrowable) {
+            player.weaponManager.throwThrowable(true);
+        }
+
+        player.shotSlowdownTimer = 0;
+
+        // so inputs don't carry over into the next life
+        player.moveLeft = false;
+        player.moveRight = false;
+        player.moveUp = false;
+        player.moveDown = false;
+
+        this.game.playerBarn.aliveCountDirty = true;
+        this.game.playerBarn.livingPlayers.splice(
+            this.game.playerBarn.livingPlayers.indexOf(player),
+            1,
+        );
+
+        // this array is exclusively used to send gameover msgs for a traditional last man standing mode
+        // which is why this is the only death method that pushes to it
+        this.game.playerBarn.killedPlayers.push(player);
+
+        //clears loadout
+        applyLoadout(player, EMPTY_LOADOUT);
+
+        const killMsg = new net.KillMsg();
+        killMsg.damageType = params.damageType;
+        killMsg.itemSourceType = params.gameSourceType ?? "";
+        killMsg.mapSourceType = params.mapSourceType ?? "";
+        killMsg.targetId = player.__id;
+        killMsg.killed = true;
+
+        const killer = resolveKiller(player, params);
+
+        if (killer) {
+            player.killedBy = killer;
+
+            if (killer !== player && killer.teamId !== player.teamId) {
+                killer.killedIds.push(player.matchDataId);
+                killer.kills++;
+
+                if (killer.isKillLeader) {
+                    player.game.playerBarn.killLeaderDirty = true;
+                }
+
+                if (killer.hasPerk("takedown")) {
+                    killer.health += 25;
+                    killer.boost += 25;
+                    killer.giveHaste(GameConfig.HasteType.Takedown, 3);
+                }
+
+                if (killer.role === "woods_king") {
+                    player.game.playerBarn.addMapPing("ping_woodsking", player.pos);
+                }
+            }
+            killMsg.killerId = killer.__id;
+            killMsg.killCreditId = killer.__id;
+            killMsg.killerKills = killer.kills;
+
+            killer.health += 40;
+            killer.boost += 25;
+
+            addToInventory(killer, "impulse", 1);
+            if (!killer.weapons[GameConfig.WeaponSlot.Throwable].type) {
+                killer.weaponManager.showNextThrowable();
+            }
+            addToInventory(killer, "bandage", 5);
+            addToInventory(killer, "healthkit", 1);
+            addToInventory(killer, "soda", 1);
+
+            // loop over all slots to make it generic i guess
+            for (let i = 0; i < GameConfig.WeaponSlot.Count; i++) {
+                if (GameConfig.WeaponType[i] != "gun") continue;
+                const gun = killer.weapons[i];
+                if (!gun.type) continue;
+                const gunDef = GameObjectDefs[gun.type] as GunDef;
+                const halfClip = Math.ceil(gunDef.maxClip / 2);
+                if (gun.ammo < halfClip) {
+                    gun.ammo = halfClip;
+                    killer.weapsDirty = true;
+                }
+            }
+        }
+
+        this.game.broadcastMsg(net.MsgType.Kill, killMsg);
+
+        this.game.deadBodyBarn.addDeadBody(
+            player.pos,
+            player.__id,
+            player.layer,
+            params.dir,
+        );
+
+        this.timerManager.setTimeout(() => {
+            this.game.deadBodyBarn.removeDeadBody(player.__id);
+        }, DESTROY_DEAD_BODY_DELAY);
+
+        // overtime is a tranditional last man standing fight
+        // so we can take advantage of the default game end methods
+        if (this.game.modeManager.shouldGameEnd()) {
+            this.game.modeManager.handleGameEnd();
+            this.game.over = true;
+
+            // send win emoji after 1 second
+            this.game.playerBarn.sendWinEmoteTicker = 1;
+            this.game.stopTicker = 2;
+
+            this.game.updateData();
+            return;
+        }
+    }
+
+    sendGameOverMsg(
+        player: Player,
+        teamRank: number,
+        winningTeamId: number,
+        gameOver: boolean,
+    ) {
+        if (player.disconnected) return;
+
+        const gameOverMsg = new net.GameOverMsg();
+
+        const statsArr: net.PlayerStatsMsg["playerStats"][] =
+            this.game.modeManager.getGameoverPlayers(player);
+        gameOverMsg.playerStats = statsArr;
+
+        gameOverMsg.teamRank = teamRank;
+        gameOverMsg.teamId = player.teamId;
+        gameOverMsg.winningTeamId = winningTeamId;
+        gameOverMsg.gameOver = gameOver;
+        player.msgsToSend.push({
+            type: net.MsgType.GameOver,
+            msg: gameOverMsg,
+        });
+
+        for (const spectator of player.spectators) {
+            spectator.msgsToSend.push({
+                type: net.MsgType.GameOver,
+                msg: gameOverMsg,
+            });
+        }
+    }
 
     override initListeners(): void {
         if (this.game.map.mapId != MapId.Deathmatch) return;
@@ -511,6 +886,7 @@ export default class DeathmatchPlugin extends GamePlugin {
         this.on("gameUpdate", (event, ctx) => {
             const { game, dt } = event.data;
             this.timerManager.update(dt);
+            this.gracePeriod.update(dt);
         });
 
         //for debugging purposes
@@ -530,6 +906,26 @@ export default class DeathmatchPlugin extends GamePlugin {
         attachCustomQuickSwitch(this, CUSTOM_SWITCH_DELAY);
 
         // deathmatch specific listeners below
+
+        this.on("playerWillTakeDamage", (event, ctx) => {
+            if (!this.gracePeriod.active) return;
+
+            event.cancel();
+            event.stopPropagation();
+        });
+
+        this.on("playerWillInput", (event, ctx) => {
+            if (!this.gracePeriod.active) return;
+
+            const { msg } = event.data;
+
+            msg.touchMoveActive = false;
+            msg.touchMoveDir = v2.create(0, 0);
+            msg.moveLeft = false;
+            msg.moveRight = false;
+            msg.moveUp = false;
+            msg.moveDown = false;
+        });
 
         //destroys spawned loot
         this.on("mapCreated", (event, ctx) => {
@@ -623,7 +1019,159 @@ export default class DeathmatchPlugin extends GamePlugin {
         if (WIN_CONDITION.kind == "timeLimit") {
             this.on("gameStarted", (event, ctx) => {
                 this.timerManager.setTimeout(() => {
-                    endGameByKillCount(this.game);
+                    // safety check
+                    if (this.game.playerBarn.players.length == 0) {
+                        return;
+                    }
+
+                    for (const id of this.respawnTimerIds) {
+                        this.timerManager.clearTimer(id);
+                    }
+
+                    if (this.game.teamMode == TeamMode.Solo) {
+                        const rankedPlayers = this.game.playerBarn.players.sort(
+                            (a, b) => b.kills - a.kills,
+                        );
+
+                        const topKills = rankedPlayers[0].kills;
+                        let i = 0;
+                        while (
+                            i < rankedPlayers.length &&
+                            rankedPlayers[i].kills == topKills
+                        ) {
+                            i++;
+                        }
+
+                        const overtimeContenders = rankedPlayers.slice(0, i);
+                        const eliminated = rankedPlayers.slice(i);
+
+                        const winner =
+                            overtimeContenders.length == 1
+                                ? overtimeContenders[0]
+                                : undefined;
+
+                        for (const player of eliminated) {
+                            this.handleTransitionDeath(player);
+
+                            const teamRank =
+                                rankedPlayers.findIndex(
+                                    (p) => p.teamId == player.teamId,
+                                ) + 1;
+                            this.sendGameOverMsg(
+                                player,
+                                teamRank,
+                                winner ? winner.teamId : 0,
+                                !!winner,
+                            );
+                        }
+
+                        if (winner) {
+                            this.sendGameOverMsg(winner, 1, winner.teamId, true);
+                            this.game.over = true;
+
+                            // send win emoji after 1 second
+                            this.game.playerBarn.sendWinEmoteTicker = 1;
+                            this.game.stopTicker = 2;
+
+                            this.game.updateData();
+                            return;
+                        }
+
+                        for (const player of overtimeContenders) {
+                            if (player.disconnected) {
+                                this.handleTransitionDeath(player);
+                            }
+                        }
+                    } else {
+                        const groupsRankedByKills = this.game.playerBarn.groups
+                            .map((group) => ({
+                                group,
+                                kills: group.players.reduce((acc, p) => acc + p.kills, 0),
+                            }))
+                            .sort((a, b) => b.kills - a.kills);
+
+                        const topKills = groupsRankedByKills[0].kills;
+                        let i = 0;
+                        while (
+                            i < groupsRankedByKills.length &&
+                            groupsRankedByKills[i].kills == topKills
+                        ) {
+                            i++;
+                        }
+
+                        const rankedGroups = groupsRankedByKills.map((g) => g.group);
+
+                        const overtimeContenders = rankedGroups.slice(0, i);
+                        const eliminated = rankedGroups.slice(i);
+
+                        const winner =
+                            overtimeContenders.length == 1
+                                ? overtimeContenders[0]
+                                : undefined;
+
+                        for (const group of eliminated) {
+                            const teamRank =
+                                rankedGroups.findIndex(
+                                    (g) => g.groupId == group.groupId,
+                                ) + 1;
+
+                            for (const player of group.players) {
+                                this.handleTransitionDeath(player);
+                                this.sendGameOverMsg(
+                                    player,
+                                    teamRank,
+                                    winner ? winner.groupId : 0,
+                                    !!winner,
+                                );
+                            }
+                        }
+
+                        if (winner) {
+                            for (const player of winner.players) {
+                                this.sendGameOverMsg(player, 1, winner.groupId, true);
+                            }
+                            this.game.over = true;
+
+                            // send win emoji after 1 second
+                            this.game.playerBarn.sendWinEmoteTicker = 1;
+                            this.game.stopTicker = 2;
+
+                            this.game.updateData();
+                            return;
+                        }
+
+                        for (const group of overtimeContenders) {
+                            for (const player of group.players) {
+                                if (player.disconnected) {
+                                    this.handleTransitionDeath(player);
+                                }
+                            }
+                        }
+                    }
+
+                    for (const player of this.game.playerBarn.livingPlayers) {
+                        player.health = 100;
+                        player.boost = 100;
+
+                        player.layer = 0;
+
+                        v2.set(
+                            player.pos,
+                            this.game.map.getSpawnPos(player.group, undefined),
+                        );
+
+                        this.game.grid.updateObject(player);
+                    }
+
+                    this.overtime = true;
+
+                    // the countdown is just so players have time to reset
+                    // overtime technically starts immediately
+                    this.gracePeriod.start(10, () => {
+                        this.game.playerBarn.addKillFeedLine(-1, [
+                            createSimpleSegment("overtime started!", "white"),
+                        ]);
+                    });
                 }, WIN_CONDITION.duration);
 
                 this.timerManager.setTimeout(() => {
@@ -660,180 +1208,11 @@ export default class DeathmatchPlugin extends GamePlugin {
             const { player, params } = event.data;
 
             event.cancel();
-            player.dead = true;
 
-            player.boost = 0;
-            player.boostDirty = true;
-
-            player.setDirty();
-
-            player.shootStart = false;
-            player.shootHold = false;
-            player.actionType = GameConfig.Action.None;
-            player.actionSeq++;
-            player.hasteType = GameConfig.HasteType.None;
-            player.hasteSeq++;
-            player.animType = GameConfig.Anim.None;
-            player.animSeq++;
-            player.weaponManager.throwThrowable();
-
-            player.shotSlowdownTimer = 0;
-
-            // so inputs don't carry over into the next life
-            player.moveLeft = false;
-            player.moveRight = false;
-            player.moveUp = false;
-            player.moveDown = false;
-
-            //clears loadout
-            applyLoadout(player, EMPTY_LOADOUT);
-
-            const killMsg = new net.KillMsg();
-            killMsg.damageType = params.damageType;
-            killMsg.itemSourceType = params.gameSourceType ?? "";
-            killMsg.mapSourceType = params.mapSourceType ?? "";
-            killMsg.targetId = player.__id;
-            killMsg.killed = true;
-
-            const killer = resolveKiller(player, params);
-
-            if (killer) {
-                player.killedBy = killer;
-
-                if (killer !== player && killer.teamId !== player.teamId) {
-                    killer.killedIds.push(player.matchDataId);
-                    killer.kills++;
-
-                    if (killer.isKillLeader) {
-                        player.game.playerBarn.killLeaderDirty = true;
-                    }
-
-                    if (killer.hasPerk("takedown")) {
-                        killer.health += 25;
-                        killer.boost += 25;
-                        killer.giveHaste(GameConfig.HasteType.Takedown, 3);
-                    }
-
-                    if (killer.role === "woods_king") {
-                        player.game.playerBarn.addMapPing("ping_woodsking", player.pos);
-                    }
-                }
-                killMsg.killerId = killer.__id;
-                killMsg.killCreditId = killer.__id;
-                killMsg.killerKills = killer.kills;
-
-                killer.health += 40;
-                killer.boost += 25;
-
-                addToInventory(killer, "impulse", 1);
-                if (!killer.weapons[GameConfig.WeaponSlot.Throwable].type) {
-                    killer.weaponManager.showNextThrowable();
-                }
-                addToInventory(killer, "bandage", 5);
-                addToInventory(killer, "healthkit", 1);
-                addToInventory(killer, "soda", 1);
-
-                // loop over all slots to make it generic i guess
-                for (let i = 0; i < GameConfig.WeaponSlot.Count; i++) {
-                    if (GameConfig.WeaponType[i] != "gun") continue;
-                    const gun = killer.weapons[i];
-                    if (!gun.type) continue;
-                    const gunDef = GameObjectDefs[gun.type] as GunDef;
-                    const halfClip = Math.ceil(gunDef.maxClip / 2);
-                    if (gun.ammo < halfClip) {
-                        gun.ammo = halfClip;
-                        killer.weapsDirty = true;
-                    }
-                }
-            }
-
-            this.game.broadcastMsg(net.MsgType.Kill, killMsg);
-
-            if (this.game.map.mapDef.gameMode.killLeaderEnabled) {
-                const killLeader = this.game.playerBarn.killLeader;
-
-                let killLeaderKills = 0;
-
-                // `player.kill() also checks !dead here but we don't care about that
-                if (killLeader) {
-                    killLeaderKills = killLeader.kills;
-                }
-
-                const newKillLeader = this.game.playerBarn.getPlayerWithHighestKills();
-                if (
-                    killLeader !== newKillLeader &&
-                    params.source &&
-                    newKillLeader === params.source &&
-                    newKillLeader.kills > killLeaderKills
-                ) {
-                    if (killLeader && killLeader.role === "the_hunted") {
-                        killLeader.removeRole();
-                    }
-
-                    params.source.promoteToKillLeader();
-                }
-            }
-
-            this.game.deadBodyBarn.addDeadBody(
-                player.pos,
-                player.__id,
-                player.layer,
-                params.dir,
-            );
-
-            this.timerManager.setTimeout(() => {
-                this.game.deadBodyBarn.removeDeadBody(player.__id);
-            }, DESTROY_DEAD_BODY_DELAY);
-
-            // end game before respawn logic gets a chance to run
-            if (
-                params.source &&
-                params.source.__type == ObjectType.Player &&
-                WIN_CONDITION.kind == "killThreshold" &&
-                params.source.kills >= WIN_CONDITION.targetKills
-            ) {
-                endGameByKillCount(this.game);
-                return;
-            }
-
-            //dont respawn disconnected players
-            if (!player.disconnected) {
-                this.timerManager.setTimeout(() => {
-                    this.timerManager.countdown(
-                        RESPAWN_COUNTDOWN_START,
-                        1,
-                        (i) => {
-                            this.game.playerBarn.addKillFeedLine(player.__id, [
-                                createSimpleSegment(`${i} seconds left`, "white"),
-                            ]);
-                        },
-                        () => {
-                            this.game.playerBarn.addKillFeedLine(player.__id, [
-                                createSimpleSegment("respawned!", "white"),
-                            ]);
-                        },
-                    );
-                }, RESPAWN_DELAY - RESPAWN_COUNTDOWN_START);
-
-                this.timerManager.setTimeout(() => {
-                    player.dead = false;
-                    player.setDirty();
-
-                    player.boost = 100;
-                    player.health = 100;
-
-                    applyLoadout(player, util.randomElem(loadouts));
-
-                    v2.set(
-                        player.pos,
-                        // undefined because players dont respawn next to teammates in deathmatch
-                        this.game.map.getSpawnPos(undefined, undefined),
-                    );
-
-                    this.game.grid.updateObject(player);
-                    // make sure player doesn't spawn in bunker or something
-                    player.layer = 0;
-                }, RESPAWN_DELAY);
+            if (this.overtime) {
+                this.handleOvertimeDeath(player, params);
+            } else {
+                this.handleNormalDeath(player, params);
             }
         });
     }
