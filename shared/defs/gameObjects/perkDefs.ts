@@ -12,7 +12,7 @@ export const PerkProperties = {
         explosionDamageReduction: 0.75,
     },
     small_arms: {
-        scale: -0.25,
+        scale: -0.15,
     },
     splinter: {
         mainDamageMult: 0.6,

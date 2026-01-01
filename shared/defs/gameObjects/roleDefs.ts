@@ -425,7 +425,6 @@ export const RoleDefs: Record<string, RoleDef> = {
             pulse: true,
             pulseTint: 0xff8400,
         },
-        perks: ["hunted"],
     },
     healer: {
         type: "role",

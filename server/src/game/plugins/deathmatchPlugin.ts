@@ -104,15 +104,53 @@ type DeepPartial<T> = T extends object
       }
     : T;
 
-//TODO: inline this instead of using Omit
-type Loadout = Omit<typeof GameConfig.player.defaultItems, "weapons"> & {
-    //undefined is def.maxClip
+type Perk = { type: string; droppable?: boolean };
+
+type Loadout = {
+    // undefined means default maxClip
     weapons: [
         { type: string | (() => string); ammo?: number },
         { type: string | (() => string); ammo?: number },
-        { type: string | (() => string); ammo: 0 },
-        { type: string | (() => string); ammo: 0 },
+        { type: string | (() => string); ammo: number },
+        { type: string | (() => string); ammo: number },
     ];
+
+    outfit: string;
+    backpack: string;
+    helmet: string;
+    chest: string;
+    scope: string;
+
+    perks: Perk[];
+
+    inventory: Record<
+        | "9mm"
+        | "762mm"
+        | "556mm"
+        | "12gauge"
+        | "50AE"
+        | "308sub"
+        | "flare"
+        | "45acp"
+        | "frag"
+        | "smoke"
+        | "strobe"
+        | "impulse"
+        | "mirv"
+        | "snowball"
+        | "potato"
+        | "bandage"
+        | "healthkit"
+        | "soda"
+        | "painkiller"
+        | "1xscope"
+        | "2xscope"
+        | "4xscope"
+        | "8xscope"
+        | "15xscope",
+        number
+    >;
+
     role: string;
     weight: number;
 };
@@ -129,7 +167,7 @@ const EMPTY_LOADOUT: Loadout = {
     helmet: "",
     chest: "",
     scope: "1xscope",
-    perks: [] as Array<{ type: string; droppable?: boolean }>,
+    perks: [],
     inventory: {
         "9mm": 0,
         "762mm": 0,
@@ -163,7 +201,7 @@ const EMPTY_LOADOUT: Loadout = {
 };
 
 function extendLoadout(base: Loadout, patch: DeepPartial<Loadout>): Loadout {
-    return util.mergeDeep(structuredClone(base), patch);
+    return util.mergeDeep({}, base, patch);
 }
 
 //non weapons defaults
@@ -192,11 +230,117 @@ const tiers = {
     tier_snipers: [
         { name: "blr", count: 1, weight: 1 },
         { name: "scout_elite", count: 1, weight: 1 },
-        { name: "model94", count: 1, weight: 0.3 },
+        { name: "model94", count: 1, weight: 0.8 },
+        { name: "mosin", count: 1, weight: 0.6 },
     ],
 };
 
 const loadouts: Loadout[] = [
+    // normal very good loadout
+    extendLoadout(DEFAULT_GEAR_LOADOUT, {
+        weapons: [
+            { type: "spas12", ammo: undefined },
+            { type: "p30l_dual", ammo: undefined },
+            { type: "impulse_gloves", ammo: 0 },
+            { type: "", ammo: 0 },
+        ],
+        perks: [{ type: "endless_ammo", droppable: false }],
+        weight: 0.5,
+    }),
+    // troll
+    extendLoadout(DEFAULT_GEAR_LOADOUT, {
+        weapons: [
+            { type: "sv98", ammo: undefined },
+            { type: "sv98", ammo: undefined },
+            { type: "fists", ammo: 0 },
+            { type: "", ammo: 0 },
+        ],
+        perks: [{ type: "endless_ammo", droppable: false }],
+        weight: 0.001,
+    }),
+    // movement class
+    extendLoadout(DEFAULT_GEAR_LOADOUT, {
+        weapons: [
+            { type: "m870", ammo: undefined },
+            { type: "mosin", ammo: undefined },
+            { type: "impulse_gloves", ammo: 0 },
+            { type: "", ammo: 0 },
+        ],
+        helmet: "helmet02",
+        chest: "chest02",
+        perks: [
+            { type: "endless_ammo", droppable: false },
+            { type: "takedown", droppable: false },
+            { type: "small_arms", droppable: false },
+        ],
+        weight: 1,
+    }),
+    // glass cannon class
+    extendLoadout(DEFAULT_GEAR_LOADOUT, {
+        weapons: [
+            { type: "mosin", ammo: undefined },
+            {
+                type: "blr",
+                ammo: undefined,
+            },
+            { type: "naginata", ammo: 0 },
+            { type: "", ammo: 0 },
+        ],
+        helmet: "helmet01",
+        chest: "chest01",
+        perks: [
+            { type: "endless_ammo", droppable: false },
+            { type: "windwalk", droppable: false },
+            { type: "firepower", droppable: false },
+        ],
+        weight: 1,
+    }),
+    // damage class
+    extendLoadout(DEFAULT_GEAR_LOADOUT, {
+        weapons: [
+            { type: "spas12", ammo: undefined },
+            { type: "qbb97", ammo: undefined },
+            { type: "fists", ammo: 0 },
+            { type: "", ammo: 0 },
+        ],
+        helmet: "helmet03",
+        chest: "chest02",
+        perks: [
+            { type: "endless_ammo", droppable: false },
+            { type: "explosive", droppable: false },
+            { type: "firepower", droppable: false },
+        ],
+        weight: 1,
+    }),
+    // grenade class
+    extendLoadout(DEFAULT_GEAR_LOADOUT, {
+        weapons: [
+            { type: "m870", ammo: undefined },
+            {
+                type: () => util.weightedRandom(tiers["tier_sprays"]).name,
+                ammo: undefined,
+            },
+            { type: "stonehammer", ammo: 0 },
+            { type: "frag", ammo: 0 },
+        ],
+        backpack: "backpack00",
+        helmet: "helmet03",
+        chest: "chest03",
+        perks: [
+            { type: "endless_ammo", droppable: false },
+            { type: "fabricate", droppable: false },
+            { type: "flak_jacket", droppable: false },
+        ],
+        inventory: {
+            smoke: 1,
+            frag: 2,
+            mirv: 2,
+            impulse: 2,
+            strobe: 1,
+        },
+        weight: 1,
+    }),
+    // tank
     extendLoadout(DEFAULT_GEAR_LOADOUT, {
         weapons: [
             { type: "spas12", ammo: undefined },
@@ -204,90 +348,39 @@ const loadouts: Loadout[] = [
                 type: () => util.weightedRandom(tiers["tier_sprays"]).name,
                 ammo: undefined,
             },
-            { type: "fists", ammo: 0 },
-            { type: "", ammo: 0 },
-        ],
-        perks: [{ type: "endless_ammo", droppable: false }],
-        weight: 1,
-    }),
-    extendLoadout(DEFAULT_GEAR_LOADOUT, {
-        weapons: [
-            { type: "m870", ammo: undefined },
-            {
-                type: () => util.weightedRandom(tiers["tier_snipers"]).name,
-                ammo: undefined,
-            },
-            { type: "impulse_gloves", ammo: 0 },
-            { type: "", ammo: 0 },
-        ],
-        perks: [{ type: "endless_ammo", droppable: false }],
-        weight: 1,
-    }),
-    extendLoadout(DEFAULT_GEAR_LOADOUT, {
-        weapons: [
-            { type: "model94", ammo: undefined },
-            { type: "deagle", ammo: undefined },
-            { type: "fists", ammo: 0 },
+            { type: "naginata", ammo: 0 },
             { type: "frag", ammo: 0 },
         ],
-        perks: [{ type: "endless_ammo", droppable: false }],
-        inventory: {
-            frag: 1,
-        },
-        weight: 0.5,
-    }),
-    extendLoadout(DEFAULT_GEAR_LOADOUT, {
-        weapons: [
-            { type: "mp220", ammo: undefined },
-            { type: "m249", ammo: undefined },
-            { type: "fists", ammo: 0 },
-            { type: "", ammo: 0 },
-        ],
-        perks: [{ type: "endless_ammo", droppable: false }],
-        weight: 0.2,
-    }),
-    extendLoadout(DEFAULT_GEAR_LOADOUT, {
-        weapons: [
-            { type: "mosin", ammo: undefined },
-            { type: "bugle", ammo: undefined },
-            { type: "fists", ammo: 0 },
-            { type: "impulse", ammo: 0 },
-        ],
+        backpack: "backpack00",
+        helmet: "helmet03",
+        chest: "chest03",
         perks: [
             { type: "endless_ammo", droppable: false },
-            { type: "inspiration", droppable: false },
+            { type: "steelskin", droppable: false },
+            { type: "takedown", droppable: false },
         ],
         inventory: {
-            impulse: 2,
-        },
-        weight: 0.1,
-    }),
-    extendLoadout(DEFAULT_GEAR_LOADOUT, {
-        weapons: [
-            { type: "m870", ammo: undefined },
-            { type: "p30l", ammo: undefined },
-            { type: "impulse_gloves", ammo: 0 },
-            { type: "", ammo: 0 },
-        ],
-        perks: [{ type: "endless_ammo", droppable: false }],
-        weight: 0.7,
-    }),
-    extendLoadout(DEFAULT_GEAR_LOADOUT, {
-        weapons: [
-            { type: "dp28", ammo: undefined },
-            { type: "vector", ammo: undefined },
-            { type: "fists", ammo: 0 },
-            { type: "", ammo: 0 },
-        ],
-        perks: [{ type: "endless_ammo", droppable: false }],
-        inventory: {
+            frag: 1,
             mirv: 1,
         },
-        weight: 0.5,
+        weight: 1,
     }),
 ];
 
 function applyLoadout(player: Player, loadout: Loadout) {
+    // avoid calling removePerk since it can cause errors in certain scenarios
+    player.perks.length = 0;
+    player.perkTypes.length = 0;
+    player.recalculateScale();
+
+    // do this before applying weapons so firepower is recognized
+    if (loadout.perks.length) {
+        for (const perk of loadout.perks) {
+            player.addPerk(perk.type, perk.droppable);
+        }
+        player.setDirty();
+    }
+
     for (let i = 0; i < loadout.weapons.length; i++) {
         const weapon = loadout.weapons[i];
         const type = weapon.type instanceof Function ? weapon.type() : weapon.type;
@@ -297,21 +390,6 @@ function applyLoadout(player: Player, loadout: Loadout) {
                 .trueMaxClip;
 
         player.weaponManager.setWeapon(i, type, ammo);
-    }
-
-    const perks = [...player.perks];
-    for (const perk of perks) {
-        // hunted can only be removed when player loses "the_hunted" role
-        if (perk.type == "hunted") continue;
-
-        player.removePerk(perk.type);
-    }
-
-    if (loadout.perks.length) {
-        for (const perk of loadout.perks) {
-            player.addPerk(perk.type, perk.droppable);
-        }
-        player.setDirty();
     }
 
     if (loadout.role) {
@@ -649,7 +727,7 @@ export default class DeathmatchPlugin extends GamePlugin {
                 player.boost = 100;
                 player.health = 100;
 
-                applyLoadout(player, util.randomElem(loadouts));
+                applyLoadout(player, util.weightedRandom(loadouts));
 
                 v2.set(
                     player.pos,

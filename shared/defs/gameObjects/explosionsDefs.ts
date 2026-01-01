@@ -80,7 +80,7 @@ export const ExplosionDefs: Record<string, ExplosionDef> = {
     explosion_rounds: {
         type: "explosion",
         damage: 3,
-        obstacleDamage: 15,
+        obstacleDamage: 4,
         rad: { min: 0.75, max: 1 },
         shrapnelCount: 0,
         shrapnelType: "shrapnel_usas",
@@ -90,7 +90,7 @@ export const ExplosionDefs: Record<string, ExplosionDef> = {
     explosion_rounds_sg: {
         type: "explosion",
         damage: 3,
-        obstacleDamage: 15,
+        obstacleDamage: 4,
         rad: { min: 0.75, max: 1 },
         shrapnelCount: 0,
         shrapnelType: "shrapnel_usas",
