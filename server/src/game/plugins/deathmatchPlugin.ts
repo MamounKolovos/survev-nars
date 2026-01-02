@@ -702,7 +702,7 @@ export default class DeathmatchPlugin extends GamePlugin {
         if (!player.disconnected) {
             const respawnTimerDisplayId = this.timerManager.setTimeout(() => {
                 this.respawnTimerIds.delete(respawnTimerDisplayId);
-                this.timerManager.countdown(
+                const respawnTimerDisplayCountdownId = this.timerManager.countdown(
                     RESPAWN_COUNTDOWN_START,
                     1,
                     (i) => {
@@ -711,11 +711,13 @@ export default class DeathmatchPlugin extends GamePlugin {
                         ]);
                     },
                     () => {
+                        this.respawnTimerIds.delete(respawnTimerDisplayCountdownId);
                         this.game.playerBarn.addKillFeedLine(player.__id, [
                             createSimpleSegment("respawned!", "white"),
                         ]);
                     },
                 );
+                this.respawnTimerIds.add(respawnTimerDisplayCountdownId);
             }, RESPAWN_DELAY - RESPAWN_COUNTDOWN_START);
             this.respawnTimerIds.add(respawnTimerDisplayId);
 
@@ -1228,10 +1230,15 @@ export default class DeathmatchPlugin extends GamePlugin {
                     }
 
                     for (const player of this.game.playerBarn.livingPlayers) {
+                        player.dead = false;
+                        player.setDirty();
+
                         player.health = 100;
                         player.boost = 100;
 
                         player.layer = 0;
+
+                        applyLoadout(player, util.weightedRandom(loadouts));
 
                         v2.set(
                             player.pos,
