@@ -375,16 +375,16 @@ export default class MiniWallsPlugin extends GamePlugin {
 
 function handleMapGeneration(game: Game, plugin: GamePlugin) {
     game.planeBarn.specialAirdrop.dropped = true;
-    generateBedCover(
-        game,
-        v2.add(game.map.center, v2.create(-BED_COVER_OFFSET, 0)),
-        Math.PI / 2,
-    );
-    generateBedCover(
-        game,
-        v2.add(game.map.center, v2.create(BED_COVER_OFFSET, 0)),
-        -Math.PI / 2,
-    );
+    // generateBedCover(
+    //     game,
+    //     v2.add(game.map.center, v2.create(-BED_COVER_OFFSET, 0)),
+    //     Math.PI / 2,
+    // );
+    // generateBedCover(
+    //     game,
+    //     v2.add(game.map.center, v2.create(BED_COVER_OFFSET, 0)),
+    //     -Math.PI / 2,
+    // );
 
     generateBorders(game);
 }
