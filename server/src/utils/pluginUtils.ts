@@ -98,7 +98,10 @@ export class TimerManager {
     }
 
     clearTimer(id: number) {
-        this.idToTimer.delete(id);
+        // prevents double frees / stale ids
+        const existed = this.idToTimer.delete(id);
+        if (!existed) return;
+
         this.idAllocator.give(id);
     }
 
@@ -124,7 +127,7 @@ export class TimerManager {
         interval: number,
         onTick: (i: number) => void,
         onComplete?: () => void,
-    ) {
+    ): number {
         let ticksLeft = n;
         const id = this.setIntervalImmediately(() => {
             onTick(ticksLeft);
@@ -138,5 +141,6 @@ export class TimerManager {
                 return;
             }
         }, interval);
+        return id;
     }
 }
