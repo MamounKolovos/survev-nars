@@ -318,7 +318,7 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
             break;
         }
         case "recon": {
-            player.inventory["impulse"] = 2;
+            player.inventory["impulse"] = 3;
             player.inventory["frag"] = 2;
             player.inventory["smoke"] = 0;
             player.inventory["mirv"] = 0;

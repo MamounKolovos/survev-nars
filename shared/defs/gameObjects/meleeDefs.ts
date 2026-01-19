@@ -1322,7 +1322,7 @@ const SkinDefs: Record<string, MeleeDef> = {
             sprite: "loot-melee-knuckles-heroic.img",
         },
         charge: {
-            amount: 3,
+            amount: 1,
             rechargeTime: 5,
         },
     }),
