@@ -42,7 +42,7 @@ const MELEE_STRENGTH_WEIGHT = 0.04; //how much melee strength impacts total stre
 
 //a value inbetween will be used depending on how strong the player's weapons are
 const MIN_LEVEL_3_ARMOR_CHANCE = 0.25;
-const MAX_LEVEL_3_ARMOR_CHANCE = 0.9;
+const MAX_LEVEL_3_ARMOR_CHANCE = 1.0;
 const MIN_ROLE_CHANCE = 0.1;
 const MAX_ROLE_CHANCE = 0.3;
 const roleWeights = [
@@ -150,11 +150,8 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
             if (x < 0.05) {
                 return "spas12";
             }
-            if (x < 0.7) {
-                return "m870";
-            }
             if (x < 0.75) {
-                return "vector";
+                return "m870";
             }
             return util.weightedRandom(gt.rifles).gun;
         }
@@ -172,7 +169,7 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
         case "ak47":
         case "hk416":
         case "scar": {
-            if (x < 0.25) {
+            if (x < 0.2) {
                 return util.weightedRandom(gt.rifles).gun;
             }
             if (x < 0.75) {
@@ -185,10 +182,10 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
         }
         case "m39":
         case "mk12": {
-            if (x < 0.4) {
+            if (x < 0.5) {
                 return "m870";
             }
-            if (x < 0.65) {
+            if (x < 0.75) {
                 return "spas12";
             }
             return util.weightedRandom(gt.rifles).gun;
@@ -197,10 +194,10 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
             if (x < 0.05) {
                 return "garand";
             }
-            if (x < 0.35) {
+            if (x < 0.5) {
                 return "m870";
             }
-            if (x < 0.7) {
+            if (x < 0.75) {
                 return util.weightedRandom(gt.rifles).gun;
             }
             return "spas12";
@@ -497,20 +494,20 @@ const gunStrengths: Record<string, number> = {
     blr: 0.7,
     garand: 0.9,
     pkp: 0.9,
-    m249: 0.75,
-    qbb97: 0.65,
+    m249: 0.7,
+    qbb97: 0.5,
     dp28: 0.0,
-    m4a1: 0.45,
-    scorpion: 0.4,
-    grozas: 0.4,
-    ak47: 0.2,
-    hk416: 0.1,
+    m4a1: 0.3,
+    scorpion: 0.2,
+    grozas: 0.2,
+    ak47: 0,
+    hk416: 0,
     scar: 0.0,
     mk12: 0.1,
     m39: 0.1,
     deagle_dual: 0.2,
-    famas: 0.3,
-    an94: 0.6,
+    famas: 0.25,
+    an94: 0.5,
     bar: 0.0,
     p30l_dual: 0.75,
     vector: 0.1,
@@ -640,7 +637,7 @@ function getTotalGunStrength(primary: string, secondary: string): number {
             BETTER_STRENGTH_WEIGHT *
                 Math.max(gunStrengths[primary], gunStrengths[secondary]) +
             (1 - BETTER_STRENGTH_WEIGHT) *
-                Math.max(gunStrengths[primary], gunStrengths[secondary])
+                Math.min(gunStrengths[primary], gunStrengths[secondary])
         );
     }
     return -1;

@@ -1,10 +1,6 @@
-import { GameObjectDefs } from "../../../../shared/defs/gameObjectDefs";
-import type { GunDef } from "../../../../shared/defs/gameObjects/gunDefs";
 import type { LootSpawnDef } from "../../../../shared/defs/mapObjectsTyping";
 import { MapId } from "../../../../shared/defs/types/misc";
-import { ObjectType } from "../../../../shared/net/objectSerializeFns";
 import { TimerManager } from "../../utils/pluginUtils";
-import type { Player } from "../objects/player";
 import { GamePlugin } from "../pluginManager";
 import {
     attachCustomGasDamage,
@@ -12,7 +8,6 @@ import {
     attachDonutSpawner,
     attachGracePeriod,
     attachKillRewards,
-    attachLootDisabler,
     attachLootPingNotification,
     attachMovingGas,
     attachObstacleDeathLoot,
@@ -33,11 +28,7 @@ export default class MainPlugin extends GamePlugin {
     timerManager = new TimerManager();
 
     override initListeners(): void {
-        if (this.game.map.mapId === MapId.Solos && this.game.teamMode === 1) return;
-        if (this.game.map.mapId === MapId.ForcedLoot) return;
-        if (this.game.map.mapId === MapId.ForcedLoot2) return;
-        if (this.game.map.mapId === MapId.Deathmatch) return;
-        return; //dont want to add a new line to this every time because this doesnt have a unique map and is completely unused
+        if (this.game.map.mapId !== MapId.Main || this.game.teamMode !== 4) return;
 
         attachTimerManagerUpdate(this);
 
@@ -47,7 +38,7 @@ export default class MainPlugin extends GamePlugin {
             firstMovingZone: 4,
             stationaryZoneRadiusMultiplier: 0.55,
             movingZoneRadiusMultiplier: 0.8,
-            damages: this.game.teamMode === 1 ? [5, 5, 5, 10] : [1, 2, 4, 6, 8, 10],
+            damages: [1, 2, 4, 6, 8, 10],
             initWaitTime: 100,
             minWaitTime: 20,
             waitTimeDecrement: 20,
@@ -58,9 +49,7 @@ export default class MainPlugin extends GamePlugin {
             minRadius: 10,
         });
 
-        if (this.game.teamMode !== 2) {
-            attachDonutSpawner(this, 0.75, 0.9);
-        }
+        attachDonutSpawner(this, 0.75, 0.9);
 
         attachCustomQuickSwitch(this, CUSTOM_SWITCH_DELAY);
 
@@ -76,132 +65,140 @@ export default class MainPlugin extends GamePlugin {
 
         attachLootPingNotification(this, 2, 5);
 
-        if (this.game.teamMode === 1) {
-            attachLootDisabler(this);
-            this.on("playerDidDie", (event) => {
-                const params = event.data.params;
-                if (params.source && params.source.__type === ObjectType.Player) {
-                    makeReady(params.source);
-                }
-            });
-            this.on("playerGotDowned", (event) => {
-                const params = event.data.params;
-                if (
-                    params.source &&
-                    params.source.__type === ObjectType.Player &&
-                    params.source !== event.data.player
-                ) {
-                    makeReady(params.source);
-                }
-            });
-            this.on("playerWasRevived", (event) => {
-                makeReady(event.data.player);
-            });
-        }
+        // if (this.game.teamMode === 1) {
+        //     attachLootDisabler(this);
+        //     this.on("playerDidDie", (event) => {
+        //         const params = event.data.params;
+        //         if (params.source && params.source.__type === ObjectType.Player) {
+        //             makeReady(params.source);
+        //         }
+        //     });
+        //     this.on("playerGotDowned", (event) => {
+        //         const params = event.data.params;
+        //         if (
+        //             params.source &&
+        //             params.source.__type === ObjectType.Player &&
+        //             params.source !== event.data.player
+        //         ) {
+        //             makeReady(params.source);
+        //         }
+        //     });
+        //     this.on("playerWasRevived", (event) => {
+        //         makeReady(event.data.player);
+        //     });
+        // }
 
         this.on("playerDidJoin", (event) => {
             const player = event.data.player;
-            switch (this.game.teamMode) {
-                case 4:
-                    player.weapons[3].type = "frag";
-                    player.inventory["frag"] = 2;
-                    player.inventory["snowball"] = 0;
-                    player.inventory["bandage"] = 5;
-                    player.backpack = "backpack01";
-                    break;
-                case 2:
-                    player.weaponManager.setWeapon(0, "spas12", 6);
-                    player.weaponManager.setWeapon(1, "ak47", 30);
-                    player.chest = "chest02";
-                    player.helmet = "helmet02";
-                    player.backpack = "backpack02";
-
-                    player.addPerk("endless_ammo", false);
-                    player.inventory["4xscope"] = 1;
-                    player.inventory["2xscope"] = 1;
-                    player.scope = "4xscope";
-
-                    player.inventory["bandage"] = 5;
-                    player.inventory["healthkit"] = 1;
-                    player.inventory["soda"] = 2;
-                    player.boost = 110;
-
-                    player.weapons[3].type = "frag";
-                    player.inventory["frag"] = 2;
-                    break;
-                case 1:
-                    player.weapons[3].type = "frag";
-                    player.inventory["bandage"] = 99;
-                    player.inventory["soda"] = 99;
-                    player.inventory["painkiller"] = 99;
-                    player.inventory["healthkit"] = 15;
-                    player.inventory["frag"] = 4;
-                    player.inventory["impulse"] = 99;
-                    player.addPerk("endless_ammo", false);
-                    player.addPerk("self_revive", false);
-
-                    player.backpack = "backpack02";
-                    player.chest = "chest02";
-                    player.helmet = "helmet03";
-                    player.inventory["2xscope"] = 1;
-                    player.inventory["4xscope"] = 1;
-                    player.scope = "4xscope";
-                    player.boost = 110;
-
-                    player.weaponManager.setWeapon(0, "spas12", 6);
-                    player.weaponManager.setWeapon(1, "mosin", 5);
-
-                    const floorguns = [
-                        "mac10",
-                        "dp28",
-                        "p30l_dual",
-                        "an94",
-                        "ak47",
-                        "model94",
-                        "garand",
-                        "ot38_dual",
-                        "saiga",
-                        "famas",
-                        "m870",
-                        "scar",
-                        "hk416",
-                        "blr",
-                        "deagle_dual",
-                        "mp220",
-                        "mk12",
-                        "m1014",
-                        "scout_elite",
-                    ];
-                    for (const g of floorguns) {
-                        player.game.lootBarn.addLootWithoutAmmo(
-                            g,
-                            player.pos,
-                            player.layer,
-                            1,
-                        );
-                    }
-                    break;
-            }
+            player.backpack = "backpack01";
+            player.inventory["4xscope"] = 1;
+            player.inventory["2xscope"] = 1;
+            player.scope = "4xscope";
+            player.weapons[3].type = "frag";
+            player.inventory["frag"] = 2;
+            player.inventory["bandage"] = 5;
         });
+        //     switch (this.game.teamMode) {
+        //         case 4:
+        //             player.weapons[3].type = "frag";
+        //             player.inventory["frag"] = 2;
+        //             player.inventory["snowball"] = 0;
+        //             player.inventory["bandage"] = 5;
+        //             player.backpack = "backpack01";
+        //             break;
+        //         case 2:
+        //             player.weaponManager.setWeapon(0, "spas12", 6);
+        //             player.weaponManager.setWeapon(1, "ak47", 30);
+        //             player.chest = "chest02";
+        //             player.helmet = "helmet02";
+        //             player.backpack = "backpack02";
+
+        //             player.addPerk("endless_ammo", false);
+        //             player.inventory["4xscope"] = 1;
+        //             player.inventory["2xscope"] = 1;
+        //             player.scope = "4xscope";
+
+        //             player.inventory["bandage"] = 5;
+        //             player.inventory["healthkit"] = 1;
+        //             player.inventory["soda"] = 2;
+        //             player.boost = 110;
+
+        //             player.weapons[3].type = "frag";
+        //             player.inventory["frag"] = 2;
+        //             break;
+        //         case 1:
+        //             player.weapons[3].type = "frag";
+        //             player.inventory["bandage"] = 99;
+        //             player.inventory["soda"] = 99;
+        //             player.inventory["painkiller"] = 99;
+        //             player.inventory["healthkit"] = 15;
+        //             player.inventory["frag"] = 4;
+        //             player.inventory["impulse"] = 99;
+        //             player.addPerk("endless_ammo", false);
+        //             player.addPerk("self_revive", false);
+
+        //             player.backpack = "backpack02";
+        //             player.chest = "chest02";
+        //             player.helmet = "helmet03";
+        //             player.inventory["2xscope"] = 1;
+        //             player.inventory["4xscope"] = 1;
+        //             player.scope = "4xscope";
+        //             player.boost = 110;
+
+        //             player.weaponManager.setWeapon(0, "spas12", 6);
+        //             player.weaponManager.setWeapon(1, "mosin", 5);
+
+        //             const floorguns = [
+        //                 "mac10",
+        //                 "dp28",
+        //                 "p30l_dual",
+        //                 "an94",
+        //                 "ak47",
+        //                 "model94",
+        //                 "garand",
+        //                 "ot38_dual",
+        //                 "saiga",
+        //                 "famas",
+        //                 "m870",
+        //                 "scar",
+        //                 "hk416",
+        //                 "blr",
+        //                 "deagle_dual",
+        //                 "mp220",
+        //                 "mk12",
+        //                 "m1014",
+        //                 "scout_elite",
+        //             ];
+        //             for (const g of floorguns) {
+        //                 player.game.lootBarn.addLootWithoutAmmo(
+        //                     g,
+        //                     player.pos,
+        //                     player.layer,
+        //                     1,
+        //                 );
+        //             }
+        //             break;
+        //     }
+        // });
     }
 }
 
-function makeReady(p: Player) {
-    p.health = 100;
-    p.boost = 100;
+// function makeReady(p: Player) {
+//     p.health = 100;
+//     p.boost = 100;
 
-    if (p.weapons[0].type) {
-        p.weapons[0].ammo = (GameObjectDefs[p.weapons[0].type] as GunDef).maxClip;
-    }
-    if (p.weapons[1].type) {
-        p.weapons[1].ammo = (GameObjectDefs[p.weapons[1].type] as GunDef).maxClip;
-    }
+//     if (p.weapons[0].type) {
+//         p.weapons[0].ammo = (GameObjectDefs[p.weapons[0].type] as GunDef).maxClip;
+//     }
+//     if (p.weapons[1].type) {
+//         p.weapons[1].ammo = (GameObjectDefs[p.weapons[1].type] as GunDef).maxClip;
+//     }
 
-    p.weapons[3].type = "frag";
-    p.inventory["frag"] = 3;
+//     p.weapons[3].type = "frag";
+//     p.inventory["frag"] = 3;
 
-    p.weapsDirty = true;
-    p.inventoryDirty = true;
-    p.boostDirty = true;
-    p.healthDirty = true;
-}
+//     p.weapsDirty = true;
+//     p.inventoryDirty = true;
+//     p.boostDirty = true;
+//     p.healthDirty = true;
+// }
