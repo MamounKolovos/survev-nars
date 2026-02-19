@@ -453,7 +453,8 @@ export function donut(
     };
 
     if (points.length == 0) {
-        const dir = v2.randomUnit();
+        // const dir = v2.randomUnit();
+        const dir = v2.create(Math.random() < 0.5 ? -1 : 1, 0);
         return pointAt(dir);
     }
 
