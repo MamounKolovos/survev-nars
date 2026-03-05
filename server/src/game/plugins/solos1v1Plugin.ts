@@ -129,6 +129,7 @@ export default class Solos1v1Plugin extends GamePlugin {
                 "model94",
                 "model94",
                 "scout_elite",
+                "scout_elite",
                 "sv98",
                 "sv98",
                 "blr",
