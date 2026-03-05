@@ -116,6 +116,9 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
             if (x < 0.7) {
                 return "m870";
             }
+            if (x < 0.74) {
+                return secondary;
+            }
             if (x < 0.8) {
                 return util.weightedRandom(gt.bigClipSnipers).gun;
             }

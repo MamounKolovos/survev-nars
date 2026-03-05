@@ -668,11 +668,11 @@ export const BaseDefs: Record<string, BulletDef> = {
     },
     bullet_scout: {
         type: "bullet",
-        damage: 56,
+        damage: 50,
         obstacleDamage: 1,
         falloff: 0.92,
         distance: 450,
-        speed: 164,
+        speed: 230,
         variance: 0,
         shrapnel: false,
         tracerColor: "556mm",
