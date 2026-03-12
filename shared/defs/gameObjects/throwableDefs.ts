@@ -300,7 +300,7 @@ export const ThrowableDefs: Record<string, ThrowableDef> = {
         cookable: false,
         explodeOnImpact: false,
         playerCollision: false,
-        fuseTime: 2.5,
+        fuseTime: 1.5,
         aimDistance: 0,
         rad: 1,
         throwPhysics: {
