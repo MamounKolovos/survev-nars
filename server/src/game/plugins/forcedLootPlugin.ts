@@ -83,7 +83,7 @@ const secondaryWeights = [
     { weight: 1, gun: "garand" },
     // { weight: 1, gun: "m1014" },
     { weight: 0.5, gun: "mk12" },
-    { weight: 0.5, gun: "m39" },
+    // { weight: 0.5, gun: "m39" },
 
     { weight: 0.8, gun: "deagle_dual" },
     { weight: 0.3, gun: "saiga" },
