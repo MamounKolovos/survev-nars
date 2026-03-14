@@ -118,7 +118,7 @@ export class InputBinds {
         for (let i = 0; i < data.length; i++) {
             view[i] = data[i];
         }
-        const stream = new BitBuffer.BitStream(arrayBuf);
+        const stream = new BitStream(arrayBuf);
         const version = stream.readUint8();
         this.clearAllBinds();
         for (let idx = 0; stream.length - stream.index >= 10; ) {
