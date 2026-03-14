@@ -634,6 +634,8 @@ export class GameMap {
         // Generate lakes
         //
         for (const lakeDef of mapConfig.rivers.lakes) {
+            if (randomGenerator() > lakeDef.odds) continue;
+
             this.trySpawn(`lake`, () => {
                 const lake = riverCreator.createLake(lakeDef);
 
