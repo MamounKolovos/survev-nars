@@ -907,7 +907,7 @@ export class GameMap {
             for (let i = 0; i < this.lakeObjs.length; i++) {
                 const lake = this.lakes[i];
                 const type = this.lakeObjs[i];
-                if (!type) return;
+                if (!type) continue;
 
                 this.genAuto(type, lake.center, 0, 0);
             }
