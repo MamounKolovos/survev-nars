@@ -171,6 +171,7 @@ const mapDef: PartialMapDef = {
                         odds: 1,
                         innerRad: 32,
                         outerRad: 96,
+                        centerObj: "teapavilion_01w",
                         spawnBound: {
                             pos: v2.create(0.5, 0.5),
                             rad: 100,
@@ -225,7 +226,6 @@ const mapDef: PartialMapDef = {
             {
                 logging_complex_02: 1,
                 logging_complex_03: 3,
-                teapavilion_01w: 1,
                 warehouse_01: 3,
                 workshop_complex_01: 1,
                 house_red_01: 3,

@@ -87,7 +87,6 @@ const mapDef: PartialMapDef = {
                 },
                 logging_complex_02x: 1,
                 logging_complex_03x: 2,
-                teapavilion_01w: 1,
                 warehouse_01: 3,
                 workshop_complex_01w: 1,
                 house_red_01x: 3,
