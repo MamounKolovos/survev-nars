@@ -467,7 +467,7 @@ export class LoadoutDisplay {
     render(_dt: number, debug: DebugRenderOpts) {
         const grassColor = this.map.mapLoaded
             ? this.map.getMapDef().biome.colors.grass
-            : 8433481;
+            : 0x80af49;
 
         this.pixi.renderer.background.color = grassColor;
 
