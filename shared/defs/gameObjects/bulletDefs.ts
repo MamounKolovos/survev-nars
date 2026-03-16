@@ -59,7 +59,7 @@ export const BaseDefs: Record<string, BulletDef> = {
         obstacleDamage: 1.5,
         falloff: 0.85,
         distance: 175,
-        speed: 108,
+        speed: 140,
         variance: 0,
         shrapnel: false,
         tracerColor: "762mm",
