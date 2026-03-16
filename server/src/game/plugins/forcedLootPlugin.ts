@@ -702,7 +702,7 @@ const gt = {
         { weight: 1, gun: "hk416" },
         { weight: 1, gun: "scar" },
         { weight: 0.5, gun: "mk12" },
-        { weight: 0.5, gun: "m39" },
+        // { weight: 0.5, gun: "m39" },
         { weight: 0.8, gun: "deagle_dual" },
         { weight: 2, gun: "famas" },
         { weight: 2, gun: "an94" },
