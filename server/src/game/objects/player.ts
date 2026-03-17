@@ -2164,6 +2164,12 @@ export class Player extends BaseGameObject {
                 this._cullingZoom = this.zoom;
             }
         }
+        if (this.portrait !== this._cullingPortrait) {
+            this._cullingPortraitTicker -= dt;
+            if (this._cullingPortraitTicker <= 0) {
+                this._cullingPortrait = this.portrait;
+            }
+        }
 
         if (insideNoZoomRegion) {
             this.insideZoomRegion = false;
@@ -2369,7 +2375,15 @@ export class Player extends BaseGameObject {
         }
 
         const radius = player._cullingZoom + 4;
-        const rect = coldet.circleToAabb(player.pos, radius);
+        let width = player._cullingZoom + 4;
+        // client zoom tries to keep a 16/9 aspect ratio, mirror it here
+        let height = width / (16 / 9);
+        if (this._cullingPortrait) {
+            let tmp = width;
+            width = height;
+            height = tmp;
+        }
+        const rect = collider.createAabbExtents(this.pos, v2.create(width, height));
 
         const newVisibleObjects = game.grid.intersectColliderSet(rect);
         // client crashes if active player is not visible
@@ -3408,6 +3422,8 @@ export class Player extends BaseGameObject {
     shootStart = false;
     shootHold = false;
     portrait = false;
+    private _cullingPortrait = false;
+    private _cullingPortraitTicker = 0;
     touchMoveActive = false;
     touchMoveDir = v2.create(1, 0);
     touchMoveLen = 255;
@@ -3439,6 +3455,11 @@ export class Player extends BaseGameObject {
         this.moveRight = msg.moveRight;
         this.moveUp = msg.moveUp;
         this.moveDown = msg.moveDown;
+
+        // same logic for `_cullingZoom`, see comment on `set zoom`
+        if (this.portrait != msg.portrait) {
+            this._cullingPortraitTicker = 0.5;
+        }
         this.portrait = msg.portrait;
         this.touchMoveActive = msg.touchMoveActive;
         this.touchMoveDir = v2.normalizeSafe(msg.touchMoveDir);
