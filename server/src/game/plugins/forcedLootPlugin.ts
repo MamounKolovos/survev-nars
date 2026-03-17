@@ -250,6 +250,7 @@ function generateFairLootLoadouts(): Loadout[] {
 }
 
 function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
+    const oldMelee = player.weapons[2].type;
     switch (loadout.role) {
         case "medic": {
             player.promoteToRole("medic");
@@ -284,6 +285,9 @@ function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
         (GameObjectDefs[loadout.secondary] as GunDef).maxClip,
     );
     player.weaponManager.setWeapon(GameConfig.WeaponSlot.Melee, loadout.melee, 0);
+    if (player.weaponManager.weapons[2].type == "fists") {
+        player.weaponManager.setWeapon(GameConfig.WeaponSlot.Melee, oldMelee, 0);
+    }
 
     player.inventory["2xscope"] = 1;
     player.inventory["4xscope"] = 1;
