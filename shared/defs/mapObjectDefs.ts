@@ -18385,7 +18385,7 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
                     wallCount: 5,
                     particleCount: 15,
                     particle: "shackGreenBreak",
-                    residue: "map-perch-res.img",
+                    residue: "map-perch-res-01.img",
                 },
             },
             mapObjects: [
