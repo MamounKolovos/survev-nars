@@ -12607,6 +12607,7 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
             tint: 0xffffff,
             zIdx: 801,
         },
+        aabb: collider.createAabbExtents(v2.create(0, 0), v2.create(11, 11)),
     } as unknown as Partial<ObstacleDef>),
     // Palm Tree
     tree_13: createTree({
