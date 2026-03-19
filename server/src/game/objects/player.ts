@@ -71,6 +71,20 @@ interface Emote {
     itemType: string;
 }
 
+const boostHeals: Array<{ maxBoost: number; heal: number }> = [];
+{
+    const boostBreakPoints = GameConfig.player.boostBreakpoints;
+    const max = GameConfig.player.boostBreakpoints.reduce((a, b) => a + b, 0);
+
+    for (let i = 0, boost = 0; i < boostBreakPoints.length; i++) {
+        boost += (boostBreakPoints[i] / max) * 100;
+        boostHeals.push({
+            maxBoost: boost,
+            heal: GameConfig.player.boostHealAmounts[i],
+        });
+    }
+}
+
 export class PlayerBarn {
     players: Player[] = [];
     livingPlayers: Player[] = [];
@@ -1532,14 +1546,20 @@ export class Player extends BaseGameObject {
         // Boost logic
         //
         if (!this.downed) {
-            if (this.boost > 0 && this.boost <= 25) this.health += 0.5 * dt;
-            else if (this.boost >= 25 && this.boost <= 50) this.health += 1.25 * dt;
-            else if (this.boost >= 50 && this.boost <= 87.5) this.health += 1.5 * dt;
-            else if (this.boost >= 87.5 && this.boost <= 100) this.health += 1.75 * dt;
-
-            this.boost -= 0.375 * dt;
-
             this.boost = math.clamp(this.boost, this.minBoost, 100);
+
+            if (this.boost > 0) {
+                let healAmount = boostHeals.findLast((b, i) => {
+                    const prev = boostHeals[i - 1]?.maxBoost ?? 0;
+                    return this.boost >= prev && this.boost <= b.maxBoost;
+                });
+
+                this.health += healAmount!.heal * dt;
+
+                if (this.boost > this.minBoost) {
+                    this.boost -= GameConfig.player.boostDecay * dt;
+                }
+            }
         } else {
             this.boost = 0;
         }
