@@ -1662,7 +1662,7 @@ export class Player extends BaseGameObject {
 
         if (this.game.gas.doDamage && this.game.gas.isInGas(this.pos)) {
             this.damage({
-                amount: this.game.gas.damage,
+                amount: this.disconnected ? 22 : this.game.gas.damage,
                 damageType: GameConfig.DamageType.Gas,
                 dir: this.dir,
             });
