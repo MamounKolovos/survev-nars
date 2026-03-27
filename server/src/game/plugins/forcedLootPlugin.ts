@@ -32,8 +32,6 @@ interface Loadout {
     melee: string;
     role: string;
 }
-const MIN_NUM_ROLES_TO_NOT_NAME_PLAYERS = 2;
-
 //raise above 0.5 to artifically boost the strength of most non sniper/shotgun loadouts, vice versa also applies
 //added only because tweaking this is easier than going through the whole strength function if you want to tweak strength distrubutions for role/armor distribution purposes
 const BETTER_STRENGTH_WEIGHT = 0.5;
@@ -351,7 +349,7 @@ function giveEveryoneFairLoot(game: Game) {
             roleCount += 1;
         }
     }
-    if (roleCount < MIN_NUM_ROLES_TO_NOT_NAME_PLAYERS) {
+    if (roleCount !== 3) {
         listSquadNames(game);
     }
 }
@@ -435,13 +433,13 @@ function getUpgradedGun(g: string): string {
             return "spas12";
         }
         case "m1014":
+        case "garand":
         case "mosin": {
             if (Math.random() < 0.3) return "sv98";
             break;
         }
         case "blr":
         case "model94":
-        case "garand":
         case "scout_elite": {
             if (Math.random() < 0.5) return "mosin";
             break;
@@ -467,6 +465,7 @@ function getUpgradedGun(g: string): string {
         case "p30l_dual":
         case "m4a1":
         case "scorpion":
+        case "scar":
         case "grozas": {
             if (Math.random() < 0.7) return util.weightedRandom(gt.goodSprays).gun;
             break;
@@ -474,7 +473,6 @@ function getUpgradedGun(g: string): string {
         case "vector":
         case "ak47":
         case "hk416":
-        case "scar":
         case "dp28": {
             return util.weightedRandom(gt.decentSprays).gun;
         }
@@ -746,11 +744,11 @@ export default class focedLootPlugin extends GamePlugin {
             (dmg: number, n: number, stage: number) => dmg * (1 + Math.min(n, 40) / 20),
         );
         attachMovingGas(this, {
-            firstMovingZone: 4,
-            stationaryZoneRadiusMultiplier: 0.55,
-            movingZoneRadiusMultiplier: 0.7,
+            firstMovingZone: 3,
+            stationaryZoneRadiusMultiplier: 0.6,
+            movingZoneRadiusMultiplier: 0.75,
             damages: [3, 4, 6, 7, 10],
-            initWaitTime: 60,
+            initWaitTime: 50,
             minWaitTime: 20,
             waitTimeDecrement: 15,
             initMovingTime: 25,
