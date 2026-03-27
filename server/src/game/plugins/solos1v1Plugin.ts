@@ -2,7 +2,7 @@ import { GameObjectDefs } from "../../../../shared/defs/gameObjectDefs";
 import type { GunDef } from "../../../../shared/defs/gameObjects/gunDefs";
 import { MapId } from "../../../../shared/defs/types/misc";
 import { ObjectType } from "../../../../shared/net/objectSerializeFns";
-import { TimerManager, createSimpleSegment } from "../../utils/pluginUtils";
+import { createSimpleSegment, TimerManager } from "../../utils/pluginUtils";
 import type { Player } from "../objects/player";
 import { GamePlugin } from "../pluginManager";
 import {

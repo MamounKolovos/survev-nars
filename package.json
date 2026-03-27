@@ -1,6 +1,6 @@
 {
   "name": "survev",
-  "version": "0.1.1",
+  "version": "0.2.23",
   "type": "module",
   "description": "Open Source Surviv.io Server",
   "scripts": {
@@ -16,26 +16,26 @@
     "lint:ci": "biome check"
   },
   "engines": {
-    "node": ">=20.12.0"
+    "node": ">=20.19.0"
   },
   "author": "Leia",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
+    "@biomejs/biome": "2.4.7",
     "@types/hjson": "^2.4.6",
-    "@types/node": "^22.15.29",
-    "concurrently": "^9.1.2",
-    "typescript": "^5.8.3"
+    "@types/node": "^25.5.0",
+    "concurrently": "^9.2.1",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "enquirer": "^2.4.1",
+    "hjson": "^3.2.2",
+    "tsx": "^4.21.0"
   },
   "workspaces": [
     "client",
     "server",
     "shared"
   ],
-  "packageManager": "pnpm@10.11.0",
-  "dependencies": {
-    "enquirer": "^2.4.1",
-    "hjson": "^3.2.2",
-    "tsx": "^4.19.4"
-  }
+  "packageManager": "pnpm@10.31.0"
 }

@@ -1,18 +1,51 @@
-import type { AtlasDef } from "../atlasConfig.ts";
+import type { AtlasDef } from "../atlasDefs";
+import { BuildingSprites } from "./buildings";
 
 export const SharedAtlas: AtlasDef = {
     compress: true,
     images: [
+        ...BuildingSprites.bank,
+        ...BuildingSprites.barn,
+        ...BuildingSprites.cabin,
+        ...BuildingSprites.club,
+        ...BuildingSprites.container,
+        ...BuildingSprites.house_red,
+        ...BuildingSprites.dock,
+        ...BuildingSprites.hut,
+        ...BuildingSprites.mansion,
+        ...BuildingSprites.outhouse,
+        ...BuildingSprites.police,
+        ...BuildingSprites.shacks,
+        ...BuildingSprites.teahouse,
+        ...BuildingSprites.warehouses,
+        ...BuildingSprites.bunker_conch,
+        ...BuildingSprites.bunker_egg,
+        ...BuildingSprites.bunker_storm,
+
+        // generic bunker sprites
+        "map/map-bunker-generic-ceiling-01.svg",
+        "map/map-bunker-generic-ceiling-02.svg",
+        "map/map-bunker-generic-floor-01.svg",
+        "map/map-bunker-generic-floor-02.svg",
+        "map/map-bunker-generic-floor-03.svg",
+        "map/map-bunker-vent-01.svg",
+        "map/map-bunker-vent-02.svg",
+        "map/map-bunker-vent-03.svg",
+
+        "map/map-building-porch-01.svg",
+
+        // generic obstacles, residues, decals etc
+
         "map/map-airdrop-01.svg",
         "map/map-airdrop-02.svg",
+
         "map/map-barrel-01.svg",
         "map/map-barrel-02.svg",
         "map/map-barrel-03.svg",
         "map/map-barrel-04.svg",
         "map/map-barrel-res-02.svg",
         "map/map-barrel-res-03.svg",
-        "map/map-bathhouse-column-01.svg",
-        "map/map-bathhouse-pool-01.svg",
+
         "map/map-bathrocks-01.svg",
         "map/map-building-saloon-ceiling-01.svg",
         "map/map-building-saloon-ceiling-02.svg",
@@ -88,8 +121,6 @@ export const SharedAtlas: AtlasDef = {
         "map/map-building-house-floor-02.svg",
         "map/map-building-house-window-01.svg",
         "map/map-building-house-window-res-01.svg",
-        "map/map-courthouse-window-small-res-01.svg",
-        "map/map-courthouse-window-large-res-01.svg",
         "map/map-building-hut-ceiling-01.svg",
         "map/map-building-hut-ceiling-02.svg",
         "map/map-building-hut-ceiling-03.svg",
@@ -110,8 +141,6 @@ export const SharedAtlas: AtlasDef = {
         "map/map-building-police-ceiling-01.svg",
         "map/map-building-police-ceiling-02.svg",
         "map/map-building-police-ceiling-03.svg",
-        "map/map-building-courthouse-floor.svg",
-        "map/map-building-courthouse-ceiling.svg",
         "map/map-building-police-floor-01.svg",
         "map/map-building-police-floor-02.svg",
         "map/map-building-porch-01.svg",
@@ -160,9 +189,12 @@ export const SharedAtlas: AtlasDef = {
         "map/map-bush-res-01.svg",
         "map/map-bush-res-02.svg",
         "map/map-bush-res-04.svg",
+
         "map/map-candle-01.svg",
+
         "map/map-case-basement-01.svg",
         "map/map-case-chrys-01.svg",
+        "map/map-case-crow-01.svg",
         "map/map-case-deagle-01.svg",
         "map/map-case-deagle-02.svg",
         "map/map-case-flare-01.svg",
@@ -170,19 +202,23 @@ export const SharedAtlas: AtlasDef = {
         "map/map-case-hatchet-01.svg",
         "map/map-case-hatchet-res-01.svg",
         "map/map-case-ring-01.svg",
+
         "map/map-chest-01.svg",
         "map/map-chest-02.svg",
         "map/map-chest-03.svg",
+
         "map/map-chimney-01.svg",
         "map/map-chute-01.svg",
         "map/map-club-bar-01.svg",
         "map/map-column-01.svg",
+
         "map/map-control-panel-01.svg",
         "map/map-control-panel-02.svg",
         "map/map-control-panel-03.svg",
         "map/map-control-panel-04.svg",
         "map/map-control-panel-05.svg",
         "map/map-control-panel-06.svg",
+
         "map/map-couch-01.svg",
         "map/map-couch-02.svg",
         "map/map-couch-03.svg",
@@ -198,6 +234,7 @@ export const SharedAtlas: AtlasDef = {
         "map/map-courthouse-judge-desk.svg",
         "map/map-courthouse-judge-desk-chair.svg",
         "map/map-couch-res-01.svg",
+
         "map/map-crate-01.svg",
         "map/map-crate-02.svg",
         "map/map-crate-02sv.svg",
@@ -220,36 +257,39 @@ export const SharedAtlas: AtlasDef = {
         "map/map-crate-mil-05.svg",
         "map/map-crate-res-01.svg",
         "map/map-crate-res-03.svg",
+
         "map/map-decal-club-01.svg",
         "map/map-decal-club-02.svg",
-        "map/map-decal-flyer-01.svg",
         "map/map-decal-initiative.svg",
+
         "map/map-decal-oil-01.svg",
         "map/map-decal-oil-02.svg",
         "map/map-decal-oil-03.svg",
         "map/map-decal-oil-04.svg",
         "map/map-decal-oil-05.svg",
         "map/map-decal-oil-06.svg",
+
         "map/map-deposit-box-01.svg",
         "map/map-deposit-box-02.svg",
+
         "map/map-door-01.svg",
         "map/map-door-02.svg",
         "map/map-door-03.svg",
         "map/map-door-04.svg",
         "map/map-door-05.svg",
+
         "map/map-door-slot-01.svg",
         "map/map-door-slot-02.svg",
+
         "map/map-drawers-01.svg",
         "map/map-drawers-02.svg",
         "map/map-drawers-res.svg",
+
         "map/map-fire-ext-01.svg",
         "map/map-fire-ext-res.svg",
+
         "map/map-grill-01.svg",
-        "map/map-gun-mount-01.svg",
-        "map/map-gun-mount-02.svg",
-        "map/map-gun-mount-03.svg",
-        "map/map-gun-mount-04.svg",
-        "map/map-gun-mount-05.svg",
+
         "map/map-hedgehog-01.svg",
         "map/map-hut-res-01.svg",
         "map/map-locker-01.svg",
@@ -257,24 +297,31 @@ export const SharedAtlas: AtlasDef = {
         "map/map-locker-03.svg",
         "map/map-outhouse-res.svg",
         "map/map-oven-01.svg",
+
         "map/map-piano-01.svg",
+
         "map/map-pipes-01.svg",
         "map/map-pipes-02.svg",
         "map/map-pipes-03.svg",
         "map/map-pipes-04.svg",
         "map/map-pipes-05.svg",
+
         "map/map-pot-01.svg",
         "map/map-pot-02.svg",
         "map/map-pot-03.svg",
         "map/map-pot-04.svg",
         "map/map-pot-05.svg",
+
         "map/map-pot-res-01.svg",
         "map/map-potato-res.svg",
+
         "map/map-power-box-01.svg",
+
         "map/map-recorder-01.svg",
         "map/map-recorder-02.svg",
         "map/map-recorder-03.svg",
         "map/map-recorder-04.svg",
+
         "map/map-refrigerator-01.svg",
         "map/map-saloon-bar-01.svg",
         "map/map-saloon-bar-02.svg",
@@ -282,16 +329,14 @@ export const SharedAtlas: AtlasDef = {
         "map/map-sandbags-02.svg",
         "map/map-screen-01.svg",
         "map/map-screen-res-01.svg",
-        "map/map-shack-res-01.svg",
-        "map/map-shack-res-02.svg",
-        "map/map-shack-res-03.svg",
+
         "map/map-silo-01.svg",
         "map/map-smoke-res.svg",
         "map/map-snow-07.svg",
-        "map/map-squash-01.svg",
-        "map/map-squash-res-01.svg",
+
         "map/map-stairs-broken-01.svg",
         "map/map-stand-01.svg",
+
         "map/map-stone-01.svg",
         "map/map-stone-03.svg",
         "map/map-stone-04.svg",
@@ -300,41 +345,43 @@ export const SharedAtlas: AtlasDef = {
         "map/map-stone-res-02.svg",
         "map/map-stone-res-04.svg",
         "map/map-stone-res-06.svg",
+
         "map/map-stove-01.svg",
         "map/map-stove-02.svg",
+
         "map/map-switch-01.svg",
         "map/map-switch-02.svg",
         "map/map-switch-03.svg",
-        "map/map-courthouse-bench.svg",
-        "map/map-courthouse-courtfence.svg",
-        "map/map-courthouse-window-small.svg",
-        "map/map-courthouse-window-large.svg",
-        "map/map-courthouse-table.svg",
-        "map/map-courthouse-chair.svg",
         "map/map-table-01.svg",
         "map/map-table-02.svg",
         "map/map-table-03.svg",
-        "map/map-table-res.svg",
+        "map/map-table-res-01.svg",
+
         "map/map-toilet-01.svg",
         "map/map-toilet-02.svg",
         "map/map-toilet-03.svg",
         "map/map-toilet-04.svg",
         "map/map-toilet-res-01.svg",
         "map/map-toilet-res-02.svg",
+
         "map/map-towelrack-01.svg",
+
         "map/map-tree-03.svg",
         "map/map-tree-04.svg",
         "map/map-tree-07su.svg",
-        "map/map-tree-08f.svg",
         "map/map-tree-08su.svg",
         "map/map-tree-09.svg",
         "map/map-tree-res-01.svg",
         "map/map-tree-res-02.svg",
+
         "map/map-vat-01.svg",
         "map/map-vat-02.svg",
         "map/map-vat-res.svg",
+
         "map/map-vending-res.svg",
         "map/map-vending-soda-01.svg",
+
+        // walls
         "map/map-wall-01-rounded.svg",
         "map/map-wall-02-5-rounded.svg",
         "map/map-wall-02-rounded.svg",
@@ -376,9 +423,11 @@ export const SharedAtlas: AtlasDef = {
         "map/map-wall-shack-left.svg",
         "map/map-wall-shack-right.svg",
         "map/map-wall-shack-top.svg",
+
         "map/map-wheel-01.svg",
         "map/map-wheel-02.svg",
         "map/map-wheel-03.svg",
+
         "map/map-woodpile-01.svg",
         "map/map-woodpile-res-01.svg",
     ],

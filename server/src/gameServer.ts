@@ -1,5 +1,9 @@
-import { randomUUID } from "crypto";
 import { App, SSLApp, type WebSocket } from "uWebSockets.js";
+import fs, { existsSync } from "node:fs";
+import fsPromises from "node:fs/promises";
+import path from "node:path";
+import { Cron } from "croner";
+import { randomUUID } from "crypto";
 import { version } from "../../package.json";
 import { GameConfig, TeamMode } from "../../shared/gameConfig";
 import * as net from "../../shared/net/net";
@@ -7,23 +11,23 @@ import { Config } from "./config";
 import { SingleThreadGameManager } from "./game/gameManager";
 import { GameProcessManager } from "./game/gameProcessManager";
 import { GIT_VERSION } from "./utils/gitRevision";
-import { Logger } from "./utils/logger";
+import { ServerLogger } from "./utils/logger";
 import {
-    HTTPRateLimit,
-    WebSocketRateLimit,
+    apiPrivateRouter,
     cors,
-    fetchApiServer,
     forbidden,
     getIp,
-    isBehindProxy,
+    HTTPRateLimit,
     logErrorToWebhook,
     readPostedJSON,
     returnJson,
+    WebSocketRateLimit,
 } from "./utils/serverHelpers";
 import {
     type FindGamePrivateBody,
     type FindGamePrivateRes,
     type GameSocketData,
+    type SaveGameBody,
     zFindGamePrivateBody,
 } from "./utils/types";
 
@@ -36,7 +40,6 @@ process.on("uncaughtException", async (err) => {
 });
 
 import crypto from "crypto";
-import fs from "fs";
 import hjson from "hjson";
 
 const bannedIPHashes: string[] = fs.existsSync("../bannedIPs.hjson")
@@ -44,7 +47,7 @@ const bannedIPHashes: string[] = fs.existsSync("../bannedIPs.hjson")
     : [];
 
 class GameServer {
-    readonly logger = new Logger("GameServer");
+    readonly logger = new ServerLogger("GameServer");
 
     readonly region = Config.regions[Config.gameServer.thisRegion];
     readonly regionId = Config.gameServer.thisRegion;
@@ -60,7 +63,7 @@ class GameServer {
         if (!parsed.success || !parsed.data) {
             this.logger.warn("/api/find_game: Invalid body");
             return {
-                error: "full",
+                error: "failed_to_parse_body",
             };
         }
         const data = parsed.data;
@@ -73,7 +76,7 @@ class GameServer {
 
         if (data.region !== this.regionId) {
             return {
-                error: "full",
+                error: "invalid_region",
             };
         }
 
@@ -107,13 +110,78 @@ class GameServer {
         };
     }
 
-    sendData() {
-        fetchApiServer("private/update_region", {
-            data: {
-                playerCount: this.manager.getPlayerCount(),
-            },
-            regionId: Config.gameServer.thisRegion,
-        });
+    async sendData() {
+        try {
+            await apiPrivateRouter.update_region.$post({
+                json: {
+                    data: {
+                        playerCount: this.manager.getPlayerCount(),
+                    },
+                    regionId: Config.gameServer.thisRegion,
+                },
+            });
+        } catch (err) {
+            this.logger.error(`Failed to update region: `, err);
+        }
+    }
+
+    async checkIp(ip: string) {
+        try {
+            const apiRes = await apiPrivateRouter.check_ip.$post({
+                json: {
+                    ip,
+                },
+            });
+
+            if (apiRes.ok) {
+                const body = await apiRes.json();
+                return body;
+            }
+        } catch (err) {
+            this.logger.error(`Failed request API fetch_ip: `, err);
+        }
+
+        return undefined;
+    }
+
+    async tryToSaveLostGames() {
+        const games: SaveGameBody["matchData"] = [];
+
+        const dir = path.resolve("lost_game_data");
+
+        if (!existsSync(dir)) return;
+
+        const files = await fsPromises.readdir(dir);
+
+        for (const fileName of files) {
+            const filePath = path.resolve(dir, fileName);
+            const data = JSON.parse(await fsPromises.readFile(filePath, "utf8"));
+            games.push(...data);
+        }
+
+        if (games.length < 2) return;
+
+        this.logger.info(`${games.length} lost games found, trying to save...`);
+
+        let res: Response | undefined = undefined;
+        try {
+            res = await apiPrivateRouter.save_game.$post({
+                json: {
+                    matchData: games,
+                },
+            });
+        } catch (err) {
+            this.logger.error(`Failed to fetch API save game:`, err);
+        }
+
+        if (res?.ok) {
+            this.logger.info(`successfully saved lost games!`);
+            // if we successfully saved the games we can remove them
+            for (const fileName of files) {
+                const filePath = path.resolve(dir, fileName);
+                await fsPromises.rm(filePath);
+            }
+        }
     }
 }
 
@@ -130,12 +198,18 @@ const app = Config.gameServer.ssl
       })
     : App();
 
+app.get("/health", (res) => {
+    res.writeStatus("200 OK");
+    res.write("OK");
+    res.end();
+});
+
 app.options("/api/find_game", (res) => {
     cors(res);
     res.end();
 });
 
-app.post("/api/find_game", async (res, req) => {
+app.post("/api/find_game", (res, req) => {
     res.onAborted(() => {
         res.aborted = true;
     });
@@ -153,7 +227,7 @@ app.post("/api/find_game", async (res, req) => {
 
                 const parsed = zFindGamePrivateBody.safeParse(body);
                 if (!parsed.success || !parsed.data) {
-                    returnJson(res, { error: "full" });
+                    returnJson(res, { error: "failed_to_parse_body" });
                     return;
                 }
 
@@ -163,6 +237,13 @@ app.post("/api/find_game", async (res, req) => {
             }
         },
         () => {
+            if (res.aborted) return;
+            res.cork(() => {
+                if (res.aborted) return;
+                res.writeStatus("500 Internal Server Error");
+                res.write("500 Internal Server Error");
+                res.end();
+            });
             server.logger.warn("/api/find_game: Error retrieving body");
         },
     );
@@ -213,16 +294,35 @@ app.ws<GameSocketData>("/play", {
         const searchParams = new URLSearchParams(req.getQuery());
         const gameId = searchParams.get("gameId");
 
-        if (!gameId || !server.manager.getById(gameId)) {
+        if (!gameId) {
+            server.logger.warn("game_id_missing");
             forbidden(res);
             return;
         }
+        const gameData = server.manager.getById(gameId);
+
+        if (!gameData) {
+            server.logger.warn("invalid_game_id");
+            forbidden(res);
+            return;
+        }
+
+        if (!gameData.canJoin) {
+            server.logger.warn("game_started");
+            forbidden(res);
+            return;
+        }
+
         gameWsRateLimit.ipConnected(ip);
 
         const socketId = randomUUID();
         let disconnectReason = "";
 
-        if (await isBehindProxy(ip)) {
+        const ipData = await server.checkIp(ip);
+
+        if (ipData?.banned) {
+            disconnectReason = "ip_banned";
+        } else if (ipData?.behindProxy) {
             disconnectReason = "behind_proxy";
         }
 
@@ -264,6 +364,7 @@ app.ws<GameSocketData>("/play", {
 
     message(socket: WebSocket<GameSocketData>, message) {
         if (gameWsRateLimit.isRateLimited(socket.getUserData().rateLimit)) {
+            server.logger.warn("Game websocket rate limited, closing socket.");
             socket.close();
             return;
         }
@@ -324,6 +425,7 @@ app.ws<pingSocketData>("/ptc", {
 
     message(socket: WebSocket<pingSocketData>, message) {
         if (pingWsRateLimit.isRateLimited(socket.getUserData().rateLimit)) {
+            server.logger.warn("Ping websocket rate limited, closing socket.");
             socket.close();
             return;
         }
@@ -346,4 +448,13 @@ app.listen(Config.gameServer.host, Config.gameServer.port, () => {
         `Listening on ${Config.gameServer.host}:${Config.gameServer.port}`,
     );
     server.logger.info("Press Ctrl+C to exit.");
+});
+
+// try to save lost games every hour
+new Cron("0 * * * *", async () => {
+    try {
+        await server.tryToSaveLostGames();
+    } catch (err) {
+        server.logger.error("Failed to save lost games", err);
+    }
 });

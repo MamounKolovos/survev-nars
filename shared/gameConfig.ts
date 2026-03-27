@@ -28,6 +28,16 @@ export enum Action {
     ReloadAlt,
     UseItem,
     Revive,
+    Count,
+}
+
+export enum Rarity {
+    Stock,
+    Common,
+    Uncommon,
+    Rare,
+    Epic,
+    Mythic,
 }
 
 export enum WeaponSlot {
@@ -52,6 +62,7 @@ export enum Anim {
     CrawlForward,
     CrawlBackward,
     Revive,
+    Count,
 }
 
 export enum Plane {
@@ -64,6 +75,7 @@ export enum HasteType {
     Windwalk,
     Takedown,
     Inspire,
+    Count,
 }
 
 export enum Input {
@@ -203,6 +215,7 @@ export const GameConfig = {
                 mirv: 0,
                 snowball: 0,
                 potato: 0,
+                coconut: 0,
                 bandage: 0,
                 healthkit: 0,
                 soda: 0,
@@ -212,7 +225,7 @@ export const GameConfig = {
                 "4xscope": 0,
                 "8xscope": 0,
                 "15xscope": 0,
-            } as Record<string, number>,
+            },
         },
         /* STRIP_FROM_PROD_CLIENT:END */
     },
@@ -265,6 +278,7 @@ export const GameConfig = {
             regular: 0xfee2c6,
             saturated: 0xffd9b3,
             chambered: 0xff7f00,
+            apSaturated: 0xa54b0b,
             alphaRate: 0.92,
             alphaMin: 0.14,
         },
@@ -272,6 +286,7 @@ export const GameConfig = {
             regular: 0xfee2c6,
             saturated: 0xffd9b3,
             chambered: 0xff7f00,
+            apSaturated: 0xa54b0b,
             alphaRate: 0.96,
             alphaMin: 0.28,
         },
@@ -279,6 +294,7 @@ export const GameConfig = {
             regular: 0x130900,
             saturated: 0x130900,
             chambered: 0x130900,
+            apSaturated: 0x130900,
             alphaRate: 0.92,
             alphaMin: 0.14,
         },
@@ -286,6 +302,7 @@ export const GameConfig = {
             regular: 0xc5d6fe,
             saturated: 0xabc4ff,
             chambered: 0x4cff,
+            apSaturated: 0x0000c8,
             alphaRate: 0.94,
             alphaMin: 0.2,
         },
@@ -293,11 +310,13 @@ export const GameConfig = {
             regular: 0xfedcdc,
             saturated: 0xfedcdc,
             chambered: 0xff0000,
+            apSaturated: 0x9f0000,
         },
         "556mm": {
             regular: 0xa9ff92,
             saturated: 0xa9ff92,
             chambered: 0x36ff00,
+            apSaturated: 0x308000,
             alphaRate: 0.92,
             alphaMin: 0.14,
         },
@@ -305,11 +324,13 @@ export const GameConfig = {
             regular: 0xfff088,
             saturated: 0xfff088,
             chambered: 0xffdf00,
+            apSaturated: 0xff8000,
         },
         "308sub": {
             regular: 0x252b00,
             saturated: 0x465000,
             chambered: 0x131600,
+            apSaturated: 0x000a02,
             alphaRate: 0.92,
             alphaMin: 0.07,
         },
@@ -317,15 +338,17 @@ export const GameConfig = {
             regular: 0xe2e2e2,
             saturated: 0xe2e2e2,
             chambered: 0xc4c4c4,
+            apSaturated: 0xc4c4c4,
         },
         "45acp": {
             regular: 0xecbeff,
             saturated: 0xe7acff,
             chambered: 0xb500ff,
+            apSaturated: 0x470349,
         },
         shrapnel: { regular: 0x333333, saturated: 0x333333 },
-        frag: { regular: 0xcb0000, saturated: 0xcb0000 },
-        invis: { regular: 0, saturated: 0, chambered: 0 },
+        frag: { regular: 0xcb0000, saturated: 0xcb0000, apSaturated: 0xcb0000 },
+        invis: { regular: 0, saturated: 0, chambered: 0, apSaturated: 0 },
     },
     scopeZoomRadius: {
         desktop: {
@@ -349,7 +372,7 @@ export const GameConfig = {
         "556mm": [90, 180, 240, 300],
         "12gauge": [15, 30, 60, 90],
         "50AE": [49, 98, 147, 196],
-        "308sub": [10, 20, 40, 80],
+        "308sub": [20, 40, 60, 80],
         flare: [2, 4, 6, 8],
         "45acp": [90, 180, 240, 300],
         frag: [3, 6, 9, 12],
@@ -359,6 +382,7 @@ export const GameConfig = {
         mirv: [2, 4, 6, 8],
         snowball: [10, 20, 30, 40],
         potato: [10, 20, 30, 40],
+        coconut: [3, 6, 9, 12],
         bandage: [5, 10, 15, 30],
         healthkit: [1, 2, 3, 4],
         soda: [2, 5, 10, 15],
@@ -368,7 +392,7 @@ export const GameConfig = {
         "4xscope": [1, 1, 1, 1],
         "8xscope": [1, 1, 1, 1],
         "15xscope": [1, 1, 1, 1],
-    } as Record<string, number[]>,
+    },
     lootRadius: {
         outfit: 1,
         melee: 1.25,
@@ -385,3 +409,5 @@ export const GameConfig = {
         xp: 1,
     } as Record<string, number>,
 };
+
+export type InventoryItem = keyof (typeof GameConfig)["bagSizes"];

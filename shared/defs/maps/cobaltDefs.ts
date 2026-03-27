@@ -1,13 +1,15 @@
 import { util } from "../../utils/util";
 import { v2 } from "../../utils/v2";
+import { MapId } from "../types/misc";
 import { Main, type PartialMapDef } from "./baseDefs";
 
 const mapDef: PartialMapDef = {
-    mapId: 7,
+    mapId: MapId.Cobalt,
     desc: {
         name: "Cobalt",
         icon: "img/gui/cobalt.svg",
         buttonCss: "btn-mode-cobalt",
+        backgroundImg: "img/main_splash_cobalt.png",
     },
     assets: {
         audio: [
@@ -32,6 +34,7 @@ const mapDef: PartialMapDef = {
         },
         particles: {},
     },
+    /* STRIP_FROM_PROD_CLIENT:START */
     gameConfig: {
         planes: {
             crates: [
@@ -69,7 +72,6 @@ const mapDef: PartialMapDef = {
 
         tier_airdrop_outfits: [{ name: "outfitGhillie", count: 1, weight: 1 }],
     },
-    /* STRIP_FROM_PROD_CLIENT:START */
     mapGen: {
         map: {
             rivers: {
@@ -129,7 +131,6 @@ const mapDef: PartialMapDef = {
         ],
         fixedSpawns: [
             {
-                bunker_structure_09: 1,
                 warehouse_01: 2,
                 house_red_01: { small: 3, large: 4 },
                 house_red_02: { small: 3, large: 4 },

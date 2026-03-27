@@ -5,7 +5,7 @@ import { api } from "../api";
 import { device } from "../device";
 import { helpers } from "../helpers";
 import { proxy } from "../proxy";
-import { SDK } from "../sdk";
+import { SDK } from "../sdk/sdk";
 import type { LoadoutMenu } from "./loadoutMenu";
 import type { Localization } from "./localization";
 import { MenuModal } from "./menuModal";
@@ -33,11 +33,7 @@ function createLoginOptions(
         class: "account-buttons",
     });
     contentsElem.append(buttonParentElem);
-    const addLoginOption = function (
-        method: string,
-        linked: boolean,
-        onClick: () => void,
-    ) {
+    const addLoginOption = function (method: string, onClick: () => void) {
         const el = $("<div/>", {
             class: `menu-option btn-darken btn-standard btn-login-${method}`,
         });
@@ -56,31 +52,28 @@ function createLoginOptions(
                     }),
                 ),
         );
-        if (linkAccount && linked) {
-            el.addClass("btn-login-linked");
-            el.find("span.login-button-name").html('<div class="icon"></div>');
-        } else {
-            el.click((_e) => {
-                onClick();
-            });
-        }
+
+        el.on("click", (_e) => {
+            onClick();
+        });
+
         buttonParentElem.append(el);
     };
 
     // Define the available login methods
     if (proxy.loginSupported("google")) {
-        addLoginOption("google", account.profile.linkedGoogle, () => {
+        addLoginOption("google", () => {
             window.location.href = api.resolveUrl("/api/auth/google");
         });
     }
     if (proxy.loginSupported("discord")) {
-        addLoginOption("discord", account.profile.linkedDiscord, () => {
+        addLoginOption("discord", () => {
             window.location.href = api.resolveUrl("/api/auth/discord");
         });
     }
 
     if (proxy.loginSupported("mock")) {
-        addLoginOption("mock", false, () => {
+        addLoginOption("mock", () => {
             window.location.href = api.resolveUrl("/api/auth/mock");
         });
     }
@@ -126,7 +119,7 @@ export class ProfileUi {
         this.setNameModal = new MenuModal($("#modal-account-name-change"));
         this.setNameModal.onShow(clearNamePrompt);
         this.setNameModal.onHide(clearNamePrompt);
-        $("#modal-account-name-finish").click((t) => {
+        $("#modal-account-name-finish").on("click", (t) => {
             t.stopPropagation();
             const name = $("#modal-account-name-input").val() as string;
             this.account.setUsername(name, (error?: string) => {
@@ -151,7 +144,7 @@ export class ProfileUi {
             });
         });
         $("#modal-account-name-input").on("keypress", (e) => {
-            if ((e.which || e.keyCode) === 13) {
+            if (e.key === "Enter") {
                 $("#modal-account-name-finish").trigger("click");
             }
         });
@@ -162,7 +155,7 @@ export class ProfileUi {
             $("#modal-account-reset-stats-input").val("");
             this.modalMobileAccount.hide();
         });
-        $("#modal-account-reset-stats-finish").click((t) => {
+        $("#modal-account-reset-stats-finish").on("click", (t) => {
             t.stopPropagation();
             if ($("#modal-account-reset-stats-input").val() == "RESET STATS") {
                 this.account.resetStats();
@@ -170,7 +163,7 @@ export class ProfileUi {
             }
         });
         $("#modal-account-reset-stats-input").on("keypress", (e) => {
-            if ((e.which || e.keyCode) === 13) {
+            if (e.key === "Enter") {
                 $("#modal-account-reset-stats-finish").trigger("click");
             }
         });
@@ -180,7 +173,7 @@ export class ProfileUi {
             $("#modal-account-delete-input").val("");
             this.modalMobileAccount.hide();
         });
-        $("#modal-account-delete-finish").click((t) => {
+        $("#modal-account-delete-finish").on("click", (t) => {
             t.stopPropagation();
             if ($("#modal-account-delete-input").val() == "DELETE") {
                 this.account.deleteAccount();
@@ -188,7 +181,7 @@ export class ProfileUi {
             }
         });
         $("#modal-account-delete-input").on("keypress", (e) => {
-            if ((e.which || e.keyCode) === 13) {
+            if (e.key === "Enter") {
                 $("#modal-account-delete-finish").trigger("click");
             }
         });
@@ -249,11 +242,11 @@ export class ProfileUi {
         //
 
         // Leaderboard
-        $(".account-leaderboard-link").click((_e) => {
+        $(".account-leaderboard-link").on("click", (_e) => {
             window.open("/stats", "_blank");
             return false;
         });
-        $(".account-stats-link").click(() => {
+        $(".account-stats-link").on("click", () => {
             this.waitOnLogin(() => {
                 if (this.account.loggedIn) {
                     if (this.account.profile.usernameSet) {
@@ -270,11 +263,11 @@ export class ProfileUi {
             });
             return false;
         });
-        $(".account-loadout-link, #btn-customize").click(() => {
+        $(".account-loadout-link, #btn-customize").on("click", () => {
             this.loadoutMenu.show();
             return false;
         });
-        $(".account-details-user").click(() => {
+        $(".account-details-user").on("click", () => {
             if (
                 this.userSettingsModal!.isVisible() ||
                 this.loginOptionsModal!.isVisible()
@@ -298,7 +291,7 @@ export class ProfileUi {
             }
             return false;
         });
-        $(".btn-account-link").click(() => {
+        $(".btn-account-link").on("click", () => {
             this.userSettingsModal!.hide();
             this.showLoginMenu({
                 modal: false,
@@ -306,7 +299,7 @@ export class ProfileUi {
             });
             return false;
         });
-        $(".btn-account-change-name").click(() => {
+        $(".btn-account-change-name").on("click", () => {
             if (this.account.profile.usernameChangeTime <= 0) {
                 this.userSettingsModal!.hide();
                 this.modalMobileAccount.hide();
@@ -317,21 +310,21 @@ export class ProfileUi {
             }
             return false;
         });
-        $(".btn-account-reset-stats").click(() => {
+        $(".btn-account-reset-stats").on("click", () => {
             this.userSettingsModal!.hide();
             this.resetStatsModal!.show();
             return false;
         });
-        $(".btn-account-delete").click(() => {
+        $(".btn-account-delete").on("click", () => {
             this.userSettingsModal!.hide();
             this.deleteAccountModal!.show();
             return false;
         });
-        $(".btn-account-logout").click(() => {
+        $(".btn-account-logout").on("click", () => {
             this.account.logout();
             return false;
         });
-        $("#btn-pass-locked").click(() => {
+        $("#btn-pass-locked").on("click", () => {
             this.showLoginMenu({
                 modal: true,
             });
@@ -373,7 +366,7 @@ export class ProfileUi {
         }
     }
 
-    onLoadoutUpdated(_e: unknown) {
+    onLoadoutUpdated() {
         this.updateUserIcon();
     }
 

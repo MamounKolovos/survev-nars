@@ -1,10 +1,13 @@
-import { TeamMode } from "../../../shared/gameConfig";
+import fs from "node:fs";
+import path from "node:path";
+import { GameConfig, TeamMode } from "../../../shared/gameConfig";
 import * as net from "../../../shared/net/net";
+import type { Loadout } from "../../../shared/utils/loadout";
 import { math } from "../../../shared/utils/math";
 import { v2 } from "../../../shared/utils/v2";
 import { Config } from "../config";
-import { Logger } from "../utils/logger";
-import { fetchApiServer } from "../utils/serverHelpers";
+import { ServerLogger } from "../utils/logger";
+import { apiPrivateRouter } from "../utils/serverHelpers";
 import {
     type FindGamePrivateBody,
     ProcessMsgType,
@@ -35,6 +38,7 @@ export interface JoinTokenData {
     expiresAt: number;
     userId: string | null;
     findGameIp: string;
+    loadout?: Loadout;
     groupData: {
         autoFill: boolean;
         playerCount: number;
@@ -47,7 +51,6 @@ export class Game {
     stopped = false;
     allowJoin = false;
     over = false;
-    sentWinEMotes = false;
     startedTime = 0;
     stopTicker = 0;
     id: string;
@@ -106,7 +109,7 @@ export class Game {
     perfTicker = 0;
     tickTimes: number[] = [];
 
-    logger: Logger;
+    logger: ServerLogger;
 
     start = Date.now();
 
@@ -120,7 +123,7 @@ export class Game {
         readonly sendData?: (data: UpdateDataMsg) => void,
     ) {
         this.id = id;
-        this.logger = new Logger(`Game #${this.id.substring(0, 4)}`);
+        this.logger = new ServerLogger(`Game #${this.id.substring(0, 4)}`);
         if (config.teamMode != TeamMode.Solo) {
             this.logger.info(
                 `Creating for room "${config.room ?? ""}" with "${config.roomPair ?? ""}"`,
@@ -177,13 +180,13 @@ export class Game {
         this.updateData();
     }
 
-    update(): void {
+    update(dt?: number): void {
         if (!this.allowJoin) return;
         this.profiler.flush();
 
         const now = performance.now();
         if (!this.now) this.now = now;
-        const dt = math.clamp((now - this.now) / 1000, 0.001, 1 / 8);
+        dt ??= math.clamp((now - this.now) / 1000, 0.001, 1 / 8);
 
         this.now = now;
 
@@ -355,6 +358,7 @@ export class Game {
     deserializeMsg(buff: ArrayBuffer): {
         type: net.MsgType;
         msg: net.AbstractMsg | undefined;
+        error?: string;
     } {
         const msgStream = new net.MsgStream(buff);
         const stream = msgStream.stream;
@@ -373,6 +377,23 @@ export class Game {
 
         switch (type) {
             case net.MsgType.Join: {
+                // read protocol version outside of JoinMsg
+                // reason: if theres a protocol change in JoinMsg it will fail to deserialize the entire msg
+                // and won't give the proper invalid-protocol error
+                // so we read it before deserializing the msg to avoid it throwing and giving the wrong error
+
+                const oldIdx = stream.index;
+                const protocol = stream.readUint32();
+
+                if (protocol !== GameConfig.protocolVersion) {
+                    return {
+                        type: net.MsgType.Join,
+                        msg: undefined,
+                        error: "index-invalid-protocol",
+                    };
+                }
+                stream.index = oldIdx;
+
                 msg = new net.JoinMsg();
                 msg.deserialize(stream);
                 break;
@@ -418,13 +439,29 @@ export class Game {
 
         let msg: net.AbstractMsg | undefined = undefined;
         let type = net.MsgType.None;
+        let error: string | undefined;
 
         try {
             const deserialized = this.deserializeMsg(buff);
             msg = deserialized.msg;
             type = deserialized.type;
+            error = deserialized.error;
         } catch (err) {
-            this.logger.error("Failed to deserialize msg: ", err);
+            this.logger.error(
+                "Failed to deserialize msg: ",
+                err,
+                "msg buffer: ",
+                // JSON.stringify doesn't work on buffers, so need to convert to an Uint8Array first
+                // and then to a regular array... 😭
+                // the slice is to make sure it doesn't overflow the error webhook
+                JSON.stringify([...new Uint8Array(buff.slice(0, 255))]),
+            );
+            this.closeSocket(socketId);
+            return;
+        }
+
+        if (error) {
+            this.closeSocket(socketId, error);
             return;
         }
 
@@ -475,7 +512,7 @@ export class Game {
         player.disconnected = true;
         player.group?.checkPlayers();
         player.spectating = undefined;
-        player.dir = v2.create(0, 0);
+        player.dirNew = v2.create(1, 0);
         player.setPartDirty();
         if (player.canDespawn()) {
             player.game.playerBarn.removePlayer(player);
@@ -509,8 +546,8 @@ export class Game {
 
             // send win emoji after 1 second
             this.playerBarn.sendWinEmoteTicker = 1;
-            // stop game after 2
-            this.stopTicker = 2;
+            // stop game after 1.8s
+            this.stopTicker = 1.8;
 
             this.updateData();
         }
@@ -529,6 +566,7 @@ export class Game {
                 userId: token.userId,
                 groupData,
                 findGameIp: token.ip,
+                loadout: token.loadout,
             });
         }
     }
@@ -569,6 +607,15 @@ export class Game {
          */
         const teamTotal = new Set(players.map(({ player }) => player.teamId)).size;
 
+        const teamKills = players.reduce(
+            (acc, curr) => {
+                acc[curr.player.teamId] =
+                    (acc[curr.player.teamId] ?? 0) + curr.player.kills;
+                return acc;
+            },
+            {} as Record<string, number>,
+        );
+
         const values: SaveGameBody["matchData"] = players.map(({ player, rank }) => {
             return {
                 // *NOTE: userId is optional; we save the game stats for non logged users too
@@ -577,12 +624,13 @@ export class Game {
                 username: player.name,
                 playerId: player.matchDataId,
                 teamMode: this.teamMode,
-                teamCount: player.group?.totalCount ?? 1,
+                teamCount: player.group?.players.length ?? 1,
                 teamTotal: teamTotal,
                 teamId: player.teamId,
                 timeAlive: Math.round(player.timeAlive),
                 died: player.dead,
                 kills: player.kills,
+                team_kills: teamKills[player.groupId] ?? 0,
                 damageDealt: Math.round(player.damageDealt),
                 damageTaken: Math.round(player.damageTaken),
                 killerId: player.killedBy?.matchDataId || 0,
@@ -603,36 +651,45 @@ export class Game {
         // to avoid blocking the game from being GC'd until this request is done
         // and opening a database in each process if it fails
         // etc
-        const res = await fetchApiServer<SaveGameBody, { error: string }>(
-            "private/save_game",
-            {
-                matchData: values,
-            },
-        );
+        let res: Response | undefined = undefined;
+        try {
+            res = await apiPrivateRouter.save_game.$post({
+                json: {
+                    matchData: values,
+                },
+            });
+        } catch (err) {
+            this.logger.error(`Failed to fetch API save game:`, err);
+        }
 
-        if (!res || res.error) {
-            this.logger.warn(`Failed to save game data, saving locally instead`);
-
-            // we dump the game  to a local db if we failed to save;
-            // avoid importing sqlite and creating the database at process startup
-            // since this code should rarely run anyway
-            const sqliteDb = (await import("better-sqlite3")).default(
-                "lost_game_data.db",
+        if (!res || !res.ok) {
+            const region = Config.gameServer.thisRegion.toUpperCase();
+            this.logger.error(
+                `[${region}] Failed to save game data, saving locally instead`,
             );
 
-            sqliteDb
-                .prepare(`
-                    CREATE TABLE IF NOT EXISTS lost_game_data (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        data TEXT NOT NULL,
-                        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-                    )
-                `)
-                .run();
+            const dir = path.resolve("lost_game_data");
+            if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir);
+            }
+            fs.writeFileSync(
+                path.join(dir, `${this.id}.json`),
+                JSON.stringify(values),
+                "utf8",
+            );
+        }
+    }
 
-            sqliteDb
-                .prepare("INSERT INTO lost_game_data (data) VALUES (?)")
-                .run(JSON.stringify(values));
+    /**
+     * Steps the game X seconds in the future
+     * This is done in smaller steps of 0.1 seconds
+     * To make sure everything updates properly
+     *
+     * Used for unit tests, don't call this on actual game code :p
+     */
+    step(seconds: number) {
+        for (let i = 0, steps = seconds * 10; i < steps; i++) {
+            this.update(0.1);
         }
     }
 }

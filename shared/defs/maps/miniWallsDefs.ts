@@ -11,7 +11,7 @@ import { MapId } from "../types/misc";
 
 export const MiniWalls: MapDef = {
     mapId: MapId.MiniWalls,
-    desc: { name: "Mini Walls", icon: "", buttonCss: "" },
+    desc: { name: "Mini Walls", icon: "", buttonCss: "", backgroundImg: "" },
     assets: {
         audio: [
             { name: "club_music_01", channel: "ambient" },

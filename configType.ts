@@ -1,6 +1,7 @@
 import type { MapDefs } from "./shared/defs/mapDefs";
 import type { TeamMode } from "./shared/gameConfig";
 import type { ProxyDef } from "./shared/types/api";
+import type { DeepPartial } from "./shared/utils/util";
 import type { Vec2 } from "./shared/utils/v2";
 
 /**
@@ -130,14 +131,7 @@ export interface ConfigType {
      *
      * NOTE: Required at build time, unlike modes it wont update by fetching from the server!
      */
-    clientTheme:
-        | "main"
-        | "easter"
-        | "halloween"
-        | "faction"
-        | "cobalt"
-        | "snow"
-        | "spring";
+    clientTheme: keyof typeof MapDefs;
 
     /**
      * Game tick rate.
@@ -194,9 +188,14 @@ export interface ConfigType {
         errorLogs: boolean;
     };
     /**
-     * Webhook URL to log errors.
+     * Webhook URL to log server errors.
      */
     errorLoggingWebhook?: string;
+
+    /**
+     * Webhook URL to log client errors.
+     */
+    clientErrorLoggingWebhook?: string;
 
     /**
      * PostgreSQL Database configuration, this will enable features like accounts, IP bans, leaderboards etc.
@@ -282,6 +281,11 @@ export interface ConfigType {
         GOOGLE_SECRET_ID?: string;
 
         /**
+         * Discord bot token.
+         */
+        DISCORD_BOT_TOKEN?: string;
+
+        /**
          * Enables proxycheck.io to ban VPNs and proxies from connecting.
          *
          */
@@ -296,22 +300,29 @@ export interface ConfigType {
          * Turnstile captcha site key.
          */
         TURNSTILE_SITE_KEY?: string;
+        /**
+         * CrazyGames and GameMonetize ad IDs.
+         */
+        AD_PREFIX?: string;
+        GAMEMONETIZE_ID?: string;
 
         /**
-         * Adin play ID: API key used for Adin play ads.
-         * Setting both this and AIP_PLACEMENT_ID will enable ads on the client.
-         *
-         * NOTE: This is only used by the client so must be present at the build time!
+         * SpellSync project ID and public token.
+         * Used for the SpellSync integration.
          */
-        AIP_ID?: string;
-        /**
-         * Adin play placement ID (used to identify ad banners), can be just "survev-io".
-         *
-         * NOTE: This is only used by the client so must be present at the build time!
-         */
-        AIP_PLACEMENT_ID?: string;
-        GAMEMONETIZE_ID?: string;
+        SPELLSYNC_PROJECT_ID?: string;
+        SPELLSYNC_PUBLIC_TOKEN?: string;
     };
+
+    /**
+     * Role ID for users with moderation permissions
+     */
+    discordRoleId?: string;
+
+    /**
+     * Guild ID
+     */
+    discordGuildId?: string;
 
     /**
      * Enables caching some expensive API requests (like leaderboards) with Redis.
@@ -394,9 +405,4 @@ export interface ConfigType {
     };
 }
 
-type DeepPartial<T> = T extends object
-    ? {
-          [P in keyof T]?: DeepPartial<T[P]>;
-      }
-    : T;
 export type PartialConfig = DeepPartial<ConfigType>;

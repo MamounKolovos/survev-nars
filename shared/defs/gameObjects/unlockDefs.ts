@@ -21,6 +21,7 @@ const _allowedOutfits = [
     "outfitBase",
     "outfitTurkey",
     "outfitDev",
+    "outfitGD",
     "outfitMod",
     "outfitWheat",
     "outfitNoir",
@@ -151,11 +152,13 @@ const _allowedEmotes = [
     "emote_flagsingapore",
     "emote_flagtrinidad",
     "emote_flaguruguay",
+    "emote_flagpalestine",
     "emote_logoconch",
     "emote_pineapple",
     "emote_coconut",
     "emote_crab",
     "emote_whale",
+    "emote_cake",
     "emote_logometeor",
     "emote_salt",
     "emote_disappointface",
@@ -190,6 +193,8 @@ const _allowedEmotes = [
     "emote_flaglatvia",
     "emote_flaguae",
     "emote_flagdominicanrepublic",
+    "emote_flaglibya",
+    "emote_flagbosnia",
     "emote_logocloud",
     "emote_logotwins",
 ];
@@ -201,7 +206,8 @@ export interface UnlockDef {
     free?: boolean;
 }
 
-export const UnlockDefs: Record<string, UnlockDef> = {
+type UnlockDefKey = "unlock_default" | "unlock_new_account";
+export const UnlockDefs: Record<UnlockDefKey, UnlockDef> = {
     unlock_default: {
         type: "unlock",
         name: "standard-issue",
@@ -333,6 +339,7 @@ export const UnlockDefs: Record<string, UnlockDef> = {
             "emote_cattle",
             "emote_icecream",
             "emote_cupcake",
+            "emote_cake",
             "emote_donut",
             "emote_logohatchet",
             "emote_acorn",
@@ -357,6 +364,15 @@ export const UnlockDefs: Record<string, UnlockDef> = {
             "emote_flaglatvia",
             "emote_flaguae",
             "emote_flagdominicanrepublic",
+            "emote_flagpalestine",
+            "emote_flagtransgender",
+            "emote_flagpride",
+            "emote_flaglesbian",
+            "emote_flaggay",
+            "emote_flagasexual",
+            "emote_flagnonbinary",
+            "emote_flaglibya",
+            "emote_flagbosnia",
             "emote_logocloud",
             "emote_logotwins",
 

@@ -14,7 +14,7 @@ import { type Vec2, v2 } from "../../../../shared/utils/v2";
 import type { Game } from "../game";
 import type { Decal } from "./decal";
 import { BaseGameObject } from "./gameObject";
-import { Obstacle } from "./obstacle";
+import type { Obstacle } from "./obstacle";
 import type { Structure } from "./structure";
 
 export class Building extends BaseGameObject {
@@ -54,10 +54,11 @@ export class Building extends BaseGameObject {
         zoomIn?: AABB;
         zoomOut?: AABB;
         zoom?: number;
+        noZoom?: boolean;
     }> = [];
 
     healRegions?: Array<{
-        collision: AABB;
+        collision: Collider;
         healRate: number;
     }> = [];
 
@@ -108,7 +109,7 @@ export class Building extends BaseGameObject {
                     this.pos,
                     this.rot,
                     this.scale,
-                ) as AABB,
+                ),
                 healRate: hr.healRate,
             };
         });
@@ -167,6 +168,7 @@ export class Building extends BaseGameObject {
                       ) as AABB)
                     : undefined,
                 zoom: region.zoom,
+                noZoom: region.noZoom,
             });
         }
 
@@ -295,7 +297,10 @@ export class Building extends BaseGameObject {
 
         if (this.puzzleOrder.join("-") === puzzleOrder.join("-")) {
             for (const obj of this.childObjects) {
-                if (obj instanceof Obstacle && obj.type === puzzleDef.completeUseType) {
+                if (
+                    obj.__type === ObjectType.Obstacle &&
+                    obj.type === puzzleDef.completeUseType
+                ) {
                     setTimeout(() => {
                         obj.toggleDoor();
                     }, puzzleDef.completeUseDelay * 1000);
@@ -343,7 +348,11 @@ export class Building extends BaseGameObject {
     resetPuzzle(): void {
         this.puzzleOrder.length = 0;
         for (const piece of this.childObjects) {
-            if (piece instanceof Obstacle && piece.isButton && piece.puzzlePiece) {
+            if (
+                piece.__type === ObjectType.Obstacle &&
+                piece.isButton &&
+                piece.puzzlePiece
+            ) {
                 piece.button.canUse = !this.puzzleSolved;
                 piece.button.onOff = false;
                 piece.button.seq++;

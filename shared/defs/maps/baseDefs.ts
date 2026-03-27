@@ -1,4 +1,5 @@
 import { GameConfig } from "../../gameConfig";
+import type { DeepPartial } from "../../utils/util";
 import { v2 } from "../../utils/v2";
 import type { MapDef } from "../mapDefs";
 import { MapId } from "../types/misc";
@@ -12,7 +13,12 @@ import { MapId } from "../types/misc";
 
 export const Main: MapDef = {
     mapId: MapId.Main,
-    desc: { name: "Normal", icon: "", buttonCss: "" },
+    desc: {
+        name: "Normal",
+        icon: "",
+        buttonCss: "",
+        backgroundImg: "img/main_splash.png",
+    },
     assets: {
         audio: [
             { name: "club_music_01", channel: "ambient" },
@@ -51,6 +57,7 @@ export const Main: MapDef = {
         maxPlayers: 80,
         killLeaderEnabled: true,
     },
+    /* STRIP_FROM_PROD_CLIENT:START */
     gameConfig: {
         planes: {
             timings: [
@@ -84,7 +91,6 @@ export const Main: MapDef = {
         bleedDamage: 2,
         bleedDamageMult: 1,
     },
-    /* STRIP_FROM_PROD_CLIENT:START */
     // NOTE: this loot table is not the original one so its not accurate
     // ? are guesses based on statistics
     // ! are uncertain data based on leak
@@ -209,6 +215,14 @@ export const Main: MapDef = {
         tier_mansion_floor: [{ name: "outfitCasanova", count: 1, weight: 1 }],
         tier_vault_floor: [{ name: "outfitJester", count: 1, weight: 1 }],
         tier_police_floor: [{ name: "outfitPrisoner", count: 1, weight: 1 }],
+        tier_fragtastic: [
+            { name: "", count: 1, weight: 1 },
+            { name: "outfitFragtastic", count: 1, weight: 0.15 },
+        ],
+        tier_turkey_outfit: [
+            { name: "", count: 1, weight: 1 },
+            { name: "outfitTurkey", count: 1, weight: 0.05 },
+        ],
         tier_chrys_01: [{ name: "outfitImperial", count: 1, weight: 1 }],
         tier_chrys_02: [{ name: "katana", count: 1, weight: 1 }],
         tier_chrys_03: [
@@ -224,6 +238,11 @@ export const Main: MapDef = {
             { name: "katana_rusted", count: 1, weight: 1 },
             { name: "katana_orchid", count: 1, weight: 1 },
         ],
+        tier_crow_case_melee: [{ name: "crowbar", count: 1, weight: 1 }],
+        tier_crow_case_skin: [
+            { name: "outfitCarbonFiber", count: 1, weight: 1 },
+            { name: "outfitDarkGloves", count: 1, weight: 1 },
+        ],
         tier_eye_02: [{ name: "stonehammer", count: 1, weight: 1 }],
         tier_eye_block: [
             { name: "spas12", count: 1, weight: 1 },
@@ -237,7 +256,7 @@ export const Main: MapDef = {
             // { name: "awc", count: 1, weight: 0.05 },
             //{ name: "pkp", count: 1, weight: 0.05 },
         ],
-        tier_sledgehammer: [{ name: "sledgehammer", count: 1, weight: 1 }],
+        tier_barn_melee: [{ name: "sledgehammer", count: 1, weight: 1 }],
         tier_chest_04: [
             { name: "p30l", count: 1, weight: 20 },
             { name: "p30l_dual", count: 1, weight: 1 },
@@ -325,7 +344,10 @@ export const Main: MapDef = {
             { name: "outfitCoral", count: 1, weight: 1 },
         ],
         tier_noir_outfit: [{ name: "outfitNoir", count: 1, weight: 1 }],
-        tier_khaki_outfit: [{ name: "outfitKhaki", count: 1, weight: 1 }],
+        tier_khaki_outfit: [
+            { name: "outfitKhaki", count: 1, weight: 20 },
+            { name: "outfitParmaPrestige", count: 1, weight: 1 },
+        ],
         tier_pirate_melee: [{ name: "hook", count: 1, weight: 1 }],
         tier_hatchet: [
             { name: "blr", count: 1, weight: 1 },
@@ -351,6 +373,22 @@ export const Main: MapDef = {
             { name: "saiga", count: 1, weight: 0.1 },
             { name: "usas", count: 1, weight: 0 },
         ],
+        tier_snipers: [
+            { name: "model94", count: 1, weight: 6 }, // ?
+            { name: "blr", count: 1, weight: 6 }, // ?
+            { name: "scout_elite", count: 1, weight: 3 }, // ?
+            { name: "mk12", count: 1, weight: 2 }, // ?
+            { name: "m39", count: 1, weight: 2 }, // ?
+            { name: "vss", count: 1, weight: 1.5 }, // ?
+            { name: "mosin", count: 1, weight: 0.75 }, // ?
+            { name: "mkg45", count: 1, weight: 0.75 }, // ?
+            { name: "l86", count: 1, weight: 0.75 }, // ?
+            { name: "svd", count: 1, weight: 0.75 }, // ?
+            { name: "garand", count: 1, weight: 0.45 }, // ?
+            { name: "scarssr", count: 1, weight: 0.15 }, // ?
+            { name: "awc", count: 1, weight: 0.15 }, // ?
+            { name: "sv98", count: 1, weight: 0.1 }, // ?
+        ],
         tier_hatchet_melee: [
             { name: "fireaxe", count: 1, weight: 5 },
             { name: "katana", count: 1, weight: 1 },
@@ -364,6 +402,16 @@ export const Main: MapDef = {
             { name: "naginata", count: 1, weight: 1 },
             { name: "m9", count: 1, weight: 1 },
             { name: "pkp", count: 1, weight: 1 },
+        ],
+        tier_safe: [
+            { name: "m9", count: 1, weight: 0.01 },
+            { name: "fabricate", count: 1, weight: 1 },
+            { name: "flak_jacket", count: 1, weight: 1 },
+            { name: "explosive", count: 1, weight: 1 },
+        ],
+        tier_safe_throwables: [
+            { name: "", count: 1, weight: 1 },
+            { name: "strobe", count: 1, weight: 1 },
         ],
         tier_forest_helmet: [{ name: "helmet03_forest", count: 1, weight: 1 }],
         tier_imperial_outfit: [{ name: "outfitImperial", count: 1, weight: 1 }],
@@ -432,7 +480,6 @@ export const Main: MapDef = {
             // { name: "8xscope", count: 1, weight: 0 },
             // { name: "15xscope", count: 1, weight: 0 },
         ],
-
         tier_perks: [
             // { name: "", count: 1, weight: 20 },
             // { name: "splinter", count: 1, weight: 11.428 },
@@ -445,6 +492,7 @@ export const Main: MapDef = {
             // { name: "lifesteal", count: 1, weight: 1 },
             // { name: "bulwark", count: 1, weight: 1 },
         ],
+        tier_knives: [],
     },
     mapGen: {
         map: {
@@ -584,7 +632,6 @@ export const Main: MapDef = {
                     large: 3,
                 },
                 stone_04: 1,
-                club_complex_01: 1,
             },
         ],
         randomSpawns: [
@@ -598,11 +645,5 @@ export const Main: MapDef = {
     },
     /* STRIP_FROM_PROD_CLIENT:END */
 };
-
-type DeepPartial<T> = T extends object
-    ? {
-          [P in keyof T]?: DeepPartial<T[P]>;
-      }
-    : T;
 
 export type PartialMapDef = DeepPartial<MapDef>;

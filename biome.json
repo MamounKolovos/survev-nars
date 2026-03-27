@@ -1,11 +1,9 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.4.7/schema.json",
   "files": {
-    "ignore": ["client/atlas-builder/out/*.json"]
+    "includes": ["**", "!**/client/atlas-builder/out/**/*.json"]
   },
-  "organizeImports": {
-    "enabled": true
-  },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "linter": {
     "enabled": true,
     "rules": {
@@ -30,14 +28,15 @@
         "noDoubleEquals": "off",
         "noExplicitAny": "off",
         "noPrototypeBuiltins": "off",
-        "useAwait": "warn"
+        "useAwait": "warn",
+        "noFallthroughSwitchClause": "warn"
       }
     },
-    "ignore": ["drizzle/*"]
+    "includes": ["**", "!**/drizzle/**/*"]
   },
   "overrides": [
     {
-      "include": ["plugins/*"],
+      "includes": ["plugins/*"],
       "linter": {
         "rules": {
           "correctness": {
@@ -51,7 +50,7 @@
     "indentWidth": 4,
     "indentStyle": "space",
     "lineWidth": 90,
-    "ignore": ["package.json", "drizzle/*"]
+    "includes": ["**", "!**/package.json", "!**/drizzle/**/*"]
   },
   "vcs": {
     "enabled": true,

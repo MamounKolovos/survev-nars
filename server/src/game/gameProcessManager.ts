@@ -1,10 +1,11 @@
+import type { WebSocket } from "uWebSockets.js";
 import { type ChildProcess, fork } from "child_process";
 import { randomUUID } from "crypto";
-import type { WebSocket } from "uWebSockets.js";
 import { type MapDef, MapDefs } from "../../../shared/defs/mapDefs";
 import type { TeamMode } from "../../../shared/gameConfig";
 import * as net from "../../../shared/net/net";
-import { Logger } from "../utils/logger";
+import { util } from "../../../shared/utils/util";
+import { ServerLogger } from "../utils/logger";
 import {
     type FindGamePrivateBody,
     type GameData,
@@ -174,7 +175,7 @@ export class GameProcessManager implements GameManager {
     readonly processById = new Map<string, GameProcess>();
     readonly processes: GameProcess[] = [];
 
-    readonly logger = new Logger("Game Process Manager");
+    readonly logger = new ServerLogger("Game Process Manager");
 
     constructor() {
         process.on("beforeExit", () => {
@@ -215,7 +216,7 @@ export class GameProcessManager implements GameManager {
         }, 0);
     }
 
-    async newGame(config: ServerGameConfig): Promise<GameProcess> {
+    newGame(config: ServerGameConfig): GameProcess {
         let gameProc: GameProcess | undefined;
 
         for (let i = 0; i < this.processes.length; i++) {
@@ -263,6 +264,7 @@ export class GameProcessManager implements GameManager {
             const data = socket.getUserData();
             if (data.closed) continue;
             if (data.gameId !== gameProc.id) continue;
+            this.logger.warn(`Closing socket for ${gameProc.id}`);
             socket.close();
         }
 
@@ -274,10 +276,7 @@ export class GameProcessManager implements GameManager {
             }
         }, 5000);
 
-        const idx = this.processes.indexOf(gameProc);
-        if (idx !== -1) {
-            this.processes.splice(idx, 1);
-        }
+        util.removeFrom(this.processes, gameProc);
         this.processById.delete(gameProc.id);
     }
 
@@ -316,7 +315,7 @@ export class GameProcessManager implements GameManager {
             })[0];
 
         if (!game) {
-            game = await this.newGame({
+            game = this.newGame({
                 teamMode: body.teamMode,
                 mapName: body.mapName as keyof typeof MapDefs,
                 roomPair: body.roomPair,
@@ -327,7 +326,7 @@ export class GameProcessManager implements GameManager {
         // if the game has not finished creating
         // wait for it to be created to send the find game response
         if (!game.created) {
-            return new Promise((resolve) => {
+            return await new Promise((resolve) => {
                 game.onCreatedCbs.push((game) => {
                     game.addJoinTokens(body.playerData, body.autoFill);
                     resolve(game.id);
@@ -344,6 +343,7 @@ export class GameProcessManager implements GameManager {
         const data = socket.getUserData();
         const proc = this.processById.get(data.gameId);
         if (proc === undefined) {
+            this.logger.warn("prcoess not found, closing socket.");
             socket.close();
             return;
         }

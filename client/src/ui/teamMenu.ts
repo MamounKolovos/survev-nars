@@ -15,7 +15,7 @@ import type { ConfigManager } from "../config";
 import { device } from "../device";
 import { helpers } from "../helpers";
 import type { PingTest } from "../pingTest";
-import { SDK } from "../sdk";
+import { SDK } from "../sdk/sdk";
 import type { SiteInfo } from "../siteInfo";
 import type { Localization } from "./localization";
 
@@ -89,7 +89,7 @@ export class TeamMenu {
         public leaveCb: (err: string) => void,
     ) {
         // Listen for ui modifications
-        this.serverSelect.change(() => {
+        this.serverSelect.on("change", () => {
             const e = this.serverSelect.find(":selected").val() as string;
             this.pingTest.start([e]);
             this.setRoomProperty("region", e);
@@ -102,13 +102,13 @@ export class TeamMenu {
         this.queueMode1.click(() => {
             this.setRoomProperty("gameModeIdx", 1);
         });
-        this.queueMode2.click(() => {
+        this.queueMode2.on("click", () => {
             this.setRoomProperty("gameModeIdx", 2);
         });
-        this.fillAuto.click(() => {
+        this.fillAuto.on("click", () => {
             this.setRoomProperty("autoFill", true);
         });
-        this.fillNone.click(() => {
+        this.fillNone.on("click", () => {
             this.setRoomProperty("autoFill", false);
         });
         this.playBtn.on("click", () => {
@@ -116,7 +116,7 @@ export class TeamMenu {
                 this.tryStartGame();
             });
         });
-        $("#team-copy-url, #team-desc-text").click((e) => {
+        $("#team-copy-url, #team-desc-text").on("click", (e) => {
             const t = $("<div/>", {
                 class: "copy-toast",
                 html: "Copied!",
@@ -156,7 +156,7 @@ export class TeamMenu {
         if (!device.mobile) {
             // Hide invite link
             this.hideUrl = false;
-            $("#team-hide-url").click((e) => {
+            $("#team-hide-url").on("click", (e) => {
                 const el = e.currentTarget;
                 this.hideUrl = !this.hideUrl;
                 $("#team-desc-text, #team-code-text").css({
@@ -169,22 +169,18 @@ export class TeamMenu {
                 });
             });
         }
+
+        setInterval(() => {
+            if (this.joined) {
+                this.sendMessage("keepAlive", {});
+            }
+        }, 10 * 1000);
     }
 
     getPlayerById(playerId: number) {
         return this.players.find((x) => {
             return x.playerId == playerId;
         });
-    }
-
-    update(dt: number) {
-        if (this.joined) {
-            this.keepAliveTimeout -= dt;
-            if (this.keepAliveTimeout < 0) {
-                this.keepAliveTimeout = 45;
-                this.sendMessage("keepAlive", {});
-            }
-        }
     }
 
     connect(create: boolean, roomUrl: string) {
@@ -657,7 +653,7 @@ export class TeamMenu {
                         this.editingName = false;
                         this.refreshUi();
                     };
-                    n.keypress((e) => {
+                    n.on("keydown", (e) => {
                         if (e.which === 13) {
                             m();
                             return false;
@@ -705,10 +701,10 @@ export class TeamMenu {
                     );
                 }
                 teamMembers.append(member);
-                n?.focus();
+                n?.trigger("focus");
             }
 
-            $(".icon-kick", teamMembers).click((e) => {
+            $(".icon-kick", teamMembers).on("click", (e) => {
                 const playerId = Number($(e.currentTarget).attr("data-playerid"));
                 this.sendMessage("kick", {
                     playerId,

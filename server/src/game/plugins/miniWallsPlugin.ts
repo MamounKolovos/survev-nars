@@ -4,7 +4,7 @@ import { MapObjectDefs } from "../../../../shared/defs/mapObjectDefs";
 import type { ObstacleDef } from "../../../../shared/defs/mapObjectsTyping";
 import { TeamColor } from "../../../../shared/defs/maps/factionDefs";
 import { MapId } from "../../../../shared/defs/types/misc";
-import { GameConfig, GasMode } from "../../../../shared/gameConfig";
+import { GameConfig, GasMode, type InventoryItem } from "../../../../shared/gameConfig";
 import * as net from "../../../../shared/net/net";
 import { ObjectType } from "../../../../shared/net/objectSerializeFns";
 import { type Collider, coldet } from "../../../../shared/utils/coldet";
@@ -12,7 +12,7 @@ import { collider } from "../../../../shared/utils/collider";
 import { math } from "../../../../shared/utils/math";
 import { util } from "../../../../shared/utils/util";
 import { type Vec2, v2 } from "../../../../shared/utils/v2";
-import { TimerManager, createSimpleSegment } from "../../utils/pluginUtils";
+import { createSimpleSegment, TimerManager } from "../../utils/pluginUtils";
 import type { Game } from "../game";
 import type { Obstacle } from "../objects/obstacle";
 import type { Player } from "../objects/player";
@@ -497,10 +497,12 @@ function giveGear(player: Player) {
     player.weaponManager.setWeapon(GameConfig.WeaponSlot.Melee, melee, 0);
 
     for (const nt of validNadeTypes) {
-        player.inventory[nt] = 0;
+        if (nt) {
+            player.inventory[nt] = 0;
+        }
     }
     if (nadeType !== "" && loadout.nadeCount > 0) {
-        player.inventory[nadeType] = loadout.nadeCount;
+        player.inventory[nadeType as InventoryItem] = loadout.nadeCount;
     }
 
     player.weaponManager.showNextThrowable();
