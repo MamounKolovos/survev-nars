@@ -18,6 +18,7 @@ const GRACE_PERIOD = 5;
 const CUSTOM_SWITCH_DELAY = 0.205;
 
 export default class Solos1v1Plugin extends GamePlugin {
+    killTracker: Record<number, Record<number,number>> =  {};
     timerManager = new TimerManager();
 
     override initListeners(): void {
@@ -67,13 +68,28 @@ export default class Solos1v1Plugin extends GamePlugin {
                 params.source.__type === ObjectType.Player &&
                 params.source !== event.data.player
             ) {
-                this.game.playerBarn.addKillFeedLine(event.data.player.__id, [
+                const killer = params.source;
+                const killed = event.data.player;
+                this.game.playerBarn.addKillFeedLine(killed.__id, [
                     createSimpleSegment(
-                        `${params.source.name} had ${Math.round(params.source.health)} health remaining`,
+                        `${killer.name} had ${Math.round(killer.health)} health remaining`,
                         "white",
                     ),
                 ]);
-                makeReady(params.source);
+                this.killTracker[killer.__id][killed.__id] = (this.killTracker[killer.__id][killed.__id] ?? 0) + 1
+                this.game.playerBarn.addKillFeedLine(killer.__id, [
+                    createSimpleSegment(
+                        `You are ${this.killTracker[killer.__id][killed.__id] ?? 0}-${this.killTracker[killed.__id][killer.__id] ?? 0} against ${killed.name}`,
+                        "white",
+                    ),
+                ]);
+                this.game.playerBarn.addKillFeedLine(killed.__id, [
+                    createSimpleSegment(
+                        `You are ${this.killTracker[killed.__id][killer.__id] ?? 0}-${this.killTracker[killer.__id][killed.__id] ?? 0} against ${killer.name}`,
+                        "white",
+                    ),
+                ]);
+                makeReady(killer);
             }
         });
         this.on("playerWasRevived", (event) => {
@@ -85,6 +101,7 @@ export default class Solos1v1Plugin extends GamePlugin {
                 if (p.disconnected) {
                     continue;
                 }
+                this.killTracker[p.__id] = {};
                 this.game.playerBarn.addKillFeedLine(-1, [
                     createSimpleSegment(`${p.name} is in the game`, "white"),
                 ]);
