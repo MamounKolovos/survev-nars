@@ -9,8 +9,8 @@ import { util } from "../../../shared/utils/util";
 import { type Vec2, v2 } from "../../../shared/utils/v2";
 import type { AudioManager } from "../audioManager";
 import type { Camera } from "../camera";
-import type { DebugOptions } from "../config";
-import { debugLines } from "../debugLines";
+import type { DebugRenderOpts } from "../config";
+import { debugLines } from "../debug/debugLines";
 import type { Ctx } from "../game";
 import type { Map } from "../map";
 import type { Renderer } from "../renderer";
@@ -46,6 +46,7 @@ export class Obstacle implements AbstractObject {
     rot!: number;
     scale!: number;
     pos!: Vec2;
+    imgRot!: number;
     imgMirrorX!: boolean;
     imgMirrorY!: boolean;
 
@@ -97,7 +98,7 @@ export class Obstacle implements AbstractObject {
     visualPosOld!: Vec2;
     posInterpTicker!: number;
 
-    collider!: Collider & { height: number };
+    collider!: Collider;
 
     constructor() {
         this.sprite.anchor.set(0.5, 0.5);
@@ -209,6 +210,16 @@ export class Obstacle implements AbstractObject {
             }
             this.isPuzzlePiece = data.isPuzzlePiece;
             this.parentBuildingId = this.isPuzzlePiece ? data.parentBuildingId! : 0;
+
+            if (def.img.randomRotation) {
+                // use the ID, while its not technically random, the obstacle positions are
+                // which makes the rotation of each obstacle on your screen effectively random
+                // and the id keeps it consistent so the obstacle doesn't rotate every time its re-added
+                // to your screen
+                this.imgRot = math.deg2rad(this.__id % 360);
+            } else {
+                this.imgRot = 0;
+            }
         }
         if (this.isDoor && fullUpdate) {
             this.door.canUse = data.door?.canUse;
@@ -465,7 +476,7 @@ export class Obstacle implements AbstractObject {
         this.isNew = false;
     }
 
-    render(dt: number, camera: Camera, debug: DebugOptions, layer: number) {
+    render(dt: number, camera: Camera, debug: DebugRenderOpts, layer: number) {
         let pos = this.isDoor ? this.door.interpPos : this.pos;
 
         if (this.isSkin && camera.m_interpEnabled) {
@@ -488,7 +499,7 @@ export class Obstacle implements AbstractObject {
         if (this.imgMirrorX) {
             this.sprite.scale.x *= -1;
         }
-        this.sprite.rotation = -rot;
+        this.sprite.rotation = -rot + this.imgRot;
 
         if (this.isDoor && this.door?.casingSprite) {
             const casingPos = camera.m_pointToScreen(
@@ -501,11 +512,18 @@ export class Obstacle implements AbstractObject {
             this.door.casingSprite.visible = !this.dead;
         }
 
-        if (IS_DEV && debug.render.obstacles && util.sameLayer(layer, this.layer)) {
+        if (IS_DEV && debug.obstacles && util.sameLayer(layer, this.layer)) {
             const def = MapObjectDefs[this.type] as ObstacleDef;
 
             const color = def.collidable ? 0xff0000 : 0xffff00;
             debugLines.addCollider(this.collider, color, 0.1);
+
+            // don't feel like adding a debug option for this rn
+            // but its only used for trees
+            // if (def.aabb) {
+            //     const aabb = collider.transform(def.aabb, this.pos, this.rot, this.scale);
+            //     debugLines.addCollider(aabb, 0x00ff00, 0.2);
+            // }
         }
     }
 }

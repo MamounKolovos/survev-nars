@@ -1,6 +1,18 @@
 import { math } from "./math";
 import { type Vec2, v2 } from "./v2";
 
+export class AssertionError extends Error {
+    name = "AssertionError";
+    constructor(message?: string, options?: ErrorOptions) {
+        super(message, options);
+
+        // @ts-ignore this was v8 / nodejs specific but firefox now also supports it
+        // what it does is remove the `assert` call from the stack trace
+        // typescript types for it only exist on @types/node so cant use ts-expect-error without
+        // it failing on the server
+        Error.captureStackTrace?.(this, assert);
+    }
+}
 /**
  * Custom function to not bundle nodejs assert polyfill with the client
  */
@@ -9,18 +21,16 @@ export function assert(value: unknown, message?: string | Error): asserts value 
         const error =
             message instanceof Error
                 ? message
-                : new Error(message ?? "Assertation failed");
+                : new AssertionError(message ?? "Assertation failed");
         throw error;
     }
 }
 
-export function defineSkin<Def>(
-    baseDefs: Record<string, Def>,
-    baseType: string,
-    params: Partial<Def>,
-) {
-    return util.mergeDeep({}, baseDefs[baseType], { baseType }, params) as Def;
-}
+export type DeepPartial<T> = T extends object
+    ? {
+          [P in keyof T]?: DeepPartial<T[P]>;
+      }
+    : T;
 
 export const util = {
     //
@@ -322,24 +332,20 @@ export const util = {
         return arr.at(index % arr.length) as T;
     },
 
-    removeElem<T>(arr: T[], element: T) {
-        const index = arr.indexOf(element);
-        if (index != -1) arr.splice(index, 1);
-    },
-
-    randomElem<T>(arr: T[]): T {
-        return arr[Math.floor(Math.random() * arr.length)];
-    },
-
-    rotateRight(arr: unknown[]) {
-        const lastElem = arr.at(-1);
-        for (let i = arr.length - 1; i >= 1; i--) {
-            arr[i] = arr[i - 1];
+    removeFrom<T>(arr: T[], item: T): boolean {
+        const idx = arr.indexOf(item);
+        if (idx === -1) {
+            return false;
         }
-        arr[0] = lastElem;
+        arr.splice(idx, 1);
+        return true;
     },
 
-    weightedRandom<T extends Object>(
+    removeElem<T>(arr: T[], item: T): boolean {
+        return util.removeFrom(arr, item);
+    },
+
+    weightedRandom<T extends object>(
         items: Array<T & { weight: number }>,
         rand = Math.random,
     ) {
@@ -354,5 +360,61 @@ export const util = {
             idx++;
         }
         return items[idx];
+    },
+
+    randomItem<T>(array: T[]): T | undefined {
+        if (array.length === 0) return undefined;
+        return array[util.randomInt(0, array.length - 1)];
+    },
+
+    randomElem<T>(array: T[]): T {
+        return array[util.randomInt(0, array.length - 1)];
+    },
+
+    rotateRight<T>(array: T[]): void {
+        if (array.length <= 1) return;
+        array.unshift(array.pop() as T);
+    },
+
+    weightedRandomObject(items: Record<string, number>) {
+        const arr: Array<{
+            type: string;
+            weight: number;
+        }> = [];
+        for (const key in items) {
+            if (items[key]) {
+                arr.push({ type: key, weight: items[key] });
+            }
+        }
+
+        let total = 0.0;
+        for (let i = 0; i < arr.length; i++) {
+            total += arr[i].weight;
+        }
+
+        let rng = util.random(0, total);
+        let idx = 0;
+        while (rng > arr[idx].weight) {
+            rng -= arr[idx].weight;
+            idx++;
+        }
+        return arr[idx].type;
+    },
+
+    formatDate(date?: string | Date) {
+        return date
+            ? new Date(date).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+              })
+            : "Unknown";
+    },
+
+    daysToMs(days: number) {
+        const dayInMs = 24 * 60 * 60 * 1000;
+        return days * dayInMs;
     },
 };

@@ -1,11 +1,10 @@
 import type { Hono } from "hono";
 import type { UpgradeWebSocket } from "hono/ws";
-import { GameConfig } from "../../../shared/gameConfig";
-import type { Info } from "../../../shared/types/api";
+import type { SiteInfoRes } from "../../../shared/types/api";
 import { Config } from "../config";
 import { TeamMenu } from "../teamMenu";
 import { GIT_VERSION } from "../utils/gitRevision";
-import { Logger, defaultLogger } from "../utils/logger";
+import { defaultLogger, ServerLogger } from "../utils/logger";
 import type { FindGamePrivateBody, FindGamePrivateRes } from "../utils/types";
 
 class Region {
@@ -43,7 +42,7 @@ class Region {
     async findGame(body: FindGamePrivateBody): Promise<FindGamePrivateRes> {
         const data = await this.fetch<FindGamePrivateRes>("api/find_game", body);
         if (!data) {
-            return { error: "full" };
+            return { error: "find_game_failed" };
         }
         return data;
     }
@@ -54,13 +53,14 @@ interface RegionData {
 }
 
 export class ApiServer {
-    readonly logger = new Logger("Server");
+    readonly logger = new ServerLogger("Server");
 
     teamMenu = new TeamMenu(this);
 
     regions: Record<string, Region> = {};
 
     modes = [...Config.modes];
+    clientTheme = Config.clientTheme;
 
     captchaEnabled = Config.captchaEnabled;
 
@@ -74,8 +74,8 @@ export class ApiServer {
         this.teamMenu.init(app, upgradeWebSocket);
     }
 
-    getSiteInfo(): Info {
-        const data: Info = {
+    getSiteInfo(): SiteInfoRes {
+        const data: SiteInfoRes = {
             modes: this.modes,
             pops: {},
             youtube: { name: "", link: "" },
@@ -83,6 +83,7 @@ export class ApiServer {
             country: "US",
             gitRevision: GIT_VERSION,
             captchaEnabled: this.captchaEnabled,
+            clientTheme: this.clientTheme,
         };
 
         for (const region in this.regions) {
@@ -105,14 +106,10 @@ export class ApiServer {
     }
 
     async findGame(body: FindGamePrivateBody): Promise<FindGamePrivateRes> {
-        if (body.version !== GameConfig.protocolVersion) {
-            return { error: "invalid_protocol" };
-        }
-
         if (body.region in this.regions) {
             return await this.regions[body.region].findGame(body);
         }
-        return { error: "full" };
+        return { error: "find_game_failed" };
     }
 }
 

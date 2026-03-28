@@ -19,11 +19,11 @@ import { errorLogManager } from "./errorLogs";
 import { Game } from "./game";
 import { helpers } from "./helpers";
 import { InputHandler } from "./input";
-import { InputBindUi, InputBinds } from "./inputBinds";
+import { InputBinds, InputBindUi } from "./inputBinds";
 import { PingTest } from "./pingTest";
 import { proxy } from "./proxy";
 import { ResourceManager } from "./resources";
-import { SDK } from "./sdk";
+import { SDK } from "./sdk/sdk";
 import { SiteInfo } from "./siteInfo";
 import { LoadoutMenu } from "./ui/loadoutMenu";
 import { Localization } from "./ui/localization";
@@ -35,7 +35,7 @@ import { ProfileUi } from "./ui/profileUi";
 import { TeamMenu } from "./ui/teamMenu";
 import { loadStaticDomImages } from "./ui/ui2";
 
-class Application {
+export class Application {
     nameInput = $("#player-name-input-solo");
     serverSelect = $("#server-select-main");
     playMode0Btn = $("#btn-start-mode-0");
@@ -96,6 +96,12 @@ class Application {
     hasFocus = true;
     newsDisplayed = true;
 
+    updateLogoBasedOnLanguage(lang: string) {
+        const header = $("#start-row-header");
+        if (!header.length) return;
+        header.toggleClass("lang-ru", lang === "ru");
+    }
+
     constructor() {
         this.account = new Account(this.config);
         this.loadoutMenu = new LoadoutMenu(this.account, this.localization);
@@ -128,7 +134,7 @@ class Application {
     }
 
     async loadBrowserDeps(onLoadCompleteCb: () => void) {
-        await SDK.init();
+        await SDK.init(this);
         onLoadCompleteCb();
     }
 
@@ -140,18 +146,23 @@ class Application {
             if (device.mobile) {
                 Menu.applyMobileBrowserStyling(device.tablet);
             }
-            const language =
-                this.config.get("language") || this.localization.detectLocale();
-            this.config.set("language", language);
-            this.localization.setLocale(language);
+            if (SDK.isSpellSync) {
+                this.localization.setLocale(window.spellSync.language);
+                this.updateLogoBasedOnLanguage(window.spellSync.language);
+            } else {
+                const language =
+                    this.config.get("language") || this.localization.detectLocale();
+                this.config.set("language", language);
+                this.localization.setLocale(language);
+                this.updateLogoBasedOnLanguage(language);
+            }
             this.localization.populateLanguageSelect();
             this.startPingTest();
             this.siteInfo.load();
             this.localization.localizeIndex();
             this.account.init();
 
-            (this.nameInput as unknown as HTMLInputElement).maxLength =
-                net.Constants.PlayerNameMaxLen;
+            this.nameInput.attr("maxLength", net.Constants.PlayerNameMaxLen);
 
             this.playMode0Btn.on("click", () => {
                 SDK.requestMidGameAd(() => {
@@ -169,7 +180,7 @@ class Application {
                 });
             });
 
-            this.serverSelect.change(() => {
+            this.serverSelect.on("change", () => {
                 const t = this.serverSelect.find(":selected").val();
                 this.config.set("region", t as string);
             });
@@ -212,7 +223,7 @@ class Application {
                     const a = $(r);
                     a.prop("checked", this.config.get(a.prop("id")));
                 });
-            $(".modal-settings-item > input:checkbox").change((t) => {
+            $(".modal-settings-item > input:checkbox").on("change", (t) => {
                 const r = $(t.target);
                 this.config.set(r.prop("id"), r.is(":checked"));
             });
@@ -223,6 +234,10 @@ class Application {
                 const r = t.target.value;
                 if (r) {
                     this.config.set("language", r as ConfigType["language"]);
+                    if (SDK.isSpellSync && window.spellSync) {
+                        window.spellSync.changeLanguage(r);
+                    }
+                    this.updateLogoBasedOnLanguage(r);
                 }
             });
             $("#btn-create-team").on("click", () => {
@@ -311,7 +326,11 @@ class Application {
             this.resourceManager.loadMapAssets("main");
             this.input = new InputHandler(document.getElementById("game-touch-area")!);
             this.inputBinds = new InputBinds(this.input, this.config);
-            this.inputBindUi = new InputBindUi(this.input, this.inputBinds);
+            this.inputBindUi = new InputBindUi(
+                this.input,
+                this.inputBinds,
+                this.localization,
+            );
             const onJoin = () => {
                 this.loadoutDisplay!.free();
                 this.game!.init();
@@ -338,7 +357,7 @@ class Application {
                 if (errMsg) {
                     this.showErrorModal(errMsg);
                 }
-
+                console.error("Quitting", errMsg);
                 SDK.gamePlayStop();
             };
             this.game = new Game(
@@ -477,9 +496,13 @@ class Application {
 
         this.nameInput.val(this.config.get("playerName")!);
         this.serverSelect.find("option").each((_i, ele) => {
-            ele.selected = ele.value == this.config.get("region");
+            const spellSyncLang = SDK.isSpellSync && window.spellSync.language;
+            const configRegion = this.config.get("region");
+            ele.selected = spellSyncLang
+                ? ele.value === spellSyncLang
+                : ele.value === configRegion;
         });
-        this.languageSelect.val(this.config.get("language")!);
+        this.languageSelect.val(this.localization.getLocale());
     }
 
     onConfigModified(key?: string) {
@@ -505,6 +528,7 @@ class Application {
         if (key == "language") {
             const language = this.config.get("language")!;
             this.localization.setLocale(language);
+            this.updateLogoBasedOnLanguage(language);
         }
 
         if (key == "region") {
@@ -514,6 +538,10 @@ class Application {
 
         if (key == "highResTex") {
             location.reload();
+        }
+
+        if (key === "debugHUD") {
+            this.game?.debugHUD?.onConfigModified();
         }
     }
 
@@ -769,7 +797,6 @@ class Application {
             this.game!.tryJoinGame(
                 url,
                 matchData.data,
-                this.account.loadoutPriv,
                 this.account.questPriv,
                 onFailure,
             );
@@ -840,8 +867,9 @@ class Application {
         const typeText: Record<string, string> = {
             // TODO: translate those?
             behind_proxy: this.localization.translate("index-behind-proxy"),
-            ip_banned: `Your IP has been banned`,
+            ip_banned: this.localization.translate("index-ip-banned"),
         };
+
         const text = typeText[err];
 
         if (text) {
@@ -867,7 +895,6 @@ class Application {
         this.resourceManager!.update(dt);
         this.audioManager.update(dt);
         this.ambience.update(dt, this.audioManager, !this.active);
-        this.teamMenu.update(dt);
 
         // Game update
         if (this.game?.initialized && this.game.m_playing) {
@@ -933,10 +960,10 @@ window.addEventListener("beforeunload", (e) => {
         return dialogText;
     }
 });
-window.addEventListener("onfocus", () => {
+window.addEventListener("focus", () => {
     App.hasFocus = true;
 });
-window.addEventListener("onblur", () => {
+window.addEventListener("blur", () => {
     App.hasFocus = false;
 });
 
@@ -944,6 +971,9 @@ const reportedErrors: string[] = [];
 window.onerror = function (msg, url, lineNo, columnNo, error) {
     msg = msg || "undefined_error_msg";
     const stacktrace = error ? error.stack : "";
+
+    // don't report useless errors lol
+    if (!url && !lineNo && !columnNo) return;
 
     const errObj = {
         msg,

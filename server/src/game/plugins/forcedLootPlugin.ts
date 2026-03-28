@@ -6,7 +6,7 @@ import { ObjectType } from "../../../../shared/net/objectSerializeFns";
 import { collider } from "../../../../shared/utils/collider";
 import { util } from "../../../../shared/utils/util";
 import { v2 } from "../../../../shared/utils/v2";
-import { TimerManager, createSimpleSegment } from "../../utils/pluginUtils";
+import { createSimpleSegment, TimerManager } from "../../utils/pluginUtils";
 import type { Game } from "../game";
 import type { Obstacle } from "../objects/obstacle";
 import type { Player } from "../objects/player";
@@ -145,6 +145,7 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
             if (Math.random() < 0.3) {
                 return "spas12";
             }
+            break;
         }
         case "m249":
         case "pkp": {
@@ -161,6 +162,7 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
             if (Math.random() < 0.4) {
                 return "spas12";
             }
+            break;
         }
         case "p30l_dual":
         case "deagle_dual":
@@ -456,9 +458,11 @@ function getUpgradedGun(g: string): string {
         case "m39":
         case "mk12": {
             if (Math.random() < 0.4) return "garand";
+            break;
         }
         case "famas": {
-            if (Math.random() < 0.5 && g !== "mk12" && g !== "m39") return "an94";
+            if (Math.random() < 0.5) return "an94";
+            break;
         }
 
         case "deagle_dual":
@@ -557,7 +561,7 @@ function getTotalGunStrength(primary: string, secondary: string): number {
             case "saiga":
                 return 0.0; //i dont think spas saiga is actually this weak but i want it to have more armor/rolescase
             case "p30l_dual":
-                0.8;
+                return 0.8;
             case "deagle_dual":
                 return 0.45;
             case "m4a1":

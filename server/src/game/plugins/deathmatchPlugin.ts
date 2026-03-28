@@ -3,7 +3,12 @@ import type { GunDef } from "../../../../shared/defs/gameObjects/gunDefs";
 import { MapObjectDefs } from "../../../../shared/defs/mapObjectDefs";
 import type { ObstacleDef } from "../../../../shared/defs/mapObjectsTyping";
 import { MapId } from "../../../../shared/defs/types/misc";
-import { GameConfig, GasMode, TeamMode } from "../../../../shared/gameConfig";
+import {
+    GameConfig,
+    GasMode,
+    type InventoryItem,
+    TeamMode,
+} from "../../../../shared/gameConfig";
 import * as net from "../../../../shared/net/net";
 import { ObjectType } from "../../../../shared/net/objectSerializeFns";
 import { type Collider, coldet } from "../../../../shared/utils/coldet";
@@ -11,7 +16,7 @@ import { collider } from "../../../../shared/utils/collider";
 import { math } from "../../../../shared/utils/math";
 import { assert, util } from "../../../../shared/utils/util";
 import { v2 } from "../../../../shared/utils/v2";
-import { TimerManager, createSimpleSegment } from "../../utils/pluginUtils";
+import { createSimpleSegment, TimerManager } from "../../utils/pluginUtils";
 import type { DamageParams } from "../objects/gameObject";
 import type { Player } from "../objects/player";
 import { GamePlugin } from "../pluginManager";
@@ -386,8 +391,7 @@ function applyLoadout(player: Player, loadout: Loadout) {
         const type = weapon.type instanceof Function ? weapon.type() : weapon.type;
         const ammo =
             weapon.ammo ??
-            player.weaponManager.getTrueAmmoStats(GameObjectDefs[type] as GunDef)
-                .trueMaxClip;
+            player.weaponManager.getTrueAmmoStats(GameObjectDefs[type] as GunDef).maxClip;
 
         player.weaponManager.setWeapon(i, type, ammo);
     }
@@ -507,10 +511,12 @@ function attachGasResizer(
 }
 
 function addToInventory(player: Player, type: string, amount: number) {
-    if (!player.bagSizes[type]) return;
+    if (!(type in player.bagSizes)) return;
+    const itemType = type as InventoryItem;
     const backpackLevel = player.getGearLevel(player.backpack);
-    const spaceLeft = player.bagSizes[type][backpackLevel] - player.inventory[type];
-    player.inventory[type] += math.clamp(amount, 0, spaceLeft);
+    const spaceLeft =
+        player.bagSizes[itemType][backpackLevel] - player.inventory[itemType];
+    player.inventory[itemType] += math.clamp(amount, 0, spaceLeft);
     player.inventoryDirty = true;
 }
 

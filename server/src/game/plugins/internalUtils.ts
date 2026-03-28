@@ -12,7 +12,7 @@ import { collider } from "../../../../shared/utils/collider";
 import { math } from "../../../../shared/utils/math";
 import { assert, util } from "../../../../shared/utils/util";
 import { type Vec2, v2 } from "../../../../shared/utils/v2";
-import { type TimerManager, createSimpleSegment } from "../../utils/pluginUtils";
+import { createSimpleSegment, type TimerManager } from "../../utils/pluginUtils";
 import type { Game } from "../game";
 import type { GameMap } from "../map";
 import type { Gas } from "../objects/gas";
@@ -573,20 +573,18 @@ export function attachObstacleDeathLoot(
                 const count = util.randomInt(lootTierOrItem.min!, lootTierOrItem.max!);
 
                 for (let i = 0; i < count; i++) {
-                    const items = plugin.game.lootBarn.getLootTable(lootTierOrItem.tier!);
-
-                    for (const item of items) {
-                        plugin.game.lootBarn.addLoot(
-                            item.name,
-                            v2.add(lootPos, v2.mul(v2.randomUnit(), 0.2)),
-                            obstacle.layer,
-                            item.count,
-                            undefined,
-                            undefined, // undefined to use default push speed value
-                            params.dir,
-                            lootTierOrItem.props?.preloadGuns,
-                        );
-                    }
+                    const item = plugin.game.lootBarn.getLootTable(lootTierOrItem.tier!);
+                    if (!item) continue;
+                    plugin.game.lootBarn.addLoot(
+                        item.name,
+                        v2.add(lootPos, v2.mul(v2.randomUnit(), 0.2)),
+                        obstacle.layer,
+                        item.count,
+                        undefined,
+                        undefined, // undefined to use default push speed value
+                        params.dir,
+                        lootTierOrItem.props?.preloadGuns,
+                    );
                 }
             } else {
                 plugin.game.lootBarn.addLoot(
