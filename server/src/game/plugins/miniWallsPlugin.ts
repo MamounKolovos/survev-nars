@@ -635,9 +635,9 @@ function getRandomRifle(): string {
 
 function baseNadeType(): string {
     return util.weightedRandom([
-        { weight: 5, t: "" },
-        { weight: 1, t: "frag" },
-        { weight: 2, t: "impulse" },
+        { weight: 2, t: "" },
+        { weight: 3, t: "frag" },
+        { weight: 3, t: "impulse" },
         { weight: 2, t: "mirv" },
     ]).t;
 }
