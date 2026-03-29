@@ -658,18 +658,6 @@ const loadouts = [
     {
         weight: 1,
         loadout: {
-            primary: "sv98",
-            secondary: "sv98",
-            melee: baseMeleeType,
-            nadeType: baseNadeType,
-            nadeCount: 1,
-            chestLevel: 2,
-            helmetLevel: 2,
-        },
-    },
-    {
-        weight: 1,
-        loadout: {
             primary: "spas12",
             secondary: "sv98",
             melee: baseMeleeType,
