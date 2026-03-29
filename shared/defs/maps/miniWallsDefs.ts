@@ -121,7 +121,7 @@ export const MiniWalls: MapDef = {
         },
         densitySpawns: [
             {
-                stone_01: 800,
+                stone_01: 1400,
                 barrel_01: 20,
                 silo_01: 0,
                 crate_01: 0,
@@ -129,7 +129,7 @@ export const MiniWalls: MapDef = {
                 crate_03: 0,
                 bush_01: 0,
                 cache_06: 0,
-                tree_01: 400,
+                tree_01: 500,
                 hedgehog_01: 0,
                 hedgehog_02: 25,
                 container_01: 0,
