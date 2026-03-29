@@ -663,8 +663,8 @@ const loadouts = [
             melee: baseMeleeType,
             nadeType: baseNadeType,
             nadeCount: 1,
-            chestLevel: 2,
-            helmetLevel: 2,
+            chestLevel: 1,
+            helmetLevel: 1,
         },
     },
     {
@@ -676,7 +676,7 @@ const loadouts = [
             nadeType: baseNadeType,
             nadeCount: 1,
             chestLevel: 2,
-            helmetLevel: 3,
+            helmetLevel: 1,
         },
     },
     {
@@ -688,7 +688,7 @@ const loadouts = [
             nadeType: baseNadeType,
             nadeCount: 1,
             chestLevel: 2,
-            helmetLevel: 2,
+            helmetLevel: 1,
         },
     },
     {

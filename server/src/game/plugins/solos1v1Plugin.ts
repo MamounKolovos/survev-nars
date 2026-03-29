@@ -18,7 +18,7 @@ const GRACE_PERIOD = 5;
 const CUSTOM_SWITCH_DELAY = 0.205;
 
 export default class Solos1v1Plugin extends GamePlugin {
-    killTracker: Record<number, Record<number,number>> =  {};
+    killTracker: Record<number, Record<number, number>> = {};
     timerManager = new TimerManager();
 
     override initListeners(): void {
@@ -76,7 +76,8 @@ export default class Solos1v1Plugin extends GamePlugin {
                         "white",
                     ),
                 ]);
-                this.killTracker[killer.__id][killed.__id] = (this.killTracker[killer.__id][killed.__id] ?? 0) + 1
+                this.killTracker[killer.__id][killed.__id] =
+                    (this.killTracker[killer.__id][killed.__id] ?? 0) + 1;
                 this.game.playerBarn.addKillFeedLine(killer.__id, [
                     createSimpleSegment(
                         `You are ${this.killTracker[killer.__id][killed.__id] ?? 0}-${this.killTracker[killed.__id][killer.__id] ?? 0} against ${killed.name}`,
