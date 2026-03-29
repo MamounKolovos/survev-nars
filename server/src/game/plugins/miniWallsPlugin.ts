@@ -914,7 +914,7 @@ const loadouts = [
             secondary: getRandomRifle,
             melee: baseMeleeType,
             nadeType: "impulse",
-            nadeCount: 1,
+            nadeCount: 2,
             chestLevel: 4,
             helmetLevel: 3,
         },
