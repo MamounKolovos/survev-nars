@@ -58,9 +58,9 @@ const ZONE_CLOSE_DURATION = 10; //(minutes) how long the zone takes to finally c
 // how long an obstacle waits after being destroyed before regrowing
 const OBSTACLE_REGROW_DELAY = 15;
 
-const PLAYABLE_WIDTH = 300;
-const PLAYABLE_HEIGHT = 120;
-const BED_DIST_FROM_WALL = 60; //might not actually be where the bed is, but just where its generating and stuff idk
+const PLAYABLE_WIDTH = 200;
+const PLAYABLE_HEIGHT = 100;
+const BED_DIST_FROM_WALL = 25; //might not actually be where the bed is, but just where its generating and stuff idk
 const BED_COVER_OFFSET = PLAYABLE_WIDTH / 2 - BED_DIST_FROM_WALL; //offset from center in the x axis
 const BED_OFFSET = BED_COVER_OFFSET - 10;
 
@@ -496,7 +496,6 @@ function giveGear(player: Player) {
         secondary,
         (GameObjectDefs[secondary] as GunDef).maxClip,
     );
-
     player.weaponManager.setWeapon(GameConfig.WeaponSlot.Melee, melee, 0);
 
     for (const nt of validNadeTypes) {
