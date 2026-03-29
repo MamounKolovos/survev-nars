@@ -935,12 +935,12 @@ const loadouts = [
         weight: 1,
         loadout: {
             primary: "m870",
-            secondary: "mp5",
+            secondary: "mac10",
             melee: baseMeleeType,
             nadeType: "impulse",
             nadeCount: 2,
             chestLevel: 4,
-            helmetLevel: 3,
+            helmetLevel: 4,
         },
     },
 ];
