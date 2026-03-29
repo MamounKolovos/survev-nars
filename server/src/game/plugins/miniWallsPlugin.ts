@@ -650,7 +650,7 @@ function baseMeleeType(): string {
         // {weight: 5, t: "impulse_gloves"},
         { weight: 0, t: "hook" },
         { weight: 0, t: "katana" },
-        { weight: 1, t: "naginata" },
+        { weight: 0, t: "naginata" },
     ]).t;
 }
 
@@ -934,12 +934,12 @@ const loadouts = [
     {
         weight: 1,
         loadout: {
-            primary: "spas12",
-            secondary: "saiga",
+            primary: "m870",
+            secondary: "mp5",
             melee: baseMeleeType,
             nadeType: "impulse",
-            nadeCount: 1,
-            chestLevel: 2,
+            nadeCount: 2,
+            chestLevel: 4,
             helmetLevel: 3,
         },
     },
