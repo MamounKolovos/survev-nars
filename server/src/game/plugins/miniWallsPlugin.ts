@@ -645,11 +645,11 @@ function baseNadeType(): string {
 function baseMeleeType(): string {
     return util.weightedRandom([
         { weight: 85, t: "fists" },
-        { weight: 3, t: "stonehammer" },
-        { weight: 5, t: "machete" },
+        { weight: 0, t: "stonehammer" },
+        { weight: 0, t: "machete" },
         // {weight: 5, t: "impulse_gloves"},
-        { weight: 3, t: "hook" },
-        { weight: 3, t: "katana" },
+        { weight: 0, t: "hook" },
+        { weight: 0, t: "katana" },
         { weight: 1, t: "naginata" },
     ]).t;
 }
