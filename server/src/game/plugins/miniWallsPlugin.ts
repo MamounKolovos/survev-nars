@@ -324,7 +324,7 @@ export default class MiniWallsPlugin extends GamePlugin {
             this.timerManager.setTimeout(() => {
                 this.breakBeds();
             }, AUTO_BED_BREAK_DELAY * 60);
-            for (const t of this.game.playerBarn.teams){
+            for (const t of this.game.playerBarn.teams) {
                 t.isLastManApplied = true;
             }
         });
@@ -644,7 +644,7 @@ function baseNadeType(): string {
 
 function baseMeleeType(): string {
     return util.weightedRandom([
-        { weight: 85, t: "" },
+        { weight: 85, t: "fists" },
         { weight: 3, t: "stonehammer" },
         { weight: 5, t: "machete" },
         // {weight: 5, t: "impulse_gloves"},
