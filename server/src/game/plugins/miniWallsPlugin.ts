@@ -636,9 +636,9 @@ function getRandomRifle(): string {
 function baseNadeType(): string {
     return util.weightedRandom([
         { weight: 5, t: "" },
-        { weight: 3, t: "frag" },
-        { weight: 1, t: "impulse" },
-        { weight: 1, t: "mirv" },
+        { weight: 1, t: "frag" },
+        { weight: 2, t: "impulse" },
+        { weight: 2, t: "mirv" },
     ]).t;
 }
 
@@ -712,18 +712,18 @@ const loadouts = [
             nadeType: baseNadeType,
             nadeCount: 1,
             chestLevel: 2,
-            helmetLevel: 3,
+            helmetLevel: 2,
         },
     },
     {
-        weight: 1,
+        weight: 0.5,
         loadout: {
             primary: "blr",
             secondary: "blr",
             melee: baseMeleeType,
             nadeType: baseNadeType,
             nadeCount: 1,
-            chestLevel: 2,
+            chestLevel: 3,
             helmetLevel: 3,
         },
     },
@@ -752,14 +752,14 @@ const loadouts = [
         },
     },
     {
-        weight: 1,
+        weight: 0.5,
         loadout: {
             primary: "scout_elite",
             secondary: "scout_elite",
             melee: baseMeleeType,
             nadeType: baseNadeType,
             nadeCount: 1,
-            chestLevel: 2,
+            chestLevel: 3,
             helmetLevel: 3,
         },
     },
@@ -844,7 +844,7 @@ const loadouts = [
             nadeType: baseNadeType,
             nadeCount: 1,
             chestLevel: 3,
-            helmetLevel: 2,
+            helmetLevel: 3,
         },
     },
     {
@@ -854,9 +854,9 @@ const loadouts = [
             secondary: "famas",
             melee: baseMeleeType,
             nadeType: "impulse",
-            nadeCount: 1,
-            chestLevel: 3,
-            helmetLevel: 2,
+            nadeCount: 2,
+            chestLevel: 4,
+            helmetLevel: 3,
         },
     },
     {
@@ -879,7 +879,7 @@ const loadouts = [
             melee: baseMeleeType,
             nadeType: baseNadeType,
             nadeCount: 1,
-            chestLevel: 2,
+            chestLevel: 3,
             helmetLevel: 3,
         },
     },
@@ -891,12 +891,12 @@ const loadouts = [
             melee: baseMeleeType,
             nadeType: "impulse",
             nadeCount: 1,
-            chestLevel: 3,
+            chestLevel: 4,
             helmetLevel: 3,
         },
     },
     {
-        weight: 3,
+        weight: 1,
         loadout: {
             primary: "sv98",
             secondary: getRandomRifle,
@@ -908,26 +908,26 @@ const loadouts = [
         },
     },
     {
-        weight: 3,
+        weight: 1,
         loadout: {
             primary: "spas12",
             secondary: getRandomRifle,
             melee: baseMeleeType,
             nadeType: "impulse",
             nadeCount: 1,
-            chestLevel: 3,
+            chestLevel: 4,
             helmetLevel: 3,
         },
     },
     {
-        weight: 3,
+        weight: 1,
         loadout: {
             primary: "m870",
             secondary: getRandomRifle,
             melee: baseMeleeType,
             nadeType: "impulse",
             nadeCount: 2,
-            chestLevel: 3,
+            chestLevel: 4,
             helmetLevel: 3,
         },
     },
