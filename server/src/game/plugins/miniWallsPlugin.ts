@@ -324,6 +324,9 @@ export default class MiniWallsPlugin extends GamePlugin {
             this.timerManager.setTimeout(() => {
                 this.breakBeds();
             }, AUTO_BED_BREAK_DELAY * 60);
+            for (const t of this.game.playerBarn.teams){
+                t.isLastManApplied = true;
+            }
         });
 
         this.on("mapWillCreate", (event, ctx) => {
