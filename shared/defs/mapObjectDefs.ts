@@ -12071,7 +12071,7 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
         height: 0.5,
         collidable: true,
         destructible: true,
-        health: 1000,
+        health: 2000,
         reflectBullets: false,
         hitParticle: "glassChip",
         explodeParticle: "windowBreak",

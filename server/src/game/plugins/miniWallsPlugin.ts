@@ -545,7 +545,7 @@ function getNewLoadout(): Loadout {
 }
 
 function getRespawnDelay(player: Player): number {
-    return 8;
+    return 5;
 }
 
 function bedBroken(bed: Bed, game: Game) {
