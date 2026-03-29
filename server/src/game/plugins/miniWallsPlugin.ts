@@ -826,25 +826,13 @@ const loadouts = [
     {
         weight: 1,
         loadout: {
-            primary: "spas12",
-            secondary: "model94",
-            melee: baseMeleeType,
-            nadeType: baseNadeType,
-            nadeCount: 1,
-            chestLevel: 3,
-            helmetLevel: 2,
-        },
-    },
-    {
-        weight: 1,
-        loadout: {
             primary: "m870",
             secondary: "model94",
             melee: baseMeleeType,
             nadeType: baseNadeType,
             nadeCount: 1,
             chestLevel: 3,
-            helmetLevel: 2,
+            helmetLevel: 3,
         },
     },
     {
@@ -915,8 +903,8 @@ const loadouts = [
             melee: baseMeleeType,
             nadeType: "impulse",
             nadeCount: 1,
-            chestLevel: 3,
-            helmetLevel: 3,
+            chestLevel: 2,
+            helmetLevel: 2,
         },
     },
     {
