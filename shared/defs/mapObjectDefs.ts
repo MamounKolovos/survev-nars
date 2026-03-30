@@ -12065,11 +12065,11 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
     vat_03: {
         //same as vat_01 but modified a bit for mini walls
         type: "obstacle",
-        scale: { createMin: 0.7, createMax: 0.7, destroy: 0.3 },
+        scale: { createMin: 1.5, createMax: 1.5, destroy: 0.3 },
         collision: collider.createCircle(v2.create(0, 0), 2),
         mapObstacleBounds: [collider.createAabb(v2.create(-6, -6), v2.create(6, 6), 0)],
         height: 0.5,
-        collidable: true,
+        collidable: false,
         destructible: true,
         health: 2000,
         reflectBullets: false,
