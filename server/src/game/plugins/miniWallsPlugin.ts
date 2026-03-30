@@ -716,18 +716,6 @@ const loadouts = [
         },
     },
     {
-        weight: 0.5,
-        loadout: {
-            primary: "blr",
-            secondary: "blr",
-            melee: baseMeleeType,
-            nadeType: baseNadeType,
-            nadeCount: 2,
-            chestLevel: 3,
-            helmetLevel: 3,
-        },
-    },
-    {
         weight: 1,
         loadout: {
             primary: "spas12",
@@ -735,7 +723,7 @@ const loadouts = [
             melee: baseMeleeType,
             nadeType: baseNadeType,
             nadeCount: 1,
-            chestLevel: 2,
+            chestLevel: 3,
             helmetLevel: 3,
         },
     },
@@ -752,18 +740,6 @@ const loadouts = [
         },
     },
     {
-        weight: 0.5,
-        loadout: {
-            primary: "scout_elite",
-            secondary: "scout_elite",
-            melee: baseMeleeType,
-            nadeType: baseNadeType,
-            nadeCount: 2,
-            chestLevel: 3,
-            helmetLevel: 3,
-        },
-    },
-    {
         weight: 1,
         loadout: {
             primary: "spas12",
@@ -771,7 +747,7 @@ const loadouts = [
             melee: baseMeleeType,
             nadeType: baseNadeType,
             nadeCount: 1,
-            chestLevel: 2,
+            chestLevel: 3,
             helmetLevel: 3,
         },
     },
@@ -795,7 +771,7 @@ const loadouts = [
             melee: baseMeleeType,
             nadeType: baseNadeType,
             nadeCount: 1,
-            chestLevel: 2,
+            chestLevel: 3,
             helmetLevel: 3,
         },
     },
@@ -867,7 +843,7 @@ const loadouts = [
             melee: baseMeleeType,
             nadeType: baseNadeType,
             nadeCount: 1,
-            chestLevel: 2,
+            chestLevel: 3,
             helmetLevel: 3,
         },
     },
@@ -892,7 +868,7 @@ const loadouts = [
             nadeType: "impulse",
             nadeCount: 1,
             chestLevel: 3,
-            helmetLevel: 3,
+            helmetLevel: 2,
         },
     },
     {
@@ -904,7 +880,7 @@ const loadouts = [
             nadeType: "impulse",
             nadeCount: 1,
             chestLevel: 2,
-            helmetLevel: 2,
+            helmetLevel: 3,
         },
     },
     {
