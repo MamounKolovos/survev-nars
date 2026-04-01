@@ -109,6 +109,11 @@ export class ApiServer {
             return { error: "invalid_protocol" };
         }
 
+        // user isn't logged in or they are logged in but they're banned
+        if (body.playerData[0].userId == null) {
+            return { error: "join_game_failed" };
+        }
+
         if (body.region in this.regions) {
             return await this.regions[body.region].findGame(body);
         }
