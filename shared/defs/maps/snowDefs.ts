@@ -1,6 +1,6 @@
 import { util } from "../../utils/util";
 import type { MapDef } from "../mapDefs";
-import type { PartialMapDef } from "./baseDefs";
+import { Main, type PartialMapDef } from "./baseDefs";
 
 const mapDef: PartialMapDef = {
     assets: {
@@ -72,4 +72,4 @@ const mapDef: PartialMapDef = {
     /* STRIP_FROM_PROD_CLIENT:END */
 };
 
-export const Snow = util.mergeDeep({}, mapDef) as MapDef;
+export const Snow = util.mergeDeep({}, Main, mapDef) as MapDef;
