@@ -75,17 +75,19 @@ export const ModerationRouter = new Hono()
                     };
                 });
 
-                await db
-                    .insert(bannedIpsTable)
-                    .values(bans)
-                    .onConflictDoUpdate({
-                        target: bannedIpsTable.encodedIp,
-                        set: {
-                            expiresIn: expiresIn,
-                            reason: banReason,
-                            permanent: ipBanPermanent,
-                        },
-                    });
+                if (bans.length) {
+                    await db
+                        .insert(bannedIpsTable)
+                        .values(bans)
+                        .onConflictDoUpdate({
+                            target: bannedIpsTable.encodedIp,
+                            set: {
+                                expiresIn: expiresIn,
+                                reason: banReason,
+                                permanent: ipBanPermanent,
+                            },
+                        });
+                }
             }
 
             return c.json({ message: "User has been banned." }, 200);
