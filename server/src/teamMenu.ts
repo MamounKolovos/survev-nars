@@ -236,6 +236,14 @@ class Room {
         const roomLeader = this.players[0];
         if (!roomLeader) return;
 
+        // Match /api/find_game policy when captcha is off: guests could otherwise queue via
+        // team play without an account. Every socket must have validated session → userId.
+        if (this.players.some((p) => p.userId == null)) {
+            this.data.lastError = "find_game_account_required";
+            this.sendState();
+            return;
+        }
+
         this.data.findingGame = true;
         this.sendState();
 
@@ -300,6 +308,7 @@ class Room {
             const errMap: Partial<Record<FindGameError, TeamMenuErrorType>> = {
                 full: "find_game_full",
                 invalid_protocol: "find_game_invalid_protocol",
+                account_required: "find_game_account_required",
             };
 
             this.data.lastError = errMap[res.error] || "find_game_error";

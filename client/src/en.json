@@ -2,6 +2,8 @@
   "word-order": "svo",
   "index-create-account": "Create Account",
   "index-create-account-prompt-1": "Log in to access this feature!",
+  "index-team-all-members-must-login": "All players must log in to start.",
+  "index-account-required-to-play": "Log in to your account to play.",
   "index-set-account-name": "Set your account name",
   "index-enter-name": "Enter name",
   "index-finish": "Finish",

@@ -1475,7 +1475,7 @@ export class UiManager2 {
         activeTeamId: number,
         targetTeamId: number,
         killerTeamId: number,
-        factionMode: boolean,
+        _factionMode: boolean,
     ) {
         // if (factionMode) {
         //     return "#efeeee";
