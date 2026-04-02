@@ -308,6 +308,7 @@ class Room {
             const errMap: Partial<Record<FindGameError, TeamMenuErrorType>> = {
                 full: "find_game_full",
                 invalid_protocol: "find_game_invalid_protocol",
+                account_required: "find_game_account_required",
             };
 
             this.data.lastError = errMap[res.error] || "find_game_error";

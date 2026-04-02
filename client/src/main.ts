@@ -783,6 +783,7 @@ class Application {
             invalid_protocol: this.localization.translate("index-invalid-protocol"),
             invalid_captcha: this.localization.translate("index-invalid-captcha"),
             join_game_failed: this.localization.translate("index-failed-joining-game"),
+            account_required: this.localization.translate("index-account-required-to-play"),
             rate_limited: this.localization.translate("index-rate-limited"),
         };
         if (err == "invalid_protocol") {
