@@ -12,6 +12,9 @@ survev-config.hjson
 # env file
 .env
 
+# Local replay service / data (optional; remove if you track this in git)
+replay-service/
+
 # sqlite db
 *.db
 
