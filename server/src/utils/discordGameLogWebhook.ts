@@ -4,6 +4,12 @@
  * different channel, and can evolve (embeds vs plain content) without mixing concerns.
  */
 import { TeamMode } from "../../../shared/gameConfig";
+import { Config } from "../config";
+import {
+    type NeatQueueMatchInfo,
+    collectGameDiscordIdsForNeatQueue,
+    resolveNeatQueueForGameLog,
+} from "../neatqueue/neatqueueGameLog.resolve";
 import { hashIp } from "./ipHash";
 
 /** Same as mock auth placeholder in `api/routes/user/auth/mock.ts` */
@@ -35,6 +41,15 @@ function formatStatsLine(p: GameLogPlayerRow): string {
 
 function formatIpHashLine(ip: string): string {
     return `**IP hash:** ||\`${hashIp(ip)}\`||`;
+}
+
+function formatNeatQueueLine(info: NeatQueueMatchInfo): string {
+    const q = info.queueName ? ` · \`${info.queueName}\`` : "";
+    if (info.source === "active") {
+        const st = info.stage ? ` (${info.stage})` : "";
+        return `**NeatQueue:** \`#${info.gameNum}\`${q} · active${st}`;
+    }
+    return `**NeatQueue:** \`#${info.gameNum}\`${q} · history`;
 }
 
 function formatAccountLine(p: GameLogPlayerRow, info: UserLogInfo | undefined): string {
@@ -111,6 +126,7 @@ function buildEmbedDescription(
     teamMode: TeamMode,
     players: GameLogPlayerRow[],
     userMap: Map<string, UserLogInfo>,
+    neatQueue: NeatQueueMatchInfo | undefined,
 ): string {
     const lines: string[] = [
         `Map: **${mapName}**`,
@@ -118,6 +134,10 @@ function buildEmbedDescription(
         `Teams in Lobby: **${teamCount}**`,
         "",
     ];
+    if (neatQueue) {
+        lines.push(formatNeatQueueLine(neatQueue));
+        lines.push("");
+    }
 
     if (teamMode === TeamMode.Solo) {
         const sorted = [...players].sort((a, b) => a.rank - b.rank);
@@ -188,6 +208,22 @@ export async function sendGameEndDiscordLog(
         userMap = new Map();
     }
 
+    const gameDiscordIds = collectGameDiscordIdsForNeatQueue(
+        players,
+        userMap,
+        MOCK_AUTH_ID,
+    );
+    let neatQueue: NeatQueueMatchInfo | undefined;
+    try {
+        neatQueue = await resolveNeatQueueForGameLog(
+            Config.neatQueueGameLog,
+            gameDiscordIds,
+            Date.now(),
+        );
+    } catch {
+        neatQueue = undefined;
+    }
+
     const embed = {
         title: buildEmbedTitle(teamMode, players),
         description: buildEmbedDescription(
@@ -197,6 +233,7 @@ export async function sendGameEndDiscordLog(
             teamMode,
             players,
             userMap,
+            neatQueue,
         ),
         color: 0x3498db,
         footer: {

@@ -4,6 +4,83 @@ import type { ProxyDef } from "./shared/types/api";
 import type { Vec2 } from "./shared/utils/v2";
 
 /**
+ * NeatQueue API correlation for match-end Discord logs (optional).
+ * @see https://api.neatqueue.com/docs
+ */
+export interface NeatQueueGameLogConfig {
+    /** When false, no NeatQueue HTTP calls are made. */
+    enabled: boolean;
+    /**
+     * Discord guild id (NeatQueue `server_id` path segment).
+     * Required when enabled.
+     */
+    discordGuildId: string;
+    /**
+     * Minimum fraction of NeatQueue roster Discord ids that must appear in the game
+     * (e.g. 0.75 ≈ 6/8 in a 4v4).
+     */
+    minOverlapRatio: number;
+    /**
+     * Max linked-Discord players in the game who are not on the NeatQueue roster
+     * (filters scrims / extra spectators).
+     * @default 2
+     */
+    maxGamePlayersNotOnNeatQueueRoster: number;
+    /** Minimum linked-Discord players before attempting correlation. */
+    minLinkedDiscordPlayers: number;
+    /** Active match `stage` values to consider (e.g. IN_GAME). */
+    activeMatchStages: string[];
+    /**
+     * History fallback: max |NeatQueue history row time − game end time| (ms).
+     * Use when the match is no longer active (early vote, etc.).
+     * Ignored when {@link historySkipTimeMatch} is true.
+     */
+    historyMaxTimeDeviationMs: number;
+    /**
+     * When true, do not filter history rows by time vs game end. NeatQueue's `time`
+     * often does not align with when Survev ends (start time, timezone, delayed write).
+     * Prefer {@link historyFilterByDateRange} + {@link historyFilterByPlayerIds} on the API instead.
+     * @default true
+     */
+    historySkipTimeMatch: boolean;
+    /**
+     * NeatQueue `GET /history` supports `player_id` (Discord user ids). When true, request
+     * only matches that include at least one of the linked players in this game (server-side).
+     */
+    historyFilterByPlayerIds: boolean;
+    /**
+     * NeatQueue supports `start_date` / `end_date` (ISO8601). Narrows history to a window
+     * around game end so pagination order is not the only way to get recent rows.
+     */
+    historyFilterByDateRange: boolean;
+    /** How far before game end `start_date` is set (ms). */
+    historyDateRangeLookbackMs: number;
+    /** How far after game end `end_date` is set (ms). */
+    historyDateRangeEndBufferMs: number;
+    /**
+     * If the filtered history request returns no rows, retry once without player/date params
+     * (legacy behavior; order may not be globally “most recent”).
+     */
+    historyFallbackIfFilteredEmpty: boolean;
+    /** First page; use with `historyOrder: "desc"` for newest matches. */
+    historyPage: number;
+    /**
+     * Rows per page from NeatQueue history. Small is enough: correlation only scans
+     * recent rows within {@link historyMaxTimeDeviationMs} (if time match is used).
+     * @default 20
+     */
+    historyPageSize: number;
+    /**
+     * NeatQueue API `limit` query param (see their docs). Does not need to be large.
+     * @default 100
+     */
+    historyLimit: number;
+    historyOrder: "asc" | "desc";
+    fetchTimeoutMs: number;
+    baseUrl: string;
+}
+
+/**
  * Common keys used by both API and game server.
  */
 interface ServerConfig {
@@ -203,6 +280,11 @@ export interface ConfigType {
      * Optional; when unset, no game log is sent.
      */
     gameLogsWebhook?: string;
+
+    /**
+     * Optional NeatQueue match correlation for game-end Discord logs.
+     */
+    neatQueueGameLog: NeatQueueGameLogConfig;
 
     /**
      * PostgreSQL Database configuration, this will enable features like accounts, IP bans, leaderboards etc.

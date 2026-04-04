@@ -72,6 +72,27 @@ export function getConfig(isProduction: boolean, dir: string) {
             allowMockAccount: isDev,
         },
         defaultItems: {},
+        neatQueueGameLog: {
+            enabled: true,
+            discordGuildId: "1282262872675844106",
+            minOverlapRatio: 0.75,
+            maxGamePlayersNotOnNeatQueueRoster: 2,
+            minLinkedDiscordPlayers: 2,
+            activeMatchStages: ["IN_GAME"],
+            historyMaxTimeDeviationMs: 20 * 60 * 1000,
+            historySkipTimeMatch: true,
+            historyFilterByPlayerIds: true,
+            historyFilterByDateRange: true,
+            historyDateRangeLookbackMs: 24 * 60 * 60 * 1000,
+            historyDateRangeEndBufferMs: 5 * 60 * 1000,
+            historyFallbackIfFilteredEmpty: true,
+            historyPage: 1,
+            historyPageSize: 20,
+            historyLimit: 100,
+            historyOrder: "desc",
+            fetchTimeoutMs: 10_000,
+            baseUrl: "https://api.neatqueue.com",
+        },
     };
 
     const dirname = import.meta?.dirname || __dirname;
