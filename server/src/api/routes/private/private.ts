@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { Hono } from "hono";
 import { z } from "zod";
 import type { Context } from "../..";
@@ -104,6 +104,28 @@ export const PrivateRouter = new Hono<Context>()
         server.logger.info(`Saved game data for ${matchData[0].gameId}`);
         return c.json({}, 200);
     })
+    .post(
+        "/game_log_users",
+        databaseEnabledMiddleware,
+        validateParams(z.object({ userIds: z.array(z.string()) })),
+        async (c) => {
+            const { userIds } = c.req.valid("json");
+            const unique = [...new Set(userIds)].filter(Boolean);
+            if (!unique.length) {
+                return c.json({ users: [] as const });
+            }
+            const rows = await db
+                .select({
+                    id: usersTable.id,
+                    authId: usersTable.authId,
+                    linkedDiscord: usersTable.linkedDiscord,
+                    linkedGoogle: usersTable.linkedGoogle,
+                })
+                .from(usersTable)
+                .where(inArray(usersTable.id, unique));
+            return c.json({ users: rows });
+        },
+    )
     .post(
         "/give_item",
         databaseEnabledMiddleware,

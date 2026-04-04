@@ -600,7 +600,7 @@ export class Game {
         // only save the game if it has more than 2 players lol
         if (values.length < 2) return;
 
-        void sendGameEndDiscordLog(Config.gameLogsWebhook, {
+        await sendGameEndDiscordLog(Config.gameLogsWebhook, {
             gameId: this.id,
             mapName: this.mapName,
             region: Config.gameServer.thisRegion,
@@ -614,6 +614,7 @@ export class Game {
                 damageDealt: v.damageDealt,
                 damageTaken: v.damageTaken,
                 timeAlive: v.timeAlive,
+                ip: v.ip,
             })),
         });
 
