@@ -183,7 +183,7 @@ export class Game {
 
         const now = performance.now();
         if (!this.now) this.now = now;
-        const dt = math.clamp((now - this.now) / 1000, 0.001, 1 / 8);
+        const dt = math.clamp((now - this.now) / 1000, 0.001, 1 / 8) * 1.5;
 
         this.now = now;
 
