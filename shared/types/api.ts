@@ -26,6 +26,7 @@ export type FindGameError =
     | "full"
     | "invalid_protocol"
     | "join_game_failed"
+    | "account_required"
     | "rate_limited"
     | "banned"
     | "behind_proxy"

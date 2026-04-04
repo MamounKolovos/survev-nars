@@ -109,6 +109,11 @@ export class ApiServer {
             return { error: "invalid_protocol" };
         }
 
+        // Solo (and any caller): banned users already have null userId from /api/find_game
+        if (body.playerData[0].userId == null) {
+            return { error: "account_required" };
+        }
+
         if (body.region in this.regions) {
             return await this.regions[body.region].findGame(body);
         }

@@ -33,7 +33,9 @@ DiscordRouter.get("/", (c) => {
 
     setCookie(c, stateCookieName, state, {
         path: "/",
-        secure: process.env.NODE_ENV === "production",
+        // TODO: change back when i finally setup ssl certs
+        secure: false,
+        // secure: process.env.NODE_ENV === "production",
         httpOnly: true,
         maxAge: 60 * 10,
         sameSite: "Lax",
@@ -41,7 +43,9 @@ DiscordRouter.get("/", (c) => {
     });
 
     setCookie(c, codeVerifierCookieName, codeVerifier, {
-        secure: process.env.NODE_ENV === "production",
+        // TODO: change back when i finally setup ssl certs
+        secure: false,
+        // secure: process.env.NODE_ENV === "production",
         path: "/",
         httpOnly: false,
         maxAge: 60 * 10,
