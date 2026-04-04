@@ -412,7 +412,7 @@ export async function fetchApiServer<
         });
 
         if (res.ok) {
-            return res as Res;
+            return (await res.json()) as Res;
         }
 
         defaultLogger.warn(

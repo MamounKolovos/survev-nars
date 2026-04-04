@@ -33,6 +33,10 @@ function formatStatsLine(p: GameLogPlayerRow): string {
     return `(${p.kills} Kills - ${p.damageDealt} Dmg Dealt - ${p.damageTaken} Dmg Taken - ${p.timeAlive}s Alive - Rank ${p.rank})`;
 }
 
+function formatIpHashLine(ip: string): string {
+    return `**IP hash:** ||\`${hashIp(ip)}\`||`;
+}
+
 function formatAccountLine(p: GameLogPlayerRow, info: UserLogInfo | undefined): string {
     if (!p.userId) {
         return `**Account:** Guest`;
@@ -97,7 +101,7 @@ function buildEmbedTitle(teamMode: TeamMode, players: GameLogPlayerRow[]): strin
     if (teamMode === TeamMode.Solo) {
         return `${winner.username} Won The Round`;
     }
-    return `TEAM ${winner.teamId + 1} Won The Round`;
+    return `TEAM ${winner.teamId} Won The Round`;
 }
 
 function buildEmbedDescription(
@@ -123,7 +127,7 @@ function buildEmbedDescription(
             lines.push(
                 formatAccountLine(p, p.userId ? userMap.get(p.userId) : undefined),
             );
-            lines.push(`**IP hash:** \`${hashIp(p.ip)}\``);
+            lines.push(formatIpHashLine(p.ip));
             lines.push(`*${formatStatsLine(p)}*`);
             lines.push("");
         }
@@ -136,14 +140,14 @@ function buildEmbedDescription(
         const teamPlayers = players.filter((p) => p.teamId === teamId);
         const teamRank = Math.min(...teamPlayers.map((p) => p.rank));
         const isWinner = teamRank === 1;
-        const label = `TEAM ${teamId + 1}${isWinner ? " 🏆" : ""}`;
+        const label = `TEAM ${teamId}${isWinner ? " 🏆" : ""}`;
         lines.push(`**${label}**`);
         for (const p of teamPlayers) {
             lines.push(`**IGN:** ${p.username}`);
             lines.push(
                 formatAccountLine(p, p.userId ? userMap.get(p.userId) : undefined),
             );
-            lines.push(`**IP hash:** \`${hashIp(p.ip)}\``);
+            lines.push(formatIpHashLine(p.ip));
             lines.push(`*${formatStatsLine(p)}*`);
             lines.push("");
         }
