@@ -3,6 +3,7 @@ import * as net from "../../../shared/net/net";
 import { math } from "../../../shared/utils/math";
 import { v2 } from "../../../shared/utils/v2";
 import { Config } from "../config";
+import { sendGameEndDiscordLog } from "../utils/discordGameLogWebhook";
 import { Logger } from "../utils/logger";
 import { fetchApiServer } from "../utils/serverHelpers";
 import {
@@ -598,6 +599,23 @@ export class Game {
 
         // only save the game if it has more than 2 players lol
         if (values.length < 2) return;
+
+        void sendGameEndDiscordLog(Config.gameLogsWebhook, {
+            gameId: this.id,
+            mapName: this.mapName,
+            region: Config.gameServer.thisRegion,
+            teamMode: this.teamMode,
+            players: values.map((v) => ({
+                username: v.username,
+                userId: v.userId || null,
+                teamId: v.teamId,
+                rank: v.rank,
+                kills: v.kills,
+                damageDealt: v.damageDealt,
+                damageTaken: v.damageTaken,
+                timeAlive: v.timeAlive,
+            })),
+        });
 
         // FIXME: maybe move this to the parent game server process?
         // to avoid blocking the game from being GC'd until this request is done

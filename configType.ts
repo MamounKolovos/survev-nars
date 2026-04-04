@@ -199,6 +199,12 @@ export interface ConfigType {
     errorLoggingWebhook?: string;
 
     /**
+     * Discord webhook URL for match-end embeds (game stats, teams, game id).
+     * Optional; when unset, no game log is sent.
+     */
+    gameLogsWebhook?: string;
+
+    /**
      * PostgreSQL Database configuration, this will enable features like accounts, IP bans, leaderboards etc.
      */
     database: {
