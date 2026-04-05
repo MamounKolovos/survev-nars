@@ -25,8 +25,8 @@ const mapDef: PartialMapDef = {
     },
     mapGen: {
         map: {
-            baseWidth: 300 * 1.3,
-            baseHeight: 300 * 1.3,
+            baseWidth: 300,
+            baseHeight: 300,
             scale: { small: 1.3, large: 1.3 },
             shoreInset: 10,
             grassInset: 10,

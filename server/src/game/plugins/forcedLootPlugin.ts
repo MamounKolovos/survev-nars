@@ -87,7 +87,7 @@ const secondaryWeights = [
     { weight: 0.3, gun: "saiga" },
     { weight: 3, gun: "famas" },
     { weight: 1.5, gun: "an94" },
-    // { weight: 0.5, gun: "p30l_dual" },
+    { weight: 0.5, gun: "p30l_dual" },
     { weight: 0.001, gun: "awc" },
 ];
 
@@ -711,7 +711,7 @@ const gt = {
         { weight: 0.5, gun: "p30l_dual" },
     ],
 };
-const GRACE_PERIOD_DURATION = 20;
+const GRACE_PERIOD_DURATION = 5;
 
 const HEALTH_AND_BOOST_ON_KILL = true;
 const RELOAD_ON_KILL = true;
@@ -748,12 +748,12 @@ export default class focedLootPlugin extends GamePlugin {
             stationaryZoneRadiusMultiplier: 0.6,
             movingZoneRadiusMultiplier: 0.75,
             damages: [3, 4, 6, 7, 10],
-            initWaitTime: 40 * 2,
-            minWaitTime: 15 * 2,
-            waitTimeDecrement: 10 * 2,
-            initMovingTime: 25 * 2,
-            minMovingTime: 15 * 2,
-            movingTimeDecrement: 5 * 2,
+            initWaitTime: 40,
+            minWaitTime: 15,
+            waitTimeDecrement: 10,
+            initMovingTime: 25,
+            minMovingTime: 15 ,
+            movingTimeDecrement: 5 ,
             movingZoneOffset: 1,
             minRadius: 20,
         });
