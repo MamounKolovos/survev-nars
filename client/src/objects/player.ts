@@ -39,6 +39,7 @@ import { device } from "../device";
 import { errorLogManager } from "../errorLogs";
 import type { Ctx } from "../game";
 import { helpers } from "../helpers";
+import type { InputHandler } from "../input";
 import type { SoundHandle } from "../lib/createJS";
 import type { Map } from "../map";
 import type { Renderer } from "../renderer";
@@ -816,13 +817,21 @@ export class Player implements AbstractObject {
             const posT = math.clamp(this.posInterpTicker / camera.m_interpInterval, 0, 1);
             this.m_visualPos = v2.lerp(posT, this.m_visualPosOld, this.m_pos);
 
-            this.dirInterpolationTicker += dt;
-            const dirT = math.clamp(
-                this.dirInterpolationTicker / camera.m_interpInterval,
-                0,
-                1,
-            );
-            this.m_visualDir = v2.lerp(dirT, this.m_visualDirOld, this.m_dir);
+            // no need to interpolate if client has full control over its own rotation
+            if (
+                !camera.m_localRotationEnabled ||
+                !isActivePlayer ||
+                isSpectating ||
+                displayingStats
+            ) {
+                this.dirInterpolationTicker += dt;
+                const dirT = math.clamp(
+                    this.dirInterpolationTicker / camera.m_interpInterval,
+                    0,
+                    1,
+                );
+                this.m_visualDir = v2.lerp(dirT, this.m_visualDirOld, this.m_dir);
+            }
         } else {
             this.m_visualPos = v2.copy(this.m_pos);
             this.m_visualDir = v2.copy(this.m_dir);
@@ -1303,7 +1312,7 @@ export class Player implements AbstractObject {
 
         this.updateAura(dt, isActivePlayer, activePlayer);
 
-        this.Zr();
+        this.Zr(inputBinds.input, camera, isActivePlayer, isSpectating, displayingStats);
 
         // @NOTE: There's an off-by-one frame issue for effects spawned earlier
         // in this frame that reference renderLayer / zOrd / zIdx. This issue is
@@ -1834,7 +1843,13 @@ export class Player implements AbstractObject {
         }
     }
 
-    Zr() {
+    Zr(
+        inputHandler: InputHandler,
+        camera: Camera,
+        isActivePlayer: boolean,
+        isSpectating: boolean,
+        displayingStats: boolean,
+    ) {
         const e = function (e: PIXI.Container, t: Pose) {
             e.position.set(t.pos.x, t.pos.y);
             e.pivot.set(-t.pivot.x, -t.pivot.y);
@@ -1853,7 +1868,24 @@ export class Player implements AbstractObject {
         }
         this.handLContainer.position.x -= this.gunRecoilL * 1.125;
         this.handRContainer.position.x -= this.gunRecoilR * 1.125;
-        this.bodyContainer.rotation = -Math.atan2(this.m_visualDir.y, this.m_visualDir.x);
+
+        if (
+            !device.mobile &&
+            camera.m_localRotationEnabled &&
+            isActivePlayer &&
+            !isSpectating &&
+            !displayingStats
+        ) {
+            this.bodyContainer.rotation = Math.atan2(
+                inputHandler.mousePos.y - window.innerHeight / 2,
+                inputHandler.mousePos.x - window.innerWidth / 2,
+            );
+        } else {
+            this.bodyContainer.rotation = -Math.atan2(
+                this.m_visualDir.y,
+                this.m_visualDir.x,
+            );
+        }
     }
 
     playActionStartEffect(
