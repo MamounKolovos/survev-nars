@@ -597,7 +597,8 @@ export class Game {
         });
 
         // only save the game if it has more than 2 players lol
-        if (values.length < 2) return;
+        // Mamoun: commenting this out so 1v1s get saved and logged
+        // if (values.length < 2) return;
 
         // FIXME: maybe move this to the parent game server process?
         // to avoid blocking the game from being GC'd until this request is done

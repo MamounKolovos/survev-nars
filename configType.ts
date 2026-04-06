@@ -198,6 +198,8 @@ export interface ConfigType {
      */
     errorLoggingWebhook?: string;
 
+    matchLoggingWebhook?: string;
+
     /**
      * PostgreSQL Database configuration, this will enable features like accounts, IP bans, leaderboards etc.
      */
