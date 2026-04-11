@@ -448,8 +448,8 @@ export const Main: MapDef = {
     },
     mapGen: {
         map: {
-            baseWidth: 430,
-            baseHeight: 430,
+            baseWidth: 500,
+            baseHeight: 500,
             scale: { small: 1.1875, large: 1.28125 },
             extension: 112,
             shoreInset: 48,
@@ -532,7 +532,7 @@ export const Main: MapDef = {
         },
         densitySpawns: [
             {
-                stone_01: 300,
+                stone_01: 400,
                 barrel_01: 55,
                 silo_01: 8,
                 crate_01: 60,
@@ -540,7 +540,7 @@ export const Main: MapDef = {
                 crate_03: 8,
                 bush_01: 60 * 0.5,
                 cache_06: 12,
-                tree_01: 260,
+                tree_01: 300,
                 hedgehog_01: 24,
                 container_01: 5,
                 container_02: 5,
@@ -548,17 +548,17 @@ export const Main: MapDef = {
                 container_04: 5,
                 shack_01: 7,
                 outhouse_01: 5,
-                loot_tier_1: 24,
-                loot_tier_beach: 4,
+                loot_tier_1: 48,
+                loot_tier_beach: 10,
             },
         ],
         fixedSpawns: [
             {
                 // small is spawn count for solos and duos, large is spawn count for squads
                 warehouse_01: 2,
-                house_red_01: { small: 2, large: 4 },
-                house_red_02: { small: 2, large: 3 },
-                barn_01: { small: 2, large: 2 },
+                house_red_01: { small: 3, large: 4 },
+                house_red_02: { small: 3, large: 3 },
+                barn_01: { small: 3, large: 2 },
                 barn_02: 1,
                 hut_01: 1,
                 hut_02: 1, // spas hut
@@ -567,7 +567,7 @@ export const Main: MapDef = {
                 shack_03b: { small: 2, large: 3 },
                 greenhouse_01: 1,
                 cache_01: 1,
-                cache_02: 0, // mosin tree
+                cache_02: 2, // mosin tree
                 cache_07: 1,
                 bunker_structure_01: { odds: 0.05 },
                 bunker_structure_02: 1,
@@ -580,7 +580,7 @@ export const Main: MapDef = {
                 mil_crate_02: { odds: 0.25 },
                 tree_02: 3,
                 teahouse_complex_01su: {
-                    small: 2,
+                    small: 3,
                     large: 3,
                 },
                 stone_04: 1,

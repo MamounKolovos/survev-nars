@@ -16,7 +16,7 @@ import {
     tierLoot,
 } from "./internalUtils";
 
-const GRACE_PERIOD = 10;
+const GRACE_PERIOD = 20;
 const CUSTOM_SWITCH_DELAY = 0.205;
 
 const obstacleToLoot: Record<string, LootSpawnDef[]> = {
@@ -28,7 +28,7 @@ export default class MainPlugin extends GamePlugin {
     timerManager = new TimerManager();
 
     override initListeners(): void {
-        if (this.game.map.mapId !== MapId.Main || this.game.teamMode !== 4) return;
+        if (this.game.map.mapId !== MapId.Main) return;
 
         attachTimerManagerUpdate(this);
 
@@ -95,7 +95,8 @@ export default class MainPlugin extends GamePlugin {
             player.inventory["2xscope"] = 1;
             player.scope = "4xscope";
             player.weapons[3].type = "frag";
-            player.inventory["frag"] = 2;
+            player.inventory["frag"] = 1;
+            player.inventory["impulse"] = 1;
             player.inventory["bandage"] = 5;
         });
         //     switch (this.game.teamMode) {
