@@ -1,7 +1,9 @@
 import type { LootSpawnDef } from "../../../../shared/defs/mapObjectsTyping";
 import { MapId } from "../../../../shared/defs/types/misc";
+import { util } from "../../../../shared/utils/util";
 import { TimerManager } from "../../utils/pluginUtils";
 import { GamePlugin } from "../pluginManager";
+import { generateFairLootLoadouts, givePlayerFairLootLoadout } from "./forcedLootPlugin";
 import {
     attachCustomGasDamage,
     attachCustomQuickSwitch,
@@ -29,6 +31,24 @@ export default class MainPlugin extends GamePlugin {
 
     override initListeners(): void {
         if (this.game.map.mapId !== MapId.Main) return;
+
+        this.on("gameStarted", (event) => {
+            const loadouts = generateFairLootLoadouts();
+            for (const group of this.game.playerBarn.groups) {
+                const players = [...group.players];
+                util.shuffleArray(players);
+                for (let i = 0; i < players.length; i++) {
+                    const player = players[i];
+                    givePlayerFairLootLoadout(player, loadouts[i]);
+
+                    player.boost = 100;
+                    player.inventory["bandage"] = 5;
+                    player.inventory["healthkit"] = 1;
+                    player.inventory["soda"] = 1;
+                    player.inventory["painkiller"] = 1;
+                }
+            }
+        });
 
         attachTimerManagerUpdate(this);
 
@@ -88,17 +108,17 @@ export default class MainPlugin extends GamePlugin {
         //     });
         // }
 
-        this.on("playerDidJoin", (event) => {
-            const player = event.data.player;
-            player.backpack = "backpack01";
-            player.inventory["4xscope"] = 1;
-            player.inventory["2xscope"] = 1;
-            player.scope = "4xscope";
-            player.weapons[3].type = "frag";
-            player.inventory["frag"] = 1;
-            player.inventory["impulse"] = 1;
-            player.inventory["bandage"] = 5;
-        });
+        // this.on("playerDidJoin", (event) => {
+        //     const player = event.data.player;
+        //     player.backpack = "backpack01";
+        //     player.inventory["4xscope"] = 1;
+        //     player.inventory["2xscope"] = 1;
+        //     player.scope = "4xscope";
+        //     player.weapons[3].type = "frag";
+        //     player.inventory["frag"] = 1;
+        //     player.inventory["impulse"] = 1;
+        //     player.inventory["bandage"] = 5;
+        // });
         //     switch (this.game.teamMode) {
         //         case 4:
         //             player.weapons[3].type = "frag";

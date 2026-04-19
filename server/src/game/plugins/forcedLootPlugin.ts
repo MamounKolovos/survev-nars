@@ -208,7 +208,7 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
     return "m9";
 }
 
-function generateFairLootLoadouts(): Loadout[] {
+export function generateFairLootLoadouts(): Loadout[] {
     let loadouts: Loadout[] = [];
     for (let i = 0; i < 4; i++) {
         const secondary = util.weightedRandom(secondaryWeights).gun;
@@ -247,7 +247,7 @@ function generateFairLootLoadouts(): Loadout[] {
     return loadouts;
 }
 
-function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
+export function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
     const oldMelee = player.weapons[2].type;
     switch (loadout.role) {
         case "medic": {
