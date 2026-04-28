@@ -411,6 +411,22 @@ export class ParticleBarn {
             }
         }
     }
+
+    m_clear() {
+        for (let i = 0; i < this.particles.length; i++) {
+            const particle = this.particles[i];
+            if (particle.active) {
+                particle.free();
+            }
+        }
+
+        for (let i = 0; i < this.emitters.length; i++) {
+            const emitter = this.emitters[i];
+            if (emitter.active) {
+                emitter.free();
+            }
+        }
+    }
 }
 
 const ParticleDefs: Record<string, ParticleDef> = {

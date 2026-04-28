@@ -188,6 +188,20 @@ export class PlaneBarn {
         }
     }
 
+    m_clear() {
+        for (let i = 0; i < this.planes.length; i++) {
+            const plane = this.planes[i];
+            if (plane.active) {
+                if (plane.soundInstance) {
+                    this.audioManager.stopSound(plane.soundInstance);
+                    plane.soundInstance = null;
+                }
+                plane.sprite.visible = false;
+                plane.active = false;
+            }
+        }
+    }
+
     updatePlanes(planeData: PlaneData[], map: Map) {
         // Mark existing planes as dirty
         for (let i = 0; i < this.planes.length; i++) {

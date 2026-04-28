@@ -39,6 +39,7 @@ export type MatchHistory = {
     team_kills: number;
     damage_dealt: number;
     damage_taken: number;
+    has_replay: boolean;
 };
 export type MatchHistoryResponse = MatchHistory[];
 

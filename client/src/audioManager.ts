@@ -52,6 +52,9 @@ export class AudioManager {
         type: string;
     }> = [];
 
+    /** prevents all sounds from getting played */
+    suppressPlayback = false;
+
     constructor(_options?: unknown) {
         CreateJS.Sound.volume = 0.5;
         CreateJS.Sound.on("fileload", this.loadHandler, this);
@@ -183,6 +186,9 @@ export class AudioManager {
 
     playSound(sound: string, options = {} as Partial<Options>) {
         if (!sound || sound == "none") {
+            return null;
+        }
+        if (this.suppressPlayback) {
             return null;
         }
         options.channel = options.channel || "activePlayer";
@@ -370,6 +376,19 @@ export class AudioManager {
 
     stopAll() {
         CreateJS.Sound.stop();
+    }
+
+    kill() {
+        CreateJS.Sound.kill();
+        this.soundInstances.length = 0;
+    }
+
+    pause() {
+        CreateJS.Sound.ctx.suspend();
+    }
+
+    resume() {
+        CreateJS.Sound.ctx.resume();
     }
 
     allLoaded() {

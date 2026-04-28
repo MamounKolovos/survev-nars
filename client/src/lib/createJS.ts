@@ -796,12 +796,32 @@ class WebAudioEngine {
         }
     }
 
+    kill() {
+        for (let i = 0; i < kMaxInstances; i++) {
+            const instance = this.instances[i];
+            if (instance.sound) {
+                instance.disconnect();
+            }
+        }
+
+        this.playingInstances.length = 0;
+
+        for (let i = 0; i < this.activeReverbs.length; i++) {
+            const reverb = this.activeReverbs[i];
+            if (reverb.isConnected()) {
+                reverb.disconnect();
+            }
+            reverb.active = false;
+        }
+        this.activeReverbs.length = 0;
+    }
+
     update(_dt: unknown) {
         // If the audio context got suspended (as it is be default in Chrome,
         // until the user interacts with the page), try to resume it
-        if (this.ctx.state == "suspended") {
-            this.ctx.resume();
-        }
+        // if (this.ctx.state == "suspended") {
+        //     this.ctx.resume();
+        // }
 
         // Update master volume params
         const masterVolume = this.muted ? 0.0 : this.volume;

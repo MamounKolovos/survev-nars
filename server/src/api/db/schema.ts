@@ -1,6 +1,7 @@
 import {
     bigint,
     boolean,
+    customType,
     index,
     integer,
     json,
@@ -141,4 +142,13 @@ export const bannedIpsTable = pgTable("banned_ips", {
     encodedIp: text("encoded_ip").notNull().primaryKey(),
     permanent: boolean("permanent").notNull().default(false),
     reason: text("reason").notNull().default(""),
+});
+
+export const replaysTable = pgTable("replays", {
+    id: serial("id").primaryKey(),
+    gameId: uuid("game_id").notNull(),
+    data: customType<{ data: Buffer }>({
+        dataType: () => "bytea",
+    })("data").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });

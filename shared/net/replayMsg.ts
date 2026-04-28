@@ -1,244 +1,44 @@
-import { GameConfig } from "../gameConfig";
-import { type Vec2, v2 } from "./../utils/v2";
+import { v2 } from "../utils/v2";
+import type { KillFeedSegment } from "./killFeedMsg";
 import { type AbstractMsg, type BitStream, Constants } from "./net";
+import * as net from "./net";
 import {
     ObjectSerializeFns,
     type ObjectType,
     type ObjectsFullData,
     type ObjectsPartialData,
 } from "./objectSerializeFns";
-
-export function serializeActivePlayer(s: BitStream, data: LocalDataWithDirty) {
-    s.writeBoolean(data.healthDirty);
-    if (data.healthDirty) s.writeFloat(data.health, 0, 100, 8);
-
-    s.writeBoolean(data.boostDirty);
-    if (data.boostDirty) s.writeFloat(data.boost, 0, 100, 8);
-
-    s.writeBoolean(data.zoomDirty);
-    if (data.zoomDirty) s.writeUint8(data.zoom);
-
-    s.writeBoolean(data.actionDirty);
-    if (data.actionDirty) {
-        s.writeFloat(data.action.time, 0, Constants.ActionMaxDuration, 8);
-        s.writeFloat(data.action.duration, 0, Constants.ActionMaxDuration, 8);
-        s.writeUint16(data.action.targetId);
-    }
-
-    s.writeBoolean(data.inventoryDirty);
-    if (data.inventoryDirty) {
-        s.writeGameType(data.scope);
-        for (const key of Object.keys(GameConfig.bagSizes)) {
-            const hasItem = data.inventory[key] > 0;
-            s.writeBoolean(hasItem);
-            if (hasItem) s.writeBits(data.inventory[key], 9);
-        }
-    }
-
-    s.writeBoolean(data.weapsDirty);
-    if (data.weapsDirty) {
-        s.writeBits(data.curWeapIdx, 2);
-        for (let i = 0; i < GameConfig.WeaponSlot.Count; i++) {
-            s.writeGameType(data.weapons[i].type);
-            s.writeUint8(data.weapons[i].ammo);
-        }
-    }
-
-    s.writeBoolean(data.spectatorCountDirty);
-    if (data.spectatorCountDirty) {
-        s.writeUint8(data.spectatorCount);
-    }
-
-    s.writeAlignToNextByte();
-}
-
-export function deserializeActivePlayer(s: BitStream, data: LocalDataWithDirty) {
-    data.healthDirty = s.readBoolean();
-    if (data.healthDirty) {
-        data.health = s.readFloat(0, 100, 8);
-    }
-    data.boostDirty = s.readBoolean();
-    if (data.boostDirty) {
-        data.boost = s.readFloat(0, 100, 8);
-    }
-    data.zoomDirty = s.readBoolean();
-    if (data.zoomDirty) {
-        data.zoom = s.readUint8();
-    }
-    data.actionDirty = s.readBoolean();
-    if (data.actionDirty) {
-        data.action = {} as Action;
-        data.action.time = s.readFloat(0, Constants.ActionMaxDuration, 8);
-        data.action.duration = s.readFloat(0, Constants.ActionMaxDuration, 8);
-        data.action.targetId = s.readUint16();
-    }
-    data.inventoryDirty = s.readBoolean();
-    if (data.inventoryDirty) {
-        data.scope = s.readGameType();
-        data.inventory = {};
-        const inventoryKeys = Object.keys(GameConfig.bagSizes);
-        for (let i = 0; i < inventoryKeys.length; i++) {
-            const item = inventoryKeys[i];
-            let count = 0;
-            if (s.readBoolean()) {
-                count = s.readBits(9);
-            }
-            data.inventory[item] = count;
-        }
-    }
-    data.weapsDirty = s.readBoolean();
-    if (data.weapsDirty) {
-        data.curWeapIdx = s.readBits(2);
-        data.weapons = [];
-        for (let i = 0; i < GameConfig.WeaponSlot.Count; i++) {
-            data.weapons.push({
-                type: s.readGameType(),
-                ammo: s.readUint8(),
-            });
-        }
-    }
-    data.spectatorCountDirty = s.readBoolean();
-    if (data.spectatorCountDirty) {
-        data.spectatorCount = s.readUint8();
-    }
-    s.readAlignToNextByte();
-}
-
-function serializePlayerStatus(s: BitStream, data: { players: PlayerStatus[] }) {
-    s.writeUint8(data.players.length);
-    for (let i = 0; i < data.players.length; i++) {
-        const info = data.players[i];
-        s.writeBoolean(info.hasData);
-
-        if (info.hasData) {
-            s.writeVec(info.pos, 0, 0, 1024, 1024, 11);
-            s.writeBoolean(info.visible);
-            s.writeBoolean(info.dead);
-            s.writeBoolean(info.downed);
-
-            s.writeBoolean(info.role !== "");
-            if (info.role !== "") {
-                s.writeGameType(info.role);
-            }
-        }
-    }
-    s.writeAlignToNextByte();
-}
-
-function deserializePlayerStatus(s: BitStream, data: { players: PlayerStatus[] }) {
-    data.players = [];
-    const count = s.readUint8();
-    for (let i = 0; i < count; i++) {
-        const p = {} as PlayerStatus & { hasData: boolean };
-        p.hasData = s.readBoolean();
-        if (p.hasData) {
-            p.pos = s.readVec(0, 0, 1024, 1024, 11);
-            p.visible = s.readBoolean();
-            p.dead = s.readBoolean();
-            p.downed = s.readBoolean();
-            p.role = "";
-            if (s.readBoolean()) {
-                p.role = s.readGameType();
-            }
-        }
-        data.players.push(p);
-    }
-    s.readAlignToNextByte();
-}
-
-function serializeGroupStatus(s: BitStream, data: { players: GroupStatus[] }) {
-    s.writeUint8(data.players.length);
-
-    for (let i = 0; i < data.players.length; i++) {
-        const status = data.players[i];
-        s.writeFloat(status.health, 0, 100, 7);
-        s.writeBoolean(status.disconnected);
-    }
-}
-
-function deserializeGroupStatus(s: BitStream, data: { players: GroupStatus[] }) {
-    data.players = [];
-    const count = s.readUint8();
-    for (let i = 0; i < count; i++) {
-        const p = {} as GroupStatus;
-        p.health = s.readFloat(0, 100, 7);
-        p.disconnected = s.readBoolean();
-        data.players.push(p);
-    }
-}
-
-export interface PlayerInfo {
-    playerId: number;
-    teamId: number;
-    groupId: number;
-    name: string;
-
-    loadout: {
-        heal: string;
-        boost: string;
-    };
-}
-
-export function serializePlayerInfo(s: BitStream, data: PlayerInfo) {
-    s.writeUint16(data.playerId);
-    s.writeUint8(data.teamId);
-    s.writeUint8(data.groupId);
-    s.writeString(data.name);
-
-    s.writeGameType(data.loadout.heal);
-    s.writeGameType(data.loadout.boost);
-
-    s.writeAlignToNextByte();
-}
-
-export function deserializePlayerInfo(s: BitStream, data: PlayerInfo) {
-    data.playerId = s.readUint16();
-    data.teamId = s.readUint8();
-    data.groupId = s.readUint8();
-    data.name = s.readString();
-    data.loadout = {} as PlayerInfo["loadout"];
-    data.loadout.heal = s.readGameType();
-    data.loadout.boost = s.readGameType();
-    s.readAlignToNextByte();
-}
-
-export interface GasData {
-    mode: number;
-    duration: number;
-    posOld: Vec2;
-    posNew: Vec2;
-    radOld: number;
-    radNew: number;
-}
-
-export function serializeGasData(s: BitStream, data: GasData) {
-    s.writeUint8(data.mode);
-    s.writeFloat32(data.duration);
-    s.writeVec(data.posOld, 0, 0, 1024, 1024, 16);
-    s.writeVec(data.posNew, 0, 0, 1024, 1024, 16);
-    s.writeFloat(data.radOld, 0, 2048, 16);
-    s.writeFloat(data.radNew, 0, 2048, 16);
-}
-
-export function deserializeGasData(s: BitStream, data: GasData) {
-    data.mode = s.readUint8();
-    data.duration = s.readFloat32();
-    data.posOld = s.readVec(0, 0, 1024, 1024, 16);
-    data.posNew = s.readVec(0, 0, 1024, 1024, 16);
-    data.radOld = s.readFloat(0, 2048, 16);
-    data.radNew = s.readFloat(0, 2048, 16);
-}
+import type {
+    Airstrike,
+    Bullet,
+    Emote,
+    Explosion,
+    GasData,
+    LocalDataWithDirty,
+    MapIndicator,
+    Plane,
+    PlayerInfo,
+    PlayerStatus,
+} from "./updateMsg";
+import {
+    deserializeActivePlayer,
+    deserializeGasData,
+    deserializePlayerInfo,
+    serializeActivePlayer,
+    serializeGasData,
+    serializePlayerInfo,
+} from "./updateMsg";
 
 export const UpdateExtFlags = {
-    DeletedObjects: 1 << 0,
-    FullObjects: 1 << 1,
-    ActivePlayerId: 1 << 2,
-    Gas: 1 << 3,
-    GasCircle: 1 << 4,
-    PlayerInfos: 1 << 5,
-    DeletePlayerIds: 1 << 6,
-    PlayerStatus: 1 << 7,
-    GroupStatus: 1 << 8,
+    Map: 1 << 0,
+    AliveCounts: 1 << 1,
+    KillFeedLines: 1 << 2,
+    DeletedObjects: 1 << 3,
+    FullObjects: 1 << 4,
+    Gas: 1 << 5,
+    GasCircle: 1 << 6,
+    Players: 1 << 7,
+    DeletePlayerIds: 1 << 8,
     Bullets: 1 << 9,
     Explosions: 1 << 10,
     Emotes: 1 << 11,
@@ -248,8 +48,18 @@ export const UpdateExtFlags = {
     KillLeader: 1 << 15,
 };
 
-export class UpdateMsg implements AbstractMsg {
+export class ReplayMsg implements AbstractMsg {
+    mapDirty = false;
+    mapStream!: net.BitStream;
+    // mapBuffer!: Uint8Array;
+
+    aliveCountDirty = false;
+    teamAliveCounts: number[] = [];
+
+    killFeedLines: KillFeedSegment[][] = [];
+
     delObjIds: number[] = [];
+
     fullObjects: Array<
         ObjectsFullData[ObjectType] &
             ObjectsPartialData[ObjectType] & {
@@ -268,23 +78,13 @@ export class UpdateMsg implements AbstractMsg {
         }
     > = [];
 
-    activePlayerId = 0;
-    activePlayerIdDirty = false;
-    activePlayerData!: LocalDataWithDirty;
-
     gasData!: GasData;
     gasDirty = false;
     gasT = 0;
     gasTDirty = false;
 
-    playerInfos: PlayerInfo[] = [];
+    players: Player[] = [];
     deletedPlayerIds: number[] = [];
-
-    playerStatus: { players: PlayerStatus[] } = { players: [] };
-    playerStatusDirty = false;
-
-    groupStatus: { players: GroupStatus[] } = { players: [] };
-    groupStatusDirty = false;
 
     bullets: Bullet[] = [];
     explosions: Explosion[] = [];
@@ -296,12 +96,37 @@ export class UpdateMsg implements AbstractMsg {
     killLeaderId = 0;
     killLeaderKills = 0;
     killLeaderDirty = false;
-    ack = 0;
+
+    msgsToSend!: net.MsgStream;
 
     serialize(s: BitStream) {
         let flags = 0;
         const flagsIdx = s.byteIndex;
         s.writeUint16(flags);
+
+        if (this.mapDirty) {
+            s.writeUint32(this.mapStream.byteIndex - 1);
+            // mapStream includes the type because there's no good way to remove it without copying the underlying memory
+            s.writeBytes(this.mapStream, 1, this.mapStream.byteIndex - 1);
+            flags |= UpdateExtFlags.Map;
+        }
+
+        if (this.aliveCountDirty) {
+            const aliveMsg = new net.AliveCountsMsg();
+            aliveMsg.teamAliveCounts = this.teamAliveCounts;
+            aliveMsg.serialize(s);
+            flags |= UpdateExtFlags.AliveCounts;
+        }
+
+        if (this.killFeedLines.length) {
+            s.writeUint8(this.killFeedLines.length);
+            for (let i = 0; i < this.killFeedLines.length; i++) {
+                const killFeedMsg = new net.KillFeedMsg();
+                killFeedMsg.segments = this.killFeedLines[i];
+                killFeedMsg.serialize(s);
+            }
+            flags |= UpdateExtFlags.KillFeedLines;
+        }
 
         if (this.delObjIds.length) {
             s.writeUint16(this.delObjIds.length);
@@ -328,13 +153,6 @@ export class UpdateMsg implements AbstractMsg {
             s.writeBytes(obj.partialStream, 0, obj.partialStream.byteIndex);
         }
 
-        if (this.activePlayerIdDirty) {
-            s.writeUint16(this.activePlayerId);
-            flags |= UpdateExtFlags.ActivePlayerId;
-        }
-
-        serializeActivePlayer(s, this.activePlayerData);
-
         if (this.gasDirty) {
             serializeGasData(s, this.gasData);
             flags |= UpdateExtFlags.Gas;
@@ -345,12 +163,13 @@ export class UpdateMsg implements AbstractMsg {
             flags |= UpdateExtFlags.GasCircle;
         }
 
-        if (this.playerInfos.length) {
-            s.writeUint8(this.playerInfos.length);
-            for (let i = 0; i < this.playerInfos.length; i++) {
-                serializePlayerInfo(s, this.playerInfos[i]);
+        if (this.players.length) {
+            s.writeUint8(this.players.length);
+            for (let i = 0; i < this.players.length; i++) {
+                const player = this.players[i];
+                serializePlayer(s, player);
             }
-            flags |= UpdateExtFlags.PlayerInfos;
+            flags |= UpdateExtFlags.Players;
         }
 
         if (this.deletedPlayerIds.length) {
@@ -361,18 +180,8 @@ export class UpdateMsg implements AbstractMsg {
             flags |= UpdateExtFlags.DeletePlayerIds;
         }
 
-        if (this.playerStatusDirty) {
-            serializePlayerStatus(s, this.playerStatus);
-            flags |= UpdateExtFlags.PlayerStatus;
-        }
-
-        if (this.groupStatusDirty) {
-            serializeGroupStatus(s, this.groupStatus);
-            flags |= UpdateExtFlags.GroupStatus;
-        }
-
         if (this.bullets.length) {
-            s.writeUint8(this.bullets.length);
+            s.writeUint16(this.bullets.length);
 
             for (let i = 0; i < this.bullets.length; i++) {
                 const bullet = this.bullets[i];
@@ -416,7 +225,7 @@ export class UpdateMsg implements AbstractMsg {
         }
 
         if (this.explosions.length) {
-            s.writeUint8(this.explosions.length);
+            s.writeUint16(this.explosions.length);
             for (let i = 0; i < this.explosions.length; i++) {
                 const explosion = this.explosions[i];
 
@@ -493,7 +302,10 @@ export class UpdateMsg implements AbstractMsg {
             flags |= UpdateExtFlags.KillLeader;
         }
 
-        s.writeUint8(this.ack);
+        const streamLength = this.msgsToSend.stream.byteIndex;
+        s.writeUint32(streamLength);
+        s.writeBytes(this.msgsToSend.stream, 0, streamLength);
+
         const idx = s.byteIndex;
         s.byteIndex = flagsIdx;
         s.writeUint16(flags);
@@ -506,6 +318,32 @@ export class UpdateMsg implements AbstractMsg {
         objectCreator: { m_getTypeById: (id: number, s: BitStream) => ObjectType },
     ) {
         const flags = s.readUint16();
+
+        if ((flags & UpdateExtFlags.Map) != 0) {
+            const length = s.readUint32();
+            const bytes = s.readBytes(length);
+            const buffer = bytes.buffer.slice(
+                bytes.byteOffset,
+                bytes.byteOffset + bytes.byteLength,
+            );
+            this.mapStream = new net.BitStream(buffer);
+            this.mapDirty = true;
+        }
+
+        if ((flags & UpdateExtFlags.AliveCounts) != 0) {
+            const aliveMsg = new net.AliveCountsMsg();
+            aliveMsg.deserialize(s);
+            this.teamAliveCounts = aliveMsg.teamAliveCounts;
+        }
+
+        if ((flags & UpdateExtFlags.KillFeedLines) != 0) {
+            const count = s.readUint8();
+            for (let i = 0; i < count; i++) {
+                const killFeedMsg = new net.KillFeedMsg();
+                killFeedMsg.deserialize(s);
+                this.killFeedLines.push(killFeedMsg.segments);
+            }
+        }
 
         if ((flags & UpdateExtFlags.DeletedObjects) != 0) {
             const count = s.readUint16();
@@ -549,15 +387,6 @@ export class UpdateMsg implements AbstractMsg {
             this.partObjects.push(data);
         }
 
-        if ((flags & UpdateExtFlags.ActivePlayerId) != 0) {
-            this.activePlayerId = s.readUint16();
-            this.activePlayerIdDirty = true;
-        }
-
-        const activePlayerData = {} as LocalDataWithDirty;
-        deserializeActivePlayer(s, activePlayerData);
-        this.activePlayerData = activePlayerData;
-
         if ((flags & UpdateExtFlags.Gas) != 0) {
             const gasData = {} as GasData;
             deserializeGasData(s, gasData);
@@ -570,12 +399,12 @@ export class UpdateMsg implements AbstractMsg {
             this.gasTDirty = true;
         }
 
-        if ((flags & UpdateExtFlags.PlayerInfos) != 0) {
+        if ((flags & UpdateExtFlags.Players) != 0) {
             const count = s.readUint8();
             for (let i = 0; i < count; i++) {
-                const x = {} as PlayerInfo;
-                deserializePlayerInfo(s, x);
-                this.playerInfos.push(x);
+                const player = {} as Player;
+                deserializePlayer(s, player);
+                this.players.push(player);
             }
         }
 
@@ -587,22 +416,8 @@ export class UpdateMsg implements AbstractMsg {
             }
         }
 
-        if ((flags & UpdateExtFlags.PlayerStatus) != 0) {
-            const playerStatus = {} as this["playerStatus"];
-            deserializePlayerStatus(s, playerStatus);
-            this.playerStatus = playerStatus;
-            this.playerStatusDirty = true;
-        }
-
-        if ((flags & UpdateExtFlags.GroupStatus) != 0) {
-            const groupStatus = {} as this["groupStatus"];
-            deserializeGroupStatus(s, groupStatus);
-            this.groupStatus = groupStatus;
-            this.groupStatusDirty = true;
-        }
-
         if ((flags & UpdateExtFlags.Bullets) != 0) {
-            for (let count = s.readUint8(), i = 0; i < count; i++) {
+            for (let count = s.readUint16(), i = 0; i < count; i++) {
                 const bullet = {} as Bullet;
                 bullet.playerId = s.readUint16();
                 bullet.pos = s.readVec(0, 0, 1024, 1024, 16);
@@ -641,7 +456,7 @@ export class UpdateMsg implements AbstractMsg {
         }
 
         if ((flags & UpdateExtFlags.Explosions) != 0) {
-            const count = s.readUint8();
+            const count = s.readUint16();
             for (let i = 0; i < count; i++) {
                 const explosion = {} as Explosion;
                 explosion.pos = s.readVec(0, 0, 1024, 1024, 16);
@@ -663,7 +478,7 @@ export class UpdateMsg implements AbstractMsg {
                 if (emote.isPing) {
                     emote.pos = s.readVec(0, 0, 1024, 1024, 16);
                 }
-                s.readBits(3);
+                s.readAlignToNextByte(); // readBits(3)
                 this.emotes.push(emote);
             }
         }
@@ -713,141 +528,65 @@ export class UpdateMsg implements AbstractMsg {
             this.killLeaderKills = s.readUint8();
             this.killLeaderDirty = true;
         }
-        this.ack = s.readUint8();
+
+        const streamLength = s.readUint32();
+        this.msgsToSend = new net.MsgStream(s.readBytes(streamLength));
     }
 }
 
-export function getPlayerStatusUpdateRate(factionMode: boolean) {
-    if (factionMode) {
-        return 0.5;
+export interface Player {
+    status: PlayerStatus;
+    data: LocalDataWithDirty;
+    info: PlayerInfo;
+}
+
+function serializePlayer(s: BitStream, player: Player) {
+    s.writeBoolean(player.status.hasData);
+
+    if (player.status.hasData) {
+        s.writeVec(player.status.pos, 0, 0, 1024, 1024, 11);
+        s.writeBoolean(player.status.visible);
+        s.writeBoolean(player.status.dead);
+        s.writeBoolean(player.status.downed);
+
+        s.writeBoolean(player.status.role !== "");
+        if (player.status.role !== "") {
+            s.writeGameType(player.status.role);
+        }
+
+        s.writeBoolean(player.status.disconnected!);
     }
-    return 0.25;
+
+    s.writeAlignToNextByte();
+
+    serializeActivePlayer(s, player.data);
+    serializePlayerInfo(s, player.info);
 }
 
-export interface Bullet {
-    playerId: number;
-    startPos: Vec2;
-    pos: Vec2;
-    dir: Vec2;
-    bulletType: string;
-    layer: number;
-    varianceT: number;
-    distAdjIdx: number;
-    clipDistance: boolean;
-    distance: number;
-    shotFx: boolean;
-    shotSourceType: string;
-    shotOffhand: boolean;
-    lastShot: boolean;
-    reflectCount: number;
-    reflectObjId: number;
-    hasSpecialFx: boolean;
-    shotAlt: boolean;
-    splinter: boolean;
-    trailSaturated: boolean;
-    trailSmall: boolean;
-    trailThick: boolean;
-}
+function deserializePlayer(s: BitStream, player: Player) {
+    const status = {} as PlayerStatus;
+    status.hasData = s.readBoolean();
+    if (status.hasData) {
+        status.pos = s.readVec(0, 0, 1024, 1024, 11);
+        status.visible = s.readBoolean();
+        status.dead = s.readBoolean();
+        status.downed = s.readBoolean();
+        status.role = "";
+        if (s.readBoolean()) {
+            status.role = s.readGameType();
+        }
 
-export interface Explosion {
-    pos: Vec2;
-    type: string;
-    layer: number;
-}
+        status.disconnected = s.readBoolean();
+    }
 
-export interface Emote {
-    playerId: number;
-    type: string;
-    itemType: string;
-    isPing: boolean;
-    pos?: Vec2;
-}
+    s.readAlignToNextByte();
 
-export interface Airstrike {
-    pos: Vec2;
-    duration: number;
-    rad: number;
-}
+    const data = {} as LocalDataWithDirty;
+    deserializeActivePlayer(s, data);
+    const info = {} as PlayerInfo;
+    deserializePlayerInfo(s, info);
 
-export interface Plane {
-    planeDir: Vec2;
-    pos: Vec2;
-    actionComplete: boolean;
-    action: number;
-    id: number;
-}
-
-export interface MapIndicator {
-    id: number;
-    dead: boolean;
-    equipped: boolean;
-    type: string;
-    pos: Vec2;
-}
-
-export interface Action {
-    type: Action;
-    seq: number;
-    seqOld: number;
-    item: string;
-    skin: string;
-    targetId: number;
-    time: number;
-    duration: number;
-    throttleCount: number;
-    throttleTicker: number;
-}
-
-export interface LocalData {
-    health: number;
-    zoom: number;
-    boost: number;
-    scope: string;
-    curWeapIdx: number;
-    inventory: Record<string, number>;
-    weapons: Array<{
-        type: string;
-        ammo: number;
-    }>;
-    spectatorCount: number;
-}
-
-export interface LocalDataWithDirty extends LocalData {
-    healthDirty: boolean;
-    boostDirty: boolean;
-    zoomDirty: boolean;
-    actionDirty: boolean;
-    action: {
-        time: number;
-        duration: number;
-        targetId: number;
-    };
-    inventoryDirty: boolean;
-    weapsDirty: boolean;
-    spectatorCountDirty: boolean;
-}
-
-// the non-optional properties are used by both server and client
-export interface PlayerStatus {
-    playerId?: number;
-    pos: Vec2;
-    posTarget?: Vec2;
-    posDelta?: number;
-    health?: number;
-    posInterp?: number;
-    visible: boolean;
-    dead: boolean;
-    downed: boolean;
-    disconnected?: boolean;
-    role: string;
-    timeSinceUpdate?: number;
-    timeSinceVisible?: number;
-    minimapAlpha?: number;
-    minimapVisible?: boolean;
-    hasData: boolean;
-}
-
-export interface GroupStatus {
-    health: number;
-    disconnected: boolean;
+    player.status = status;
+    player.data = data;
+    player.info = info;
 }

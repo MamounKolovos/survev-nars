@@ -40,7 +40,7 @@
                         <%= timeDiff %>
                     </div>
                 </div>
-                <div class='col-3'>
+                <div class='col-2'>
                     <div class='match-link-stat'>
                         <%
                             var modeText = env.games[i].summary.team_mode;
@@ -94,6 +94,16 @@
                         <div class='game-mode-icon' style='background-image: url(/<%= env.games[i].summary.icon %>)'></div>
                     </div>
                   <% } %>
+                </div>
+                <!-- Replay icon -->
+                <div class='hide-xs col-md-1'>
+                    <% if (env.games[i].summary.has_replay) { %>
+                    <div class='match-link-stat btn-darken'>
+                        <a href="/?replay=<%= env.games[i].summary.guid %>" onclick="event.stopPropagation()">
+                            <div class='match-link-replay-start-icon'></div>
+                        </a>
+                    </div>
+                    <% } %>
                 </div>
                 <!-- Expand/Unexpand icon -->
                 <div class='offset-0 col-1 pl-0 pr-0'>

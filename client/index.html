@@ -595,6 +595,26 @@
             </div>
           </div>
         </div>
+        <div id="ui-replay-menu-wrapper" style="display: none">
+          <div id="ui-replay-menu" class="ui-bg-standard">
+            <div id="ui-replay-scrubber">
+              <input type="range" id="replay-scrubber" min="0" max="100" step="any" value="0"/>
+              <div id="ui-replay-time">
+                <span id="replay-elapsed">0:00</span>
+                <span aria-hidden="true"> / </span>
+                <span id="replay-total">0:00</span>
+              </div>
+            </div>
+            <div id="ui-replay-buttons">
+              <a title="Playback" class="btn-darken btn-replay-pause" id="btn-replay-playback"></a>
+              <a title="Seek backward 5 seconds" class="btn-darken btn-replay-seek-backward" id="btn-replay-seek-backward"></a>
+              <a title="Seek forward 5 seconds" class="btn-darken btn-replay-seek-forward" id="btn-replay-seek-forward"></a>
+              <a title="Toggle layer" class="btn-darken btn-replay-toggle-layer" id="btn-replay-toggle-layer"></a>
+              <a title="Switch to freecam" class="btn-darken btn-replay-to-freecam" id="btn-replay-to-freecam"></a>
+              <a title="Copy to clipboard at timestamp" class="btn-darken btn-replay-copy-link" id="btn-replay-copy-link"></a>
+            </div>
+          </div>
+        </div>
         <div id="ui-bottom-center-1" class="click-through">
           <div id="ui-kills">
             <div id="ui-kill-text"></div>

@@ -287,6 +287,7 @@ export class BulletBarn {
                     if (
                         player.active &&
                         !player.m_netData.m_dead &&
+                        !player.isFreecam &&
                         (util.sameLayer(player.m_netData.m_layer, b.layer) ||
                             player.m_netData.m_layer & 2) &&
                         (player.__id != b.playerId || b.damageSelf)
@@ -504,6 +505,17 @@ export class BulletBarn {
                     b.alive = false;
                 }
                 b.isNew = false;
+            }
+        }
+    }
+
+    m_clear() {
+        for (let i = 0; i < this.bullets.length; i++) {
+            const bullet = this.bullets[i];
+            if (bullet.alive || bullet.collided) {
+                bullet.alive = false;
+                bullet.collided = false;
+                bullet.container.visible = false;
             }
         }
     }

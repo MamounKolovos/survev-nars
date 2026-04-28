@@ -117,6 +117,16 @@ function m() {
     return t;
 }
 
+function setPlayerHUDVisibility(visible: boolean) {
+    const visibility = visible ? "visible" : "hidden";
+    domElemById("ui-right-center").style.visibility = visibility; // ammo
+    domElemById("ui-bottom-center-0").style.visibility = visibility; // health/adren
+    domElemById("ui-bottom-center-right").style.visibility = visibility; // armor
+    domElemById("ui-bottom-right").style.visibility = visibility; // weapons
+    domElemById("ui-equipped-ammo-wrapper").style.visibility = visibility; // equipped ammo
+    domElemById("ui-top-center-scopes-wrapper").style.visibility = visibility; // scopes
+}
+
 class UiState {
     mobile = false;
     touch = false;
@@ -603,6 +613,24 @@ export class UiManager2 {
     ) {
         const state = this.newState;
 
+        // KillFeed
+        let offset = 0;
+        for (let i = 0; i < state.killFeed.length; i++) {
+            const line = state.killFeed[i];
+            line.ticker += dt;
+            const E = line.ticker;
+            line.offset = offset;
+            line.opacity = math.smoothstep(E, 0, 0.25) * (1 - math.smoothstep(E, 6, 6.5));
+            offset += math.min(E / 0.25, 1);
+
+            // Shorter animation on mobile
+            if (device.mobile) {
+                line.opacity = E < 6.5 ? 1 : 0;
+            }
+        }
+
+        setPlayerHUDVisibility(!activePlayer.isFreecam);
+
         // Device
         state.mobile = device.mobile;
         state.touch = device.touch;
@@ -656,22 +684,6 @@ export class UiManager2 {
         const T = state.killMessage.duration;
         state.killMessage.opacity =
             (1 - math.smoothstep(I, T - 0.2, T)) * (1 - state.rareLootMessage.opacity);
-
-        // KillFeed
-        let offset = 0;
-        for (let i = 0; i < state.killFeed.length; i++) {
-            const line = state.killFeed[i];
-            line.ticker += dt;
-            const E = line.ticker;
-            line.offset = offset;
-            line.opacity = math.smoothstep(E, 0, 0.25) * (1 - math.smoothstep(E, 6, 6.5));
-            offset += math.min(E / 0.25, 1);
-
-            // Shorter animation on mobile
-            if (device.mobile) {
-                line.opacity = E < 6.5 ? 1 : 0;
-            }
-        }
 
         // Player status
         state.health = activePlayer.m_netData.m_dead
@@ -1402,6 +1414,18 @@ export class UiManager2 {
         const newLine = killFeed[0];
         newLine.segments = segments;
         newLine.ticker = 0;
+    }
+
+    clearKillFeed() {
+        for (let i = 0; i < this.newState.killFeed.length; i++) {
+            const line = this.newState.killFeed[i];
+            line.ticker = Number.MAX_VALUE;
+            line.opacity = 0;
+            line.segments = Array.from({ length: maxSegmentsPerKillFeedLine }, () => ({
+                text: "",
+                style: Object.fromEntries(styleKeys.map((k) => [k, undefined])),
+            }));
+        }
     }
 
     getKillFeedText(

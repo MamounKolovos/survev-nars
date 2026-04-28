@@ -72,6 +72,7 @@ export function getConfig(isProduction: boolean, dir: string) {
             allowMockAccount: isDev,
         },
         defaultItems: {},
+        replaysEnabled: true,
     };
 
     const dirname = import.meta?.dirname || __dirname;

@@ -394,6 +394,8 @@ export interface ConfigType {
          */
         inventory?: Record<string, number>;
     };
+
+    replaysEnabled: boolean;
 }
 
 type DeepPartial<T> = T extends object

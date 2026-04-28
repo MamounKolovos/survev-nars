@@ -22,6 +22,7 @@ import { InputHandler } from "./input";
 import { InputBindUi, InputBinds } from "./inputBinds";
 import { PingTest } from "./pingTest";
 import { proxy } from "./proxy";
+import { Replay } from "./replay";
 import { ResourceManager } from "./resources";
 import { SDK } from "./sdk";
 import { SiteInfo } from "./siteInfo";
@@ -96,6 +97,8 @@ class Application {
     hasFocus = true;
     newsDisplayed = true;
 
+    replay?: Replay;
+
     constructor() {
         this.account = new Account(this.config);
         this.loadoutMenu = new LoadoutMenu(this.account, this.localization);
@@ -132,7 +135,7 @@ class Application {
         onLoadCompleteCb();
     }
 
-    tryLoad() {
+    async tryLoad() {
         if (this.domContentLoaded && this.configLoaded && !this.initialized) {
             this.initialized = true;
             // this should be this.config.config.teamAutofill = true???
@@ -370,7 +373,43 @@ class Application {
             loadStaticDomImages();
 
             SDK.gameLoadComplete();
+
+            const gameId = helpers.getParameterByName("replay");
+            if (gameId) {
+                const replayBuffer = await this.fetchReplayBuffer(gameId);
+                if (replayBuffer) {
+                    try {
+                        const t = helpers.getParameterByName("t");
+                        const startSecond = t ? Number(t) : 0;
+                        this.replay = new Replay(
+                            replayBuffer,
+                            this.game,
+                            gameId,
+                            startSecond,
+                        );
+                        this.replay.start();
+                    } catch (e) {
+                        console.error(e);
+                        this.showErrorModal("replay_invalid");
+                    }
+                } else {
+                    this.showErrorModal("replay_not_found");
+                }
+            }
         }
+    }
+
+    async fetchReplayBuffer(
+        gameId: string,
+    ): Promise<Uint8Array<ArrayBuffer> | undefined> {
+        const res = await fetch(`/api/replay/${gameId}`);
+
+        if (!res.ok) {
+            return undefined;
+        }
+
+        const buffer = await res.arrayBuffer();
+        return new Uint8Array(buffer);
     }
 
     onUnload() {
@@ -844,6 +883,9 @@ class Application {
             // TODO: translate those?
             behind_proxy: this.localization.translate("index-behind-proxy"),
             ip_banned: `Your IP has been banned`,
+            replay_not_found: "Replay not found or unavailable.",
+            replay_invalid:
+                "This replay is either corrupted or the recording is out of date",
         };
         const text = typeText[err];
 
@@ -878,7 +920,11 @@ class Application {
                 this.setAppActive(false);
                 this.setPlayLockout(true);
             }
-            this.game.update(dt);
+            if (this.replay) {
+                this.replay.update(dt);
+            } else {
+                this.game.update(dt);
+            }
         }
 
         // LoadoutDisplay update

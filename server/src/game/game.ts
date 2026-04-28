@@ -30,6 +30,7 @@ import { ProjectileBarn } from "./objects/projectile";
 import { SmokeBarn } from "./objects/smoke";
 import { PluginManager } from "./pluginManager";
 import { Profiler } from "./profiler";
+import { Recorder } from "./replay";
 
 export interface JoinTokenData {
     expiresAt: number;
@@ -112,6 +113,8 @@ export class Game {
 
     profiler = new Profiler();
 
+    recorder?: Recorder;
+
     constructor(
         id: string,
         config: ServerGameConfig,
@@ -164,6 +167,10 @@ export class Game {
                 this.playerBarn.addTeam(i);
             }
         }
+
+        if (Config.replaysEnabled) {
+            this.recorder = new Recorder(this);
+        }
     }
 
     async init() {
@@ -198,6 +205,12 @@ export class Game {
         if (!this.started) {
             this.started = this.modeManager.isGameStarted();
             if (this.started) {
+                // no point recording an empty game
+                if (this.recorder) {
+                    this.recorder.start();
+                    this.logger.info("Recording started");
+                }
+
                 this.pluginManager.emit("gameStarted", { game: this });
                 this.gas.advanceGasStage();
             }
@@ -306,6 +319,7 @@ export class Game {
 
         // serialize objects and send msgs
         this.objectRegister.serializeObjs();
+        this.recorder?.recordTick();
         this.playerBarn.sendMsgs();
 
         //
@@ -555,6 +569,7 @@ export class Game {
                 this.closeSocket(player.socketId);
             }
         }
+        this.recorder?.stop();
         this.logger.info("Game Ended");
         this.updateData();
         this._saveGameToDatabase();
@@ -603,10 +618,14 @@ export class Game {
         // to avoid blocking the game from being GC'd until this request is done
         // and opening a database in each process if it fails
         // etc
+        const replay = this.recorder
+            ? Buffer.from(this.recorder.getBuffer().buffer).toString("base64")
+            : undefined;
         const res = await fetchApiServer<SaveGameBody, { error: string }>(
             "private/save_game",
             {
                 matchData: values,
+                replay,
             },
         );
 

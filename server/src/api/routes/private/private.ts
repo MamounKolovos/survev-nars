@@ -23,6 +23,7 @@ import {
     type MatchDataTable,
     itemsTable,
     matchDataTable,
+    replaysTable,
     usersTable,
 } from "../../db/schema";
 import { MOCK_USER_ID } from "../user/auth/mock";
@@ -106,6 +107,13 @@ export const PrivateRouter = new Hono<Context>()
         server.logger.info(`Saved game data for ${matchData[0].gameId}`);
 
         await logMatchToDiscord(matchData);
+
+        if (data.replay) {
+            const replay = Buffer.from(data.replay, "base64");
+            await saveReplay(replay, matchData[0].gameId);
+
+            server.logger.info(`Saved replay for ${matchData[0].gameId}`);
+        }
 
         return c.json({}, 200);
     })
@@ -235,6 +243,13 @@ export const PrivateRouter = new Hono<Context>()
             return c.json({ success: true }, 200);
         },
     );
+
+async function saveReplay(replay: Buffer, gameId: string): Promise<void> {
+    await db.insert(replaysTable).values({
+        data: replay,
+        gameId,
+    });
+}
 
 type Team = {
     // id: number;

@@ -175,6 +175,14 @@ export class BitStream extends bb.BitStream {
         this.index += length * 8;
     }
 
+    readBytes(length: number): Uint8Array {
+        assert(this.index % 8 == 0);
+        const byteIndex = this.index / 8;
+        const data = this._view._view.slice(byteIndex, byteIndex + length);
+        this.index += length * 8;
+        return data;
+    }
+
     writeAlignToNextByte() {
         const offset = 8 - (this.index % 8);
         if (offset < 8) this.writeBits(0, offset);
@@ -298,6 +306,7 @@ export enum MsgType {
     AliveCounts,
     PerkModeRoleSelect,
     KillFeedMsg,
+    Replay,
 }
 
 export enum PickupMsgType {
@@ -332,3 +341,4 @@ export { RoleAnnouncementMsg } from "./roleAnnouncementMsg";
 export { AliveCountsMsg } from "./aliveCountsMsg";
 export { PerkModeRoleSelectMsg } from "./perkModeRoleSelectMsg";
 export { KillFeedMsg } from "./killFeedMsg";
+export { ReplayMsg } from "./replayMsg";

@@ -70,6 +70,7 @@ export class InputBinds {
     binds: Array<InputValue | null> = [];
     boundKeys: Record<number, boolean | null> = {};
     menuHovered = false;
+    disabled = false;
 
     constructor(
         public input: InputHandler,
@@ -216,20 +217,24 @@ export class InputBinds {
     }
 
     isKeyBound(key: Key) {
+        if (this.disabled) return false;
         return this.boundKeys[key];
     }
 
     isBindPressed(bind: Input) {
+        if (this.disabled) return false;
         const b = this.binds[bind];
         return !this.preventMenuBind(b) && b && this.input.isInputValuePressed(b);
     }
 
     isBindReleased(bind: Input) {
+        if (this.disabled) return false;
         const b = this.binds[bind];
         return !this.preventMenuBind(b) && b && this.input.isInputValueReleased(b);
     }
 
     isBindDown(bind: Input) {
+        if (this.disabled) return false;
         const b = this.binds[bind];
         return !this.preventMenuBind(b) && b && this.input.isInputValueDown(b);
     }
@@ -242,6 +247,10 @@ export class InputBinds {
             const def = BindDefs[key as unknown as keyof typeof BindDefs];
             this.setBind(parseInt(key), def.defaultValue);
         }
+    }
+
+    disable() {
+        this.disabled = true;
     }
 }
 

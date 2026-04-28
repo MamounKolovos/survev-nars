@@ -1,4 +1,8 @@
+import { eq } from "drizzle-orm";
 import { Hono } from "hono";
+import { databaseEnabledMiddleware } from "../../auth/middleware";
+import { db } from "../../db";
+import { replaysTable } from "../../db/schema";
 import { leaderboardRouter } from "./leaderboard";
 import { matchDataRouter } from "./match_data";
 import { matchHistoryRouter } from "./match_history";
@@ -10,3 +14,21 @@ StatsRouter.route("/user_stats", UserStatsRouter);
 StatsRouter.route("/match_history", matchHistoryRouter);
 StatsRouter.route("/match_data", matchDataRouter);
 StatsRouter.route("/leaderboard", leaderboardRouter);
+
+StatsRouter.get("/replay/:gameId", databaseEnabledMiddleware, async (c) => {
+    const gameId = c.req.param("gameId");
+
+    const replay = await db.query.replaysTable.findFirst({
+        where: eq(replaysTable.gameId, gameId),
+        columns: {
+            data: true,
+        },
+    });
+
+    if (!replay) {
+        return c.json({ error: "No replay exists for that game id" }, 404);
+    }
+
+    c.header("Content-Type", "application/octet-stream");
+    return c.body(replay.data);
+});

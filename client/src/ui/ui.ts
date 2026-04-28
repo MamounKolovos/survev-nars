@@ -9,6 +9,7 @@ import type { PlayerStatsMsg } from "../../../shared/net/playerStatsMsg";
 import type { MapIndicator, PlayerStatus } from "../../../shared/net/updateMsg";
 import { coldet } from "../../../shared/utils/coldet";
 import { math } from "../../../shared/utils/math";
+import { util } from "../../../shared/utils/util";
 import { type Vec2, v2 } from "../../../shared/utils/v2";
 import type { AudioManager } from "../audioManager";
 import type { Camera } from "../camera";
@@ -65,6 +66,8 @@ class Color {
         };
     }
 }
+
+type ScrubberEvent = { kind: "down" } | { kind: "input"; value: number } | { kind: "up" };
 
 interface ContainerWithMask extends PIXI.Container {
     mask: PIXI.Graphics;
@@ -168,6 +171,33 @@ export class UiManager {
     specPrev = false;
     specNextButton = $("#btn-spectate-next-player");
     specPrevButton = $("#btn-spectate-prev-player");
+
+    replayInputs = {
+        scrubberEvents: [] as ScrubberEvent[],
+        playback: false,
+        seekForward: false,
+        seekBackward: false,
+        toggleLayer: false,
+        toFreecam: false,
+        copyLink: false,
+    };
+
+    replayElements = {
+        scrubber: $("#replay-scrubber"),
+        timeLabel: {
+            elapsed: $("#replay-elapsed"),
+            total: $("#replay-total"),
+        },
+        playbackButton: $("#btn-replay-playback"),
+        seekForwardButton: $("#btn-replay-seek-forward"),
+        seekBackwardButton: $("#btn-replay-seek-backward"),
+        toggleLayerButton: $("#btn-replay-toggle-layer"),
+        toFreecamButton: $("#btn-replay-to-freecam"),
+        copyLinkButton: $("#btn-replay-copy-link"),
+    };
+
+    replayMenu = $("#ui-replay-menu-wrapper");
+    replayMenuDisplayed = false;
 
     // Touch specific buttons
     interactionElems = $("#ui-interaction-press, #ui-interaction");
@@ -560,6 +590,43 @@ export class UiManager {
                 },
             });
         }
+
+        // prevents browser accessibility features from allowing arrow keys to control the scrubber
+        this.replayElements.scrubber.on("keydown", (e) => {
+            e.preventDefault();
+        });
+        this.replayElements.scrubber.on("input", (e) => {
+            this.replayInputs.scrubberEvents.push({
+                kind: "input",
+                value: Number((e.target as HTMLInputElement).value),
+            });
+        });
+        this.replayElements.scrubber.on("pointerdown", () => {
+            this.replayInputs.scrubberEvents.push({ kind: "down" });
+        });
+        this.replayElements.scrubber.on("pointerup", () => {
+            this.replayInputs.scrubberEvents.push({ kind: "up" });
+        });
+
+        this.replayElements.playbackButton.on("click", () => {
+            this.replayInputs.playback = true;
+        });
+        this.replayElements.seekForwardButton.on("click", () => {
+            this.replayInputs.seekForward = true;
+        });
+        this.replayElements.seekBackwardButton.on("click", () => {
+            this.replayInputs.seekBackward = true;
+        });
+        this.replayElements.toggleLayerButton.on("click", () => {
+            this.replayInputs.toggleLayer = true;
+        });
+        this.replayElements.toFreecamButton.on("click", () => {
+            this.replayInputs.toFreecam = true;
+        });
+        this.replayElements.copyLinkButton.on("click", () => {
+            this.replayInputs.copyLink = true;
+        });
+
         this.init();
     }
 
@@ -602,6 +669,17 @@ export class UiManager {
         $("#ui-weapon-id-2").off("mouseup");
         this.muteButton.off("mousedown");
         this.muteButton.off("click");
+
+        this.replayElements.scrubber.off("keydown");
+        this.replayElements.scrubber.off("input");
+        this.replayElements.scrubber.off("pointerdown");
+        this.replayElements.scrubber.off("pointerup");
+        this.replayElements.playbackButton.off("click");
+        this.replayElements.seekForwardButton.off("click");
+        this.replayElements.seekBackwardButton.off("click");
+        this.replayElements.toggleLayerButton.off("click");
+        this.replayElements.toFreecamButton.off("click");
+        this.replayElements.copyLinkButton.off("click");
 
         // Reset team member health bar widths
         $(".ui-team-member-health")
@@ -794,7 +872,8 @@ export class UiManager {
         }
 
         const layoutSm = device.uiLayout == device.UiLayout.Sm;
-        const groupPlayerCount = groupInfo.playerIds.length;
+        // replay client isn't a "real" player, no group UI should show for them
+        const groupPlayerCount = localPlayer.isFreecam ? 0 : groupInfo.playerIds.length;
 
         for (let i = 0; i < groupPlayerCount; i++) {
             const teamElems = this.teamSelectors[i];
@@ -935,8 +1014,7 @@ export class UiManager {
                 top: 12,
             });
         }
-        this.updatePlayerMapSprites(dt, player, playerBarn, map);
-        this.mapSpriteBarn.update(dt, this, map);
+
         this.m_pieTimer.update(dt, camera);
 
         // Update role selection menu
@@ -962,6 +1040,9 @@ export class UiManager {
                 this.setRoleMenuActive(false);
             }
         }
+
+        this.updatePlayerMapSprites(dt, player, playerBarn, map);
+        this.mapSpriteBarn.update(dt, this, map);
     }
 
     updatePlayerMapSprites(
@@ -971,6 +1052,7 @@ export class UiManager {
         map: Map,
     ) {
         const activePlayerInfo = playerBarn.getPlayerInfo(activePlayer.__id);
+        const groupCount = Object.keys(playerBarn.groupInfo).length;
 
         let spriteIdx = 0;
         const addSprite = (
@@ -1000,6 +1082,13 @@ export class UiManager {
             const playerStatus = playerBarn.playerStatus[keys[i] as unknown as number];
             const playerId = playerStatus.playerId!;
             const playerInfo = playerBarn.getPlayerInfo(playerId);
+
+            // replay client is omniscient so they should see everyone
+            // if youre watching a player's pov during a replay though, you should only see what they saw
+            if (!activePlayer.isFreecam && playerInfo.teamId != activePlayerInfo.teamId) {
+                continue;
+            }
+
             const sameGroup = playerInfo.groupId == activePlayerInfo.groupId;
             let zOrder = 65535 + playerId * 2;
             if (playerId == activePlayerInfo.playerId) {
@@ -1024,9 +1113,21 @@ export class UiManager {
             } else if (playerStatus.downed) {
                 texture = sameGroup ? "player-map-inner.img" : "player-map-downed.img";
             }
-            let tint = sameGroup
-                ? playerBarn.getGroupColor(playerId)
-                : playerBarn.getTeamColor(playerInfo.teamId);
+            let tint: number;
+            if (activePlayer.isFreecam) {
+                if (playerId == activePlayer.__id) {
+                    tint = 0xffffff;
+                } else {
+                    // - 1 to exclude replay client from calculation
+                    const hue = playerInfo.groupId / (groupCount - 1);
+                    const rgb = util.hsvToRgb(hue, 1, 1);
+                    tint = util.rgbToInt(rgb);
+                }
+            } else if (sameGroup) {
+                tint = playerBarn.getGroupColor(playerId);
+            } else {
+                tint = playerBarn.getTeamColor(playerInfo.teamId);
+            }
             if (map.factionMode && customMapIcon) {
                 tint = playerBarn.getTeamColor(playerInfo.teamId);
             }
@@ -1799,9 +1900,11 @@ export class UiManager {
                 this.specPrevButton.css("display", hideSpec ? "none" : "block");
                 this.specNextButton.css("display", hideSpec ? "none" : "block");
                 this.hideStats();
+                this.replayMenu.css("bottom", "79px");
             } else {
                 this.spectateMode.css("display", "none");
                 $(".ui-zoom").addClass("ui-zoom-hover");
+                this.replayMenu.css("bottom", "12px");
             }
         }
     }
@@ -1920,6 +2023,47 @@ export class UiManager {
             );
             this.spectatorCounterDisplayed = displayCounter;
         }
+    }
+
+    setReplayScrubberMax(max: number) {
+        this.replayElements.scrubber.prop("max", max);
+    }
+
+    setReplayScrubberValue(value: number) {
+        this.replayElements.scrubber.prop("value", value);
+    }
+
+    setReplayElapsedTimeLabel(ms: number) {
+        const seconds = ms / 1000;
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60)
+            .toString()
+            .padStart(2, "0");
+        this.replayElements.timeLabel.elapsed.text(`${m}:${s}`);
+    }
+
+    setReplayTotalTimeLabel(ms: number) {
+        const seconds = ms / 1000;
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60)
+            .toString()
+            .padStart(2, "0");
+        this.replayElements.timeLabel.total.text(`${m}:${s}`);
+    }
+
+    displayReplayMenu(display?: boolean) {
+        display = display ?? !this.replayMenuDisplayed;
+        const displayValue = display ? "block" : "none";
+
+        this.replayMenuDisplayed = display;
+        this.replayMenu.css("display", displayValue);
+    }
+
+    setReplayPlaybackIconState(state: "play" | "pause" | "restart") {
+        this.replayElements.playbackButton.removeClass(
+            "btn-replay-play btn-replay-pause btn-replay-restart",
+        );
+        this.replayElements.playbackButton.addClass(`btn-replay-${state}`);
     }
 
     toggleMiniMap() {

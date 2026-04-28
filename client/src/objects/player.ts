@@ -190,6 +190,8 @@ export class Player implements AbstractObject {
     __type!: ObjectType.Player;
     active!: boolean;
 
+    isFreecam = false;
+
     bodySprite = createSprite();
     chestSprite = createSprite();
     flakSprite = createSprite();
@@ -224,6 +226,10 @@ export class Player implements AbstractObject {
 
     container = new PIXI.Container();
     nameText = createPlayerNameText();
+
+    healthBar = new PIXI.Graphics();
+    healthBarDirty = false;
+
     auraContainer = new PIXI.Container();
     auraCircle = createSprite();
 
@@ -426,6 +432,7 @@ export class Player implements AbstractObject {
         this.container.addChild(this.bodyContainer);
 
         this.container.addChild(this.nameText);
+        this.container.addChild(this.healthBar);
 
         this.auraContainer.addChild(this.auraCircle);
 
@@ -606,6 +613,7 @@ export class Player implements AbstractObject {
 
         if (data.healthDirty) {
             this.m_localData.m_health = data.health;
+            this.healthBarDirty = true;
         }
 
         if (data.boostDirty) {
@@ -717,7 +725,11 @@ export class Player implements AbstractObject {
     }
 
     canInteract(map: Map) {
-        return !this.m_netData.m_dead && (!map.perkMode || this.m_netData.m_role);
+        return (
+            !this.m_netData.m_dead &&
+            (!map.perkMode || this.m_netData.m_role) &&
+            !this.isFreecam
+        );
     }
 
     m_updatePerks(
@@ -800,6 +812,11 @@ export class Player implements AbstractObject {
         displayingStats: boolean,
         isSpectating: boolean,
     ) {
+        // not a real player so it doesn't make sense for it to get updated like one
+        if (this.isFreecam) {
+            return;
+        }
+
         const curWeapDef = GameObjectDefs[this.m_netData.m_activeWeapon];
         const isActivePlayer = this.__id == activeId;
         const activePlayer = playerBarn.getPlayerById(activeId)!;
@@ -872,7 +889,15 @@ export class Player implements AbstractObject {
         const playerInfo = playerBarn.getPlayerInfo(this.__id);
         const inSameGroup = playerInfo.groupId == activeGroupId;
         this.nameText.text = playerInfo.name;
-        this.nameText.visible = !isActivePlayer && inSameGroup;
+        this.nameText.visible =
+            !isActivePlayer && (inSameGroup || activePlayer.isFreecam);
+
+        // Update health bar
+        if (this.healthBarDirty) {
+            this.updateHealthBar();
+            this.healthBarDirty = false;
+        }
+        this.healthBar.visible = activePlayer.isFreecam;
 
         // Locate nearby obstacles that may play interaction effects
         let insideObstacle: Obstacle | null = null;
@@ -2510,6 +2535,33 @@ export class Player implements AbstractObject {
         this.bodyEffectSprite.visible = this.frozenTicker > 0;
     }
 
+    updateHealthBar() {
+        const width = 100;
+        const height = 10;
+        const x = -width / 2;
+        const y = 40;
+        const padding = 2;
+
+        const fillWidth = (this.m_localData.m_health / GameConfig.player.health) * width;
+
+        this.healthBar.clear();
+        this.healthBar
+            // outer bar
+            .beginFill(0x000000, 0.4)
+            .drawRoundedRect(
+                x - padding,
+                y - padding,
+                width + padding * 2,
+                height + padding * 2,
+                1,
+            )
+            .endFill()
+            // inner fill bar
+            .beginFill(0xb3b3b3)
+            .drawRoundedRect(x, y, fillWidth, height, 1)
+            .endFill();
+    }
+
     addRecoil(amount: number, leftHand: boolean, rightHand: boolean) {
         if (leftHand) {
             this.gunRecoilL += amount;
@@ -2669,7 +2721,11 @@ export class PlayerBarn {
             // @HACK: Fix issue in non-faction mode when spectating and swapping
             // between teams. We don't want the old player indicators to fade out
             // after moving to the new team
-            if (!map.factionMode && playerInfo.teamId != activeInfo.teamId) {
+            if (
+                !map.factionMode &&
+                playerInfo.teamId != activeInfo.teamId &&
+                !activePlayer.isFreecam
+            ) {
                 status.minimapAlpha = 0;
             }
             status.minimapVisible = status.minimapAlpha > 0.01;

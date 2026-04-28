@@ -1,4 +1,4 @@
-import { aliasedTable, and, desc, eq, gt, sum } from "drizzle-orm";
+import { aliasedTable, and, desc, eq, gt, isNotNull, sum } from "drizzle-orm";
 import { Hono } from "hono";
 import type { Context } from "../..";
 import type { TeamMode } from "../../../../../shared/gameConfig";
@@ -10,7 +10,7 @@ import {
 import { databaseEnabledMiddleware, rateLimitMiddleware } from "../../auth/middleware";
 import { validateParams } from "../../auth/middleware";
 import { db } from "../../db";
-import { matchDataTable, usersTable } from "../../db/schema";
+import { matchDataTable, replaysTable, usersTable } from "../../db/schema";
 
 export const matchHistoryRouter = new Hono<Context>();
 
@@ -52,6 +52,7 @@ matchHistoryRouter.post(
                 damage_dealt: matchDataTable.damageDealt,
                 damage_taken: matchDataTable.damageTaken,
                 slug: usersTable.slug,
+                has_replay: isNotNull(replaysTable.gameId),
             })
             .from(matchDataTable)
             .groupBy(
@@ -68,6 +69,7 @@ matchHistoryRouter.post(
                 matchDataTable.damageDealt,
                 matchDataTable.damageTaken,
                 usersTable.slug,
+                replaysTable.gameId,
             )
             .leftJoin(
                 aliased,
@@ -77,6 +79,7 @@ matchHistoryRouter.post(
                 ),
             )
             .innerJoin(usersTable, eq(usersTable.id, matchDataTable.userId))
+            .leftJoin(replaysTable, eq(replaysTable.gameId, matchDataTable.gameId))
             .where(
                 and(
                     eq(usersTable.id, userId),

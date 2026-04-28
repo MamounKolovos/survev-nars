@@ -870,7 +870,8 @@ export class EmoteBarn {
         // Update local emote wheels
         this.activePlayer = player;
 
-        const shouldDisable = localId !== player.__id || !!player.m_netData.m_dead;
+        const shouldDisable =
+            localId !== player.__id || !!player.m_netData.m_dead || player.isFreecam;
         if (shouldDisable !== this.disable) {
             this.disable = shouldDisable;
             if (shouldDisable) this.m_free();

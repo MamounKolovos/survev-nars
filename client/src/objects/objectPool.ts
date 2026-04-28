@@ -133,4 +133,11 @@ export class Creator {
             delete this.m_idToObj[id];
         }
     }
+
+    m_clear() {
+        const ids = Object.keys(this.m_idToObj);
+        for (let i = 0; i < ids.length; i++) {
+            this.m_deleteObj(Number(ids[i]));
+        }
+    }
 }

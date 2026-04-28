@@ -2167,6 +2167,115 @@ img {
   }
 }
 
+#ui-replay-menu-wrapper {
+  position: absolute;
+  color: #fff;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#ui-replay-menu {
+  position: relative;
+  pointer-events: all;
+  width: 100%;
+}
+
+#ui-replay-scrubber {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 4px;
+}
+
+#replay-scrubber {
+  flex: 1;
+  cursor: pointer;
+}
+
+#replay-scrubber:hover::-webkit-slider-thumb {
+  transform: scale(1.5);
+}
+
+#ui-replay-buttons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  height: 50px;
+  padding: 0 6px;
+}
+
+#ui-replay-menu a {
+  display: inline-block;
+  width: auto;
+
+  border: 0;
+  border-radius: 5px;
+  box-sizing: border-box;
+  width: 90px;
+  height: 40px;
+  line-height: 38px;
+  text-align: center;
+
+  color: white;
+  font-size: 16px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  background-color: #50afab;
+  border-bottom: 2px solid #387c79;
+  box-shadow: inset 0 -2px #387c79;
+  cursor: pointer;
+}
+
+.btn-replay-pause {
+  background-image: url(/img/gui/replay-pause.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.btn-replay-play {
+  background-image: url(/img/gui/replay-play.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.btn-replay-restart {
+  background-image: url(/img/gui/replay-restart.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.btn-replay-seek-backward {
+  background-image: url(/img/gui/replay-seek-backward.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.btn-replay-seek-forward {
+  background-image: url(/img/gui/replay-seek-forward.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.btn-replay-toggle-layer {
+  background-image: url(/img/gui/replay-toggle-layer.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.btn-replay-to-freecam {
+  background-image: url(/img/gui/replay-to-freecam.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.btn-replay-copy-link {
+  background-image: url(/img/gui/replay-copy-link.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 #ui-equipped-ammo-wrapper {
   /* Taken from ui-bottom-center-0 */
   position: absolute;

@@ -24,6 +24,8 @@ export type UpdateRegionBody = z.infer<typeof zUpdateRegionBody>;
 
 export interface SaveGameBody {
     matchData: (MatchDataTable & { ip: string; findGameIp: string })[];
+    // base64 encoded Buffer
+    replay?: string;
 }
 
 export interface ServerGameConfig {
