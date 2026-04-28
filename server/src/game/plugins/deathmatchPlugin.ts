@@ -552,7 +552,7 @@ class GracePeriod {
             duration,
             1,
             (i) => {
-                this.plugin.game.playerBarn.addKillFeedLine(-1, [
+                this.plugin.game.playerBarn.addKillFeedLine({ kind: "all" }, [
                     createSimpleSegment(`${i} seconds left`, "white"),
                 ]);
             },
@@ -706,15 +706,17 @@ export default class DeathmatchPlugin extends GamePlugin {
                     RESPAWN_COUNTDOWN_START,
                     1,
                     (i) => {
-                        this.game.playerBarn.addKillFeedLine(player.__id, [
-                            createSimpleSegment(`${i} seconds left`, "white"),
-                        ]);
+                        this.game.playerBarn.addKillFeedLine(
+                            { kind: "player", id: player.__id },
+                            [createSimpleSegment(`${i} seconds left`, "white")],
+                        );
                     },
                     () => {
                         this.respawnTimerIds.delete(respawnTimerDisplayCountdownId);
-                        this.game.playerBarn.addKillFeedLine(player.__id, [
-                            createSimpleSegment("respawned!", "white"),
-                        ]);
+                        this.game.playerBarn.addKillFeedLine(
+                            { kind: "player", id: player.__id },
+                            [createSimpleSegment("respawned!", "white")],
+                        );
                     },
                 );
                 this.respawnTimerIds.add(respawnTimerDisplayCountdownId);
@@ -1253,7 +1255,7 @@ export default class DeathmatchPlugin extends GamePlugin {
                     // the countdown is just so players have time to reset
                     // overtime technically starts immediately
                     this.gracePeriod.start(10, () => {
-                        this.game.playerBarn.addKillFeedLine(-1, [
+                        this.game.playerBarn.addKillFeedLine({ kind: "all" }, [
                             createSimpleSegment("overtime started!", "white"),
                         ]);
                     });
@@ -1264,14 +1266,14 @@ export default class DeathmatchPlugin extends GamePlugin {
                         WIN_CONDITION.countdownStart,
                         WIN_CONDITION.countdownInterval,
                         (i) => {
-                            this.game.playerBarn.addKillFeedLine(-1, [
+                            this.game.playerBarn.addKillFeedLine({ kind: "all" }, [
                                 createSimpleSegment(`round ends in `, "white"),
                                 createSimpleSegment(`${i}`, "red"),
                                 createSimpleSegment(` seconds`, "white"),
                             ]);
                         },
                         () => {
-                            this.game.playerBarn.addKillFeedLine(-1, [
+                            this.game.playerBarn.addKillFeedLine({ kind: "all" }, [
                                 createSimpleSegment("ROUND OVER", "red"),
                             ]);
                         },

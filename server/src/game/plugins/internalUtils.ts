@@ -85,12 +85,12 @@ export function attachGracePeriod(
             countdownStart,
             1,
             (i) => {
-                plugin.game.playerBarn.addKillFeedLine(-1, [
+                plugin.game.playerBarn.addKillFeedLine({ kind: "all" }, [
                     createSimpleSegment(`${i} seconds left`, "white"),
                 ]);
             },
             () => {
-                plugin.game.playerBarn.addKillFeedLine(-1, [
+                plugin.game.playerBarn.addKillFeedLine({ kind: "all" }, [
                     createSimpleSegment("round started!", "white"),
                 ]);
             },
@@ -364,7 +364,10 @@ export function attachLootPingNotification(
         const text = `${player.name} pinged a ${itemName}`;
         const segments = [createSimpleSegment(text, "#B4A3FC")];
 
-        plugin.game.playerBarn.addKillFeedLine(player.groupId, segments);
+        plugin.game.playerBarn.addKillFeedLine(
+            { kind: "group", id: player.groupId },
+            segments,
+        );
         lastItemPingNotif[playerId] = currentTime;
     });
 }

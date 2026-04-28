@@ -75,10 +75,15 @@ export interface Ping extends Emote {
     itemType: "";
 }
 
+export type KillFeedTarget =
+    | { kind: "all" }
+    | { kind: "player"; id: number }
+    | { kind: "group"; id: number }
+    | { kind: "team"; id: number };
+
 export interface KillFeedLine {
+    target: KillFeedTarget;
     segments: KillFeedSegment[];
-    /** who can see the killfeed line, -1 is everyone */
-    canSeeId: number;
 }
 
 export class PlayerBarn {
@@ -553,8 +558,8 @@ export class PlayerBarn {
         this.game.pluginManager.emit("pingDidOccur", { ping });
     }
 
-    addKillFeedLine(canSeeId = -1, segments: KillFeedSegment[]) {
-        this.killFeedLines.push({ canSeeId, segments });
+    addKillFeedLine(target: KillFeedTarget, segments: KillFeedSegment[]) {
+        this.killFeedLines.push({ target, segments });
     }
 }
 
@@ -2216,16 +2221,16 @@ export class Player extends BaseGameObject {
         }
 
         for (let i = 0; i < playerBarn.killFeedLines.length; i++) {
-            const killFeedLine = playerBarn.killFeedLines[i];
-            const canSeeId = killFeedLine.canSeeId;
+            const { target, segments } = playerBarn.killFeedLines[i];
+
             if (
-                -1 == canSeeId ||
-                player.__id == canSeeId ||
-                player.groupId == canSeeId ||
-                player.teamId == canSeeId
+                target.kind == "all" ||
+                (target.kind == "player" && target.id == player.__id) ||
+                (target.kind == "group" && target.id == player.groupId) ||
+                (target.kind == "team" && target.id == player.teamId)
             ) {
                 const killFeedMsg = new net.KillFeedMsg();
-                killFeedMsg.segments = killFeedLine.segments;
+                killFeedMsg.segments = segments;
                 msgStream.serializeMsg(net.MsgType.KillFeedMsg, killFeedMsg);
             }
         }

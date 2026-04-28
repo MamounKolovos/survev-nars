@@ -824,6 +824,8 @@ function listSquadNames(game: Game) {
         for (let i = 1; i < group.players.length; i++) {
             kfline += `-${group.players[i].name}`;
         }
-        game.playerBarn.addKillFeedLine(-1, [createSimpleSegment(kfline, "white")]);
+        game.playerBarn.addKillFeedLine({ kind: "all" }, [
+            createSimpleSegment(kfline, "white"),
+        ]);
     }
 }

@@ -70,26 +70,35 @@ export default class Solos1v1Plugin extends GamePlugin {
             ) {
                 const killer = params.source;
                 const killed = event.data.player;
-                this.game.playerBarn.addKillFeedLine(killed.__id, [
-                    createSimpleSegment(
-                        `${killer.name} had ${Math.round(killer.health)} health remaining`,
-                        "white",
-                    ),
-                ]);
+                this.game.playerBarn.addKillFeedLine(
+                    { kind: "player", id: killed.__id },
+                    [
+                        createSimpleSegment(
+                            `${killer.name} had ${Math.round(killer.health)} health remaining`,
+                            "white",
+                        ),
+                    ],
+                );
                 this.killTracker[killer.__id][killed.__id] =
                     (this.killTracker[killer.__id][killed.__id] ?? 0) + 1;
-                this.game.playerBarn.addKillFeedLine(killer.__id, [
-                    createSimpleSegment(
-                        `You are ${this.killTracker[killer.__id][killed.__id] ?? 0}-${this.killTracker[killed.__id][killer.__id] ?? 0} against ${killed.name}`,
-                        "white",
-                    ),
-                ]);
-                this.game.playerBarn.addKillFeedLine(killed.__id, [
-                    createSimpleSegment(
-                        `You are ${this.killTracker[killed.__id][killer.__id] ?? 0}-${this.killTracker[killer.__id][killed.__id] ?? 0} against ${killer.name}`,
-                        "white",
-                    ),
-                ]);
+                this.game.playerBarn.addKillFeedLine(
+                    { kind: "player", id: killer.__id },
+                    [
+                        createSimpleSegment(
+                            `You are ${this.killTracker[killer.__id][killed.__id] ?? 0}-${this.killTracker[killed.__id][killer.__id] ?? 0} against ${killed.name}`,
+                            "white",
+                        ),
+                    ],
+                );
+                this.game.playerBarn.addKillFeedLine(
+                    { kind: "player", id: killed.__id },
+                    [
+                        createSimpleSegment(
+                            `You are ${this.killTracker[killed.__id][killer.__id] ?? 0}-${this.killTracker[killer.__id][killed.__id] ?? 0} against ${killer.name}`,
+                            "white",
+                        ),
+                    ],
+                );
                 makeReady(killer);
             }
         });
@@ -103,7 +112,7 @@ export default class Solos1v1Plugin extends GamePlugin {
                     continue;
                 }
                 this.killTracker[p.__id] = {};
-                this.game.playerBarn.addKillFeedLine(-1, [
+                this.game.playerBarn.addKillFeedLine({ kind: "all" }, [
                     createSimpleSegment(`${p.name} is in the game`, "white"),
                 ]);
                 this.game.playerBarn.addMapPing("ping_woodsking", p.pos);

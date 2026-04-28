@@ -25,7 +25,7 @@ export function attachEventLogger(plugin: GamePlugin, eventName: EventName) {
             createSimpleSegment(eventName, "red", "bold"),
             createSimpleSegment(" was emitted", "white"),
         ];
-        plugin.game.playerBarn.addKillFeedLine(-1, segments);
+        plugin.game.playerBarn.addKillFeedLine({ kind: "all" }, segments);
     });
 }
 

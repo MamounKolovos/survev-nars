@@ -551,7 +551,7 @@ function getRespawnDelay(player: Player): number {
 function bedBroken(bed: Bed, game: Game) {
     const colorString = TeamColorToString[bed.color];
     bed.broken = true;
-    game.playerBarn.addKillFeedLine(-1, [
+    game.playerBarn.addKillFeedLine({ kind: "all" }, [
         createSimpleSegment(
             `${colorString.toUpperCase()} BED HAS BEEN BROKEN`,
             colorString,
@@ -576,7 +576,7 @@ function bedWillTakeDamage(bed: Bed, game: Game, dmg: number) {
     const oldHealth = bed.obstacleRef.health;
     const newHealth = oldHealth - dmg;
     if (shouldBedDamageBeNotified(oldHealth, newHealth)) {
-        game.playerBarn.addKillFeedLine(-1, [
+        game.playerBarn.addKillFeedLine({ kind: "all" }, [
             createSimpleSegment(
                 `${TeamColorToString[bed.color]} bed is on ${Math.round(newHealth)} HP`,
                 TeamColorToString[bed.color],
