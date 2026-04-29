@@ -41,8 +41,15 @@ function getFlags(style: KillFeedStyleObj) {
     return flags;
 }
 
+export type KillFeedTarget =
+    | { kind: "all" }
+    | { kind: "player"; id: number }
+    | { kind: "group"; id: number }
+    | { kind: "team"; id: number };
+
 export class KillFeedMsg implements AbstractMsg {
     segments: KillFeedSegment[] = [];
+    target: KillFeedTarget = { kind: "all" };
 
     serialize(s: BitStream) {
         s.writeUint8(this.segments.length);
@@ -57,6 +64,24 @@ export class KillFeedMsg implements AbstractMsg {
                     s.writeASCIIString(segment.style[key]);
                 }
             }
+        }
+
+        switch (this.target.kind) {
+            case "all":
+                s.writeUint8(0);
+                break;
+            case "player":
+                s.writeUint8(1);
+                s.writeUint16(this.target.id);
+                break;
+            case "group":
+                s.writeUint8(2);
+                s.writeUint8(this.target.id);
+                break;
+            case "team":
+                s.writeUint8(3);
+                s.writeUint8(this.target.id);
+                break;
         }
     }
 
@@ -75,5 +100,25 @@ export class KillFeedMsg implements AbstractMsg {
 
             this.segments.push(segment);
         }
+
+        let target: KillFeedTarget;
+        const kind = s.readUint8();
+        switch (kind) {
+            case 0:
+                target = { kind: "all" };
+                break;
+            case 1:
+                target = { kind: "player", id: s.readUint16() };
+                break;
+            case 2:
+                target = { kind: "group", id: s.readUint8() };
+                break;
+            case 3:
+                target = { kind: "team", id: s.readUint8() };
+                break;
+            default:
+                throw new Error(`unknown KillFeedTarget kind: ${kind}`);
+        }
+        this.target = target;
     }
 }

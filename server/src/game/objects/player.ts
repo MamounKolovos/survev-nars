@@ -27,7 +27,7 @@ import {
     GameConfig,
     type HasteType,
 } from "../../../../shared/gameConfig";
-import type { KillFeedSegment } from "../../../../shared/net/killFeedMsg";
+import type { KillFeedSegment, KillFeedTarget } from "../../../../shared/net/killFeedMsg";
 import * as net from "../../../../shared/net/net";
 import { ObjectType } from "../../../../shared/net/objectSerializeFns";
 import type { GroupStatus } from "../../../../shared/net/updateMsg";
@@ -74,12 +74,6 @@ export interface Ping extends Emote {
     isPing: true;
     itemType: "";
 }
-
-export type KillFeedTarget =
-    | { kind: "all" }
-    | { kind: "player"; id: number }
-    | { kind: "group"; id: number }
-    | { kind: "team"; id: number };
 
 export interface KillFeedLine {
     target: KillFeedTarget;
@@ -2231,6 +2225,7 @@ export class Player extends BaseGameObject {
             ) {
                 const killFeedMsg = new net.KillFeedMsg();
                 killFeedMsg.segments = segments;
+                killFeedMsg.target = target;
                 msgStream.serializeMsg(net.MsgType.KillFeedMsg, killFeedMsg);
             }
         }

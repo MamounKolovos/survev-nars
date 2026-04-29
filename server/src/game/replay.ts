@@ -113,10 +113,7 @@ export class Recorder {
             this.game.modeManager.updateAliveCounts(replayMsg.teamAliveCounts);
         }
 
-        for (let i = 0; i < this.game.playerBarn.killFeedLines.length; i++) {
-            const killFeedLine = this.game.playerBarn.killFeedLines[i];
-            replayMsg.killFeedLines.push(killFeedLine.segments);
-        }
+        replayMsg.killFeedLines = this.game.playerBarn.killFeedLines;
 
         // deletedObjs gets flushed every tick but recordTick() gets called before so it's fine
         // much faster than querying the grid

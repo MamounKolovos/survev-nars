@@ -1,5 +1,5 @@
 import { v2 } from "../utils/v2";
-import type { KillFeedSegment } from "./killFeedMsg";
+import type { KillFeedSegment, KillFeedTarget } from "./killFeedMsg";
 import { type AbstractMsg, type BitStream, Constants } from "./net";
 import * as net from "./net";
 import {
@@ -56,7 +56,7 @@ export class ReplayMsg implements AbstractMsg {
     aliveCountDirty = false;
     teamAliveCounts: number[] = [];
 
-    killFeedLines: KillFeedSegment[][] = [];
+    killFeedLines: KillFeedLine[] = [];
 
     delObjIds: number[] = [];
 
@@ -121,8 +121,10 @@ export class ReplayMsg implements AbstractMsg {
         if (this.killFeedLines.length) {
             s.writeUint8(this.killFeedLines.length);
             for (let i = 0; i < this.killFeedLines.length; i++) {
+                const line = this.killFeedLines[i];
                 const killFeedMsg = new net.KillFeedMsg();
-                killFeedMsg.segments = this.killFeedLines[i];
+                killFeedMsg.segments = line.segments;
+                killFeedMsg.target = line.target;
                 killFeedMsg.serialize(s);
             }
             flags |= UpdateExtFlags.KillFeedLines;
@@ -341,7 +343,10 @@ export class ReplayMsg implements AbstractMsg {
             for (let i = 0; i < count; i++) {
                 const killFeedMsg = new net.KillFeedMsg();
                 killFeedMsg.deserialize(s);
-                this.killFeedLines.push(killFeedMsg.segments);
+                this.killFeedLines.push({
+                    segments: killFeedMsg.segments,
+                    target: killFeedMsg.target,
+                });
             }
         }
 
@@ -532,6 +537,11 @@ export class ReplayMsg implements AbstractMsg {
         const streamLength = s.readUint32();
         this.msgsToSend = new net.MsgStream(s.readBytes(streamLength));
     }
+}
+
+export interface KillFeedLine {
+    segments: KillFeedSegment[];
+    target: KillFeedTarget;
 }
 
 export interface Player {

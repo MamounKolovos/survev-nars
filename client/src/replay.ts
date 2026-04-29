@@ -76,11 +76,11 @@ export class Replay {
         index += 4;
 
         const protocolVersion = this.view.getUint32(index);
-        if (protocolVersion != GameConfig.protocolVersion) {
-            throw new Error(
-                `Replay protocol mismatch: expected ${GameConfig.protocolVersion} got ${protocolVersion}`,
-            );
-        }
+        // if (protocolVersion != GameConfig.protocolVersion) {
+        //     throw new Error(
+        //         `Replay protocol mismatch: expected ${GameConfig.protocolVersion} got ${protocolVersion}`,
+        //     );
+        // }
         index += 4;
 
         this.currentTick = 0;
@@ -326,8 +326,25 @@ export class Replay {
             this.game.m_uiManager.updatePlayersAliveBlue(msg.teamAliveCounts[1]);
         }
 
+        const activeId = this.game.m_activeId;
+        const activeGroupId = this.game.m_playerBarn.getPlayerInfo(
+            this.game.m_activeId,
+        ).groupId;
+        const activeTeamId = this.game.m_playerBarn.getPlayerInfo(
+            this.game.m_activeId,
+        ).teamId;
+
         for (let i = 0; i < msg.killFeedLines.length; i++) {
-            this.game.m_ui2Manager.addCustomKillFeedMessage(msg.killFeedLines[i]);
+            const { target, segments } = msg.killFeedLines[i];
+
+            if (
+                target.kind == "all" ||
+                (target.kind == "player" && target.id == activeId) ||
+                (target.kind == "group" && target.id == activeGroupId) ||
+                (target.kind == "team" && target.id == activeTeamId)
+            ) {
+                this.game.m_ui2Manager.addCustomKillFeedMessage(segments);
+            }
         }
 
         // Delete objects
@@ -446,13 +463,6 @@ export class Replay {
 
             return false;
         };
-
-        const activeGroupId = this.game.m_playerBarn.getPlayerInfo(
-            this.game.m_activeId,
-        ).groupId;
-        const activeTeamId = this.game.m_playerBarn.getPlayerInfo(
-            this.game.m_activeId,
-        ).teamId;
 
         // Create emotes and pings
         for (let i = 0; i < msg.emotes.length; i++) {
