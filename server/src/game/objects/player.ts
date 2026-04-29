@@ -2030,6 +2030,13 @@ export class Player extends BaseGameObject {
             this.insideZoomRegion = false;
         }
 
+        if (this.portrait !== this._cullingPortrait) {
+            this._cullingPortraitTicker -= dt;
+            if (this._cullingPortraitTicker <= 0) {
+                this._cullingPortrait = this.portrait;
+            }
+        }
+
         //
         // Calculate layer
         //
@@ -2245,7 +2252,19 @@ export class Player extends BaseGameObject {
         }
 
         const radius = player.cullingZoom + 4;
-        const rect = coldet.circleToAabb(player.pos, radius);
+
+        let width: number;
+        let height: number;
+
+        if (this._cullingPortrait) {
+            width = radius * (9 / 16);
+            height = radius;
+        } else {
+            width = radius;
+            height = radius * (9 / 16);
+        }
+
+        const rect = collider.createAabbExtents(player.pos, v2.create(width, height));
 
         const newVisibleObjects = game.grid.intersectColliderSet(rect);
         // client crashes if active player is not visible
@@ -3278,6 +3297,8 @@ export class Player extends BaseGameObject {
     shootStart = false;
     shootHold = false;
     portrait = false;
+    private _cullingPortrait = false;
+    private _cullingPortraitTicker = 0;
     touchMoveActive = false;
     touchMoveDir = v2.create(1, 0);
     touchMoveLen = 255;
@@ -3314,7 +3335,12 @@ export class Player extends BaseGameObject {
         this.moveRight = msg.moveRight;
         this.moveUp = msg.moveUp;
         this.moveDown = msg.moveDown;
-        this.portrait = msg.portrait;
+
+        if (this.portrait != msg.portrait) {
+            this._cullingPortraitTicker = 0.5;
+            this.portrait = msg.portrait;
+        }
+
         this.touchMoveActive = msg.touchMoveActive;
         this.touchMoveDir = v2.normalizeSafe(msg.touchMoveDir);
         this.touchMoveLen = msg.touchMoveLen;
