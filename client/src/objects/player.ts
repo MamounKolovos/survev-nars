@@ -43,7 +43,7 @@ import type { InputHandler } from "../input";
 import type { SoundHandle } from "../lib/createJS";
 import type { Map } from "../map";
 import type { Renderer } from "../renderer";
-import type { UiManager2 } from "../ui/ui2";
+import { type UiManager2, getHealthColor } from "../ui/ui2";
 import type {
     BackpackDef,
     BoostDef,
@@ -2544,6 +2544,9 @@ export class Player implements AbstractObject {
 
         const fillWidth = (this.m_localData.m_health / GameConfig.player.health) * width;
 
+        const rgbColor = getHealthColor(this.m_localData.m_health, this.downed);
+        const color = util.rgbToInt({ r: rgbColor[0], g: rgbColor[1], b: rgbColor[2] });
+
         this.healthBar.clear();
         this.healthBar
             // outer bar
@@ -2557,7 +2560,7 @@ export class Player implements AbstractObject {
             )
             .endFill()
             // inner fill bar
-            .beginFill(0xb3b3b3)
+            .beginFill(color)
             .drawRoundedRect(x, y, fillWidth, height, 1)
             .endFill();
     }
