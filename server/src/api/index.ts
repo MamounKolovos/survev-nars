@@ -232,17 +232,10 @@ new Cron("0 0 * * *", async () => {
     try {
         await cleanupOldLogs();
         await deleteExpiredSessions();
+        await purgeReplays();
         server.logger.info("Deleted old logs and expired sessions");
     } catch (err) {
         server.logger.error("Failed to run cleanup script", err);
-    }
-});
-
-new Cron("0 0 * * 0", async () => {
-    try {
-        await purgeReplays();
-    } catch (err) {
-        server.logger.error("Failed to purge replays", err);
     }
 });
 
