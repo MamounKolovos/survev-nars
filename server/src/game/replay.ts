@@ -1,5 +1,6 @@
 import { GameConfig } from "../../../shared/gameConfig";
 import * as net from "../../../shared/net/net";
+import { coldet } from "../../../shared/utils/coldet";
 import { Config } from "../config";
 import type { Game } from "./game";
 
@@ -185,7 +186,18 @@ export class Recorder {
         replayMsg.emotes = this.game.playerBarn.emotes;
         replayMsg.bullets = this.game.bulletBarn.newBullets;
         replayMsg.explosions = this.game.explosionBarn.newExplosions;
-        replayMsg.planes = this.game.planeBarn.planes;
+        for (let i = 0; i < this.game.planeBarn.planes.length; i++) {
+            const plane = this.game.planeBarn.planes[i];
+            if (
+                coldet.testPointAabb(
+                    plane.pos,
+                    this.game.planeBarn.planeBounds.min,
+                    this.game.planeBarn.planeBounds.max,
+                )
+            ) {
+                replayMsg.planes.push(plane);
+            }
+        }
         replayMsg.airstrikeZones = this.game.planeBarn.newAirstrikeZones;
         replayMsg.mapIndicators = this.game.mapIndicatorBarn.mapIndicators;
 
