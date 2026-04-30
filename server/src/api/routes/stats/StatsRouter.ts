@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, lt } from "drizzle-orm";
 import { Hono } from "hono";
 import { databaseEnabledMiddleware } from "../../auth/middleware";
 import { db } from "../../db";
@@ -32,3 +32,8 @@ StatsRouter.get("/replay/:gameId", databaseEnabledMiddleware, async (c) => {
     c.header("Content-Type", "application/octet-stream");
     return c.body(replay.data);
 });
+
+export async function purgeReplays() {
+    const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    await db.delete(replaysTable).where(lt(replaysTable.createdAt, oneWeekAgo));
+}

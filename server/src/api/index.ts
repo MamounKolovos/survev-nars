@@ -28,7 +28,7 @@ import { rateLimitMiddleware, validateParams } from "./auth/middleware";
 import type { SessionTableSelect, UsersTableSelect } from "./db/schema";
 import { cleanupOldLogs, isBanned } from "./routes/private/ModerationRouter";
 import { PrivateRouter } from "./routes/private/private";
-import { StatsRouter } from "./routes/stats/StatsRouter";
+import { StatsRouter, purgeReplays } from "./routes/stats/StatsRouter";
 import { AuthRouter } from "./routes/user/AuthRouter";
 import { UserRouter } from "./routes/user/UserRouter";
 
@@ -235,6 +235,14 @@ new Cron("0 0 * * *", async () => {
         server.logger.info("Deleted old logs and expired sessions");
     } catch (err) {
         server.logger.error("Failed to run cleanup script", err);
+    }
+});
+
+new Cron("0 0 * * 0", async () => {
+    try {
+        await purgeReplays();
+    } catch (err) {
+        server.logger.error("Failed to purge replays", err);
     }
 });
 
