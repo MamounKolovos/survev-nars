@@ -889,6 +889,17 @@ export class Player implements AbstractObject {
         const playerInfo = playerBarn.getPlayerInfo(this.__id);
         const inSameGroup = playerInfo.groupId == activeGroupId;
         this.nameText.text = playerInfo.name;
+
+        const groupCount = Object.keys(playerBarn.groupInfo).length;
+        // makes all players of a group share a name color for visual clarity
+        if (activePlayer.isFreecam) {
+            const hue = playerInfo.groupId / (groupCount - 1);
+            const rgb = util.hsvToRgb(hue, 1, 1);
+            this.nameText.style.fill = util.rgbToInt(rgb);
+        } else {
+            this.nameText.style.fill = 65535;
+        }
+
         this.nameText.visible =
             !isActivePlayer && (inSameGroup || activePlayer.isFreecam);
 
