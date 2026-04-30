@@ -237,6 +237,8 @@ export class Replay {
                         this.game.m_onMsg(net.MsgType.Map, mapStream);
                     }
 
+                    this.processTick(stream, true);
+
                     while (this.currentTick < seekTarget && !this.isEnded()) {
                         this.processTick(stream);
                         this.game.update(this.tickElapsed / 1000);
@@ -276,14 +278,22 @@ export class Replay {
         requestAnimationFrame(loop);
     }
 
-    processTick(stream: net.BitStream) {
+    processTick(stream: net.BitStream, skipDeletes = false) {
         const startIndex = stream.byteIndex;
 
         this.tickElapsed = stream.readFloat32();
 
         this.tickToElapsed[this.currentTick] =
             (this.tickToElapsed[this.currentTick - 1] ?? 0) + this.tickElapsed;
-        this.nextTick(stream);
+
+        const msg = new net.ReplayMsg();
+        msg.deserialize(stream, this.game.m_objectCreator);
+        // meh design, find a better abstraction in the future
+        if (skipDeletes) {
+            msg.delObjIds.length = 0;
+        }
+
+        this.nextTick(msg);
         if (this.currentTick % this.ticksPerCheckpoint == 0) {
             const checkpointIndex = this.currentTick / this.ticksPerCheckpoint;
             this.checkpoints[checkpointIndex] = {
@@ -305,15 +315,7 @@ export class Replay {
         return this.currentTick >= this.totalTicks;
     }
 
-    nextTick(stream: net.BitStream) {
-        // console.log("index", stream.byteIndex)
-        // const msgLength = stream.readUint16();
-        // this.index += 2;
-
-        const msg = new net.ReplayMsg();
-        msg.deserialize(stream, this.game.m_objectCreator);
-        // this.index += msgLength;
-
+    nextTick(msg: net.ReplayMsg) {
         if (msg.mapDirty) {
             this.game.m_onMsg(net.MsgType.Map, msg.mapStream);
             this.seedToMapStream[this.game.m_map.seed] = msg.mapStream;
