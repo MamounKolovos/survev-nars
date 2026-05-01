@@ -4,7 +4,7 @@ import { coldet } from "../../../shared/utils/coldet";
 import { Config } from "../config";
 import type { Game } from "./game";
 
-const TICKS_PER_CHECKPOINT = Config.netSyncTps * 10;
+const TICKS_PER_CHECKPOINT = Config.netSyncTps * 5;
 
 export class Recorder {
     static VERSION = 1;
