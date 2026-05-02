@@ -396,6 +396,11 @@ img {
   background-image: url(/img/gui/keyboard.svg);
 }
 
+.monitor-play-icon {
+  background-image: url(/img/gui/monitor-play.svg);
+  background-size: 25px;
+}
+
 #ui-game-tab-settings {
   display: block;
   height: initial;
@@ -418,6 +423,61 @@ img {
   height: 295px;
   overflow-y: scroll;
   pointer-events: all;
+}
+
+.replay-guide {
+  height: 349px;
+  overflow-y: scroll;
+  pointer-events: all;
+}
+
+.replay-guide .highlight {
+  font-weight: 700;
+  color: gold;
+}
+
+.replay-guide-keybinds {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.replay-guide-keybind-entry {
+  display: flex;
+  justify-content: "space-between";
+  align-items: "center";
+}
+
+.replay-guide-keybind-key {
+  flex: 1;
+}
+
+.replay-guide-keybind-description {
+  flex: 1;
+  /* margin-left: 100px; */
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.replay-guide-preview-btn {
+  display: block;
+  width: 100%;
+  height: 40px;
+  border: 0px;
+  border-radius: 5px;
+  box-sizing: border-box;
+  position: relative;
+  margin: auto;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: white;
+  font-size: 16px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  background-color: #50afab;
+  border-bottom: 2px solid #387c79;
+  box-shadow: inset 0 -2px #387c79;
+  background-repeat: no-repeat;
+  cursor: pointer;
 }
 
 #ui-map-container {

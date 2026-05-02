@@ -23,6 +23,25 @@ const FREECAM_ID = 65534;
 const FREECAM_GROUP_ID = 255;
 const FREECAM_TEAM_ID = 255;
 
+// map instead of record to preserve definition order
+const keybinds = new Map<number, string>([
+    [Key.W, "Freecam Move Up"],
+    [Key.A, "Freecam Move Left"],
+    [Key.S, "Freecam Move Down"],
+    [Key.D, "Freecam Move Right"],
+    [Key.Plus, "Freecam Zoom In"],
+    [Key.Minus, "Freecam Zoom Out"],
+    [Key.T, "Freecam Toggle Layer (Ground/Underground)"],
+    [Key.J, "Seek Forward 5s"],
+    [Key.K, "Seek Backward 5s"],
+    [Key.M, "Toggle Replay Menu"],
+    [Key.G, "Toggle Big Map"],
+    [Key.V, "Toggle Minimap"],
+    [Key.Space, "Toggle Playback (Play/Pause)"],
+    [Key.Right, "Spectate Next Player"],
+    [Key.Left, "Spectate Previous Player"],
+]);
+
 export class Replay {
     private view: DataView;
     private uint8buff: Uint8Array;
@@ -121,6 +140,9 @@ export class Replay {
         this.game.m_uiManager.setReplayTotalTimeLabel(this.totalElapsedMs);
         this.game.m_uiManager.setReplayScrubberMax(this.totalElapsedMs);
         this.game.m_uiManager.setReplayScrubberValue(0);
+
+        this.game.m_uiManager.displayReplayGuide();
+        this.game.m_uiManager.setReplayGuideKeybinds(keybinds);
 
         const localData = {
             health: 100,
@@ -648,7 +670,7 @@ export class Replay {
 
             if (
                 this.game.m_uiManager.replayInputs.toggleLayer ||
-                this.game.m_input.keyReleased(Key.Zero)
+                this.game.m_input.keyReleased(Key.T)
             ) {
                 player.m_netData.m_layer ^= 1;
             }
@@ -711,11 +733,17 @@ export class Replay {
         }
         this.game.m_uiManager.replayInputs.scrubberEvents.length = 0;
 
-        if (this.game.m_uiManager.replayInputs.seekForward) {
+        if (
+            this.game.m_uiManager.replayInputs.seekForward ||
+            this.game.m_input.keyPressed(Key.K)
+        ) {
             this.seekOffset = 5000;
         }
 
-        if (this.game.m_uiManager.replayInputs.seekBackward) {
+        if (
+            this.game.m_uiManager.replayInputs.seekBackward ||
+            this.game.m_input.keyPressed(Key.J)
+        ) {
             this.seekOffset = -5000;
         }
 

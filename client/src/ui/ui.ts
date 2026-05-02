@@ -18,6 +18,7 @@ import { errorLogManager } from "../errorLogs";
 import type { Game } from "../game";
 import { type Gas, GasRenderer, GasSafeZoneRenderer } from "../gas";
 import { helpers } from "../helpers";
+import { KeyNames } from "../input";
 import type { SoundHandle } from "../lib/createJS";
 import type { Map } from "../map";
 import { MapIndicatorBarn } from "../objects/mapIndicator";
@@ -2064,6 +2065,32 @@ export class UiManager {
             "btn-replay-play btn-replay-pause btn-replay-restart",
         );
         this.replayElements.playbackButton.addClass(`btn-replay-${state}`);
+    }
+
+    setReplayGuideKeybinds(keybinds: globalThis.Map<number, string>) {
+        const container = $(".js-replay-guide-keybinds");
+        container.empty();
+
+        for (const [keyCode, descriptionText] of keybinds) {
+            const entry = $("<div/>", {
+                class: "replay-guide-keybind-entry",
+            });
+            const key = $("<span/>", {
+                class: "highlight replay-guide-keybind-key",
+                text: KeyNames[keyCode],
+            });
+            const description = $("<span/>", {
+                class: "replay-guide-keybind-description",
+                text: descriptionText,
+            });
+
+            entry.append(key, description);
+            container.append(entry);
+        }
+    }
+
+    displayReplayGuide() {
+        $("#btn-game-replay-guide-container").css("display", "block");
     }
 
     toggleMiniMap() {

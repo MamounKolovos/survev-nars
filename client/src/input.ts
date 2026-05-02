@@ -347,6 +347,9 @@ export enum Key {
     E = 69,
     F = 70,
     G = 71,
+    H = 72,
+    J = 74,
+    K = 75,
     L = 76,
     M = 77,
     N = 78,
@@ -398,7 +401,7 @@ export enum InputType {
     MouseButton,
     MouseWheel,
 }
-const KeyNames = [
+export const KeyNames = [
     "",
     "",
     "",

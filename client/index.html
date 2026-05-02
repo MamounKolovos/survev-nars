@@ -69,6 +69,10 @@
                 <a id="btn-game-keybinds" class="btn-game-tab-select btn-game-menu btn-darken" data-tab="keybinds"></a>
                 <div class="btn-double-row game-menu-icon-static keybind-icon"></div>
               </div>
+              <div id="btn-game-replay-guide-container" class="btn-game-container" style="display: none">
+                <a id="btn-game-replay-guide" class="btn-game-tab-select btn-game-menu btn-darken" data-tab="replay-guide"></a>
+                <div class="btn-double-row game-menu-icon-static monitor-play-icon"></div>
+              </div>
             </div>
             <div id="ui-game-tab-settings" class="ui-game-tab">
               <a id="btn-game-fullscreen" class="btn-fullscreen-toggle btn-game-menu btn-darken" data-l10n="game-full-screen">Full Screen</a>
@@ -101,6 +105,54 @@
             <div id="ui-game-tab-keybinds" class="ui-game-tab">
               <div id="ui-keybind-list" class="js-keybind-list"></div>
               <a class="js-btn-keybind-restore btn-keybind-restore btn-game-menu btn-darken" data-l10n="game-restore-defaults">Restore Defaults</a>
+            </div>
+            <div id="ui-game-tab-replay-guide" class="ui-game-tab">
+              <div class="js-replay-guide replay-guide">
+
+                <section class="replay-guide-section">
+                  <h2 class="replay-guide-heading">What is a Replay?</h2>
+                  <p class="replay-guide-text">
+                    A replay is a 1 to 1 simulation of a game. It contains everything that happened everywhere on the map at all times.
+                    This means you can freely move through time, scrub backward, jump forward, or pause at any moment.
+                  </p>
+                </section>
+
+                <section class="replay-guide-section">
+                  <h2 class="replay-guide-heading">Playback Controls</h2>
+                  <p class="replay-guide-text">
+                    At the bottom of the screen you'll find the replay menu. The <span class="highlight">scrubber</span>
+                    lets you click or drag to any point in the match. The <span class="highlight">seek</span> buttons
+                    jump 5 seconds backward or forward. When the replay ends, the <span class="highlight">playback</span> button lets you restart the recording.
+                  </p>
+                </section>
+
+                <section class="replay-guide-section">
+                  <h2 class="replay-guide-heading">2 modes: Freecam vs. Perspective</h2>
+                  <p class="replay-guide-text">
+                    <strong>Freecam</strong> is the default spectating mode. Move the camera freely
+                    across the map with WASD and zoom with + and -. The <span class="highlight">freecam</span> button switches from perspective to freecam
+                  </p>
+                  <p class="replay-guide-text">
+                    <strong>Perspective</strong> locks your view to a specific player's
+                    perspective like traditional spectating. Use the arrow keys to cycle between players. If the player
+                    you're watching dies or despawns, you're returned to freecam automatically.
+                  </p>
+                </section>
+
+                <section class="replay-guide-section">
+                  <h2 class="replay-guide-heading">Keybinds</h2>
+                  <div class="js-replay-guide-keybinds replay-guide-keybinds"></div>
+                </section>
+
+                <section class="replay-guide-section">
+                  <h2 class="replay-guide-heading">Sharing</h2>
+                  <p class="replay-guide-text">
+                    Click the <span class="highlight">copy link</span> button
+                    to get a link to the current timestamp.
+                  </p>
+                </section>
+
+              </div>
             </div>
             <a id="btn-game-resume" class="btn-game-menu btn-darken" data-l10n="game-return-to-game">Return to Game</a>
           </div>
