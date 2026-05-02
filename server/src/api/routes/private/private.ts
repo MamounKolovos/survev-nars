@@ -381,6 +381,7 @@ async function logMatchToDiscord(matchData: SaveGameBody["matchData"]): Promise<
                 `**Teams in Lobby:** ${gameData.teamTotal}\n`;
             embed = {
                 title: "Match Results",
+                url: `${Config.oauthRedirectURI}/?replay=${gameData.gameId}`,
                 description,
                 color: randomColor,
                 fields: page,
