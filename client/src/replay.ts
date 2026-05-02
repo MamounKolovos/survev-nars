@@ -692,7 +692,7 @@ export class Replay {
             const elapsedSeconds = Math.floor(
                 this.tickToElapsed[this.currentTick - 1] / 1000,
             );
-            const link = `${api.resolveRoomHost()}/?replay=${this.gameId}&t=${elapsedSeconds}`;
+            const link = `${window.location.protocol}//${api.resolveRoomHost()}/?replay=${this.gameId}&t=${elapsedSeconds}`;
             helpers.copyTextToClipboard(link);
         }
 
