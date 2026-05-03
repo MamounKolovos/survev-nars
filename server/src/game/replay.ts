@@ -26,7 +26,7 @@ export class Recorder {
     private oldMapSeed = -1;
 
     constructor(readonly game: Game) {
-        const buffer = new ArrayBuffer(20_000_000); // 20 mb
+        const buffer = new ArrayBuffer(40_000_000);
         this.uint8buff = new Uint8Array(buffer);
         this.view = new DataView(buffer);
     }
