@@ -17,20 +17,15 @@ import type {
     LocalDataWithDirty,
     MapIndicator,
     Plane,
-    PlayerInfo,
-    PlayerStatus,
 } from "./updateMsg";
 import {
     deserializeActivePlayer,
     deserializeGasData,
-    deserializePlayerInfo,
     serializeActivePlayer,
     serializeGasData,
-    serializePlayerInfo,
 } from "./updateMsg";
 
 export const UpdateExtFlags = {
-    Map: 1 << 0,
     AliveCounts: 1 << 1,
     KillFeedLines: 1 << 2,
     DeletedObjects: 1 << 3,
@@ -49,10 +44,6 @@ export const UpdateExtFlags = {
 };
 
 export class ReplayMsg implements AbstractMsg {
-    mapDirty = false;
-    mapStream!: net.BitStream;
-    // mapBuffer!: Uint8Array;
-
     aliveCountDirty = false;
     teamAliveCounts: number[] = [];
 
@@ -103,13 +94,6 @@ export class ReplayMsg implements AbstractMsg {
         let flags = 0;
         const flagsIdx = s.byteIndex;
         s.writeUint16(flags);
-
-        if (this.mapDirty) {
-            s.writeUint32(this.mapStream.byteIndex - 1);
-            // mapStream includes the type because there's no good way to remove it without copying the underlying memory
-            s.writeBytes(this.mapStream, 1, this.mapStream.byteIndex - 1);
-            flags |= UpdateExtFlags.Map;
-        }
 
         if (this.aliveCountDirty) {
             const aliveMsg = new net.AliveCountsMsg();
@@ -320,17 +304,6 @@ export class ReplayMsg implements AbstractMsg {
         objectCreator: { m_getTypeById: (id: number, s: BitStream) => ObjectType },
     ) {
         const flags = s.readUint16();
-
-        if ((flags & UpdateExtFlags.Map) != 0) {
-            const length = s.readUint32();
-            const bytes = s.readBytes(length);
-            const buffer = bytes.buffer.slice(
-                bytes.byteOffset,
-                bytes.byteOffset + bytes.byteLength,
-            );
-            this.mapStream = new net.BitStream(buffer);
-            this.mapDirty = true;
-        }
 
         if ((flags & UpdateExtFlags.AliveCounts) != 0) {
             const aliveMsg = new net.AliveCountsMsg();
@@ -545,58 +518,61 @@ export interface KillFeedLine {
 }
 
 export interface Player {
-    status: PlayerStatus;
     data: LocalDataWithDirty;
-    info: PlayerInfo;
+    playerId: number;
+    disconnected: boolean;
+    extraDirty: boolean;
+    extra: PlayerExtra;
+}
+
+export interface PlayerExtra {
+    teamId: number;
+    groupId: number;
+    name: string;
+
+    loadout: {
+        heal: string;
+        boost: string;
+    };
 }
 
 function serializePlayer(s: BitStream, player: Player) {
-    s.writeBoolean(player.status.hasData);
+    serializeActivePlayer(s, player.data);
 
-    if (player.status.hasData) {
-        s.writeVec(player.status.pos, 0, 0, 1024, 1024, 11);
-        s.writeBoolean(player.status.visible);
-        s.writeBoolean(player.status.dead);
-        s.writeBoolean(player.status.downed);
+    s.writeUint16(player.playerId);
+    s.writeBoolean(player.disconnected);
 
-        s.writeBoolean(player.status.role !== "");
-        if (player.status.role !== "") {
-            s.writeGameType(player.status.role);
-        }
+    s.writeBoolean(player.extraDirty);
+    if (player.extraDirty) {
+        const extra = player.extra;
+        s.writeUint8(extra.teamId);
+        s.writeUint8(extra.groupId);
+        s.writeString(extra.name);
 
-        s.writeBoolean(player.status.disconnected!);
+        s.writeGameType(extra.loadout.heal);
+        s.writeGameType(extra.loadout.boost);
     }
 
     s.writeAlignToNextByte();
-
-    serializeActivePlayer(s, player.data);
-    serializePlayerInfo(s, player.info);
 }
 
 function deserializePlayer(s: BitStream, player: Player) {
-    const status = {} as PlayerStatus;
-    status.hasData = s.readBoolean();
-    if (status.hasData) {
-        status.pos = s.readVec(0, 0, 1024, 1024, 11);
-        status.visible = s.readBoolean();
-        status.dead = s.readBoolean();
-        status.downed = s.readBoolean();
-        status.role = "";
-        if (s.readBoolean()) {
-            status.role = s.readGameType();
-        }
+    player.data = {} as LocalDataWithDirty;
+    deserializeActivePlayer(s, player.data);
 
-        status.disconnected = s.readBoolean();
+    player.playerId = s.readUint16();
+    player.disconnected = s.readBoolean();
+
+    player.extraDirty = s.readBoolean();
+    if (player.extraDirty) {
+        player.extra = {} as PlayerExtra;
+        player.extra.teamId = s.readUint8();
+        player.extra.groupId = s.readUint8();
+        player.extra.name = s.readString();
+        player.extra.loadout = {} as PlayerExtra["loadout"];
+        player.extra.loadout.heal = s.readGameType();
+        player.extra.loadout.boost = s.readGameType();
     }
 
     s.readAlignToNextByte();
-
-    const data = {} as LocalDataWithDirty;
-    deserializeActivePlayer(s, data);
-    const info = {} as PlayerInfo;
-    deserializePlayerInfo(s, info);
-
-    player.status = status;
-    player.data = data;
-    player.info = info;
 }

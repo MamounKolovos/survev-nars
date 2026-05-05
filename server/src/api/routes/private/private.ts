@@ -112,7 +112,10 @@ export const PrivateRouter = new Hono<Context>()
             const replay = Buffer.from(data.replay, "base64");
             await saveReplay(replay, matchData[0].gameId);
 
-            server.logger.info(`Saved replay for ${matchData[0].gameId}`);
+            const sizeMb = replay.byteLength / 1_000_000;
+            server.logger.info(
+                `Saved replay for ${matchData[0].gameId}, size: ${sizeMb.toFixed(2)}MB`,
+            );
         }
 
         return c.json({}, 200);

@@ -6,6 +6,18 @@ import type { Game } from "./game";
 
 const TICKS_PER_CHECKPOINT = Config.netSyncTps * 5;
 
+type Checkpoint = {
+    tick: number;
+    byteIndex: number;
+    totalElapsed: number;
+    mapStreamIndex: number;
+};
+
+type MapEntry = {
+    tick: number;
+    stream: net.BitStream;
+};
+
 export class Recorder {
     static VERSION = 1;
 
@@ -15,15 +27,17 @@ export class Recorder {
     private index = 0;
 
     private tickCount = 0;
-    private tickCountIndex = 0;
     private recording = false;
 
     private lastTickTime = 0;
 
     private elapsedMs = 0;
-    private elapsedMsIndex = 0;
 
     private oldMapSeed = -1;
+
+    private checkpoints: Checkpoint[] = [];
+
+    private mapEntries: MapEntry[] = [];
 
     constructor(readonly game: Game) {
         const buffer = new ArrayBuffer(40_000_000);
@@ -36,23 +50,8 @@ export class Recorder {
         this.tickCount = 0;
         this.recording = true;
 
-        this.view.setUint32(this.index, Recorder.VERSION);
+        // reserve 4 bytes for the header index
         this.index += 4;
-
-        this.view.setUint32(this.index, GameConfig.protocolVersion);
-        this.index += 4;
-
-        this.tickCountIndex = this.index;
-        this.index += 4;
-
-        this.elapsedMsIndex = this.index;
-        this.index += 4;
-
-        this.view.setUint16(this.index, TICKS_PER_CHECKPOINT);
-        this.index += 2;
-
-        this.view.setUint8(this.index, this.game.teamMode);
-        this.index += 1;
 
         this.lastTickTime = performance.now();
     }
@@ -80,32 +79,30 @@ export class Recorder {
 
         this.elapsedMs += tickElapsed;
 
-        let isCheckpoint = false;
+        if (this.oldMapSeed != this.game.map.seed) {
+            this.oldMapSeed = this.game.map.seed;
 
-        if (this.tickCount % TICKS_PER_CHECKPOINT == 0) {
-            isCheckpoint = true;
+            this.mapEntries.push({
+                tick: this.tickCount,
+                stream: this.game.map.mapStream.stream,
+            });
         }
 
         const replayMsg = new net.ReplayMsg();
 
-        if (this.oldMapSeed != this.game.map.seed) {
-            this.oldMapSeed = this.game.map.seed;
-            replayMsg.mapDirty = true;
-            replayMsg.mapStream = this.game.map.mapStream.stream;
+        let isCheckpoint = false;
 
-            // // const stream = this.game.map.mapStream;
-            // // replayMsg.mapBuffer = new Uint8Array(stream.arrayBuf, 1, stream.stream.byteIndex)
+        if (this.tickCount % TICKS_PER_CHECKPOINT == 0) {
+            isCheckpoint = true;
 
-            // const length = mapStream.byteIndex - 1;
-            // // excludes the type since we already know it's a map msg
-            // // replayMsg.mapStream = new net.BitStream(mapStream.buffer, 1, length);
-            // replayMsg.mapStream = new net.BitStream(mapStream.buffer, mapStream.byteIndex, length);
-            // // replayMsg.mapStream.byteIndex = length;
-
-            // // mapStream.byteIndex = 1;
-            // // mapStream.readBitStream(mapStream.bitsLeft)
-
-            // replayMsg.mapStream.byteIndex = 0;
+            this.checkpoints.push({
+                tick: this.tickCount,
+                // byteIndex is relative to the start of the tick data (after the 4 byte header index)
+                byteIndex: this.index - 4,
+                totalElapsed: this.elapsedMs,
+                // the last element is always the most recently pushed and therefore the "active" map
+                mapStreamIndex: this.mapEntries.length - 1,
+            });
         }
 
         if (this.game.playerBarn.aliveCountDirty || isCheckpoint) {
@@ -144,15 +141,6 @@ export class Recorder {
         for (let i = 0; i < this.game.playerBarn.players.length; i++) {
             const p = this.game.playerBarn.players[i];
             replayMsg.players.push({
-                status: {
-                    hasData: true,
-                    pos: p.pos,
-                    visible: true,
-                    dead: p.dead,
-                    downed: p.downed,
-                    role: p.role,
-                    disconnected: p.disconnected,
-                },
                 data: {
                     health: p.health,
                     zoom: p.zoom,
@@ -161,18 +149,20 @@ export class Recorder {
                     curWeapIdx: p.curWeapIdx,
                     inventory: p.inventory,
                     weapons: p.weapons,
-                    spectatorCount: p.spectatorCount,
-                    healthDirty: true,
-                    boostDirty: true,
-                    zoomDirty: true,
-                    actionDirty: true,
                     action: p.action,
-                    inventoryDirty: true,
-                    weapsDirty: true,
-                    spectatorCountDirty: true,
+                    spectatorCount: p.spectatorCount,
+                    healthDirty: p.healthDirty || isCheckpoint,
+                    zoomDirty: p.zoomDirty || isCheckpoint,
+                    boostDirty: p.boostDirty || isCheckpoint,
+                    inventoryDirty: p.inventoryDirty || isCheckpoint,
+                    weapsDirty: p.weapsDirty || isCheckpoint,
+                    actionDirty: p.actionDirty || isCheckpoint,
+                    spectatorCountDirty: p.spectatorCountDirty || isCheckpoint,
                 },
-                info: {
-                    playerId: p.__id,
+                playerId: p.__id,
+                disconnected: p.disconnected,
+                extraDirty: isCheckpoint,
+                extra: {
                     teamId: p.teamId,
                     groupId: p.groupId,
                     name: p.name,
@@ -222,9 +212,61 @@ export class Recorder {
     }
 
     stop() {
-        this.view.setUint32(this.tickCountIndex, this.tickCount);
-        this.view.setFloat32(this.elapsedMsIndex, this.elapsedMs);
+        const headerIndex = this.index;
+        this.index = 0;
+        this.writeUint32(headerIndex);
+        this.index = headerIndex;
+
+        this.writeUint32(Recorder.VERSION);
+        this.writeUint32(GameConfig.protocolVersion);
+        this.writeUint32(this.tickCount);
+        this.writeFloat32(this.elapsedMs);
+        this.writeUint16(TICKS_PER_CHECKPOINT);
+        this.writeUint8(this.game.teamMode);
+
+        this.writeUint16(this.checkpoints.length);
+        for (let i = 0; i < this.checkpoints.length; i++) {
+            const checkpoint = this.checkpoints[i];
+            this.writeUint32(checkpoint.tick);
+            this.writeUint32(checkpoint.byteIndex);
+            this.writeFloat32(checkpoint.totalElapsed);
+            this.writeUint8(checkpoint.mapStreamIndex);
+        }
+
+        this.writeUint8(this.mapEntries.length);
+        for (let i = 0; i < this.mapEntries.length; i++) {
+            const entry = this.mapEntries[i];
+
+            this.writeUint32(entry.tick);
+
+            // must exclude the type byte at the start of the stream
+            const byteIndex = entry.stream.byteIndex;
+            this.writeUint32(byteIndex - 1);
+            this.uint8buff.set(entry.stream.buffer.subarray(1, byteIndex), this.index);
+            this.index += byteIndex - 1;
+        }
+
         this.recording = false;
+    }
+
+    writeUint8(value: number) {
+        this.view.setUint8(this.index, value);
+        this.index += 1;
+    }
+
+    writeUint16(value: number) {
+        this.view.setUint16(this.index, value);
+        this.index += 2;
+    }
+
+    writeUint32(value: number) {
+        this.view.setUint32(this.index, value);
+        this.index += 4;
+    }
+
+    writeFloat32(value: number) {
+        this.view.setFloat32(this.index, value);
+        this.index += 4;
     }
 
     getBuffer(): Uint8Array {

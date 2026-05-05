@@ -14,8 +14,15 @@ import { createBullet } from "./objects/bullet";
 import type { Player } from "./objects/player";
 
 type Checkpoint = {
+    tick: number;
     byteIndex: number;
-    seed: number;
+    totalElapsed: number;
+    mapStreamIndex: number;
+};
+
+type MapEntry = {
+    tick: number;
+    stream: net.BitStream;
 };
 
 /** server side allocator max - 1 */
@@ -44,7 +51,7 @@ const keybinds = new Map<number, string>([
 
 export class Replay {
     private view: DataView;
-    private uint8buff: Uint8Array;
+    private uint8buff: Uint8Array<ArrayBuffer>;
 
     freecamPlayer!: Player;
 
@@ -67,19 +74,20 @@ export class Replay {
 
     ticksPerCheckpoint: number;
 
-    seedToMapStream: Record<number, net.BitStream> = {};
-    checkpoints: Checkpoint[] = [];
-    /** monotonically increasing counter that represents how many ticks have been traversed */
-    filledTicks = 0;
-    tickToElapsed!: Float32Array;
-
     tickElapsed = 0;
 
     totalElapsedMs: number;
 
-    headerLength: number;
-
     teamMode: TeamMode;
+
+    checkpoints: Checkpoint[];
+    mapEntries: MapEntry[];
+    nextMapStreamIndex = 0;
+    currentMapEntryIndex = -1;
+
+    headerStart: number;
+
+    currentTime = 0;
 
     constructor(
         buffer: Uint8Array<ArrayBuffer>,
@@ -90,7 +98,8 @@ export class Replay {
         this.uint8buff = buffer;
         this.view = new DataView(buffer.buffer);
 
-        let index = 0;
+        this.headerStart = this.view.getUint32(0);
+        let index = this.headerStart;
 
         const version = this.view.getUint32(index);
         console.log(`Recording version: ${version}`);
@@ -106,7 +115,6 @@ export class Replay {
 
         this.currentTick = 0;
         this.totalTicks = this.view.getUint32(index);
-        this.tickToElapsed = new Float32Array(this.totalTicks);
         index += 4;
 
         this.totalElapsedMs = this.view.getFloat32(index);
@@ -118,10 +126,39 @@ export class Replay {
         this.teamMode = this.view.getUint8(index);
         index += 1;
 
-        this.headerLength = index;
+        const checkpointCount = this.view.getUint16(index);
+        index += 2;
+
+        this.checkpoints = [];
+        for (let i = 0; i < checkpointCount; i++) {
+            const tick = this.view.getUint32(index);
+            index += 4;
+            const byteIndex = this.view.getUint32(index);
+            index += 4;
+            const totalElapsed = this.view.getFloat32(index);
+            index += 4;
+            const mapStreamIndex = this.view.getUint8(index);
+            index += 1;
+            this.checkpoints.push({ tick, byteIndex, totalElapsed, mapStreamIndex });
+        }
+
+        const mapStreamCount = this.view.getUint8(index);
+        index += 1;
+
+        this.mapEntries = [];
+        for (let i = 0; i < mapStreamCount; i++) {
+            const tick = this.view.getUint32(index);
+            index += 4;
+
+            const length = this.view.getUint32(index);
+            index += 4;
+            const mapBuffer = this.uint8buff.buffer.slice(index, index + length);
+            const stream = new net.BitStream(mapBuffer);
+            index += length;
+            this.mapEntries.push({ tick, stream });
+        }
 
         // TODO: should happen in consumer
-        this.seekOffset = math.clamp(startSecond * 1000, 0, this.totalElapsedMs);
     }
 
     start() {
@@ -213,8 +250,8 @@ export class Replay {
 
         const stream = new net.BitStream(
             this.uint8buff.buffer as ArrayBuffer,
-            this.headerLength,
-            this.uint8buff.buffer.byteLength - this.headerLength,
+            4,
+            this.headerStart - 4,
         );
 
         let previous = performance.now();
@@ -231,130 +268,59 @@ export class Replay {
                 this.game.m_audioManager.kill();
                 this.game.m_audioManager.suppressPlayback = true;
 
-                if (this.seekOffset >= 0) {
-                    const targetTime =
-                        (this.tickToElapsed[this.currentTick - 1] ?? 0) + this.seekOffset;
-                    const maxElapsedTime = this.tickToElapsed[this.filledTicks - 1];
+                const currentTime = this.currentTime;
+                const targetTime = math.clamp(
+                    currentTime + this.seekOffset,
+                    0,
+                    this.totalElapsedMs,
+                );
 
-                    // we're seeking to a time we've already traversed so we can make use of cached checkpoints
-                    if (targetTime < maxElapsedTime) {
-                        let left = this.currentTick - 1;
-                        let right = this.filledTicks - 1;
+                let left = 0;
+                let right = this.checkpoints.length - 1;
 
-                        while (left <= right) {
-                            const mid = (left + right) >>> 1;
+                while (left <= right) {
+                    const mid = (left + right) >>> 1;
 
-                            if (this.tickToElapsed[mid] < targetTime) {
-                                left = mid + 1;
-                            } else {
-                                right = mid - 1;
-                            }
-                        }
-
-                        const targetTick = right;
-
-                        const checkpointIndex = Math.floor(
-                            targetTick / this.ticksPerCheckpoint,
-                        );
-                        const checkpointTick = checkpointIndex * this.ticksPerCheckpoint;
-
-                        if (checkpointTick > this.currentTick) {
-                            this.game.m_objectCreator.m_clear();
-                            this.game.m_ui2Manager.clearKillFeed();
-                            this.game.m_particleBarn.m_clear();
-                            this.game.m_bulletBarn.m_clear();
-                            this.game.m_planeBarn.m_clear();
-
-                            const checkpoint = this.checkpoints[checkpointIndex];
-                            this.currentTick = checkpointTick;
-                            stream.byteIndex = checkpoint.byteIndex;
-                            if (this.game.m_map.seed != checkpoint.seed) {
-                                const mapStream = this.seedToMapStream[checkpoint.seed];
-                                // very necessary! stream will be exhausted everytime its read so we must reset it
-                                mapStream.byteIndex = 0;
-                                this.game.m_onMsg(net.MsgType.Map, mapStream);
-                            }
-
-                            this.processTick(stream, true);
-                        }
-
-                        while (this.currentTick < targetTick && !this.isEnded()) {
-                            this.processTick(stream);
-                            this.game.update(this.tickElapsed / 1000);
-                        }
+                    if (this.checkpoints[mid].totalElapsed < targetTime) {
+                        left = mid + 1;
                     } else {
-                        // never seen this time before, must checkpoint as far as possible then traverse the gap
-                        const checkpointIndex = Math.floor(
-                            this.filledTicks / this.ticksPerCheckpoint,
-                        );
-                        const checkpointTick = checkpointIndex * this.ticksPerCheckpoint;
-
-                        if (checkpointTick > this.currentTick) {
-                            this.game.m_objectCreator.m_clear();
-                            this.game.m_ui2Manager.clearKillFeed();
-                            this.game.m_particleBarn.m_clear();
-                            this.game.m_bulletBarn.m_clear();
-                            this.game.m_planeBarn.m_clear();
-
-                            const checkpoint = this.checkpoints[checkpointIndex];
-                            this.currentTick = checkpointTick;
-                            stream.byteIndex = checkpoint.byteIndex;
-                            if (this.game.m_map.seed != checkpoint.seed) {
-                                const mapStream = this.seedToMapStream[checkpoint.seed];
-                                // very necessary! stream will be exhausted everytime its read so we must reset it
-                                mapStream.byteIndex = 0;
-                                this.game.m_onMsg(net.MsgType.Map, mapStream);
-                            }
-
-                            this.processTick(stream, true);
-                        }
-
-                        while (
-                            this.tickToElapsed[this.currentTick - 1] < targetTime &&
-                            !this.isEnded()
-                        ) {
-                            this.processTick(stream);
-                            this.game.update(this.tickElapsed / 1000);
-                        }
+                        right = mid - 1;
                     }
-                } else {
-                    const seekTarget = this.getTickFromOffset(this.seekOffset);
-                    const checkpointIndex = Math.floor(
-                        seekTarget / this.ticksPerCheckpoint,
-                    );
-                    const checkpointTick = checkpointIndex * this.ticksPerCheckpoint;
+                }
 
+                const checkpointIndex = Math.max(0, right);
+                const checkpoint = this.checkpoints[checkpointIndex];
+
+                // we must always load a checkpoint when seeking backward
+                // but we only load a checkpoint when seeking forward if the checkpoint is closer to the target than current tick
+                // would be pointless work otherwise
+                if (targetTime < currentTime || checkpoint.tick > this.currentTick) {
                     this.game.m_objectCreator.m_clear();
                     this.game.m_ui2Manager.clearKillFeed();
                     this.game.m_particleBarn.m_clear();
                     this.game.m_bulletBarn.m_clear();
                     this.game.m_planeBarn.m_clear();
 
-                    const checkpoint = this.checkpoints[checkpointIndex];
-                    this.currentTick = checkpointTick;
+                    this.currentTick = checkpoint.tick;
                     stream.byteIndex = checkpoint.byteIndex;
-                    if (this.game.m_map.seed != checkpoint.seed) {
-                        const mapStream = this.seedToMapStream[checkpoint.seed];
+                    this.currentTime = checkpoint.totalElapsed;
+                    if (this.currentMapEntryIndex != checkpoint.mapStreamIndex) {
+                        this.currentMapEntryIndex = checkpoint.mapStreamIndex;
+                        const mapEntry = this.mapEntries[checkpoint.mapStreamIndex];
                         // very necessary! stream will be exhausted everytime its read so we must reset it
-                        mapStream.byteIndex = 0;
-                        this.game.m_onMsg(net.MsgType.Map, mapStream);
+                        mapEntry.stream.byteIndex = 0;
+                        this.game.m_onMsg(net.MsgType.Map, mapEntry.stream);
                     }
 
                     this.processTick(stream, true);
-
-                    while (this.currentTick < seekTarget && !this.isEnded()) {
-                        this.processTick(stream);
-                        this.game.update(this.tickElapsed / 1000);
-                    }
+                    this.game.update(this.tickElapsed / 1000);
+                } else {
                 }
 
-                // // current tick is the tick being processed, so we subtract 1 since we only display ticks already processed
-                // this.game.m_uiManager.setReplayElapsedTimeLabel(
-                //     this.tickToElapsed[this.currentTick - 1],
-                // );
-                // this.game.m_uiManager.setReplayScrubberValue(
-                //     this.tickToElapsed[this.currentTick - 1],
-                // );
+                while (this.currentTime < targetTime && !this.isEnded()) {
+                    this.processTick(stream);
+                    this.game.update(this.tickElapsed / 1000);
+                }
 
                 this.seekOffset = undefined;
                 this.game.m_audioManager.suppressPlayback = false;
@@ -368,6 +334,8 @@ export class Replay {
 
             if (!this.paused && !this.isEnded()) {
                 accumulator += dt;
+                // safety, might remove later
+                accumulator = Math.min(accumulator, 100);
 
                 while (accumulator >= this.tickElapsed && !this.isEnded()) {
                     accumulator -= this.tickElapsed;
@@ -386,8 +354,18 @@ export class Replay {
 
         this.tickElapsed = stream.readFloat32();
 
-        this.tickToElapsed[this.currentTick] =
-            (this.tickToElapsed[this.currentTick - 1] ?? 0) + this.tickElapsed;
+        this.currentTime += this.tickElapsed;
+
+        const nextMapEntryIndex = this.currentMapEntryIndex + 1;
+        if (
+            nextMapEntryIndex < this.mapEntries.length &&
+            this.currentTick == this.mapEntries[nextMapEntryIndex].tick
+        ) {
+            this.currentMapEntryIndex = nextMapEntryIndex;
+            const mapStream = this.mapEntries[nextMapEntryIndex].stream;
+            mapStream.byteIndex = 0;
+            this.game.m_onMsg(net.MsgType.Map, mapStream);
+        }
 
         const msg = new net.ReplayMsg();
         msg.deserialize(stream, this.game.m_objectCreator);
@@ -397,34 +375,17 @@ export class Replay {
         }
 
         this.nextTick(msg);
-        if (this.currentTick % this.ticksPerCheckpoint == 0) {
-            const checkpointIndex = this.currentTick / this.ticksPerCheckpoint;
-            this.checkpoints[checkpointIndex] = {
-                byteIndex: startIndex,
-                seed: this.game.m_map.seed,
-            };
-        }
-        this.game.m_uiManager.setReplayElapsedTimeLabel(
-            this.tickToElapsed[this.currentTick],
-        );
-        this.game.m_uiManager.setReplayScrubberValue(
-            this.tickToElapsed[this.currentTick],
-        );
+        this.game.m_uiManager.setReplayElapsedTimeLabel(this.currentTime);
+        this.game.m_uiManager.setReplayScrubberValue(this.currentTime);
         this.currentTick += 1;
-        this.filledTicks = Math.max(this.filledTicks, this.currentTick);
     }
 
     isEnded(): boolean {
         // the > is just a safeguard if currentTick goes out of bounds for whatever reason
-        return this.currentTick >= this.totalTicks;
+        return this.currentTime >= this.totalElapsedMs;
     }
 
     nextTick(msg: net.ReplayMsg) {
-        if (msg.mapDirty) {
-            this.game.m_onMsg(net.MsgType.Map, msg.mapStream);
-            this.seedToMapStream[this.game.m_map.seed] = msg.mapStream;
-        }
-
         if (msg.teamAliveCounts.length == 1) {
             this.game.m_uiManager.updatePlayersAlive(msg.teamAliveCounts[0]);
         } else if (msg.teamAliveCounts.length >= 2) {
@@ -482,15 +443,31 @@ export class Replay {
         }
 
         for (let i = 0; i < msg.players.length; i++) {
-            const { status, data, info } = msg.players[i];
-            // replaymsg doesn't send groupstatus unlike updatemsg (it's redundant if we know everything about all players at all times)
-            // so we send disconnected with playerstatus and patch health in from localdata as compensation for its absence
-            status.health = data.health;
-            this.game.m_playerBarn.setPlayerStatus(info.playerId, status);
+            const { data, playerId, disconnected, extraDirty, extra } = msg.players[i];
 
-            this.game.m_playerBarn.setPlayerInfo(info);
-            const player = this.game.m_playerBarn.getPlayerById(info.playerId)!;
+            const player = this.game.m_playerBarn.getPlayerById(playerId)!;
+
             player.m_setLocalData(data, this.game.m_playerBarn);
+
+            this.game.m_playerBarn.setPlayerStatus(playerId, {
+                pos: v2.copy(player.m_netData.m_pos),
+                health: player.m_localData.m_health,
+                disconnected,
+                dead: player.m_netData.m_dead,
+                downed: player.m_netData.m_downed,
+                role: player.m_netData.m_role,
+                visible: true,
+            });
+
+            if (extraDirty) {
+                this.game.m_playerBarn.setPlayerInfo({
+                    playerId,
+                    teamId: extra.teamId,
+                    groupId: extra.groupId,
+                    name: extra.name,
+                    loadout: extra.loadout,
+                });
+            }
         }
 
         // Delete player infos
@@ -689,9 +666,7 @@ export class Replay {
         }
 
         if (this.game.m_uiManager.replayInputs.copyLink) {
-            const elapsedSeconds = Math.floor(
-                this.tickToElapsed[this.currentTick - 1] / 1000,
-            );
+            const elapsedSeconds = Math.floor(this.currentTime / 1000);
             const link = `${window.location.protocol}//${api.resolveRoomHost()}/?replay=${this.gameId}&t=${elapsedSeconds}`;
             helpers.copyTextToClipboard(link);
         }
@@ -721,9 +696,12 @@ export class Replay {
                     this.scrubbing = true;
                     break;
                 case "input":
-                    const current = this.tickToElapsed[this.currentTick - 1];
+                    const current = this.currentTime;
                     const target = event.value;
+                    // improve performance by decreasing granularity
+                    // if (Math.abs(target - current) > 250) {
                     this.seekOffset = target - current;
+                    // }
                     break;
                 case "up":
                     this.paused = this.pausedBeforeScrub;
@@ -1051,30 +1029,5 @@ export class Replay {
         game.m_renderer.m_update(dt, game.m_camera, game.m_map, debug);
 
         game.m_render(simulationDt, debug);
-    }
-
-    /** returns the tick at the given offset from the current tick */
-    private getTickFromOffset(offsetMs: number) {
-        const elapsedTime = this.tickToElapsed[this.currentTick - 1];
-        const targetTime = math.clamp(
-            elapsedTime + offsetMs,
-            0,
-            this.tickToElapsed[this.filledTicks - 1],
-        );
-
-        let left = 0;
-        let right = this.currentTick - 1;
-
-        while (left <= right) {
-            const mid = (left + right) >>> 1;
-
-            if (this.tickToElapsed[mid] < targetTime) {
-                left = mid + 1;
-            } else {
-                right = mid - 1;
-            }
-        }
-
-        return Math.max(1, right);
     }
 }
