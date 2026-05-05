@@ -30,6 +30,19 @@ const FREECAM_ID = 65534;
 const FREECAM_GROUP_ID = 255;
 const FREECAM_TEAM_ID = 255;
 
+const NUMBER_KEYS = [
+    Key.Zero,
+    Key.One,
+    Key.Two,
+    Key.Three,
+    Key.Four,
+    Key.Five,
+    Key.Six,
+    Key.Seven,
+    Key.Eight,
+    Key.Nine,
+];
+
 // map instead of record to preserve definition order
 const keybinds = new Map<number, string>([
     [Key.W, "Freecam Move Up"],
@@ -41,6 +54,7 @@ const keybinds = new Map<number, string>([
     [Key.T, "Freecam Toggle Layer (Ground/Underground)"],
     [Key.J, "Seek Forward 5s"],
     [Key.K, "Seek Backward 5s"],
+    ...NUMBER_KEYS.map((key, i) => [key, `Seek to ${i * 10}%`] as [Key, string]),
     [Key.M, "Toggle Replay Menu"],
     [Key.G, "Toggle Big Map"],
     [Key.V, "Toggle Minimap"],
@@ -48,6 +62,10 @@ const keybinds = new Map<number, string>([
     [Key.Right, "Spectate Next Player"],
     [Key.Left, "Spectate Previous Player"],
 ]);
+
+type SeekCommand =
+    | { kind: "relative"; amount: number }
+    | { kind: "absolute"; amount: number };
 
 export class Replay {
     private view: DataView;
@@ -67,8 +85,7 @@ export class Replay {
     currentTick = 0;
     totalTicks: number;
 
-    seekTarget?: number;
-    seekOffset?: number;
+    seekCommand?: SeekCommand;
 
     playbackIconState: "play" | "pause" | "restart" = "pause";
 
@@ -158,7 +175,9 @@ export class Replay {
             this.mapEntries.push({ tick, stream });
         }
 
-        // TODO: should happen in consumer
+        if (startSecond > 0) {
+            this.seekCommand = { kind: "absolute", amount: startSecond * 1000 };
+        }
     }
 
     start() {
@@ -264,16 +283,20 @@ export class Replay {
             const dt = current - previous;
             previous = current;
 
-            if (this.seekOffset != undefined) {
+            if (this.seekCommand != undefined) {
                 this.game.m_audioManager.kill();
                 this.game.m_audioManager.suppressPlayback = true;
 
-                const currentTime = this.currentTime;
-                const targetTime = math.clamp(
-                    currentTime + this.seekOffset,
-                    0,
-                    this.totalElapsedMs,
-                );
+                let targetTime: number;
+                switch (this.seekCommand.kind) {
+                    case "absolute":
+                        targetTime = this.seekCommand.amount;
+                        break;
+                    case "relative":
+                        targetTime = this.currentTime + this.seekCommand.amount;
+                        break;
+                }
+                targetTime = math.clamp(targetTime, 0, this.totalElapsedMs);
 
                 let left = 0;
                 let right = this.checkpoints.length - 1;
@@ -294,7 +317,7 @@ export class Replay {
                 // we must always load a checkpoint when seeking backward
                 // but we only load a checkpoint when seeking forward if the checkpoint is closer to the target than current tick
                 // would be pointless work otherwise
-                if (targetTime < currentTime || checkpoint.tick > this.currentTick) {
+                if (targetTime < this.currentTime || checkpoint.tick > this.currentTick) {
                     this.game.m_objectCreator.m_clear();
                     this.game.m_ui2Manager.clearKillFeed();
                     this.game.m_particleBarn.m_clear();
@@ -314,7 +337,6 @@ export class Replay {
 
                     this.processTick(stream, true);
                     this.game.update(this.tickElapsed / 1000);
-                } else {
                 }
 
                 while (this.currentTime < targetTime && !this.isEnded()) {
@@ -322,7 +344,7 @@ export class Replay {
                     this.game.update(this.tickElapsed / 1000);
                 }
 
-                this.seekOffset = undefined;
+                this.seekCommand = undefined;
                 this.game.m_audioManager.suppressPlayback = false;
 
                 previous = performance.now();
@@ -700,7 +722,7 @@ export class Replay {
                     const target = event.value;
                     // improve performance by decreasing granularity
                     // if (Math.abs(target - current) > 250) {
-                    this.seekOffset = target - current;
+                    this.seekCommand = { kind: "absolute", amount: target };
                     // }
                     break;
                 case "up":
@@ -715,14 +737,26 @@ export class Replay {
             this.game.m_uiManager.replayInputs.seekForward ||
             this.game.m_input.keyPressed(Key.K)
         ) {
-            this.seekOffset = 5000;
+            this.seekCommand = { kind: "relative", amount: 5000 };
         }
 
         if (
             this.game.m_uiManager.replayInputs.seekBackward ||
             this.game.m_input.keyPressed(Key.J)
         ) {
-            this.seekOffset = -5000;
+            this.seekCommand = { kind: "relative", amount: -5000 };
+        }
+
+        // break ties by picking the farthest right key, simple and deterministic
+        for (let i = NUMBER_KEYS.length - 1; i >= 0; i--) {
+            const key = NUMBER_KEYS[i];
+            if (this.game.m_input.keyPressed(key)) {
+                this.seekCommand = {
+                    kind: "absolute",
+                    amount: (i / 10) * this.totalElapsedMs,
+                };
+                break;
+            }
         }
 
         this.game.m_camera.m_pos = v2.copy(this.game.m_activePlayer.m_visualPos);
@@ -739,7 +773,7 @@ export class Replay {
         ) {
             if (this.isEnded()) {
                 // kind of hacky but it works so yeah
-                this.seekOffset = -1_000_000_000;
+                this.seekCommand = { kind: "absolute", amount: 0 };
                 this.paused = false;
             } else {
                 this.paused = !this.paused;
