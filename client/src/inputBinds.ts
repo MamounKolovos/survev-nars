@@ -249,6 +249,10 @@ export class InputBinds {
         }
     }
 
+    enable() {
+        this.disabled = false;
+    }
+
     disable() {
         this.disabled = true;
     }

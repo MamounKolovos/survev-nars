@@ -68,6 +68,10 @@ type SeekCommand =
     | { kind: "relative"; amount: number }
     | { kind: "absolute"; amount: number };
 
+export type ReplaySource =
+    | { kind: "local" }
+    | { kind: "server"; gameId: string; startSecond?: number };
+
 export class Replay {
     private view: DataView;
     private uint8buff: Uint8Array<ArrayBuffer>;
@@ -109,11 +113,12 @@ export class Replay {
 
     playbackSpeed = 1;
 
+    stopped = false;
+
     constructor(
         buffer: Uint8Array<ArrayBuffer>,
         readonly game: Game,
-        readonly gameId: string,
-        readonly startSecond: number,
+        readonly source: ReplaySource,
     ) {
         this.uint8buff = buffer;
         this.view = new DataView(buffer.buffer);
@@ -178,8 +183,8 @@ export class Replay {
             this.mapEntries.push({ tick, stream });
         }
 
-        if (startSecond > 0) {
-            this.seekCommand = { kind: "absolute", amount: startSecond * 1000 };
+        if (source.kind == "server" && source.startSecond) {
+            this.seekCommand = { kind: "absolute", amount: source.startSecond * 1000 };
         }
     }
 
@@ -282,6 +287,8 @@ export class Replay {
         this.tickElapsed = 0;
 
         const loop = () => {
+            if (this.stopped) return;
+
             let current = performance.now();
             const dt = current - previous;
             previous = current;
@@ -690,19 +697,19 @@ export class Replay {
             this.game.m_uiManager.spectatedPlayerId = 0;
         }
 
-        if (this.game.m_uiManager.replayInputs.copyLink) {
+        if (this.source.kind == "server" && this.game.m_uiManager.replayInputs.copyLink) {
             const elapsedSeconds = Math.floor(this.currentTime / 1000);
-            const link = `${window.location.protocol}//${api.resolveRoomHost()}/?replay=${this.gameId}&t=${elapsedSeconds}`;
+            const link = `${window.location.protocol}//${api.resolveRoomHost()}/?replay=${this.source.gameId}&t=${elapsedSeconds}`;
             helpers.copyTextToClipboard(link);
         }
 
-        if (this.game.m_uiManager.replayInputs.download) {
+        if (this.source.kind == "server" && this.game.m_uiManager.replayInputs.download) {
             const blob = new Blob([this.uint8buff], { type: "application/octet-stream" });
             const url = URL.createObjectURL(blob);
 
             const a = document.createElement("a");
             a.href = url;
-            a.download = `${this.gameId}.surv`;
+            a.download = `${this.source.gameId}.surv`;
             a.click();
 
             URL.revokeObjectURL(url);
@@ -1088,5 +1095,11 @@ export class Replay {
         game.m_renderer.m_update(dt, game.m_camera, game.m_map, debug);
 
         game.m_render(simulationDt, debug);
+    }
+
+    free() {
+        this.stopped = true;
+        this.game.m_uiManager.displayReplayMenu(false);
+        this.game.m_inputBinds.enable();
     }
 }

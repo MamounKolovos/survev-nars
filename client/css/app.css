@@ -4422,6 +4422,12 @@ input [type="image"]:focus {
   background-position: 2px -3px;
 }
 
+.btn-upload {
+  background-image: url(/img/gui/replay-upload.svg);
+  background-size: 30px;
+  background-position: center 5px;
+}
+
 #btn-start-fullscreen {
   background-image: url(/img/gui/minimize.svg);
   background-size: 34px;

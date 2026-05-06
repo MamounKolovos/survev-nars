@@ -42,6 +42,7 @@ class Application {
     playMode0Btn = $("#btn-start-mode-0");
     playMode1Btn = $("#btn-start-mode-1");
     playMode2Btn = $("#btn-start-mode-2");
+    replayUploadBtn = $(".btn-upload");
     muteBtns = $(".btn-sound-toggle");
     aimLineBtn = $("#btn-game-aim-line");
     masterSliders = $<HTMLInputElement>(".sl-master-volume");
@@ -170,6 +171,28 @@ class Application {
                 SDK.requestMidGameAd(() => {
                     this.tryQuickStartGame(2);
                 });
+            });
+
+            this.replayUploadBtn.on("click", () => {
+                const input = document.createElement("input");
+                input.type = "file";
+                input.accept = ".surv";
+                input.onchange = async () => {
+                    if (!input.files) return;
+                    if (!this.game) return;
+
+                    const file = input.files[0];
+                    const buffer = new Uint8Array(await file.arrayBuffer());
+                    try {
+                        this.replay = new Replay(buffer, this.game, { kind: "local" });
+                        this.replay.start();
+                    } catch (e) {
+                        console.error(e);
+                        this.showErrorModal("replay_invalid");
+                    }
+                };
+
+                input.click();
             });
 
             this.serverSelect.change(() => {
@@ -327,6 +350,11 @@ class Application {
                     this.pass.scheduleUpdatePass(this.game!.m_updatePassDelay);
                 }
                 this.game!.free();
+                if (this.replay) {
+                    this.replay.free();
+                    this.replay = undefined;
+                    window.history.replaceState("", "", "/");
+                }
                 this.errorMessage = this.localization.translate(errMsg || "");
                 this.teamMenu.onGameComplete();
                 this.ambience.onGameComplete(this.audioManager);
@@ -380,13 +408,11 @@ class Application {
                 if (replayBuffer) {
                     try {
                         const t = helpers.getParameterByName("t");
-                        const startSecond = t ? Number(t) : 0;
-                        this.replay = new Replay(
-                            replayBuffer,
-                            this.game,
+                        this.replay = new Replay(replayBuffer, this.game, {
+                            kind: "server",
                             gameId,
-                            startSecond,
-                        );
+                            startSecond: t ? Number(t) : undefined,
+                        });
                         this.replay.start();
                     } catch (e) {
                         console.error(e);
