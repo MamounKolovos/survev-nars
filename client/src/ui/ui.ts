@@ -181,6 +181,8 @@ export class UiManager {
         toggleLayer: false,
         toFreecam: false,
         copyLink: false,
+        download: false,
+        cyclePlaybackSpeed: false,
     };
 
     replayElements = {
@@ -195,6 +197,8 @@ export class UiManager {
         toggleLayerButton: $("#btn-replay-toggle-layer"),
         toFreecamButton: $("#btn-replay-to-freecam"),
         copyLinkButton: $("#btn-replay-copy-link"),
+        downloadButton: $("#btn-replay-download"),
+        cyclePlaybackSpeedButton: $("#btn-replay-cycle-playback-speed"),
     };
 
     replayMenu = $("#ui-replay-menu-wrapper");
@@ -627,6 +631,12 @@ export class UiManager {
         this.replayElements.copyLinkButton.on("click", () => {
             this.replayInputs.copyLink = true;
         });
+        this.replayElements.downloadButton.on("click", () => {
+            this.replayInputs.download = true;
+        });
+        this.replayElements.cyclePlaybackSpeedButton.on("click", () => {
+            this.replayInputs.cyclePlaybackSpeed = true;
+        });
 
         this.init();
     }
@@ -681,6 +691,8 @@ export class UiManager {
         this.replayElements.toggleLayerButton.off("click");
         this.replayElements.toFreecamButton.off("click");
         this.replayElements.copyLinkButton.off("click");
+        this.replayElements.downloadButton.off("click");
+        this.replayElements.cyclePlaybackSpeedButton.off("click");
 
         // Reset team member health bar widths
         $(".ui-team-member-health")
@@ -2050,6 +2062,11 @@ export class UiManager {
             .toString()
             .padStart(2, "0");
         this.replayElements.timeLabel.total.text(`${m}:${s}`);
+    }
+
+    setReplayCyclePlaybackSpeedLabel(value: number) {
+        const text = `${value.toFixed(2)}x`;
+        this.replayElements.cyclePlaybackSpeedButton.text(text);
     }
 
     displayReplayMenu(display?: boolean) {

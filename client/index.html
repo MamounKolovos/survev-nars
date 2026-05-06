@@ -648,22 +648,42 @@
           </div>
         </div>
         <div id="ui-replay-menu-wrapper" style="display: none">
-          <div id="ui-replay-menu" class="ui-bg-standard">
-            <div id="ui-replay-scrubber">
-              <input type="range" id="replay-scrubber" min="0" max="100" step="any" value="0"/>
-              <div id="ui-replay-time">
-                <span id="replay-elapsed">0:00</span>
-                <span aria-hidden="true"> / </span>
-                <span id="replay-total">0:00</span>
+          <div id="ui-replay-menu">
+            <div class="ui-replay-row" style="width: 600px">
+              <div class="ui-replay-group">
+                <div id="ui-replay-scrubber">
+                  <input type="range" id="replay-scrubber" min="0" max="100" step="any" value="0"/>
+                  <div id="ui-replay-time">
+                    <span id="replay-elapsed">0:00</span>
+                    <span aria-hidden="true"> / </span>
+                    <span id="replay-total">0:00</span>
+                  </div>
+                </div>
               </div>
             </div>
-            <div id="ui-replay-buttons">
-              <a title="Playback" class="btn-darken btn-replay-pause" id="btn-replay-playback"></a>
-              <a title="Seek backward 5 seconds" class="btn-darken btn-replay-seek-backward" id="btn-replay-seek-backward"></a>
-              <a title="Seek forward 5 seconds" class="btn-darken btn-replay-seek-forward" id="btn-replay-seek-forward"></a>
-              <a title="Toggle layer" class="btn-darken btn-replay-toggle-layer" id="btn-replay-toggle-layer"></a>
-              <a title="Switch to freecam" class="btn-darken btn-replay-to-freecam" id="btn-replay-to-freecam"></a>
-              <a title="Copy to clipboard at timestamp" class="btn-darken btn-replay-copy-link" id="btn-replay-copy-link"></a>
+            <div class="ui-replay-row" style="width: 450px">
+              <div class="ui-replay-group" style="flex: 1">
+                <a title="Playback" class="btn-darken ui-replay-button btn-replay-pause" id="btn-replay-playback"></a>
+                <a title="Seek backward 5 seconds" class="btn-darken ui-replay-button btn-replay-seek-backward" id="btn-replay-seek-backward"></a>
+                <a title="Seek forward 5 seconds" class="btn-darken ui-replay-button btn-replay-seek-forward" id="btn-replay-seek-forward"></a>
+              </div>
+              <div class="ui-replay-group" style="flex: 1">
+                <a title="Switch to freecam" class="btn-darken ui-replay-button btn-replay-to-freecam" id="btn-replay-to-freecam"></a>
+              </div>
+              <div class="ui-replay-group" style="flex: 1">
+                <a title="Download" class="btn-darken ui-replay-button btn-replay-download" id="btn-replay-download"></a>
+                <a title="Copy to clipboard at timestamp" class="btn-darken ui-replay-button btn-replay-copy-link" id="btn-replay-copy-link"></a>
+              </div>
+            </div>
+
+            <div class="ui-replay-row" style="width: 300">
+              <div class="ui-replay-group">
+                <a title="Toggle layer" class="btn-darken ui-replay-button btn-replay-toggle-layer" id="btn-replay-toggle-layer"></a>
+                <a title="Toggle ceilings" class="btn-darken ui-replay-button" id="btn-replay-toggle-ceilings"></a>
+              </div>
+              <div class="ui-replay-group">
+                <a title="Cycle Playback Speed" class="btn-darken ui-replay-button" id="btn-replay-cycle-playback-speed">1.00x</a>
+              </div>
             </div>
           </div>
         </div>

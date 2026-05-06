@@ -2238,6 +2238,10 @@ img {
 #ui-replay-menu {
   position: relative;
   pointer-events: all;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 4px;
   width: 100%;
 }
 
@@ -2249,6 +2253,7 @@ img {
 }
 
 #replay-scrubber {
+  min-width: 500px;
   flex: 1;
   cursor: pointer;
 }
@@ -2257,33 +2262,39 @@ img {
   transform: scale(1.5);
 }
 
-#ui-replay-buttons {
+.ui-replay-row {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
   gap: 8px;
-  align-items: center;
-  height: 50px;
-  padding: 0 6px;
+  padding: 2px 4px;
 }
 
-#ui-replay-menu a {
-  display: inline-block;
-  width: auto;
-
-  border: 0;
+.ui-replay-group {
+  background: rgba(0, 0, 0, 0.24);
   border-radius: 5px;
-  box-sizing: border-box;
-  width: 90px;
-  height: 40px;
-  line-height: 38px;
+
+  align-items: center;
+
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+}
+
+.ui-replay-button {
+  display: inline-block;
+  flex: 1;
+  min-width: 45px;
+  height: 25px;
   text-align: center;
+  line-height: 25px;
+  /* background-size: contain; */
+  background-size: 18px 18px;
+  border-radius: 3px;
 
   color: white;
   font-size: 16px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
   background-color: #50afab;
-  border-bottom: 2px solid #387c79;
+  border-bottom: 1.5px solid #387c79;
   box-shadow: inset 0 -2px #387c79;
   cursor: pointer;
 }
@@ -2332,6 +2343,12 @@ img {
 
 .btn-replay-copy-link {
   background-image: url(/img/gui/replay-copy-link.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.btn-replay-download {
+  background-image: url(/img/gui/replay-download.svg);
   background-repeat: no-repeat;
   background-position: center;
 }

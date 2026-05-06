@@ -59,6 +59,7 @@ const keybinds = new Map<number, string>([
     [Key.G, "Toggle Big Map"],
     [Key.V, "Toggle Minimap"],
     [Key.Space, "Toggle Playback (Play/Pause)"],
+    [Key.C, "Cycle Playback Speed"],
     [Key.Right, "Spectate Next Player"],
     [Key.Left, "Spectate Previous Player"],
 ]);
@@ -105,6 +106,8 @@ export class Replay {
     headerStart: number;
 
     currentTime = 0;
+
+    playbackSpeed = 1;
 
     constructor(
         buffer: Uint8Array<ArrayBuffer>,
@@ -355,7 +358,7 @@ export class Replay {
             }
 
             if (!this.paused && !this.isEnded()) {
-                accumulator += dt;
+                accumulator += dt * this.playbackSpeed;
                 // safety, might remove later
                 accumulator = Math.min(accumulator, 100);
 
@@ -693,6 +696,26 @@ export class Replay {
             helpers.copyTextToClipboard(link);
         }
 
+        if (this.game.m_uiManager.replayInputs.download) {
+            const blob = new Blob([this.uint8buff], { type: "application/octet-stream" });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `${this.gameId}.surv`;
+            a.click();
+
+            URL.revokeObjectURL(url);
+        }
+
+        if (
+            this.game.m_uiManager.replayInputs.cyclePlaybackSpeed ||
+            this.game.m_input.keyPressed(Key.C)
+        ) {
+            this.playbackSpeed = (this.playbackSpeed % 2) + 0.25;
+            this.game.m_uiManager.setReplayCyclePlaybackSpeedLabel(this.playbackSpeed);
+        }
+
         if (this.game.m_input.keyPressed(Key.M)) {
             this.game.m_uiManager.displayReplayMenu();
         }
@@ -737,14 +760,14 @@ export class Replay {
             this.game.m_uiManager.replayInputs.seekForward ||
             this.game.m_input.keyPressed(Key.K)
         ) {
-            this.seekCommand = { kind: "relative", amount: 5000 };
+            this.seekCommand = { kind: "relative", amount: 5000 * this.playbackSpeed };
         }
 
         if (
             this.game.m_uiManager.replayInputs.seekBackward ||
             this.game.m_input.keyPressed(Key.J)
         ) {
-            this.seekCommand = { kind: "relative", amount: -5000 };
+            this.seekCommand = { kind: "relative", amount: -5000 * this.playbackSpeed };
         }
 
         // break ties by picking the farthest right key, simple and deterministic
@@ -852,6 +875,8 @@ export class Replay {
         this.game.m_uiManager.replayInputs.toggleLayer = false;
         this.game.m_uiManager.replayInputs.toFreecam = false;
         this.game.m_uiManager.replayInputs.copyLink = false;
+        this.game.m_uiManager.replayInputs.download = false;
+        this.game.m_uiManager.replayInputs.cyclePlaybackSpeed = false;
 
         // show the action the user can take, not the state they're in
         const playbackIconState = this.isEnded()
