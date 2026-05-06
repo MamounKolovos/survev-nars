@@ -18,19 +18,23 @@ StatsRouter.route("/leaderboard", leaderboardRouter);
 StatsRouter.get("/replay/:gameId", databaseEnabledMiddleware, async (c) => {
     const gameId = c.req.param("gameId");
 
-    const replay = await db.query.replaysTable.findFirst({
-        where: eq(replaysTable.gameId, gameId),
-        columns: {
-            data: true,
-        },
-    });
+    try {
+        const replay = await db.query.replaysTable.findFirst({
+            where: eq(replaysTable.gameId, gameId),
+            columns: {
+                data: true,
+            },
+        });
 
-    if (!replay) {
-        return c.json({ error: "No replay exists for that game id" }, 404);
+        if (!replay) {
+            return c.json({ error: "No replay exists for that game id" }, 404);
+        }
+
+        c.header("Content-Type", "application/octet-stream");
+        return c.body(replay.data);
+    } catch (e) {
+        return c.json({ error: "Invalid game id" }, 400);
     }
-
-    c.header("Content-Type", "application/octet-stream");
-    return c.body(replay.data);
 });
 
 export async function purgeReplays() {
