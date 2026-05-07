@@ -30,6 +30,13 @@ const FREECAM_ID = 65534;
 const FREECAM_GROUP_ID = 255;
 const FREECAM_TEAM_ID = 255;
 
+const FREECAM_ZOOM_RATE = 3;
+const FREECAM_MIN_ZOOM = 10;
+const FREECAM_MAX_ZOOM = 1000;
+
+const FREECAM_MIN_SPEED = 10;
+const FREECAM_MAX_SPEED = 80;
+
 const NUMBER_KEYS = [
     Key.Zero,
     Key.One,
@@ -659,10 +666,22 @@ export class Replay {
         const player = this.game.m_activePlayer;
 
         if (player.isFreecam) {
-            const movement = v2.create(0, 0);
-            const speed = 60 * dt;
+            if (this.game.m_input.keyDown(Key.Plus)) {
+                player.m_localData.m_zoom /= Math.pow(FREECAM_ZOOM_RATE, dt);
+            }
 
-            // Only use arrow keys if they are unbound
+            if (this.game.m_input.keyDown(Key.Minus)) {
+                player.m_localData.m_zoom *= Math.pow(FREECAM_ZOOM_RATE, dt);
+            }
+
+            player.m_localData.m_zoom = math.clamp(
+                player.m_localData.m_zoom,
+                FREECAM_MIN_ZOOM,
+                FREECAM_MAX_ZOOM,
+            );
+
+            const movement = v2.create(0, 0);
+
             if (this.game.m_input.keyDown(Key.A)) {
                 movement.x--;
             }
@@ -681,8 +700,14 @@ export class Replay {
                 movement.y *= Math.SQRT1_2;
             }
 
+            const progress = math.smoothstep(
+                Math.log(player.m_localData.m_zoom),
+                Math.log(FREECAM_MIN_ZOOM),
+                Math.log(FREECAM_MAX_ZOOM),
+            );
+            const speed = math.lerp(progress, FREECAM_MIN_SPEED, FREECAM_MAX_SPEED);
             const velocity = v2.mul(movement, speed);
-            const newPos = v2.add(player.m_pos, velocity);
+            const newPos = v2.add(player.m_pos, v2.mul(velocity, dt));
             const clampedPos = math.v2Clamp(
                 newPos,
                 v2.create(0, 0),
@@ -693,16 +718,6 @@ export class Replay {
 
             player.m_pos = clampedPos;
             player.m_visualPos = clampedPos;
-
-            if (this.game.m_input.keyDown(Key.Plus)) {
-                player.m_localData.m_zoom /= Math.pow(3, dt);
-            }
-
-            if (this.game.m_input.keyDown(Key.Minus)) {
-                player.m_localData.m_zoom *= Math.pow(3, dt);
-            }
-
-            player.m_localData.m_zoom = math.clamp(player.m_localData.m_zoom, 5, 1000);
 
             if (
                 this.game.m_uiManager.replayInputs.toggleLayer ||
