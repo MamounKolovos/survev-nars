@@ -70,7 +70,7 @@ type SeekCommand =
 
 export type ReplaySource =
     | { kind: "local" }
-    | { kind: "server"; gameId: string; startSecond?: number };
+    | { kind: "server"; gameId: string; playerId?: number; startSecond?: number };
 
 export class Replay {
     private view: DataView;
@@ -114,6 +114,8 @@ export class Replay {
     playbackSpeed = 1;
 
     stopped = false;
+
+    startingPlayerId?: number;
 
     constructor(
         buffer: Uint8Array<ArrayBuffer>,
@@ -183,8 +185,17 @@ export class Replay {
             this.mapEntries.push({ tick, stream });
         }
 
-        if (source.kind == "server" && source.startSecond) {
-            this.seekCommand = { kind: "absolute", amount: source.startSecond * 1000 };
+        if (source.kind == "server") {
+            if (source.startSecond) {
+                this.seekCommand = {
+                    kind: "absolute",
+                    amount: source.startSecond * 1000,
+                };
+            }
+
+            if (source.playerId) {
+                this.startingPlayerId = source.playerId;
+            }
         }
     }
 
@@ -352,6 +363,26 @@ export class Replay {
                 while (this.currentTime < targetTime && !this.isEnded()) {
                     this.processTick(stream);
                     this.game.update(this.tickElapsed / 1000);
+                }
+
+                if (this.startingPlayerId) {
+                    const player = this.game.m_playerBarn.getPlayerById(
+                        this.startingPlayerId,
+                    );
+                    if (player && !player.isFreecam) {
+                        this.game.m_activeId = player.__id;
+                        this.game.m_activePlayer = player;
+                        this.game.m_spectating = true;
+                        this.game.m_uiManager.weapsDirty = true;
+                        this.game.m_uiManager.setSpectateTarget(
+                            this.game.m_activeId,
+                            this.game.m_localId,
+                            this.game.teamMode,
+                            this.game.m_playerBarn,
+                        );
+                        this.game.m_touch.hideAll();
+                    }
+                    this.startingPlayerId = undefined;
                 }
 
                 this.seekCommand = undefined;
@@ -698,8 +729,15 @@ export class Replay {
         }
 
         if (this.source.kind == "server" && this.game.m_uiManager.replayInputs.copyLink) {
-            const elapsedSeconds = Math.floor(this.currentTime / 1000);
-            const link = `${window.location.protocol}//${api.resolveRoomHost()}/?replay=${this.source.gameId}&t=${elapsedSeconds}`;
+            const params = new URLSearchParams({ replay: this.source.gameId });
+
+            params.set("t", String(Math.floor(this.currentTime / 1000)));
+
+            if (this.game.m_activeId !== this.freecamPlayer.__id) {
+                params.set("player", String(this.game.m_activeId));
+            }
+
+            const link = `${window.location.protocol}//${api.resolveRoomHost()}/?${params.toString()}`;
             helpers.copyTextToClipboard(link);
         }
 

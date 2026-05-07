@@ -408,9 +408,11 @@ class Application {
                 if (replayBuffer) {
                     try {
                         const t = helpers.getParameterByName("t");
+                        const player = helpers.getParameterByName("player");
                         this.replay = new Replay(replayBuffer, this.game, {
                             kind: "server",
                             gameId,
+                            playerId: player ? Number(player) : undefined,
                             startSecond: t ? Number(t) : undefined,
                         });
                         this.replay.start();
