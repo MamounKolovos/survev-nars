@@ -118,6 +118,8 @@ export class Replay {
 
     startingPlayerId?: number;
 
+    lastSpectatedPlayerId?: number;
+
     constructor(
         buffer: Uint8Array<ArrayBuffer>,
         readonly game: Game,
@@ -367,12 +369,7 @@ export class Replay {
                 }
 
                 if (this.startingPlayerId) {
-                    const player = this.game.m_playerBarn.getPlayerById(
-                        this.startingPlayerId,
-                    );
-                    if (player && !player.isFreecam) {
-                        this.toPerspective(player);
-                    }
+                    this.setPerspectiveById(this.startingPlayerId);
                     this.startingPlayerId = undefined;
                 }
 
@@ -716,11 +713,14 @@ export class Replay {
         }
 
         if (
-            (this.game.m_uiManager.replayInputs.toFreecam ||
-                this.game.m_input.keyPressed(Key.F)) &&
-            !this.game.m_activePlayer.isFreecam
+            this.game.m_uiManager.replayInputs.toFreecam ||
+            this.game.m_input.keyPressed(Key.F)
         ) {
-            this.toFreecam();
+            if (this.game.m_activePlayer.isFreecam && this.lastSpectatedPlayerId) {
+                this.setPerspectiveById(this.lastSpectatedPlayerId);
+            } else {
+                this.toFreecam();
+            }
         }
 
         if (this.source.kind == "server" && this.game.m_uiManager.replayInputs.copyLink) {
@@ -866,7 +866,7 @@ export class Replay {
                 spectatablePlayers.indexOf(this.game.m_activePlayer) + specDelta,
             );
 
-            this.toPerspective(newActivePlayer);
+            this.setPerspective(newActivePlayer);
         }
 
         player.layer = player.m_netData.m_layer;
@@ -1102,10 +1102,18 @@ export class Replay {
         return !player.m_netData.m_dead && player.active && !player.isFreecam;
     }
 
-    toPerspective(player: Player) {
+    setPerspectiveById(playerId: number) {
+        const player = this.game.m_playerBarn.getPlayerById(playerId);
+        if (player && this.canSpectate(player)) {
+            this.setPerspective(player);
+        }
+    }
+
+    setPerspective(player: Player) {
         this.game.m_spectating = true;
         this.game.m_activeId = player.__id;
         this.game.m_activePlayer = player;
+        this.lastSpectatedPlayerId = player.__id;
 
         this.game.m_uiManager.weapsDirty = true;
         this.game.m_uiManager.setSpectateTarget(
