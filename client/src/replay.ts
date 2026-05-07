@@ -428,6 +428,14 @@ export class Replay {
         }
 
         this.nextTick(msg);
+
+        // IMPORTANT: partial fix to perspective spectating on despawnable players when backward seeking
+        // if current time is 31, checkpoint is at 20, player is created at 23, and target is at 250
+        // this will trigger when the checkpoint is loaded even though the player exists by the time the target is reached
+        if (this.game.m_spectating && !this.canSpectate(this.game.m_activePlayer)) {
+            this.toFreecam();
+        }
+
         this.game.m_uiManager.setReplayElapsedTimeLabel(this.currentTime);
         this.game.m_uiManager.setReplayScrubberValue(this.currentTime);
         this.currentTick += 1;
@@ -827,7 +835,6 @@ export class Replay {
             if (this.isEnded()) {
                 this.seekCommand = { kind: "absolute", amount: 0 };
                 this.paused = false;
-                this.toFreecam();
             } else {
                 this.paused = !this.paused;
             }
@@ -851,22 +858,13 @@ export class Replay {
             const specDelta = +specNext - +specPrev;
             const spectatablePlayers = this.game.m_playerBarn.playerPool
                 .m_getPool()
-                .filter((p) => p.active && !p.m_netData.m_dead && !p.isFreecam);
+                .filter((p) => this.canSpectate(p));
             const newActivePlayer = util.wrappedArrayIndex(
                 spectatablePlayers,
                 spectatablePlayers.indexOf(this.game.m_activePlayer) + specDelta,
             );
 
             this.toPerspective(newActivePlayer);
-        }
-
-        if (
-            this.game.m_spectating &&
-            (this.game.m_activePlayer.m_netData.m_dead ||
-                // player despawned, game object deleted
-                !this.game.m_activePlayer.active)
-        ) {
-            this.toFreecam();
         }
 
         player.layer = player.m_netData.m_layer;
@@ -1097,6 +1095,11 @@ export class Replay {
         game.m_render(simulationDt, debug);
     }
 
+    canSpectate(player: Player): boolean {
+        // if not active, that means the player despawned, game object deleted
+        return !player.m_netData.m_dead && player.active && !player.isFreecam;
+    }
+
     toPerspective(player: Player) {
         this.game.m_spectating = true;
         this.game.m_activeId = player.__id;
@@ -1113,6 +1116,8 @@ export class Replay {
     }
 
     toFreecam() {
+        if (this.game.m_activeId == this.freecamPlayer.__id) return;
+
         this.game.m_spectating = false;
         this.game.m_activeId = this.freecamPlayer.__id;
         this.game.m_activePlayer = this.freecamPlayer;
