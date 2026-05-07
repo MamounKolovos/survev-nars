@@ -38,6 +38,6 @@ StatsRouter.get("/replay/:gameId", databaseEnabledMiddleware, async (c) => {
 });
 
 export async function purgeReplays() {
-    const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-    await db.delete(replaysTable).where(lt(replaysTable.createdAt, oneWeekAgo));
+    const threeWeeksAgo = new Date(Date.now() - 21 * 24 * 60 * 60 * 1000);
+    await db.delete(replaysTable).where(lt(replaysTable.createdAt, threeWeeksAgo));
 }
