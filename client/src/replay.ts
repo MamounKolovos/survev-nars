@@ -370,17 +370,7 @@ export class Replay {
                         this.startingPlayerId,
                     );
                     if (player && !player.isFreecam) {
-                        this.game.m_activeId = player.__id;
-                        this.game.m_activePlayer = player;
-                        this.game.m_spectating = true;
-                        this.game.m_uiManager.weapsDirty = true;
-                        this.game.m_uiManager.setSpectateTarget(
-                            this.game.m_activeId,
-                            this.game.m_localId,
-                            this.game.teamMode,
-                            this.game.m_playerBarn,
-                        );
-                        this.game.m_touch.hideAll();
+                        this.toPerspective(player);
                     }
                     this.startingPlayerId = undefined;
                 }
@@ -720,12 +710,7 @@ export class Replay {
             this.game.m_uiManager.replayInputs.toFreecam &&
             !this.game.m_activePlayer.isFreecam
         ) {
-            this.game.m_spectating = false;
-            this.game.m_activeId = this.freecamPlayer.__id;
-            this.game.m_activePlayer = this.freecamPlayer;
-
-            this.game.m_uiManager.setSpectating(false, this.game.teamMode);
-            this.game.m_uiManager.spectatedPlayerId = 0;
+            this.toFreecam();
         }
 
         if (this.source.kind == "server" && this.game.m_uiManager.replayInputs.copyLink) {
@@ -840,9 +825,9 @@ export class Replay {
             !this.scrubbing
         ) {
             if (this.isEnded()) {
-                // kind of hacky but it works so yeah
                 this.seekCommand = { kind: "absolute", amount: 0 };
                 this.paused = false;
+                this.toFreecam();
             } else {
                 this.paused = !this.paused;
             }
@@ -866,31 +851,13 @@ export class Replay {
             const specDelta = +specNext - +specPrev;
             const spectatablePlayers = this.game.m_playerBarn.playerPool
                 .m_getPool()
-                .filter((p) => p.active && !p.m_netData.m_dead);
+                .filter((p) => p.active && !p.m_netData.m_dead && !p.isFreecam);
             const newActivePlayer = util.wrappedArrayIndex(
                 spectatablePlayers,
                 spectatablePlayers.indexOf(this.game.m_activePlayer) + specDelta,
             );
 
-            this.game.m_activeId = newActivePlayer.__id;
-
-            this.game.m_spectating = this.game.m_activeId != this.game.m_localId;
-            this.game.m_activePlayer = newActivePlayer;
-            this.game.m_uiManager.weapsDirty = true;
-            if (this.game.m_spectating) {
-                this.game.m_uiManager.setSpectateTarget(
-                    this.game.m_activeId,
-                    this.game.m_localId,
-                    this.game.teamMode,
-                    this.game.m_playerBarn,
-                );
-                this.game.m_touch.hideAll();
-            } else {
-                this.game.m_uiManager.setSpectating(false, this.game.teamMode);
-                // necessary because the original game assumes that once you're spectating you never stop being a spectator
-                // but transitioning back to the replay client player naturally requires exiting spectator mode
-                this.game.m_uiManager.spectatedPlayerId = 0;
-            }
+            this.toPerspective(newActivePlayer);
         }
 
         if (
@@ -899,12 +866,7 @@ export class Replay {
                 // player despawned, game object deleted
                 !this.game.m_activePlayer.active)
         ) {
-            this.game.m_spectating = false;
-            this.game.m_activeId = this.freecamPlayer.__id;
-            this.game.m_activePlayer = this.freecamPlayer;
-
-            this.game.m_uiManager.setSpectating(false, this.game.teamMode);
-            this.game.m_uiManager.spectatedPlayerId = 0;
+            this.toFreecam();
         }
 
         player.layer = player.m_netData.m_layer;
@@ -1133,6 +1095,32 @@ export class Replay {
         game.m_renderer.m_update(dt, game.m_camera, game.m_map, debug);
 
         game.m_render(simulationDt, debug);
+    }
+
+    toPerspective(player: Player) {
+        this.game.m_spectating = true;
+        this.game.m_activeId = player.__id;
+        this.game.m_activePlayer = player;
+
+        this.game.m_uiManager.weapsDirty = true;
+        this.game.m_uiManager.setSpectateTarget(
+            this.game.m_activeId,
+            this.game.m_localId,
+            this.game.teamMode,
+            this.game.m_playerBarn,
+        );
+        this.game.m_touch.hideAll();
+    }
+
+    toFreecam() {
+        this.game.m_spectating = false;
+        this.game.m_activeId = this.freecamPlayer.__id;
+        this.game.m_activePlayer = this.freecamPlayer;
+
+        this.game.m_uiManager.setSpectating(false, this.game.teamMode);
+        // necessary because the original game assumes that once you're spectating you never stop being a spectator
+        // but transitioning back to the replay client player naturally requires exiting spectator mode
+        this.game.m_uiManager.spectatedPlayerId = 0;
     }
 
     free() {
