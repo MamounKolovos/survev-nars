@@ -902,7 +902,7 @@ export class Replay {
     updateGame(dt: number) {
         const game = this.game;
 
-        const simulationDt = this.paused ? 0 : dt;
+        const simulationDt = this.paused ? 0 : dt * this.playbackSpeed;
 
         let debug: DebugOptions;
         if (IS_DEV) {
