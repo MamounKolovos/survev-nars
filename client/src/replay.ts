@@ -51,6 +51,7 @@ const keybinds = new Map<number, string>([
     [Key.D, "Freecam Move Right"],
     [Key.Plus, "Freecam Zoom In"],
     [Key.Minus, "Freecam Zoom Out"],
+    [Key.F, "Switch To Freecam"],
     [Key.T, "Freecam Toggle Layer (Ground/Underground)"],
     [Key.J, "Seek Forward 5s"],
     [Key.K, "Seek Backward 5s"],
@@ -715,7 +716,8 @@ export class Replay {
         }
 
         if (
-            this.game.m_uiManager.replayInputs.toFreecam &&
+            (this.game.m_uiManager.replayInputs.toFreecam ||
+                this.game.m_input.keyPressed(Key.F)) &&
             !this.game.m_activePlayer.isFreecam
         ) {
             this.toFreecam();
