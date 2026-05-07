@@ -161,7 +161,7 @@ export class Recorder {
                 },
                 playerId: p.__id,
                 disconnected: p.disconnected,
-                extraDirty: isCheckpoint,
+                extraDirty: p._firstUpdate || isCheckpoint,
                 extra: {
                     teamId: p.teamId,
                     groupId: p.groupId,

@@ -2167,7 +2167,7 @@ export class Player extends BaseGameObject {
         }
     }
 
-    private _firstUpdate = true;
+    _firstUpdate = true;
     visibleObjects = new Set<GameObject>();
     visibleMapIndicators = new Set<MapIndicator>();
 
