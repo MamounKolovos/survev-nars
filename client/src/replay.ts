@@ -392,8 +392,6 @@ export class Replay {
 
             if (!this.paused && !this.isEnded()) {
                 accumulator += dt * this.playbackSpeed;
-                // safety, might remove later
-                accumulator = Math.min(accumulator, 100);
 
                 while (accumulator >= this.tickElapsed && !this.isEnded()) {
                     accumulator -= this.tickElapsed;
