@@ -7,14 +7,13 @@ import type { Game } from "./game";
 const TICKS_PER_CHECKPOINT = Config.netSyncTps * 5;
 
 type Checkpoint = {
-    tick: number;
     byteIndex: number;
     totalElapsed: number;
     mapStreamIndex: number;
 };
 
 type MapEntry = {
-    tick: number;
+    totalElapsed: number;
     stream: net.BitStream;
 };
 
@@ -83,7 +82,7 @@ export class Recorder {
             this.oldMapSeed = this.game.map.seed;
 
             this.mapEntries.push({
-                tick: this.tickCount,
+                totalElapsed: this.elapsedMs,
                 stream: this.game.map.mapStream.stream,
             });
         }
@@ -96,7 +95,6 @@ export class Recorder {
             isCheckpoint = true;
 
             this.checkpoints.push({
-                tick: this.tickCount,
                 // byteIndex is relative to the start of the tick data (after the 4 byte header index)
                 byteIndex: this.index - 4,
                 totalElapsed: this.elapsedMs,
@@ -219,15 +217,12 @@ export class Recorder {
 
         this.writeUint32(Recorder.VERSION);
         this.writeUint32(GameConfig.protocolVersion);
-        this.writeUint32(this.tickCount);
         this.writeFloat32(this.elapsedMs);
-        this.writeUint16(TICKS_PER_CHECKPOINT);
         this.writeUint8(this.game.teamMode);
 
         this.writeUint16(this.checkpoints.length);
         for (let i = 0; i < this.checkpoints.length; i++) {
             const checkpoint = this.checkpoints[i];
-            this.writeUint32(checkpoint.tick);
             this.writeUint32(checkpoint.byteIndex);
             this.writeFloat32(checkpoint.totalElapsed);
             this.writeUint8(checkpoint.mapStreamIndex);
@@ -237,7 +232,7 @@ export class Recorder {
         for (let i = 0; i < this.mapEntries.length; i++) {
             const entry = this.mapEntries[i];
 
-            this.writeUint32(entry.tick);
+            this.writeFloat32(entry.totalElapsed);
 
             // must exclude the type byte at the start of the stream
             const byteIndex = entry.stream.byteIndex;

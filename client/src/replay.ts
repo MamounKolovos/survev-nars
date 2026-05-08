@@ -14,14 +14,13 @@ import { createBullet } from "./objects/bullet";
 import type { Player } from "./objects/player";
 
 type Checkpoint = {
-    tick: number;
-    byteIndex: number;
     totalElapsed: number;
+    byteIndex: number;
     mapStreamIndex: number;
 };
 
 type MapEntry = {
-    tick: number;
+    totalElapsed: number;
     stream: net.BitStream;
 };
 
@@ -95,14 +94,9 @@ export class Replay {
      */
     pausedBeforeScrub = false;
 
-    currentTick = 0;
-    totalTicks: number;
-
     seekCommand?: SeekCommand;
 
     playbackIconState: "play" | "pause" | "restart" = "pause";
-
-    ticksPerCheckpoint: number;
 
     tickElapsed = 0;
 
@@ -112,7 +106,6 @@ export class Replay {
 
     checkpoints: Checkpoint[];
     mapEntries: MapEntry[];
-    nextMapStreamIndex = 0;
     currentMapEntryIndex = -1;
 
     headerStart: number;
@@ -150,15 +143,8 @@ export class Replay {
         // }
         index += 4;
 
-        this.currentTick = 0;
-        this.totalTicks = this.view.getUint32(index);
-        index += 4;
-
         this.totalElapsedMs = this.view.getFloat32(index);
         index += 4;
-
-        this.ticksPerCheckpoint = this.view.getUint16(index);
-        index += 2;
 
         this.teamMode = this.view.getUint8(index);
         index += 1;
@@ -168,15 +154,13 @@ export class Replay {
 
         this.checkpoints = [];
         for (let i = 0; i < checkpointCount; i++) {
-            const tick = this.view.getUint32(index);
-            index += 4;
             const byteIndex = this.view.getUint32(index);
             index += 4;
             const totalElapsed = this.view.getFloat32(index);
             index += 4;
             const mapStreamIndex = this.view.getUint8(index);
             index += 1;
-            this.checkpoints.push({ tick, byteIndex, totalElapsed, mapStreamIndex });
+            this.checkpoints.push({ totalElapsed, byteIndex, mapStreamIndex });
         }
 
         const mapStreamCount = this.view.getUint8(index);
@@ -184,7 +168,7 @@ export class Replay {
 
         this.mapEntries = [];
         for (let i = 0; i < mapStreamCount; i++) {
-            const tick = this.view.getUint32(index);
+            const totalElapsed = this.view.getFloat32(index);
             index += 4;
 
             const length = this.view.getUint32(index);
@@ -192,7 +176,7 @@ export class Replay {
             const mapBuffer = this.uint8buff.buffer.slice(index, index + length);
             const stream = new net.BitStream(mapBuffer);
             index += length;
-            this.mapEntries.push({ tick, stream });
+            this.mapEntries.push({ totalElapsed, stream });
         }
 
         if (source.kind == "server") {
@@ -348,14 +332,16 @@ export class Replay {
                 // we must always load a checkpoint when seeking backward
                 // but we only load a checkpoint when seeking forward if the checkpoint is closer to the target than current tick
                 // would be pointless work otherwise
-                if (targetTime < this.currentTime || checkpoint.tick > this.currentTick) {
+                if (
+                    targetTime < this.currentTime ||
+                    checkpoint.totalElapsed > this.currentTime
+                ) {
                     this.game.m_objectCreator.m_clear();
                     this.game.m_ui2Manager.clearKillFeed();
                     this.game.m_particleBarn.m_clear();
                     this.game.m_bulletBarn.m_clear();
                     this.game.m_planeBarn.m_clear();
 
-                    this.currentTick = checkpoint.tick;
                     stream.byteIndex = checkpoint.byteIndex;
                     this.currentTime = checkpoint.totalElapsed;
                     if (this.currentMapEntryIndex != checkpoint.mapStreamIndex) {
@@ -415,7 +401,7 @@ export class Replay {
         const nextMapEntryIndex = this.currentMapEntryIndex + 1;
         if (
             nextMapEntryIndex < this.mapEntries.length &&
-            this.currentTick == this.mapEntries[nextMapEntryIndex].tick
+            this.currentTime >= this.mapEntries[nextMapEntryIndex].totalElapsed
         ) {
             this.currentMapEntryIndex = nextMapEntryIndex;
             const mapStream = this.mapEntries[nextMapEntryIndex].stream;
@@ -441,7 +427,6 @@ export class Replay {
 
         this.game.m_uiManager.setReplayElapsedTimeLabel(this.currentTime);
         this.game.m_uiManager.setReplayScrubberValue(this.currentTime);
-        this.currentTick += 1;
     }
 
     isEnded(): boolean {
