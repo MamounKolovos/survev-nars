@@ -1,5 +1,6 @@
 import { GameConfig } from "../../../shared/gameConfig";
 import * as net from "../../../shared/net/net";
+import { ObjectType } from "../../../shared/net/objectSerializeFns";
 import { coldet } from "../../../shared/utils/coldet";
 import { Config } from "../config";
 import type { Game } from "./game";
@@ -16,6 +17,16 @@ type MapEntry = {
     totalElapsed: number;
     stream: net.BitStream;
 };
+
+type PendingEvent =
+    | { kind: "killed"; targetId: number; killerId: number }
+    | { kind: "downed"; targetId: number; downerId: number }
+    | { kind: "mapChanged" };
+
+type Event =
+    | { kind: "killed"; targetId: number; killerId: number; totalElapsed: number }
+    | { kind: "downed"; targetId: number; downerId: number; totalElapsed: number }
+    | { kind: "mapChanged"; totalElapsed: number };
 
 export class Recorder {
     static VERSION = 1;
@@ -38,6 +49,9 @@ export class Recorder {
 
     private mapEntries: MapEntry[] = [];
 
+    private pendingEvents: PendingEvent[] = [];
+    private events: Event[] = [];
+
     constructor(readonly game: Game) {
         const buffer = new ArrayBuffer(40_000_000);
         this.uint8buff = new Uint8Array(buffer);
@@ -53,6 +67,44 @@ export class Recorder {
         this.index += 4;
 
         this.lastTickTime = performance.now();
+
+        (this.game.pluginManager.eventToHandlers.playerDidDie ??= []).push(
+            (gameEvent) => {
+                const { player, params } = gameEvent.data;
+
+                const targetId = player.__id;
+                const killerId =
+                    params.source && params.source.__type == ObjectType.Player
+                        ? params.source.__id
+                        : 0;
+
+                this.pendingEvents.push({
+                    kind: "killed",
+                    targetId,
+                    killerId,
+                });
+            },
+        );
+        (this.game.pluginManager.eventToHandlers.playerGotDowned ??= []).push(
+            (gameEvent) => {
+                const { player, params } = gameEvent.data;
+
+                const targetId = player.__id;
+                const downerId =
+                    params.source && params.source.__type == ObjectType.Player
+                        ? params.source.__id
+                        : 0;
+
+                this.pendingEvents.push({
+                    kind: "downed",
+                    targetId,
+                    downerId,
+                });
+            },
+        );
+        (this.game.pluginManager.eventToHandlers.mapCreated ??= []).push(() => {
+            this.pendingEvents.push({ kind: "mapChanged" });
+        });
     }
 
     /**
@@ -73,7 +125,7 @@ export class Recorder {
         this.msgsToSend.stream.index = 0;
 
         const now = performance.now();
-        const tickElapsed = now - this.lastTickTime;
+        const tickElapsed = this.tickCount == 0 ? 0 : now - this.lastTickTime;
         this.lastTickTime = now;
 
         this.elapsedMs += tickElapsed;
@@ -81,11 +133,25 @@ export class Recorder {
         if (this.oldMapSeed != this.game.map.seed) {
             this.oldMapSeed = this.game.map.seed;
 
+            const stream = this.game.map.mapStream.stream;
+            const byteIndex = stream.byteIndex;
+            // must exclude the type byte at the start of the stream
+            const bufferView = stream.buffer.subarray(1, byteIndex);
+            const copy = new net.BitStream(Buffer.from(bufferView));
+            copy.byteIndex = byteIndex - 1;
+
             this.mapEntries.push({
                 totalElapsed: this.elapsedMs,
-                stream: this.game.map.mapStream.stream,
+                stream: copy,
             });
         }
+
+        for (let i = 0; i < this.pendingEvents.length; i++) {
+            const pending = this.pendingEvents[i];
+            const event = this.resolvePendingEvent(pending);
+            this.events.push(event);
+        }
+        this.pendingEvents.length = 0;
 
         const replayMsg = new net.ReplayMsg();
 
@@ -209,6 +275,27 @@ export class Recorder {
         this.tickCount += 1;
     }
 
+    resolvePendingEvent(event: PendingEvent): Event {
+        switch (event.kind) {
+            case "killed":
+                return {
+                    kind: "killed",
+                    targetId: event.targetId,
+                    killerId: event.killerId,
+                    totalElapsed: this.elapsedMs,
+                };
+            case "downed":
+                return {
+                    kind: "downed",
+                    targetId: event.targetId,
+                    downerId: event.downerId,
+                    totalElapsed: this.elapsedMs,
+                };
+            case "mapChanged":
+                return { kind: "mapChanged", totalElapsed: this.elapsedMs };
+        }
+    }
+
     stop() {
         const headerIndex = this.index;
         this.index = 0;
@@ -234,11 +321,33 @@ export class Recorder {
 
             this.writeFloat32(entry.totalElapsed);
 
-            // must exclude the type byte at the start of the stream
             const byteIndex = entry.stream.byteIndex;
-            this.writeUint32(byteIndex - 1);
-            this.uint8buff.set(entry.stream.buffer.subarray(1, byteIndex), this.index);
-            this.index += byteIndex - 1;
+            this.writeUint32(byteIndex);
+            this.uint8buff.set(entry.stream.buffer.subarray(0, byteIndex), this.index);
+            this.index += byteIndex;
+        }
+
+        this.writeUint16(this.events.length);
+        for (let i = 0; i < this.events.length; i++) {
+            const event = this.events[i];
+
+            switch (event.kind) {
+                case "killed":
+                    this.writeUint8(0);
+                    this.writeUint16(event.targetId);
+                    this.writeUint16(event.killerId);
+                    break;
+                case "downed":
+                    this.writeUint8(1);
+                    this.writeUint16(event.targetId);
+                    this.writeUint16(event.downerId);
+                    break;
+                case "mapChanged":
+                    this.writeUint8(2);
+                    break;
+            }
+
+            this.writeFloat32(event.totalElapsed);
         }
 
         this.recording = false;

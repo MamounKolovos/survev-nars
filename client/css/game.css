@@ -2252,10 +2252,69 @@ img {
   padding: 2px 4px;
 }
 
+#ui-replay-track {
+  position: relative;
+  display: flex;
+}
+
 #replay-scrubber {
+  display: block;
   min-width: 500px;
-  flex: 1;
   cursor: pointer;
+  margin: 0;
+}
+
+.ui-replay-event-marker-group {
+  position: absolute;
+  /* left: calc(var(--marker-progress) + 0px); */
+  left: calc(var(--marker-progress) * (100% - 16px) + 8px);
+  transform: translateX(-50%) translateY(-100%);
+  top: 0%;
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.1s;
+
+  pointer-events: all;
+  cursor: pointer;
+}
+
+.ui-replay-event-marker-group:hover {
+  transform-origin: bottom center;
+  transform: translateX(-50%) translateY(-100%) scale(1.5);
+}
+
+#ui-replay-menu:hover .ui-replay-event-marker-group {
+  opacity: 1;
+}
+
+.ui-replay-event-marker {
+  position: relative;
+  width: 25px;
+  height: 25px;
+
+  /* background-color: rgba(0, 0, 0, 0.24); */
+  background-color: var(--marker-color);
+
+  background-size: contain;
+  background-image: var(--marker-icon);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* .ui-replay-cluster:hover .ui-replay-cluster-tooltip {
+  opacity: 1;
+} */
+
+.ui-replay-event-marker-extension {
+  /* width: 0;
+  height: 0;
+  border-left: 12.5px solid transparent;
+  border-right: 12.5px solid transparent;
+  border-top: 16px solid rgba(0, 0, 0, 0.24); */
+  width: 25px;
+  height: 16px;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  /* background-color: rgba(0, 0, 0, 0.24); */
+  background-color: var(--marker-color);
 }
 
 #replay-scrubber:hover::-webkit-slider-thumb {
@@ -2349,6 +2408,18 @@ img {
 
 .btn-replay-download {
   background-image: url(/img/gui/replay-download.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.btn-replay-seek-prev-event {
+  background-image: url(/img/gui/chevrons-left.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.btn-replay-seek-next-event {
+  background-image: url(/img/gui/chevrons-right.svg);
   background-repeat: no-repeat;
   background-position: center;
 }

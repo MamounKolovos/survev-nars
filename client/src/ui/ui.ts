@@ -70,6 +70,12 @@ class Color {
 
 type ScrubberEvent = { kind: "down" } | { kind: "input"; value: number } | { kind: "up" };
 
+export type EventMarker = {
+    progress: number;
+    icon: string;
+    backgroundColor: string;
+};
+
 interface ContainerWithMask extends PIXI.Container {
     mask: PIXI.Graphics;
 }
@@ -174,10 +180,13 @@ export class UiManager {
     specPrevButton = $("#btn-spectate-prev-player");
 
     replayInputs = {
+        markerProgress: undefined as number | undefined,
         scrubberEvents: [] as ScrubberEvent[],
         playback: false,
         seekForward: false,
         seekBackward: false,
+        seekNextEvent: false,
+        seekPrevEvent: false,
         toggleLayer: false,
         toFreecam: false,
         copyLink: false,
@@ -186,6 +195,7 @@ export class UiManager {
     };
 
     replayElements = {
+        track: $("#ui-replay-track"),
         scrubber: $("#replay-scrubber"),
         timeLabel: {
             elapsed: $("#replay-elapsed"),
@@ -194,6 +204,8 @@ export class UiManager {
         playbackButton: $("#btn-replay-playback"),
         seekForwardButton: $("#btn-replay-seek-forward"),
         seekBackwardButton: $("#btn-replay-seek-backward"),
+        seekNextEventButton: $("#btn-replay-seek-next-event"),
+        seekPrevEventButton: $("#btn-replay-seek-prev-event"),
         toggleLayerButton: $("#btn-replay-toggle-layer"),
         toFreecamButton: $("#btn-replay-to-freecam"),
         copyLinkButton: $("#btn-replay-copy-link"),
@@ -622,6 +634,12 @@ export class UiManager {
         this.replayElements.seekBackwardButton.on("click", () => {
             this.replayInputs.seekBackward = true;
         });
+        this.replayElements.seekNextEventButton.on("click", () => {
+            this.replayInputs.seekNextEvent = true;
+        });
+        this.replayElements.seekPrevEventButton.on("click", () => {
+            this.replayInputs.seekPrevEvent = true;
+        });
         this.replayElements.toggleLayerButton.on("click", () => {
             this.replayInputs.toggleLayer = true;
         });
@@ -688,6 +706,8 @@ export class UiManager {
         this.replayElements.playbackButton.off("click");
         this.replayElements.seekForwardButton.off("click");
         this.replayElements.seekBackwardButton.off("click");
+        this.replayElements.seekNextEventButton.off("click");
+        this.replayElements.seekPrevEventButton.off("click");
         this.replayElements.toggleLayerButton.off("click");
         this.replayElements.toFreecamButton.off("click");
         this.replayElements.copyLinkButton.off("click");
@@ -2108,6 +2128,43 @@ export class UiManager {
 
     displayReplayGuide() {
         $("#btn-game-replay-guide-container").css("display", "block");
+    }
+
+    setReplayEventMarkers(markers: EventMarker[]) {
+        // const track = $("#ui-replay-track")
+        const track = this.replayElements.track;
+
+        track.find(".ui-replay-event-marker-group").remove();
+
+        for (let i = 0; i < markers.length; i++) {
+            const marker = markers[i];
+
+            const group = $("<div/>", {
+                class: "ui-replay-event-marker-group",
+                style: `--marker-progress: ${marker.progress}; --marker-color: ${marker.backgroundColor}`,
+            });
+
+            // group.attr("data-progress", marker.progress)
+
+            group.on("click", () => {
+                // this.replayInputs.markerValue = group.data("progress") as number;
+                this.replayInputs.markerProgress = marker.progress;
+            });
+
+            const element = $("<div/>", {
+                class: "ui-replay-event-marker",
+                style: `--marker-icon: url(${marker.icon});`,
+            });
+
+            const extension = $("<div/>", {
+                class: "ui-replay-event-marker-extension",
+            });
+
+            group.append(element);
+            group.append(extension);
+
+            track.append(group);
+        }
     }
 
     toggleMiniMap() {

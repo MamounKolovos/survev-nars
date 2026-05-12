@@ -652,7 +652,9 @@
             <div class="ui-replay-row" style="width: 600px">
               <div class="ui-replay-group">
                 <div id="ui-replay-scrubber">
-                  <input type="range" id="replay-scrubber" min="0" max="100" step="any" value="0"/>
+                  <div id="ui-replay-track">
+                    <input type="range" id="replay-scrubber" min="0" max="100" step="any" value="0"/>
+                  </div>
                   <div id="ui-replay-time">
                     <span id="replay-elapsed">0:00</span>
                     <span aria-hidden="true"> / </span>
@@ -663,9 +665,11 @@
             </div>
             <div class="ui-replay-row" style="width: 450px">
               <div class="ui-replay-group" style="flex: 1">
-                <a title="Playback" class="btn-darken ui-replay-button btn-replay-pause" id="btn-replay-playback"></a>
+                <a title="Seek to previous event" class="btn-darken ui-replay-button btn-replay-seek-prev-event" id="btn-replay-seek-prev-event"></a>
                 <a title="Seek backward 5 seconds" class="btn-darken ui-replay-button btn-replay-seek-backward" id="btn-replay-seek-backward"></a>
+                <a title="Playback" class="btn-darken ui-replay-button btn-replay-pause" id="btn-replay-playback"></a>
                 <a title="Seek forward 5 seconds" class="btn-darken ui-replay-button btn-replay-seek-forward" id="btn-replay-seek-forward"></a>
+                <a title="Seek to next event" class="btn-darken ui-replay-button btn-replay-seek-next-event" id="btn-replay-seek-next-event"></a>
               </div>
               <div class="ui-replay-group" style="flex: 1">
                 <a title="Switch to freecam" class="btn-darken ui-replay-button btn-replay-to-freecam" id="btn-replay-to-freecam"></a>
