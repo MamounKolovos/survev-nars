@@ -119,7 +119,7 @@ export class Replay {
 
     tickElapsed = 0;
 
-    totalElapsedMs: number;
+    totalElapsedUs: number;
 
     teamMode: TeamMode;
 
@@ -131,7 +131,6 @@ export class Replay {
     /** we assume that the server recorded and sent them in chronological order */
     events: Event[];
     activeEvents: Event[] = [];
-    currentEventIndex = -1;
 
     headerStart: number;
 
@@ -168,7 +167,7 @@ export class Replay {
         // }
         index += 4;
 
-        this.totalElapsedMs = this.view.getFloat32(index);
+        this.totalElapsedUs = this.view.getUint32(index);
         index += 4;
 
         this.teamMode = this.view.getUint8(index);
@@ -181,7 +180,7 @@ export class Replay {
         for (let i = 0; i < checkpointCount; i++) {
             const byteIndex = this.view.getUint32(index);
             index += 4;
-            const totalElapsed = this.view.getFloat32(index);
+            const totalElapsed = this.view.getUint32(index);
             index += 4;
             const mapStreamIndex = this.view.getUint8(index);
             index += 1;
@@ -193,7 +192,7 @@ export class Replay {
 
         this.mapEntries = [];
         for (let i = 0; i < mapStreamCount; i++) {
-            const totalElapsed = this.view.getFloat32(index);
+            const totalElapsed = this.view.getUint32(index);
             index += 4;
 
             const length = this.view.getUint32(index);
@@ -223,7 +222,7 @@ export class Replay {
                         kind,
                         targetId,
                         killerId,
-                        totalElapsed: this.view.getFloat32(index),
+                        totalElapsed: this.view.getUint32(index),
                     };
                     index += 4;
                     break;
@@ -239,7 +238,7 @@ export class Replay {
                         kind,
                         targetId,
                         downerId,
-                        totalElapsed: this.view.getFloat32(index),
+                        totalElapsed: this.view.getUint32(index),
                     };
                     index += 4;
                     break;
@@ -247,7 +246,7 @@ export class Replay {
                 case 2: {
                     const kind = "mapChanged";
                     index += 1;
-                    event = { kind, totalElapsed: this.view.getFloat32(index) };
+                    event = { kind, totalElapsed: this.view.getUint32(index) };
                     index += 4;
                     break;
                 }
@@ -256,17 +255,6 @@ export class Replay {
             }
 
             this.events.push(event);
-        }
-
-        // this.events.length = 0;
-
-        // this.events.push({ kind: "mapChanged", totalElapsed: 0 })
-        // this.events.push({ kind: "mapChanged", totalElapsed: 5000 })
-        // this.events.push({ kind: "mapChanged", totalElapsed: 10000 })
-        // this.events.push({ kind: "mapChanged", totalElapsed: this.totalElapsedMs })
-
-        if (this.events.length != 0) {
-            this.currentEventIndex = 0;
         }
 
         this.stream = new net.BitStream(
@@ -279,7 +267,7 @@ export class Replay {
             if (source.startSecond) {
                 this.seekCommand = {
                     kind: "absolute",
-                    amount: source.startSecond * 1000,
+                    amount: source.startSecond * 1_000_000,
                 };
             }
 
@@ -302,8 +290,8 @@ export class Replay {
         this.game.m_inputBinds.disable();
         this.game.m_uiManager.displayReplayMenu(true);
 
-        this.game.m_uiManager.setReplayTotalTimeLabel(this.totalElapsedMs);
-        this.game.m_uiManager.setReplayScrubberMax(this.totalElapsedMs);
+        this.game.m_uiManager.setReplayTotalTimeLabel(this.totalElapsedUs / 1_000_000);
+        this.game.m_uiManager.setReplayScrubberMax(this.totalElapsedUs);
         this.game.m_uiManager.setReplayScrubberValue(0);
 
         this.game.m_uiManager.displayReplayGuide();
@@ -365,11 +353,6 @@ export class Replay {
             },
         });
 
-        // this.game.m_activePlayer = player;
-        //TODO: should probably reserve a special number instead of using 0
-        // this.game.m_activeId = FREECAM_ID;
-        // this.game.m_localId = 0;
-
         // IMPORTANT: freecam player is never rendered because Player.visualsDirty is never set
         // player.visualsDirty = true;
         this.freecamPlayer = player;
@@ -393,7 +376,7 @@ export class Replay {
             if (this.stopped) return;
 
             let current = performance.now();
-            const dt = current - previous;
+            const dt = Math.trunc((current - previous) * 1000);
             previous = current;
 
             if (this.seekCommand != undefined) {
@@ -409,24 +392,8 @@ export class Replay {
                         targetTime = this.currentTime + this.seekCommand.amount;
                         break;
                 }
-                targetTime = math.clamp(targetTime, 0, this.totalElapsedMs);
+                targetTime = math.clamp(targetTime, 0, this.totalElapsedUs);
 
-                // console.log("before", this.currentTime, targetTime)
-
-                // let left = 0;
-                // let right = this.checkpoints.length - 1;
-
-                // while (left <= right) {
-                //     const mid = (left + right) >>> 1;
-
-                //     if (this.checkpoints[mid].totalElapsed < targetTime) {
-                //         left = mid + 1;
-                //     } else {
-                //         right = mid - 1;
-                //     }
-                // }
-
-                // const checkpointIndex = Math.max(0, right);
                 const checkpointIndex = findLeftIndex(this.checkpoints, targetTime) ?? 0;
                 const checkpoint = this.checkpoints[checkpointIndex];
 
@@ -454,16 +421,13 @@ export class Replay {
                     }
 
                     this.processTick(this.stream, true);
-                    this.game.update(this.tickElapsed / 1000);
+                    this.game.update(this.tickElapsed / 1_000_000);
                 }
 
                 while (this.currentTime < targetTime && !this.isEnded()) {
                     this.processTick(this.stream);
-                    this.game.update(this.tickElapsed / 1000);
+                    this.game.update(this.tickElapsed / 1_000_000);
                 }
-
-                // console.log("after", this.currentTime, targetTime)
-                // console.log(this.events)
 
                 if (this.startingPlayerId) {
                     this.setPerspectiveById(this.startingPlayerId);
@@ -496,13 +460,9 @@ export class Replay {
     }
 
     processTick(stream: net.BitStream, skipDeletes = false) {
-        const startIndex = stream.byteIndex;
-
-        this.tickElapsed = stream.readFloat32();
+        this.tickElapsed = stream.readUint32();
 
         this.currentTime += this.tickElapsed;
-
-        // console.log(this.currentTime, this.events[0].totalElapsed)
 
         const nextMapEntryIndex = this.currentMapEntryIndex + 1;
         if (
@@ -514,13 +474,6 @@ export class Replay {
             mapStream.byteIndex = 0;
             this.game.m_onMsg(net.MsgType.Map, mapStream);
         }
-
-        // if (this.currentEventIndex != undefined) {
-        //     const nextEventIndex = this.currentEventIndex + 1;
-        //     if (nextEventIndex < this.events.length && this.currentTime >= this.events[nextEventIndex].totalElapsed) {
-        //         this.currentEventIndex += 1;
-        //     }
-        // }
 
         const msg = new net.ReplayMsg();
         msg.deserialize(stream, this.game.m_objectCreator);
@@ -538,7 +491,7 @@ export class Replay {
             this.toFreecam();
         }
 
-        this.game.m_uiManager.setReplayElapsedTimeLabel(this.currentTime);
+        this.game.m_uiManager.setReplayElapsedTimeLabel(this.currentTime / 1_000_000);
         this.game.m_uiManager.setReplayScrubberValue(this.currentTime);
     }
 
@@ -868,10 +821,8 @@ export class Replay {
             this.game.m_uiManager.setReplayCyclePlaybackSpeedLabel(this.playbackSpeed);
         }
 
-        if (this.game.m_uiManager.replayInputs.markerProgress != undefined) {
-            const progress = this.game.m_uiManager.replayInputs.markerProgress;
-            const totalElapsed = progress * this.totalElapsedMs;
-            // console.log("marker", totalElapsed)
+        if (this.game.m_uiManager.replayInputs.markerClicked != undefined) {
+            const totalElapsed = this.game.m_uiManager.replayInputs.markerClicked;
 
             this.seekCommand = { kind: "absolute", amount: totalElapsed };
         }
@@ -920,14 +871,20 @@ export class Replay {
             this.game.m_uiManager.replayInputs.seekForward ||
             this.game.m_input.keyPressed(Key.K)
         ) {
-            this.seekCommand = { kind: "relative", amount: 5000 * this.playbackSpeed };
+            this.seekCommand = {
+                kind: "relative",
+                amount: 5_000_000 * this.playbackSpeed,
+            };
         }
 
         if (
             this.game.m_uiManager.replayInputs.seekBackward ||
             this.game.m_input.keyPressed(Key.J)
         ) {
-            this.seekCommand = { kind: "relative", amount: -5000 * this.playbackSpeed };
+            this.seekCommand = {
+                kind: "relative",
+                amount: -5_000_000 * this.playbackSpeed,
+            };
         }
 
         if (this.game.m_uiManager.replayInputs.seekNextEvent) {
@@ -952,7 +909,7 @@ export class Replay {
             if (this.game.m_input.keyPressed(key)) {
                 this.seekCommand = {
                     kind: "absolute",
-                    amount: (i / 10) * this.totalElapsedMs,
+                    amount: (i / 10) * this.totalElapsedUs,
                 };
                 break;
             }
@@ -1022,7 +979,7 @@ export class Replay {
         this.game.m_uiManager.replayInputs.copyLink = false;
         this.game.m_uiManager.replayInputs.download = false;
         this.game.m_uiManager.replayInputs.cyclePlaybackSpeed = false;
-        this.game.m_uiManager.replayInputs.markerProgress = undefined;
+        this.game.m_uiManager.replayInputs.markerClicked = undefined;
 
         // show the action the user can take, not the state they're in
         const playbackIconState = this.isEnded()
@@ -1319,8 +1276,8 @@ export class Replay {
 
     eventToMarker(event: Event, backgroundColor: string): EventMarker {
         return {
-            // progress: (event.totalElapsed / this.totalElapsedMs) * 100,
-            progress: event.totalElapsed / this.totalElapsedMs,
+            progress: event.totalElapsed / this.totalElapsedUs,
+            value: event.totalElapsed,
             icon: eventKindToIcon(event.kind),
             backgroundColor,
         };

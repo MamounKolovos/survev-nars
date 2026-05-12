@@ -72,6 +72,8 @@ type ScrubberEvent = { kind: "down" } | { kind: "input"; value: number } | { kin
 
 export type EventMarker = {
     progress: number;
+    /** passthrough only used for the click listener, could be anything */
+    value: number;
     icon: string;
     backgroundColor: string;
 };
@@ -180,7 +182,7 @@ export class UiManager {
     specPrevButton = $("#btn-spectate-prev-player");
 
     replayInputs = {
-        markerProgress: undefined as number | undefined,
+        markerClicked: undefined as number | undefined,
         scrubberEvents: [] as ScrubberEvent[],
         playback: false,
         seekForward: false,
@@ -2066,8 +2068,7 @@ export class UiManager {
         this.replayElements.scrubber.prop("value", value);
     }
 
-    setReplayElapsedTimeLabel(ms: number) {
-        const seconds = ms / 1000;
+    setReplayElapsedTimeLabel(seconds: number) {
         const m = Math.floor(seconds / 60);
         const s = Math.floor(seconds % 60)
             .toString()
@@ -2075,8 +2076,7 @@ export class UiManager {
         this.replayElements.timeLabel.elapsed.text(`${m}:${s}`);
     }
 
-    setReplayTotalTimeLabel(ms: number) {
-        const seconds = ms / 1000;
+    setReplayTotalTimeLabel(seconds: number) {
         const m = Math.floor(seconds / 60);
         const s = Math.floor(seconds % 60)
             .toString()
@@ -2131,7 +2131,6 @@ export class UiManager {
     }
 
     setReplayEventMarkers(markers: EventMarker[]) {
-        // const track = $("#ui-replay-track")
         const track = this.replayElements.track;
 
         track.find(".ui-replay-event-marker-group").remove();
@@ -2147,8 +2146,7 @@ export class UiManager {
             // group.attr("data-progress", marker.progress)
 
             group.on("click", () => {
-                // this.replayInputs.markerValue = group.data("progress") as number;
-                this.replayInputs.markerProgress = marker.progress;
+                this.replayInputs.markerClicked = marker.value;
             });
 
             const element = $("<div/>", {

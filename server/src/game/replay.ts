@@ -41,7 +41,7 @@ export class Recorder {
 
     private lastTickTime = 0;
 
-    private elapsedMs = 0;
+    private elapsedUs = 0;
 
     private oldMapSeed = -1;
 
@@ -125,10 +125,13 @@ export class Recorder {
         this.msgsToSend.stream.index = 0;
 
         const now = performance.now();
-        const tickElapsed = this.tickCount == 0 ? 0 : now - this.lastTickTime;
+        const tickElapsed =
+            this.tickCount == 0 ? 0 : Math.trunc((now - this.lastTickTime) * 1000);
         this.lastTickTime = now;
 
-        this.elapsedMs += tickElapsed;
+        const tickStart = this.elapsedUs;
+        this.elapsedUs += tickElapsed;
+        const tickEnd = this.elapsedUs;
 
         if (this.oldMapSeed != this.game.map.seed) {
             this.oldMapSeed = this.game.map.seed;
@@ -141,19 +144,38 @@ export class Recorder {
             copy.byteIndex = byteIndex - 1;
 
             this.mapEntries.push({
-                totalElapsed: this.elapsedMs,
+                // tickEnd guarantees that the map is fully processed by the time we arrive at it
+                totalElapsed: tickEnd,
                 stream: copy,
             });
         }
 
         for (let i = 0; i < this.pendingEvents.length; i++) {
             const pending = this.pendingEvents[i];
-            const event = this.resolvePendingEvent(pending);
-            this.events.push(event);
+            // tickEnd guarantees that the event is fully processed by the time we arrive at it
+            switch (pending.kind) {
+                case "killed":
+                    this.events.push({
+                        kind: "killed",
+                        targetId: pending.targetId,
+                        killerId: pending.killerId,
+                        totalElapsed: tickEnd,
+                    });
+                    break;
+                case "downed":
+                    this.events.push({
+                        kind: "downed",
+                        targetId: pending.targetId,
+                        downerId: pending.downerId,
+                        totalElapsed: tickEnd,
+                    });
+                    break;
+                case "mapChanged":
+                    this.events.push({ kind: "mapChanged", totalElapsed: tickEnd });
+                    break;
+            }
         }
         this.pendingEvents.length = 0;
-
-        const replayMsg = new net.ReplayMsg();
 
         let isCheckpoint = false;
 
@@ -163,11 +185,16 @@ export class Recorder {
             this.checkpoints.push({
                 // byteIndex is relative to the start of the tick data (after the 4 byte header index)
                 byteIndex: this.index - 4,
-                totalElapsed: this.elapsedMs,
+                // if current time is 5s and this tick just took 20s,
+                // sending 5 on the checkpoint is correct since that's the start of the tick not 25
+                // hence why we use tickStart not tickEnd, we must line up with byteIndex
+                totalElapsed: tickStart,
                 // the last element is always the most recently pushed and therefore the "active" map
                 mapStreamIndex: this.mapEntries.length - 1,
             });
         }
+
+        const replayMsg = new net.ReplayMsg();
 
         if (this.game.playerBarn.aliveCountDirty || isCheckpoint) {
             replayMsg.aliveCountDirty = true;
@@ -263,7 +290,7 @@ export class Recorder {
 
         replayMsg.msgsToSend = this.game.msgsToSend;
 
-        this.tickStream.writeFloat32(tickElapsed);
+        this.tickStream.writeUint32(tickElapsed);
 
         replayMsg.serialize(this.tickStream);
 
@@ -275,27 +302,6 @@ export class Recorder {
         this.tickCount += 1;
     }
 
-    resolvePendingEvent(event: PendingEvent): Event {
-        switch (event.kind) {
-            case "killed":
-                return {
-                    kind: "killed",
-                    targetId: event.targetId,
-                    killerId: event.killerId,
-                    totalElapsed: this.elapsedMs,
-                };
-            case "downed":
-                return {
-                    kind: "downed",
-                    targetId: event.targetId,
-                    downerId: event.downerId,
-                    totalElapsed: this.elapsedMs,
-                };
-            case "mapChanged":
-                return { kind: "mapChanged", totalElapsed: this.elapsedMs };
-        }
-    }
-
     stop() {
         const headerIndex = this.index;
         this.index = 0;
@@ -304,14 +310,14 @@ export class Recorder {
 
         this.writeUint32(Recorder.VERSION);
         this.writeUint32(GameConfig.protocolVersion);
-        this.writeFloat32(this.elapsedMs);
+        this.writeUint32(this.elapsedUs);
         this.writeUint8(this.game.teamMode);
 
         this.writeUint16(this.checkpoints.length);
         for (let i = 0; i < this.checkpoints.length; i++) {
             const checkpoint = this.checkpoints[i];
             this.writeUint32(checkpoint.byteIndex);
-            this.writeFloat32(checkpoint.totalElapsed);
+            this.writeUint32(checkpoint.totalElapsed);
             this.writeUint8(checkpoint.mapStreamIndex);
         }
 
@@ -319,7 +325,7 @@ export class Recorder {
         for (let i = 0; i < this.mapEntries.length; i++) {
             const entry = this.mapEntries[i];
 
-            this.writeFloat32(entry.totalElapsed);
+            this.writeUint32(entry.totalElapsed);
 
             const byteIndex = entry.stream.byteIndex;
             this.writeUint32(byteIndex);
@@ -347,7 +353,7 @@ export class Recorder {
                     break;
             }
 
-            this.writeFloat32(event.totalElapsed);
+            this.writeUint32(event.totalElapsed);
         }
 
         this.recording = false;
@@ -365,11 +371,6 @@ export class Recorder {
 
     writeUint32(value: number) {
         this.view.setUint32(this.index, value);
-        this.index += 4;
-    }
-
-    writeFloat32(value: number) {
-        this.view.setFloat32(this.index, value);
         this.index += 4;
     }
 
