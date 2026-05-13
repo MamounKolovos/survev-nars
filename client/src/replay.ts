@@ -791,7 +791,7 @@ export class Replay {
         if (this.source.kind == "server" && this.game.m_uiManager.replayInputs.copyLink) {
             const params = new URLSearchParams({ replay: this.source.gameId });
 
-            params.set("t", String(Math.floor(this.currentTime / 1000)));
+            params.set("t", String(Math.floor(this.currentTime / 1_000_000)));
 
             if (this.game.m_activeId !== this.freecamPlayer.__id) {
                 params.set("player", String(this.game.m_activeId));
