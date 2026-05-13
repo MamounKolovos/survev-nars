@@ -2358,6 +2358,29 @@ img {
   cursor: pointer;
 }
 
+@keyframes copy-link-btn-toast {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  55% {
+    opacity: 1;
+    transform: translateY(-25px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-25px);
+  }
+}
+
+.copy-link-btn-toast {
+  animation: copy-link-btn-toast 550ms ease forwards;
+  position: absolute;
+  pointer-events: none;
+  font-size: 18px;
+  color: #7cfc00;
+}
+
 .btn-replay-pause {
   background-image: url(/img/gui/replay-pause.svg);
   background-repeat: no-repeat;

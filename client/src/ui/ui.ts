@@ -648,8 +648,26 @@ export class UiManager {
         this.replayElements.toFreecamButton.on("click", () => {
             this.replayInputs.toFreecam = true;
         });
-        this.replayElements.copyLinkButton.on("click", () => {
+        this.replayElements.copyLinkButton.on("click", (e) => {
             this.replayInputs.copyLink = true;
+
+            const toast = $("<div/>", {
+                class: "copy-link-btn-toast",
+            }).text("Copied!");
+
+            // must append first so the DOM can give the toast its width
+            this.replayMenu.append(toast);
+
+            const mouseOffsetX = e.pageX - this.replayMenu.offset()!.left;
+            toast.css({
+                left: mouseOffsetX - toast.width()! / 2,
+                // looks better when y is mouse agnostic
+                top: this.replayElements.copyLinkButton.position().top,
+            });
+
+            toast.on("animationend", () => {
+                toast.remove();
+            });
         });
         this.replayElements.downloadButton.on("click", () => {
             this.replayInputs.download = true;
