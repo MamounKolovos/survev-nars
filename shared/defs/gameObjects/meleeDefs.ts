@@ -1326,6 +1326,11 @@ const SkinDefs: Record<string, MeleeDef> = {
             rechargeTime: 5,
         },
     }),
+    naginata_daemon: defineMeleeSkin("naginata", {
+        name: "Naginata Daemon",
+        lootImg: { sprite: "loot-melee-naginata-daemon.img" },
+        worldImg: { sprite: "loot-melee-naginata-daemon.img" },
+    }),
 };
 
 export const MeleeDefs: Record<string, MeleeDef> = { ...BaseDefs, ...SkinDefs };

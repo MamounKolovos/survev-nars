@@ -186,6 +186,7 @@ export default class Solos1v1Plugin extends GamePlugin {
                 "helmet01",
                 "helmet02",
                 "impulse_gloves",
+                "naginata_daemon",
             ];
             for (const g of floorLoot) {
                 player.game.lootBarn.addLootWithoutAmmo(g, player.pos, player.layer, 1);
