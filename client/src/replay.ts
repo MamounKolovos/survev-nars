@@ -1278,6 +1278,16 @@ export class Replay {
         // but transitioning back to the replay client player naturally requires exiting spectator mode
         this.game.m_uiManager.spectatedPlayerId = 0;
 
+        // QOL: so you don't need to waste time finding the perspectve player you were just spectating
+        if (this.lastSpectatedPlayerId) {
+            const player = this.game.m_playerBarn.getPlayerById(
+                this.lastSpectatedPlayerId,
+            );
+            if (player && this.canSpectate(player)) {
+                this.freecamPlayer.m_pos = v2.copy(player.m_pos);
+            }
+        }
+
         this.activeEvents = this.events;
         const markers = this.events.map((event) =>
             this.eventToMarker(event, "#0000003d"),
