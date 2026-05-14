@@ -9,7 +9,7 @@ import { api } from "./api";
 import type { DebugOptions } from "./config";
 import type { Ctx, Game } from "./game";
 import { helpers } from "./helpers";
-import { Key } from "./input";
+import { Key, MouseWheel } from "./input";
 import { createBullet } from "./objects/bullet";
 import type { Player } from "./objects/player";
 import type { EventMarker } from "./ui/ui";
@@ -722,6 +722,17 @@ export class Replay {
 
             if (this.game.m_input.keyDown(Key.Minus)) {
                 player.m_localData.m_zoom *= Math.pow(FREECAM_ZOOM_RATE, dt);
+            }
+
+            const wheelState = this.game.m_input.mouseWheel();
+            if (
+                wheelState.kind != MouseWheel.None &&
+                !this.game.m_inputBinds.menuHovered
+            ) {
+                const delta = wheelState.delta * 0.003;
+                const logZoom = Math.log(player.m_localData.m_zoom);
+                const newZoom = Math.exp(logZoom + delta);
+                player.m_localData.m_zoom = newZoom;
             }
 
             player.m_localData.m_zoom = math.clamp(

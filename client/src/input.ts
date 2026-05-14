@@ -31,7 +31,7 @@ export class InputHandler {
     mousePos = v2.create(0, 0);
     mouseButtons: Record<number, boolean> = {};
     mouseButtonsOld: Record<number, boolean> = {};
-    mouseWheelState = 0;
+    mouseWheelState: MouseWheelState = { kind: MouseWheel.None };
     touches: Touch[] = [];
     touchIdCounter = 0;
     lostFocus = false;
@@ -77,7 +77,7 @@ export class InputHandler {
         this.keysOld = {};
         this.mouseButtons = {};
         this.mouseButtonsOld = {};
-        this.mouseWheelState = 0;
+        this.mouseWheelState = { kind: MouseWheel.None };
         this.touches.length = 0;
         this.lostFocus = true;
     }
@@ -86,7 +86,7 @@ export class InputHandler {
     flush() {
         this.keysOld = Object.assign({}, this.keys);
         this.mouseButtonsOld = Object.assign({}, this.mouseButtons);
-        this.mouseWheelState = 0;
+        this.mouseWheelState = { kind: MouseWheel.None };
         // Update the isNew flags and clear out dead touches
         for (let i = 0; i < this.touches.length; i++) {
             this.touches[i].posOld.x = this.touches[i].pos.x;
@@ -123,7 +123,7 @@ export class InputHandler {
             case InputType.MouseButton:
                 return this.mousePressed(inputValue.code);
             case InputType.MouseWheel:
-                return this.mouseWheel() == inputValue.code;
+                return this.mouseWheel().kind == inputValue.code;
             default:
                 return false;
         }
@@ -136,7 +136,7 @@ export class InputHandler {
             case InputType.MouseButton:
                 return this.mouseReleased(inputValue.code);
             case InputType.MouseWheel:
-                return this.mouseWheel() == inputValue.code;
+                return this.mouseWheel().kind == inputValue.code;
             default:
                 return false;
         }
@@ -149,7 +149,7 @@ export class InputHandler {
             case InputType.MouseButton:
                 return this.mouseDown(inputValue.code);
             case InputType.MouseWheel:
-                return this.mouseWheel() == inputValue.code;
+                return this.mouseWheel().kind == inputValue.code;
             default:
                 return false;
         }
@@ -213,12 +213,12 @@ export class InputHandler {
     }
 
     onMouseWheel(event: WheelEvent) {
-        const wheel = event.deltaY < 0 ? MouseWheel.Up : MouseWheel.Down;
+        const kind = event.deltaY < 0 ? MouseWheel.Up : MouseWheel.Down;
 
-        if (this.checkCaptureInput(event, InputType.MouseWheel, wheel)) {
+        if (this.checkCaptureInput(event, InputType.MouseWheel, kind)) {
             return;
         }
-        this.mouseWheelState = wheel;
+        this.mouseWheelState = { kind, delta: event.deltaY };
     }
 
     mouseDown(button: number) {
@@ -394,6 +394,11 @@ export enum MouseWheel {
     Up,
     Down,
 }
+
+type MouseWheelState =
+    | { kind: MouseWheel.None }
+    | { kind: MouseWheel.Up; delta: number }
+    | { kind: MouseWheel.Down; delta: number };
 
 export enum InputType {
     None,
