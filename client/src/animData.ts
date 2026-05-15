@@ -110,6 +110,10 @@ export const IdlePoses: Record<string, Partial<Record<Bones, Pose>>> = {
         [Bones.HandL]: new Pose(v2.create(28, 5.25)),
         [Bones.HandR]: new Pose(v2.create(14, 1.75)),
     },
+    cutlass: {
+        [Bones.HandL]: new Pose(v2.create(14, -12.25)),
+        [Bones.HandR]: new Pose(v2.create(6, 16)),
+    },
     dualRifle: {
         [Bones.HandL]: new Pose(v2.create(5.75, -16)),
         [Bones.HandR]: new Pose(v2.create(5.75, 16)),
