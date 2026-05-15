@@ -1285,6 +1285,8 @@ export class Replay {
             );
             if (player && this.canSpectate(player)) {
                 this.freecamPlayer.m_pos = v2.copy(player.m_pos);
+                this.freecamPlayer.m_netData.m_pos = v2.copy(player.m_pos);
+                this.freecamPlayer.m_visualPos = v2.copy(player.m_pos);
             }
         }
 
