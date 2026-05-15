@@ -2308,64 +2308,65 @@ export class Player implements AbstractObject {
 
             // Obstacles
             const obstacles = animCtx.map?.m_obstaclePool.m_getPool()!;
-            for (let i = 0; i < obstacles.length; i++) {
-                const obstacle = obstacles[i];
-                if (
-                    !!obstacle.active &&
-                    !obstacle.dead &&
-                    !obstacle.isSkin &&
-                    obstacle.height >= GameConfig.player.meleeHeight &&
-                    util.sameLayer(obstacle.layer, this.layer & 1)
-                ) {
-                    let res = collider.intersectCircle(
-                        obstacle.collider,
-                        meleeCol.pos,
-                        meleeCol.rad,
-                    );
+            const nearbyObstacles = obstacles.filter(
+                (o) =>
+                    o.active &&
+                    !o.dead &&
+                    !o.isSkin &&
+                    o.height >= GameConfig.player.meleeHeight &&
+                    util.sameLayer(o.layer, this.layer & 1) &&
+                    !!collider.intersectCircle(o.collider, this.m_pos, meleeDist),
+            );
+            for (let i = 0; i < nearbyObstacles.length; i++) {
+                const obstacle = nearbyObstacles[i];
+                let res = collider.intersectCircle(
+                    obstacle.collider,
+                    meleeCol.pos,
+                    meleeCol.rad,
+                );
 
-                    // Certain melee weapons should perform a more expensive wall check
-                    // to not hit obstacles behind walls.
-                    // @ts-expect-error wallcheck not defined on meleeDefs
-                    if (meleeDef.cleave || meleeDef.wallCheck) {
-                        const meleeDir = v2.normalizeSafe(
-                            v2.sub(obstacle.pos, this.m_pos),
-                            v2.create(1, 0),
-                        );
-                        const wallCheck = collisionHelpers.intersectSegment(
-                            animCtx.map?.m_obstaclePool.m_getPool()!,
-                            this.m_pos,
-                            meleeDir,
-                            meleeDist,
-                            GameConfig.player.meleeHeight,
-                            this.layer,
-                            false,
-                        );
-                        if (wallCheck && wallCheck.id !== obstacle.__id) {
-                            res = null;
-                        }
+                // Certain melee weapons should perform a more expensive wall check
+                // to not hit obstacles behind walls.
+                // @ts-expect-error wallcheck not defined on meleeDefs
+                if (meleeDef.cleave || meleeDef.wallCheck) {
+                    const meleeDir = v2.normalizeSafe(
+                        v2.sub(obstacle.pos, this.m_pos),
+                        v2.create(1, 0),
+                    );
+                    const wallCheck = collisionHelpers.intersectSegment(
+                        nearbyObstacles,
+                        this.m_pos,
+                        meleeDir,
+                        meleeDist,
+                        GameConfig.player.meleeHeight,
+                        this.layer,
+                        false,
+                    );
+                    if (wallCheck && wallCheck.id !== obstacle.__id) {
+                        res = null;
                     }
-                    if (res) {
-                        const def = MapObjectDefs[obstacle.type] as ObstacleDef;
-                        const closestPt = v2.add(
-                            meleeCol.pos,
-                            v2.mul(v2.neg(res.dir), meleeCol.rad - res.pen),
-                        );
-                        const vel = v2.rotate(
-                            v2.mul(res.dir, 7.5),
-                            ((Math.random() - 0.5) * Math.PI) / 3,
-                        );
-                        hits.push({
-                            pen: res.pen,
-                            prio: 1,
-                            pos: closestPt,
-                            vel,
-                            layer: this.renderLayer,
-                            zOrd: this.renderZOrd,
-                            particle: def.hitParticle,
-                            sound: def.sound.punch,
-                            soundFn: "playGroup",
-                        });
-                    }
+                }
+                if (res) {
+                    const def = MapObjectDefs[obstacle.type] as ObstacleDef;
+                    const closestPt = v2.add(
+                        meleeCol.pos,
+                        v2.mul(v2.neg(res.dir), meleeCol.rad - res.pen),
+                    );
+                    const vel = v2.rotate(
+                        v2.mul(res.dir, 7.5),
+                        ((Math.random() - 0.5) * Math.PI) / 3,
+                    );
+                    hits.push({
+                        pen: res.pen,
+                        prio: 1,
+                        pos: closestPt,
+                        vel,
+                        layer: this.renderLayer,
+                        zOrd: this.renderZOrd,
+                        particle: def.hitParticle,
+                        sound: def.sound.punch,
+                        soundFn: "playGroup",
+                    });
                 }
             }
             const ourTeamId = animCtx.playerBarn?.getPlayerInfo(this.__id).teamId;
