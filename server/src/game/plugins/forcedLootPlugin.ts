@@ -88,6 +88,7 @@ const secondaryWeights = [
     { weight: 3, gun: "famas" },
     { weight: 1.5, gun: "an94" },
     { weight: 0.5, gun: "p30l_dual" },
+    { weight: 1, gun: "colt45_dual" },
     { weight: 0.001, gun: "awc" },
 ];
 
@@ -164,6 +165,7 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
             }
         }
         case "p30l_dual":
+        case "colt45_dual":
         case "deagle_dual":
         case "m4a1":
         case "scorpion":
@@ -520,6 +522,7 @@ const gunStrengths: Record<string, number> = {
     an94: 0.5,
     bar: 0.0,
     p30l_dual: 0.75,
+    colt45_dual: 0.5,
     vector: 0.1,
     awc: 0, //xd
     m9: 0,
@@ -562,6 +565,8 @@ function getTotalGunStrength(primary: string, secondary: string): number {
             case "saiga":
                 return 0.0; //i dont think spas saiga is actually this weak but i want it to have more armor/rolescase
             case "p30l_dual":
+                0.8;
+            case "colt45_dual":
                 0.8;
             case "deagle_dual":
                 return 0.45;
@@ -715,6 +720,7 @@ const gt = {
         { weight: 2, gun: "famas" },
         { weight: 2, gun: "an94" },
         { weight: 0.5, gun: "p30l_dual" },
+        { weight: 0.5, gun: "colt45_dual" },
     ],
 };
 const GRACE_PERIOD_DURATION = 5;

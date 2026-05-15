@@ -179,6 +179,7 @@ export default class Solos1v1Plugin extends GamePlugin {
                 "an94",
                 "bar",
                 "p30l_dual",
+                "colt45_dual",
                 "vector",
                 "m9_dual",
                 "saiga",

@@ -379,7 +379,7 @@ export const BaseDefs: Record<string, BulletDef> = {
     },
     bullet_colt45: {
         type: "bullet",
-        damage: 29,
+        damage: 17,
         obstacleDamage: 1,
         falloff: 0.7,
         speed: 106,
