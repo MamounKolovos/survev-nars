@@ -335,9 +335,8 @@ export function givePlayerFairLootLoadout(player: Player, loadout: Loadout) {
         }
     }
 
-    player.boostDirty = true;
+    player.setDirty();
     player.zoomDirty = true;
-    player.weapsDirty = true;
     player.inventoryDirty = true;
 }
 
