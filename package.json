@@ -25,7 +25,8 @@
     "@types/hjson": "^2.4.6",
     "@types/node": "^22.15.29",
     "concurrently": "^9.1.2",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "wrangler": "^4.92.0"
   },
   "workspaces": [
     "client",
