@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
     paths:
+      # for versioning
+      - 'shared/gameConfig.ts'
+      # for keeping the current version up to date
       - 'client/src/replay.ts'
 
 jobs:

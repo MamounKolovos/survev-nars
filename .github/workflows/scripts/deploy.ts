@@ -1,10 +1,10 @@
 import { execSync } from "child_process";
-import { Replay } from "../../../client/src/replay";
+import { GameConfig } from "../../../shared/gameConfig";
 
-const branch = `v${Replay.VERSION}`;
+const branch = `v${GameConfig.replayVersion}`;
 const project = "survev-nars";
 
-console.log(`Deploying version ${Replay.VERSION} to branch ${branch}`);
+console.log(`Deploying version ${GameConfig.replayVersion} to branch ${branch}`);
 
 execSync(
     `pnpm wrangler pages deploy ./client/dist --project-name=${project} --branch=${branch}`,
