@@ -430,7 +430,7 @@ class Application {
     async fetchReplayBuffer(
         gameId: string,
     ): Promise<Uint8Array<ArrayBuffer> | undefined> {
-        const res = await fetch(`/api/replay/${gameId}`);
+        const res = await fetch(api.resolveUrl(`/api/replay/${gameId}`));
 
         if (!res.ok) {
             return undefined;

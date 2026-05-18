@@ -26,6 +26,18 @@ jobs:
 
       - name: Install Packages
         run: pnpm install
+
+      - name: Write proxy config
+        run: |
+          cat > ./survev-config.hjson << 'EOF'
+          {
+            proxies: {
+              default: {
+                apiUrl: ${{ secrets.API_URL }}
+              }
+            }
+          }
+          EOF
       
       - name: Build client
         run: pnpm run build
