@@ -29,8 +29,6 @@ type Event =
     | { kind: "mapChanged"; totalElapsed: number };
 
 export class Recorder {
-    static VERSION = 2;
-
     private uint8buff: Uint8Array; // msg view
     private view: DataView; // int view
 
@@ -309,7 +307,7 @@ export class Recorder {
         this.writeUint32(headerIndex);
         this.index = headerIndex;
 
-        this.writeUint32(Recorder.VERSION);
+        this.writeUint32(GameConfig.replayVersion);
         this.writeUint32(GameConfig.protocolVersion);
         this.writeUint32(this.elapsedUs);
         this.writeUint8(this.game.teamMode);

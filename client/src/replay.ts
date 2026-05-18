@@ -99,8 +99,6 @@ export type ReplaySource =
     | { kind: "server"; gameId: string; playerId?: number; startSecond?: number };
 
 export class Replay {
-    static VERSION = 2;
-
     private view: DataView;
     private uint8buff: Uint8Array<ArrayBuffer>;
 
@@ -166,13 +164,13 @@ export class Replay {
         let index = this.headerStart;
 
         const recordingVersion = this.view.getUint32(index);
-        if (recordingVersion < Replay.VERSION) {
+        if (recordingVersion < GameConfig.replayVersion) {
             throw new Error(
-                `Replay is too old to play back (recording v${recordingVersion}, client v${Replay.VERSION}).`,
+                `Replay is too old to play back (recording v${recordingVersion}, client v${GameConfig.replayVersion}).`,
             );
-        } else if (recordingVersion > Replay.VERSION) {
+        } else if (recordingVersion > GameConfig.replayVersion) {
             throw new Error(
-                `Client is out of date (recording v${recordingVersion}, client v${Replay.VERSION}). Try refreshing the page.`,
+                `Client is out of date (recording v${recordingVersion}, client v${GameConfig.replayVersion}). Try refreshing the page.`,
             );
         }
         console.log(`Recording version: ${recordingVersion}`);
