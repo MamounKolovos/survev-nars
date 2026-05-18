@@ -1,3 +1,4 @@
+import * as PIXI from "pixi.js-legacy";
 import { GameObjectDefs } from "../../shared/defs/gameObjectDefs";
 import { GameConfig, type TeamMode } from "../../shared/gameConfig";
 import * as net from "../../shared/net/net";
@@ -84,6 +85,7 @@ const keybinds = new Map<number, string>([
     [Key.V, "Toggle Minimap"],
     [Key.Space, "Toggle Playback (Play/Pause)"],
     [Key.C, "Cycle Playback Speed"],
+    [Key.X, "Toggle Crosshair Visibility"],
     [Key.Right, "Spectate Next Player"],
     [Key.Left, "Spectate Previous Player"],
 ]);
@@ -97,6 +99,8 @@ export type ReplaySource =
     | { kind: "server"; gameId: string; playerId?: number; startSecond?: number };
 
 export class Replay {
+    static VERSION = 2;
+
     private view: DataView;
     private uint8buff: Uint8Array<ArrayBuffer>;
 
@@ -144,6 +148,12 @@ export class Replay {
 
     lastSpectatedPlayerId?: number;
 
+    gfx!: PIXI.Graphics;
+
+    playerToMouseLen = new Map<number, number>();
+
+    crosshairsVisible = false;
+
     constructor(
         buffer: Uint8Array<ArrayBuffer>,
         readonly game: Game,
@@ -155,8 +165,17 @@ export class Replay {
         this.headerStart = this.view.getUint32(0);
         let index = this.headerStart;
 
-        const version = this.view.getUint32(index);
-        console.log(`Recording version: ${version}`);
+        const recordingVersion = this.view.getUint32(index);
+        if (recordingVersion < Replay.VERSION) {
+            throw new Error(
+                `Replay is too old to play back (recording v${recordingVersion}, client v${Replay.VERSION}).`,
+            );
+        } else if (recordingVersion > Replay.VERSION) {
+            throw new Error(
+                `Client is out of date (recording v${recordingVersion}, client v${Replay.VERSION}). Try refreshing the page.`,
+            );
+        }
+        console.log(`Recording version: ${recordingVersion}`);
         index += 4;
 
         const protocolVersion = this.view.getUint32(index);
@@ -279,6 +298,12 @@ export class Replay {
 
     start() {
         this.game.onJoin();
+
+        // onJoin initializes the game and all the rendering layers
+        // so we make sure that the replay gfx renders on top of all of them
+        this.gfx = new PIXI.Graphics();
+        this.game.m_pixi.stage.addChild(this.gfx);
+
         this.game.teamMode = this.teamMode;
         this.game.m_localId = FREECAM_ID;
 
@@ -296,6 +321,8 @@ export class Replay {
 
         this.game.m_uiManager.displayReplayGuide();
         this.game.m_uiManager.setReplayGuideKeybinds(keybinds);
+
+        this.game.m_uiManager.setReplayCrosshairToggleVisibility(this.crosshairsVisible);
 
         const localData = {
             health: 100,
@@ -559,7 +586,10 @@ export class Replay {
         }
 
         for (let i = 0; i < msg.players.length; i++) {
-            const { data, playerId, disconnected, extraDirty, extra } = msg.players[i];
+            const { data, playerId, disconnected, toMouseLen, extraDirty, extra } =
+                msg.players[i];
+
+            this.playerToMouseLen.set(playerId, toMouseLen);
 
             const player = this.game.m_playerBarn.getPlayerById(playerId)!;
 
@@ -973,6 +1003,31 @@ export class Replay {
             this.setPerspective(newActivePlayer);
         }
 
+        if (
+            this.game.m_uiManager.replayInputs.toggleCrosshair ||
+            this.game.m_input.keyPressed(Key.X)
+        ) {
+            this.crosshairsVisible = !this.crosshairsVisible;
+            this.game.m_uiManager.setReplayCrosshairToggleVisibility(
+                this.crosshairsVisible,
+            );
+        }
+
+        this.gfx.clear();
+        if (this.crosshairsVisible && !this.game.m_uiManager.bigmapDisplayed) {
+            if (this.game.m_activeId == FREECAM_ID) {
+                const players = this.game.m_playerBarn.playerPool.m_getPool();
+                for (let i = 0; i < players.length; i++) {
+                    const player = players[i];
+                    if (!this.canSpectate(player)) continue;
+
+                    this.drawCrosshair(player);
+                }
+            } else {
+                this.drawCrosshair(this.game.m_activePlayer);
+            }
+        }
+
         player.layer = player.m_netData.m_layer;
         this.game.m_renderer.setActiveLayer(player.layer);
         this.game.m_audioManager.activeLayer = player.layer;
@@ -991,6 +1046,7 @@ export class Replay {
         this.game.m_uiManager.replayInputs.download = false;
         this.game.m_uiManager.replayInputs.cyclePlaybackSpeed = false;
         this.game.m_uiManager.replayInputs.markerClicked = undefined;
+        this.game.m_uiManager.replayInputs.toggleCrosshair = false;
 
         // show the action the user can take, not the state they're in
         const playbackIconState = this.isEnded()
@@ -1202,6 +1258,29 @@ export class Replay {
         game.m_renderer.m_update(dt, game.m_camera, game.m_map, debug);
 
         game.m_render(simulationDt, debug);
+    }
+
+    drawCrosshair(player: Player) {
+        const toMouseLen = this.playerToMouseLen.get(player.__id);
+        if (!toMouseLen) return;
+
+        const start = this.game.m_camera.m_pointToScreen(player.m_visualPos);
+        const end = this.game.m_camera.m_pointToScreen(
+            v2.add(player.m_visualPos, v2.mul(player.m_dir, toMouseLen)),
+        );
+
+        const color = 0x00ff00;
+        this.gfx.lineStyle({
+            width: 1,
+            color,
+        });
+
+        this.gfx.moveTo(start.x, start.y);
+        this.gfx.lineTo(end.x, end.y);
+
+        this.gfx.beginFill(color);
+        this.gfx.fill.alpha = 1;
+        this.gfx.drawCircle(end.x, end.y, 3);
     }
 
     canSpectate(player: Player): boolean {

@@ -521,6 +521,7 @@ export interface Player {
     data: LocalDataWithDirty;
     playerId: number;
     disconnected: boolean;
+    toMouseLen: number;
     extraDirty: boolean;
     extra: PlayerExtra;
 }
@@ -541,6 +542,7 @@ function serializePlayer(s: BitStream, player: Player) {
 
     s.writeUint16(player.playerId);
     s.writeBoolean(player.disconnected);
+    s.writeFloat(player.toMouseLen, 0, Constants.MouseMaxDist, 8);
 
     s.writeBoolean(player.extraDirty);
     if (player.extraDirty) {
@@ -562,6 +564,7 @@ function deserializePlayer(s: BitStream, player: Player) {
 
     player.playerId = s.readUint16();
     player.disconnected = s.readBoolean();
+    player.toMouseLen = s.readFloat(0, Constants.MouseMaxDist, 8);
 
     player.extraDirty = s.readBoolean();
     if (player.extraDirty) {

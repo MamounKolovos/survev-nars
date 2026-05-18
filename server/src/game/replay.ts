@@ -29,7 +29,7 @@ type Event =
     | { kind: "mapChanged"; totalElapsed: number };
 
 export class Recorder {
-    static VERSION = 1;
+    static VERSION = 2;
 
     private uint8buff: Uint8Array; // msg view
     private view: DataView; // int view
@@ -252,6 +252,7 @@ export class Recorder {
                 },
                 playerId: p.__id,
                 disconnected: p.disconnected,
+                toMouseLen: p.toMouseLen,
                 extraDirty: p._firstUpdate || isCheckpoint,
                 extra: {
                     teamId: p.teamId,

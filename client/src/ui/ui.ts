@@ -194,6 +194,7 @@ export class UiManager {
         copyLink: false,
         download: false,
         cyclePlaybackSpeed: false,
+        toggleCrosshair: false,
     };
 
     replayElements = {
@@ -213,6 +214,7 @@ export class UiManager {
         copyLinkButton: $("#btn-replay-copy-link"),
         downloadButton: $("#btn-replay-download"),
         cyclePlaybackSpeedButton: $("#btn-replay-cycle-playback-speed"),
+        toggleCrosshairButton: $("#btn-replay-toggle-crosshair"),
     };
 
     replayMenu = $("#ui-replay-menu-wrapper");
@@ -675,6 +677,9 @@ export class UiManager {
         this.replayElements.cyclePlaybackSpeedButton.on("click", () => {
             this.replayInputs.cyclePlaybackSpeed = true;
         });
+        this.replayElements.toggleCrosshairButton.on("click", () => {
+            this.replayInputs.toggleCrosshair = true;
+        });
 
         this.init();
     }
@@ -733,6 +738,7 @@ export class UiManager {
         this.replayElements.copyLinkButton.off("click");
         this.replayElements.downloadButton.off("click");
         this.replayElements.cyclePlaybackSpeedButton.off("click");
+        this.replayElements.toggleCrosshairButton.off("click");
 
         // Reset team member health bar widths
         $(".ui-team-member-health")
@@ -2181,6 +2187,14 @@ export class UiManager {
 
             track.append(group);
         }
+    }
+
+    setReplayCrosshairToggleVisibility(visible: boolean) {
+        const icon = visible ? "btn-replay-hide-crosshair" : "btn-replay-show-crosshair";
+        this.replayElements.toggleCrosshairButton.removeClass(
+            "btn-replay-show-crosshair btn-replay-hide-crosshair",
+        );
+        this.replayElements.toggleCrosshairButton.addClass(icon);
     }
 
     toggleMiniMap() {

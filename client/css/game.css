@@ -2447,6 +2447,18 @@ img {
   background-position: center;
 }
 
+.btn-replay-show-crosshair {
+  background-image: url(/img/gui/mouse-pointer-2.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.btn-replay-hide-crosshair {
+  background-image: url(/img/gui/mouse-pointer-2-off.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 #ui-equipped-ammo-wrapper {
   /* Taken from ui-bottom-center-0 */
   position: absolute;
