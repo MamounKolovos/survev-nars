@@ -1,8 +1,9 @@
 name: Deploy new replay client version to cloudflare pages
 
 on:
+  workflow_dispatch:
   push:
-    branches: [main]
+    branches: [master]
     paths:
       # for versioning
       - 'shared/gameConfig.ts'
