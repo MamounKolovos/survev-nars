@@ -139,6 +139,25 @@ class Application {
     async tryLoad() {
         if (this.domContentLoaded && this.configLoaded && !this.initialized) {
             this.initialized = true;
+
+            const gameId = helpers.getParameterByName("replay");
+            const proxyDef = proxy.getProxyDef();
+            const isMainSite = !IS_DEV && proxyDef?.proxy === window.location.hostname;
+            if (gameId && isMainSite) {
+                const res = await fetch(api.resolveUrl(`/api/replay/${gameId}/redirect`));
+
+                const data = (await res.json()) as { url: string } | { error: string };
+
+                if ("url" in data) {
+                    window.location.replace(data.url);
+                    return;
+                } else {
+                    console.error(data.error);
+                    this.showErrorModal("replay_not_found");
+                    return;
+                }
+            }
+
             // this should be this.config.config.teamAutofill = true???
             // this.config.teamAutoFill = true;
             if (device.mobile) {
@@ -402,7 +421,6 @@ class Application {
 
             SDK.gameLoadComplete();
 
-            const gameId = helpers.getParameterByName("replay");
             if (gameId) {
                 const replayBuffer = await this.fetchReplayBuffer(gameId);
                 if (replayBuffer) {

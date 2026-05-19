@@ -1,4 +1,4 @@
-import { TeamMode } from "../../../shared/gameConfig";
+import { GameConfig, TeamMode } from "../../../shared/gameConfig";
 import * as net from "../../../shared/net/net";
 import { math } from "../../../shared/utils/math";
 import { v2 } from "../../../shared/utils/v2";
@@ -619,7 +619,10 @@ export class Game {
         // and opening a database in each process if it fails
         // etc
         const replay = this.recorder
-            ? Buffer.from(this.recorder.getBuffer().buffer).toString("base64")
+            ? {
+                  version: GameConfig.replayVersion,
+                  data: Buffer.from(this.recorder.getBuffer().buffer).toString("base64"),
+              }
             : undefined;
         const res = await fetchApiServer<SaveGameBody, { error: string }>(
             "private/save_game",

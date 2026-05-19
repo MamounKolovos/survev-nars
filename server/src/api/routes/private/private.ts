@@ -92,9 +92,9 @@ export const PrivateRouter = new Hono<Context>()
         },
     )
     .post("/save_game", databaseEnabledMiddleware, async (c) => {
-        const data = (await c.req.json()) as SaveGameBody;
+        const payload = (await c.req.json()) as SaveGameBody;
 
-        const matchData = data.matchData;
+        const matchData = payload.matchData;
 
         if (!matchData.length) {
             return c.json({ error: "Empty match data" }, 400);
@@ -108,11 +108,14 @@ export const PrivateRouter = new Hono<Context>()
 
         await logMatchToDiscord(matchData);
 
-        if (data.replay) {
-            const replay = Buffer.from(data.replay, "base64");
+        if (payload.replay) {
+            const replay: Replay = {
+                version: payload.replay.version,
+                data: Buffer.from(payload.replay.data, "base64"),
+            };
             await saveReplay(replay, matchData[0].gameId);
 
-            const sizeMb = replay.byteLength / 1_000_000;
+            const sizeMb = replay.data.byteLength / 1_000_000;
             server.logger.info(
                 `Saved replay for ${matchData[0].gameId}, size: ${sizeMb.toFixed(2)}MB`,
             );
@@ -247,9 +250,15 @@ export const PrivateRouter = new Hono<Context>()
         },
     );
 
-async function saveReplay(replay: Buffer, gameId: string): Promise<void> {
+type Replay = {
+    version: number;
+    data: Buffer<ArrayBuffer>;
+};
+
+async function saveReplay(replay: Replay, gameId: string): Promise<void> {
     await db.insert(replaysTable).values({
-        data: replay,
+        version: replay.version,
+        data: replay.data,
         gameId,
     });
 }

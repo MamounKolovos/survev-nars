@@ -147,6 +147,7 @@ export const bannedIpsTable = pgTable("banned_ips", {
 export const replaysTable = pgTable("replays", {
     id: serial("id").primaryKey(),
     gameId: uuid("game_id").notNull(),
+    version: integer("version").notNull(),
     data: customType<{ data: Buffer }>({
         dataType: () => "bytea",
     })("data").notNull(),

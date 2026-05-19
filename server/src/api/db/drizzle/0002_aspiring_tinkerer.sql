@@ -1,0 +1,1 @@
+ALTER TABLE "replays" ADD COLUMN "version" integer NOT NULL;
