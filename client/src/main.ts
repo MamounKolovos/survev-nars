@@ -142,7 +142,8 @@ class Application {
 
             const gameId = helpers.getParameterByName("replay");
             const proxyDef = proxy.getProxyDef();
-            const isMainSite = !IS_DEV && proxyDef?.proxy === window.location.hostname;
+            const isMainSite =
+                !IS_DEV && proxyDef?.def.apiUrl === `https://${window.location.hostname}`;
             if (gameId && isMainSite) {
                 const res = await fetch(api.resolveUrl(`/api/replay/${gameId}/redirect`));
 
