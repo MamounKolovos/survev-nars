@@ -1161,6 +1161,54 @@ const BaseDefs: Record<string, MeleeDef> = {
             tint: 0xffffff,
         },
     },
+    lasr_swrd_01: {
+        name: "Lasr Swrd",
+        type: "melee",
+        quality: 1,
+        armorPiercing: true,
+        stonePiercing: true,
+        autoAttack: false,
+        switchDelay: 0.25,
+        damage: 50,
+        obstacleDamage: 1,
+        headshotMult: 1,
+        attack: {
+            offset: { x: 2, y: 0 },
+            rad: 2.1,
+            damageTimes: [0.4],
+            cooldownTime: 0.6,
+        },
+        speed: {
+            equip: 1,
+        },
+        anim: {
+            idlePose: "meleeLasrSwrd",
+            attackAnims: ["lasrSwrdSwing"],
+        },
+        sound: {
+            pickup: "heavy_pickup_01",
+            swing: "lasr_swrd_swing_01",
+            deploy: "stow_weapon_01",
+            playerHit: "hammer_hit_01",
+        },
+        lootImg: {
+            sprite: "loot-melee-lasr-sword-01.img",
+            tint: 0xffffff,
+            border: "loot-circle-outer-02.img",
+            borderTint: 0xffffff,
+            scale: 0.3,
+            mirror: true,
+            rot: 0.0,
+        },
+        worldImg: {
+            sprite: "player-melee-lasr-sword-01.img",
+            pos: { x: 110.0, y: -2.0 },
+            rot: 0.0,
+            scale: { x: 0.15, y: 0.15 },
+            tint: 0xffffff,
+            leftHandOntop: true,
+        },
+    },
 };
 
 const SkinDefs: Record<string, MeleeDef> = {
@@ -1449,6 +1497,14 @@ const SkinDefs: Record<string, MeleeDef> = {
         perk: "pirate",
         lootImg: { sprite: "loot-melee-cutlass-gold.img" },
         worldImg: { sprite: "loot-melee-cutlass-gold.img" },
+    }),
+    lasr_swrd_02: defineMeleeSkin("lasr_swrd_01", {
+        lootImg: { sprite: "loot-melee-lasr-sword-02.img" },
+        worldImg: { sprite: "player-melee-lasr-sword-02.img" },
+    }),
+    lasr_swrd_03: defineMeleeSkin("lasr_swrd_01", {
+        lootImg: { sprite: "loot-melee-lasr-sword-03.img" },
+        worldImg: { sprite: "player-melee-lasr-sword-03.img" },
     }),
 };
 
