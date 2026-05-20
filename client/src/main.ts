@@ -36,6 +36,8 @@ import { ProfileUi } from "./ui/profileUi";
 import { TeamMenu } from "./ui/teamMenu";
 import { loadStaticDomImages } from "./ui/ui2";
 
+declare const API_URL: string;
+
 class Application {
     nameInput = $("#player-name-input-solo");
     serverSelect = $("#server-select-main");
@@ -141,9 +143,8 @@ class Application {
             this.initialized = true;
 
             const gameId = helpers.getParameterByName("replay");
-            const proxyDef = proxy.getProxyDef();
             const isMainSite =
-                !IS_DEV && proxyDef?.def.apiUrl === `https://${window.location.hostname}`;
+                !IS_DEV && API_URL === `https://${window.location.hostname}`;
             if (gameId && isMainSite) {
                 const res = await fetch(api.resolveUrl(`/api/replay/${gameId}/redirect`));
 

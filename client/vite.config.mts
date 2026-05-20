@@ -160,6 +160,7 @@ export default defineConfig(({ mode }) => {
             extensions: [".ts", ".js"],
         },
         define: {
+            API_URL: JSON.stringify(Config.oauthRedirectURI),
             GAME_REGIONS: Config.regions,
             GIT_VERSION: JSON.stringify(GIT_VERSION),
             PING_TEST_URLS: Object.entries(Config.regions).map(([key, data]) => {
