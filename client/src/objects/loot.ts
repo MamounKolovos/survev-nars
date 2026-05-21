@@ -142,6 +142,13 @@ export class Loot implements AbstractObject {
                 });
             }
 
+            if (itemDef.type == "melee" && itemDef.lootEmitter) {
+                this.emitter = ctx.particleBarn.addEmitter(itemDef.lootEmitter, {
+                    pos: this.pos,
+                    layer: this.layer,
+                });
+            }
+
             this.sprite.rotation = (itemDef as MeleeDef)?.lootImg?.rot
                 ? (itemDef as MeleeDef).lootImg.rot!
                 : 0;

@@ -282,6 +282,7 @@ export class Player implements AbstractObject {
     hasteEmitter: Emitter | null = null;
     passiveHealEmitter: Emitter | null = null;
     impulseGlovesAuraEmitter: Emitter | null = null;
+    meleeEmitter: Emitter | null = null;
     downed = false;
     wasDowned = false;
     bleedTicker = 0;
@@ -541,6 +542,11 @@ export class Player implements AbstractObject {
         if (this.impulseGlovesAuraEmitter) {
             this.impulseGlovesAuraEmitter.stop();
             this.impulseGlovesAuraEmitter = null;
+        }
+
+        if (this.meleeEmitter) {
+            this.meleeEmitter.stop();
+            this.meleeEmitter = null;
         }
     }
 
@@ -1220,6 +1226,19 @@ export class Player implements AbstractObject {
             this.hasteEmitter.zOrd = this.renderZOrd + 1;
         }
 
+        const wantsMeleeEmitter =
+            curWeapDef.type == "melee" &&
+            !!curWeapDef.worldEmitter &&
+            !this.m_netData.m_downed;
+        if (!this.meleeEmitter && wantsMeleeEmitter) {
+            this.meleeEmitter = particleBarn.addEmitter(curWeapDef.worldEmitter!, {
+                layer: this.layer,
+            });
+        } else if (this.meleeEmitter && !wantsMeleeEmitter) {
+            this.meleeEmitter.stop();
+            this.meleeEmitter = null;
+        }
+
         // Start effect
         if (
             !this.impulseGlovesAuraEmitter &&
@@ -1318,6 +1337,21 @@ export class Player implements AbstractObject {
             } else {
                 this.bones[boneIdx].copy(idleBonePose);
             }
+        }
+
+        if (this.meleeEmitter) {
+            const rightHand = this.bones[Bones.HandR];
+            const offset = v2.create(
+                rightHand.pivot.x / camera.m_ppu,
+                -rightHand.pivot.y / camera.m_ppu,
+            );
+            const pos = v2.add(
+                this.m_pos,
+                v2.rotate(offset, Math.atan2(this.m_dir.y, this.m_dir.x) - rightHand.rot),
+            );
+            this.meleeEmitter.pos = pos;
+            this.meleeEmitter.layer = this.renderLayer;
+            this.meleeEmitter.zOrd = this.renderZOrd + 1;
         }
 
         if (this.impulseGlovesAuraEmitter) {

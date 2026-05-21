@@ -70,6 +70,8 @@ export interface MeleeDef {
         // amount of time in seconds it takes to recharge once
         rechargeTime: number;
     };
+    worldEmitter?: string;
+    lootEmitter?: string;
 }
 
 export interface Img {
@@ -1277,6 +1279,19 @@ const SkinDefs: Record<string, MeleeDef> = {
         worldImg: {
             sprite: "loot-melee-karambit-drowned.img",
         },
+    }),
+    karambit_magma: defineMeleeSkin("karambit", {
+        name: "Karambit Magma",
+        rarity: 4,
+        noPotatoSwap: false,
+        lootImg: {
+            sprite: "loot-melee-karambit-magma.img",
+        },
+        worldImg: {
+            sprite: "loot-melee-karambit-magma.img",
+        },
+        worldEmitter: "held_fire",
+        lootEmitter: "loot_fire",
     }),
     bayonet_rugged: defineMeleeSkin("bayonet", {
         name: "Bayonet Rugged",

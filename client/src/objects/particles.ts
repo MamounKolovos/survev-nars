@@ -3078,6 +3078,38 @@ const ParticleDefs: Record<string, ParticleDef> = {
         },
         ignoreValueAdjust: true,
     },
+    fire: {
+        image: [
+            "part-fire-01.img",
+            "part-frag-burst-02.img",
+            "part-frag-burst-03.img",
+            "part-smoke-01.img",
+        ],
+        life: new Range(1, 1.5),
+        drag: 0.25,
+        rotVel: 0.1,
+        scale: {
+            start: new Range(0.13, 0.2),
+            end: new Range(0.01, 0.03),
+            lerp: new Range(0, 1),
+        },
+        alpha: {
+            start: 1,
+            end: 0,
+            lerp: new Range(0.6, 1),
+        },
+        alphaIn: {
+            start: 0,
+            end: 1,
+            lerp: new Range(0, 0.05),
+        },
+        color: function () {
+            const hue = 0.05 + Math.random() * 0.06; // orange
+            const saturation = 0.3 + Math.random() * 0.3;
+            return util.rgbToInt(util.hsvToRgb(hue, saturation, 1));
+        },
+        ignoreValueAdjust: true,
+    },
 };
 const EmitterDefs: Record<string, EmitterDef> = {
     smoke_barrel: {
@@ -3347,6 +3379,24 @@ const EmitterDefs: Record<string, EmitterDef> = {
         speed: new Range(1.25, 1.75),
         angle: 0,
         rot: new Range(0, Math.PI * 2),
+        maxCount: Number.MAX_VALUE,
+    },
+    held_fire: {
+        particle: "fire",
+        rate: new Range(0.1, 0.11),
+        radius: 0.5,
+        speed: new Range(1.25, 1.75),
+        angle: Math.PI * 0.3,
+        rot: new Range(-Math.PI / 6, Math.PI / 6),
+        maxCount: Number.MAX_VALUE,
+    },
+    loot_fire: {
+        particle: "fire",
+        rate: new Range(0.05, 0.07),
+        radius: 2.5,
+        speed: new Range(1.25, 1.75),
+        angle: Math.PI * 0.3,
+        rot: new Range(-Math.PI / 6, Math.PI / 6),
         maxCount: Number.MAX_VALUE,
     },
 };
