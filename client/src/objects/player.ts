@@ -1229,6 +1229,7 @@ export class Player implements AbstractObject {
         const wantsMeleeEmitter =
             curWeapDef.type == "melee" &&
             !!curWeapDef.worldEmitter &&
+            !this.m_netData.m_dead &&
             !this.m_netData.m_downed;
         if (!this.meleeEmitter && wantsMeleeEmitter) {
             this.meleeEmitter = particleBarn.addEmitter(curWeapDef.worldEmitter!, {
