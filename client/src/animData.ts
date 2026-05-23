@@ -166,6 +166,11 @@ export const Animations: Record<
             bones: Partial<Record<Bones, Pose>>;
         }>;
         effects: Effect[];
+        streaks?: Array<{
+            startTime: number;
+            endTime: number;
+            emitter: string;
+        }>;
     }
 > = {
     none: {
@@ -287,6 +292,33 @@ export const Animations: Record<
         effects: [
             effect(0, "animPlaySound", { sound: "swing" }),
             effect(def.fists.attack.damageTimes[0], "animMeleeCollision", {}),
+        ],
+    },
+    karambitMagmaSlash: {
+        keyframes: [
+            frame(0, {
+                [Bones.HandL]: new Pose(v2.create(18, -8.25)),
+                [Bones.HandR]: new Pose(v2.create(6, 20.25)),
+            }),
+            frame(def.fists.attack.damageTimes[0], {
+                [Bones.HandL]: new Pose(v2.create(6, -22.25)),
+                [Bones.HandR]: new Pose(v2.create(6, 20.25)).rotate(-Math.PI * 0.6),
+            }),
+            frame(def.fists.attack.cooldownTime, {
+                [Bones.HandL]: new Pose(v2.create(18, -8.25)),
+                [Bones.HandR]: new Pose(v2.create(6, 20.25)).rotate(0),
+            }),
+        ],
+        effects: [
+            effect(0, "animPlaySound", { sound: "fireSwing" }),
+            effect(def.fists.attack.damageTimes[0], "animMeleeCollision", {}),
+        ],
+        streaks: [
+            {
+                startTime: 0,
+                endTime: def.fists.attack.damageTimes[0],
+                emitter: "streak_fire",
+            },
         ],
     },
     hook: {
