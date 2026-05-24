@@ -1,5 +1,10 @@
 import { defineSkin } from "../../utils/util";
-import type { Vec2 } from "../../utils/v2";
+import { type Vec2, v2 } from "../../utils/v2";
+
+export enum SpriteOrientation {
+    Up,
+    Right,
+}
 
 export interface MeleeDef {
     readonly type: "melee";
@@ -70,8 +75,15 @@ export interface MeleeDef {
         // amount of time in seconds it takes to recharge once
         rechargeTime: number;
     };
-    worldEmitter?: string;
+    idleEmitter?: string;
     lootEmitter?: string;
+    // MUST be relative to the untransformed world image
+    bladeBounds?: {
+        min: Vec2;
+        max: Vec2;
+        // the direction the tip of the blade is facing
+        ori: SpriteOrientation;
+    };
 }
 
 export interface Img {
@@ -237,6 +249,11 @@ const BaseDefs: Record<string, MeleeDef> = {
                 y: 0.35,
             },
             tint: 0xffffff,
+        },
+        bladeBounds: {
+            min: v2.create(9, 20),
+            max: v2.create(50, -20),
+            ori: SpriteOrientation.Right,
         },
     },
     bayonet: {
@@ -457,6 +474,11 @@ const BaseDefs: Record<string, MeleeDef> = {
                 y: 0.35,
             },
             tint: 0xffffff,
+        },
+        bladeBounds: {
+            min: v2.create(-20, 17),
+            max: v2.create(12, -80),
+            ori: SpriteOrientation.Up,
         },
     },
     saw: {
@@ -740,6 +762,11 @@ const BaseDefs: Record<string, MeleeDef> = {
             },
             tint: 0xffffff,
             leftHandOntop: true,
+        },
+        bladeBounds: {
+            min: v2.create(49, 25),
+            max: v2.create(170, -5),
+            ori: SpriteOrientation.Right,
         },
     },
     stonehammer: {
@@ -1284,13 +1311,20 @@ const SkinDefs: Record<string, MeleeDef> = {
         name: "Karambit Magma",
         rarity: 4,
         noPotatoSwap: false,
+        anim: {
+            attackAnims: ["karambitMagmaSlash", "fists"],
+        },
+        sound: {
+            fireSwing: "fire_swing_01",
+            deploy: "knife_deploy_01",
+        },
         lootImg: {
             sprite: "loot-melee-karambit-magma.img",
         },
         worldImg: {
             sprite: "loot-melee-karambit-magma.img",
         },
-        worldEmitter: "held_fire",
+        idleEmitter: "held_fire",
         lootEmitter: "loot_fire",
     }),
     bayonet_rugged: defineMeleeSkin("bayonet", {

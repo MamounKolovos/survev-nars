@@ -1,7 +1,10 @@
 import * as PIXI from "pixi.js-legacy";
 import { GameObjectDefs, type LootDef } from "../../../shared/defs/gameObjectDefs";
 import type { GunDef } from "../../../shared/defs/gameObjects/gunDefs";
-import type { MeleeDef } from "../../../shared/defs/gameObjects/meleeDefs";
+import {
+    type MeleeDef,
+    SpriteOrientation,
+} from "../../../shared/defs/gameObjects/meleeDefs";
 import type { OutfitDef } from "../../../shared/defs/gameObjects/outfitDefs";
 import type { RoleDef } from "../../../shared/defs/gameObjects/roleDefs";
 import type { ThrowableDef } from "../../../shared/defs/gameObjects/throwableDefs";
@@ -282,7 +285,8 @@ export class Player implements AbstractObject {
     hasteEmitter: Emitter | null = null;
     passiveHealEmitter: Emitter | null = null;
     impulseGlovesAuraEmitter: Emitter | null = null;
-    meleeEmitter: Emitter | null = null;
+    meleeIdleEmitter: Emitter | null = null;
+    meleeStreakEmitter: Emitter | null = null;
     downed = false;
     wasDowned = false;
     bleedTicker = 0;
@@ -544,9 +548,14 @@ export class Player implements AbstractObject {
             this.impulseGlovesAuraEmitter = null;
         }
 
-        if (this.meleeEmitter) {
-            this.meleeEmitter.stop();
-            this.meleeEmitter = null;
+        if (this.meleeIdleEmitter) {
+            this.meleeIdleEmitter.stop();
+            this.meleeIdleEmitter = null;
+        }
+
+        if (this.meleeStreakEmitter) {
+            this.meleeStreakEmitter.stop();
+            this.meleeStreakEmitter = null;
         }
     }
 
@@ -1228,16 +1237,19 @@ export class Player implements AbstractObject {
 
         const wantsMeleeEmitter =
             curWeapDef.type == "melee" &&
-            !!curWeapDef.worldEmitter &&
+            !!curWeapDef.idleEmitter &&
             !this.m_netData.m_dead &&
             !this.m_netData.m_downed;
-        if (!this.meleeEmitter && wantsMeleeEmitter) {
-            this.meleeEmitter = particleBarn.addEmitter(curWeapDef.worldEmitter!, {
+
+        if (this.meleeIdleEmitter && (!wantsMeleeEmitter || weapTypeDirty)) {
+            this.meleeIdleEmitter.stop();
+            this.meleeIdleEmitter = null;
+        }
+
+        if (!this.meleeIdleEmitter && wantsMeleeEmitter) {
+            this.meleeIdleEmitter = particleBarn.addEmitter(curWeapDef.idleEmitter!, {
                 layer: this.layer,
             });
-        } else if (this.meleeEmitter && !wantsMeleeEmitter) {
-            this.meleeEmitter.stop();
-            this.meleeEmitter = null;
         }
 
         // Start effect
@@ -1340,19 +1352,34 @@ export class Player implements AbstractObject {
             }
         }
 
-        if (this.meleeEmitter) {
-            const rightHand = this.bones[Bones.HandR];
-            const offset = v2.create(
-                rightHand.pivot.x / camera.m_ppu,
-                -rightHand.pivot.y / camera.m_ppu,
-            );
-            const pos = v2.add(
-                this.m_pos,
-                v2.rotate(offset, Math.atan2(this.m_dir.y, this.m_dir.x) - rightHand.rot),
-            );
-            this.meleeEmitter.pos = pos;
-            this.meleeEmitter.layer = this.renderLayer;
-            this.meleeEmitter.zOrd = this.renderZOrd + 1;
+        const bladeBounds = (curWeapDef as MeleeDef).bladeBounds;
+        if (this.meleeStreakEmitter && bladeBounds) {
+            const emitterOffset =
+                bladeBounds.ori == SpriteOrientation.Up
+                    ? v2.create(
+                          (bladeBounds.max.x + bladeBounds.min.x) / 2,
+                          bladeBounds.max.y,
+                      )
+                    : v2.create(
+                          bladeBounds.max.x,
+                          (bladeBounds.max.y + bladeBounds.min.y) / 2,
+                      );
+
+            const emitterPos = this.meleeToWorldSpace(emitterOffset, camera);
+
+            this.meleeStreakEmitter.pos = emitterPos;
+            this.meleeStreakEmitter.layer = this.renderLayer;
+            this.meleeStreakEmitter.zOrd = this.renderZOrd + 1;
+        }
+
+        if (this.meleeIdleEmitter && bladeBounds && this.currentAnim() == Anim.None) {
+            const emitterOffset = v2.midpoint(bladeBounds.min, bladeBounds.max);
+
+            const emitterPos = this.meleeToWorldSpace(emitterOffset, camera);
+
+            this.meleeIdleEmitter.pos = emitterPos;
+            this.meleeIdleEmitter.layer = this.renderLayer;
+            this.meleeIdleEmitter.zOrd = this.renderZOrd + 1;
         }
 
         if (this.impulseGlovesAuraEmitter) {
@@ -1415,6 +1442,37 @@ export class Player implements AbstractObject {
         );
 
         this.isNew = false;
+    }
+
+    /**
+     * takes an offset in melee sprite space and converts it to world space
+     *
+     * useful for attaching particle emitters to certain parts of the melee sprite
+     */
+    meleeToWorldSpace(offset: Vec2, camera: Camera): Vec2 {
+        // melee space
+        const nativeOffset = v2.add(v2.neg(this.meleeSprite.pivot), offset);
+        const scaledOffset = v2.create(
+            nativeOffset.x * this.meleeSprite.scale.x,
+            nativeOffset.y * this.meleeSprite.scale.y,
+        );
+        const rotatedOffset = v2.rotate(scaledOffset, this.meleeSprite.rotation);
+
+        // bone space
+        const bonePose = this.bones[Bones.HandR];
+        const boneOffset = v2.add(bonePose.pivot, rotatedOffset);
+        const boneSpaceOffset = v2.rotate(boneOffset, bonePose.rot);
+
+        // world space
+        const worldOffset = v2.create(
+            boneSpaceOffset.x / camera.m_ppu,
+            -boneSpaceOffset.y / camera.m_ppu,
+        );
+        const pos = v2.add(
+            this.m_pos,
+            v2.rotate(worldOffset, Math.atan2(this.m_dir.y, this.m_dir.x)),
+        );
+        return pos;
     }
 
     render(camera: Camera, debug: DebugOptions) {
@@ -2215,6 +2273,8 @@ export class Player implements AbstractObject {
 
     updateAnim(dt: number, AnimCtx: AnimCtx) {
         if (this.anim.data.type == "none") {
+            this.meleeStreakEmitter?.stop();
+            this.meleeStreakEmitter = null;
             this.playAnim(Anim.None, this.anim.seq);
         }
         if (this.currentAnim() != Anim.None) {
@@ -2273,6 +2333,26 @@ export class Player implements AbstractObject {
                     );
                 }
             }
+
+            if (anim.streaks) {
+                for (let i = 0; i < anim.streaks.length; i++) {
+                    const streak = anim.streaks[i];
+                    if (streak.startTime >= ticker && streak.startTime < f) {
+                        // stop old one if possible
+                        this.meleeStreakEmitter?.stop();
+                        this.meleeStreakEmitter = AnimCtx.particleBarn.addEmitter(
+                            streak.emitter,
+                            {
+                                layer: this.layer,
+                            },
+                        );
+                    } else if (streak.endTime >= ticker && streak.endTime < f) {
+                        this.meleeStreakEmitter?.stop();
+                        this.meleeStreakEmitter = null;
+                    }
+                }
+            }
+
             if (w) {
                 this.playAnim(Anim.None, this.anim.seq);
             }
