@@ -44,7 +44,11 @@ export class ExplosionBarn {
         }
 
         if (explosion.type === "explosion_smoke") {
-            this.game.smokeBarn.addEmitter(explosion.pos, explosion.layer);
+            this.game.smokeBarn.addEmitter(explosion.pos, explosion.layer, 0);
+            return;
+        } 
+        if(explosion.type === "explosion_mustard") {
+            this.game.smokeBarn.addEmitter(explosion.pos, explosion.layer, 1);
             return;
         }
 

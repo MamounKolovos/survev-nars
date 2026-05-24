@@ -2003,6 +2003,9 @@ export class Player extends BaseGameObject {
                 if (coldet.testCircleCircle(this.pos, this.rad, obj.pos, obj.rad)) {
                     insideSmoke = true;
                 }
+                if(obj.type == 1) {
+                   this.health -= 0.5 * dt;
+                }
             }
         }
 

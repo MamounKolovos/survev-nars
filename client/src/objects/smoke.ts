@@ -21,6 +21,7 @@ class Smoke implements AbstractObject {
     m_rad!: number;
     m_layer!: number;
     m_interior!: number;
+    m_type!: number;
 
     m_init() {}
     m_free() {
@@ -40,6 +41,7 @@ class Smoke implements AbstractObject {
         if (fullUpdate) {
             this.m_layer = data.layer;
             this.m_interior = data.interior;
+            this.m_type = data.type;
         }
 
         if (isNew) {
@@ -49,6 +51,7 @@ class Smoke implements AbstractObject {
                 this.m_rad,
                 this.m_layer,
                 this.m_interior,
+                this.m_type,
             );
         }
         this.m_particle!.posTarget = v2.copy(this.m_pos);
@@ -75,13 +78,14 @@ export class SmokeParticle {
     tint!: number;
     layer!: number;
     interior!: number;
+    type!: number;
 
     constructor() {
         this.sprite.anchor = new PIXI.Point(0.5, 0.5) as PIXI.ObservablePoint;
         this.sprite.visible = false;
     }
 
-    m_init(pos: Vec2, rad: number, layer: number, interior: number) {
+    m_init(pos: Vec2, rad: number, layer: number, interior: number, type: number) {
         this.pos = v2.copy(pos);
         this.posTarget = v2.copy(this.pos);
         this.rad = rad;
@@ -91,9 +95,10 @@ export class SmokeParticle {
         this.fade = false;
         this.fadeTicker = 0;
         this.fadeDuration = util.random(0.5, 0.75);
-        this.tint = util.rgbToInt(util.hsvToRgb(0, 0, util.random(0.9, 0.95)));
         this.layer = layer;
+        this.type = type;
         this.interior = interior;
+        this.tint = (this.type == 0) ? util.rgbToInt(util.hsvToRgb(0, 0, util.random(0.9, 0.95))) : 0xFFFF00;
     }
 
     fadeOut() {

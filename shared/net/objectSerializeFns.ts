@@ -175,6 +175,7 @@ export interface ObjectsFullData {
     [ObjectType.Smoke]: {
         layer: number;
         interior: number;
+        type: number;
     };
     [ObjectType.Airdrop]: {
         pos: Vec2;
@@ -593,6 +594,7 @@ export const ObjectSerializeFns: {
         serializeFull: (s, data) => {
             s.writeBits(data.layer, 2);
             s.writeBits(data.interior, 6);
+            s.writeUint8(data.type)
         },
         deserializePart: (s, data) => {
             data.pos = s.readVec(0, 0, 1024, 1024, 16);
@@ -601,6 +603,7 @@ export const ObjectSerializeFns: {
         deserializeFull: (s, data) => {
             data.layer = s.readBits(2);
             data.interior = s.readBits(6);
+            data.type = s.readUint8();
         },
     },
     [ObjectType.Airdrop]: {

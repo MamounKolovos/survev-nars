@@ -37,6 +37,16 @@ export const ExplosionDefs: Record<string, ExplosionDef> = {
         explosionEffectType: "smoke",
         decalType: "decal_smoke_explosion",
     },
+     explosion_mustard: {
+        type: "explosion",
+        damage: 0,
+        obstacleDamage: 1,
+        rad: { min: 5, max: 12 },
+        shrapnelCount: 0,
+        shrapnelType: "shrapnel_frag",
+        explosionEffectType: "smoke",
+        decalType: "decal_smoke_explosion",
+    },
     explosion_strobe: {
         type: "explosion",
         damage: 1,

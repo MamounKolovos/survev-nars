@@ -291,11 +291,11 @@ export const ThrowableDefs: Record<string, ThrowableDef> = {
             deploy: "frag_deploy_01",
         },
     },
-    poison_smoke: {
-        name: "Poison Smoke",
+    mustard: {
+        name: "Mustard Gas",
         type: "throwable",
         quality: 0,
-        explosionType: "explosion_smoke",
+        explosionType: "explosion_mustard",
         inventoryOrder: 3,
         cookable: false,
         explodeOnImpact: false,
