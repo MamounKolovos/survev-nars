@@ -14,6 +14,7 @@ import { v2 } from "../../../../shared/utils/v2";
 import { TimerManager, createSimpleSegment } from "../../utils/pluginUtils";
 import type { DamageParams } from "../objects/gameObject";
 import type { Player } from "../objects/player";
+import { SmokeType } from "../objects/smoke";
 import { GamePlugin } from "../pluginManager";
 import { attachCustomQuickSwitch, attachGracePeriod } from "./internalUtils";
 
@@ -182,6 +183,7 @@ const EMPTY_LOADOUT: Loadout = {
         smoke: 0,
         strobe: 0,
         impulse: 0,
+        mustard: 0,
         mirv: 0,
         snowball: 0,
         potato: 0,
@@ -1038,7 +1040,11 @@ export default class DeathmatchPlugin extends GamePlugin {
                 : OBSTACLE_REGROW_DELAY_NOPARENT;
 
             if (def.createSmoke) {
-                this.game.smokeBarn.addEmitter(obstacle.pos, obstacle.layer);
+                this.game.smokeBarn.addEmitter(
+                    obstacle.pos,
+                    obstacle.layer,
+                    SmokeType.Normal,
+                );
             }
 
             if (def.explosion) {

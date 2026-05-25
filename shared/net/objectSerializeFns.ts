@@ -594,7 +594,7 @@ export const ObjectSerializeFns: {
         serializeFull: (s, data) => {
             s.writeBits(data.layer, 2);
             s.writeBits(data.interior, 6);
-            s.writeUint8(data.type)
+            s.writeUint8(data.type);
         },
         deserializePart: (s, data) => {
             data.pos = s.readVec(0, 0, 1024, 1024, 16);

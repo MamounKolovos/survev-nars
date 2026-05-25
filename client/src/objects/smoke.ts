@@ -98,7 +98,10 @@ export class SmokeParticle {
         this.layer = layer;
         this.type = type;
         this.interior = interior;
-        this.tint = (this.type == 0) ? util.rgbToInt(util.hsvToRgb(0, 0, util.random(0.9, 0.95))) : 0xFFFF00;
+        this.tint =
+            this.type == 0
+                ? util.rgbToInt(util.hsvToRgb(0, 0, util.random(0.9, 0.95)))
+                : 0xffff00;
     }
 
     fadeOut() {

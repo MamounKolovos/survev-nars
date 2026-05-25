@@ -37,7 +37,7 @@ export const ExplosionDefs: Record<string, ExplosionDef> = {
         explosionEffectType: "smoke",
         decalType: "decal_smoke_explosion",
     },
-     explosion_mustard: {
+    explosion_mustard: {
         type: "explosion",
         damage: 0,
         obstacleDamage: 1,

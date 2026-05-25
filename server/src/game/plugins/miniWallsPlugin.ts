@@ -16,6 +16,7 @@ import { TimerManager, createSimpleSegment } from "../../utils/pluginUtils";
 import type { Game } from "../game";
 import type { Obstacle } from "../objects/obstacle";
 import type { Player } from "../objects/player";
+import { SmokeType } from "../objects/smoke";
 import { GamePlugin } from "../pluginManager";
 import { attachCustomQuickSwitch, attachGracePeriod } from "./internalUtils";
 
@@ -121,7 +122,11 @@ export default class MiniWallsPlugin extends GamePlugin {
             obstacle.makeDynamic();
             obstacle.regrowTicker = OBSTACLE_REGROW_DELAY;
             if (def.createSmoke) {
-                this.game.smokeBarn.addEmitter(obstacle.pos, obstacle.layer);
+                this.game.smokeBarn.addEmitter(
+                    obstacle.pos,
+                    obstacle.layer,
+                    SmokeType.Normal,
+                );
             }
 
             if (def.explosion) {

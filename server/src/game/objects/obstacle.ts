@@ -12,6 +12,7 @@ import type { Game } from "../game";
 import type { Building } from "./building";
 import { BaseGameObject, type DamageParams } from "./gameObject";
 import type { Player } from "./player";
+import { SmokeType } from "./smoke";
 
 export class Obstacle extends BaseGameObject {
     override readonly __type = ObjectType.Obstacle;
@@ -517,7 +518,7 @@ export class Obstacle extends BaseGameObject {
         }
 
         if (def.createSmoke) {
-            this.game.smokeBarn.addEmitter(this.pos, this.layer);
+            this.game.smokeBarn.addEmitter(this.pos, this.layer, SmokeType.Normal);
         }
 
         if (def.explosion) {

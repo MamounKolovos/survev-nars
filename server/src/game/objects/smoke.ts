@@ -27,7 +27,7 @@ const SPAWN_MAX_SPEED = 5;
 
 export enum SmokeType {
     Normal = 0,
-    Mustard = 1
+    Mustard = 1,
 }
 
 class SmokeEmitter {
@@ -41,7 +41,7 @@ class SmokeEmitter {
         public pos: Vec2,
         public layer: number,
         public interior: number,
-        public type: number
+        public type: number,
     ) {}
 
     update(dt: number) {
@@ -134,7 +134,7 @@ export class Smoke extends BaseGameObject {
         this.layer = layer;
         this.interior = interior;
         this.type = type;
-        this.life = (type == 0) ? LIFE_TIME : 10;
+        this.life = type == 0 ? LIFE_TIME : 10;
         this.bounds = collider.createAabbExtents(
             v2.create(0, 0),
             v2.create(this.rad, this.rad),
