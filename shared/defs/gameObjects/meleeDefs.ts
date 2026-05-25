@@ -706,6 +706,11 @@ const BaseDefs: Record<string, MeleeDef> = {
             tint: 0xffffff,
             leftHandOntop: true,
         },
+        bladeBounds: {
+            min: v2.create(-30, 15),
+            max: v2.create(110, -9),
+            ori: SpriteOrientation.Right,
+        },
     },
     naginata: {
         name: "Naginata",
@@ -1436,7 +1441,12 @@ const SkinDefs: Record<string, MeleeDef> = {
     }),
     katana_orchid: defineMeleeSkin("katana", {
         name: "Katana Orchid",
+        damage: 15,
+        noDropOnDeath: true,
         quality: 1,
+        anim: {
+            attackAnims: ["katanaOrchidSwing"],
+        },
         lootImg: { sprite: "loot-melee-katana-orchid.img" },
         worldImg: {
             sprite: "loot-melee-katana-orchid.img",

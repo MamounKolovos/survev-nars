@@ -111,8 +111,8 @@ export const GameConfig = {
     // the protocol we originated from was 78
     // remember to bump this every time a serialization function is changed
     // or a definition item added, removed or moved
-    protocolVersion: 1018,
-    replayVersion: 4,
+    protocolVersion: 1019,
+    replayVersion: 5,
     Input,
     EmoteSlot,
     WeaponSlot,

@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js-legacy";
 import { math } from "../../../shared/utils/math";
-import { util } from "../../../shared/utils/util";
+import { assert, util } from "../../../shared/utils/util";
 import { type Vec2, v2 } from "../../../shared/utils/v2";
 import type { Camera } from "../camera";
 import type { Map } from "../map";
@@ -149,9 +149,14 @@ interface EmitterOptions {
     layer?: number;
     duration?: number;
     radius?: number;
+    bounds?: Bounds;
     rateMult?: number;
     parent?: PIXI.Container | null;
 }
+
+export type Bounds =
+    | { kind: "circle"; radius: number }
+    | { kind: "local"; sample: (min: Vec2, max: Vec2) => Vec2 };
 
 export class Emitter {
     active = false;
@@ -162,7 +167,7 @@ export class Emitter {
     scale!: number;
     layer!: number;
     duration!: number;
-    radius!: number;
+    bounds!: Bounds;
     ticker!: number;
     nextSpawn!: number;
     spawnCount!: number;
@@ -182,7 +187,7 @@ export class Emitter {
         this.layer = options.layer || 0;
         this.duration =
             options.duration !== undefined ? options.duration : Number.MAX_VALUE;
-        this.radius = options.radius !== undefined ? options.radius : def.radius;
+        this.bounds = options.bounds ?? (def.bounds as Bounds);
         this.ticker = 0;
         this.nextSpawn = 0;
         this.spawnCount = 0;
@@ -314,8 +319,17 @@ export class ParticleBarn {
                 e.nextSpawn -= dt;
                 const def = EmitterDefs[e.type];
                 while (e.nextSpawn <= 0 && e.spawnCount < def.maxCount) {
-                    const rad = e.scale * e.radius;
-                    const pos = v2.add(e.pos, util.randomPointInCircle(rad));
+                    let pos: Vec2;
+                    switch (e.bounds.kind) {
+                        case "circle":
+                            const radius = e.scale * e.bounds.radius;
+                            pos = v2.add(e.pos, util.randomPointInCircle(radius));
+                            break;
+                        case "local":
+                            assert(def.bounds.kind == "local");
+                            pos = e.bounds.sample(def.bounds.min, def.bounds.max);
+                            break;
+                    }
                     const dir = v2.rotate(e.dir, (Math.random() - 0.5) * def.angle);
                     const vel = v2.mul(dir, getRangeValue(def.speed));
                     const rot = getRangeValue(def.rot!);
@@ -3111,7 +3125,7 @@ const ParticleDefs: Record<string, ParticleDef> = {
         drag: 0.5,
         rotVel: 0.1,
         scale: {
-            start: new Range(0.14, 0.22),
+            start: new Range(0.15, 0.23),
             end: new Range(0.01, 0.03),
             lerp: new Range(0, 1),
         },
@@ -3127,12 +3141,39 @@ const ParticleDefs: Record<string, ParticleDef> = {
         },
         ignoreValueAdjust: true,
     },
+    streak_orchid: {
+        image: [
+            "part-blossom-01.img",
+            "part-blossom-02.img",
+            "part-blossom-03.img",
+            "part-blossom-04.img",
+        ],
+        life: new Range(0.9, 1.2),
+        drag: 0.1,
+        rotVel: 1,
+        scale: {
+            start: new Range(0.11, 0.15),
+            end: new Range(0.01, 0.03),
+            lerp: new Range(0, 1),
+        },
+        alpha: {
+            start: 1,
+            end: 0,
+            lerp: new Range(0.6, 1),
+        },
+        color: function () {
+            const hue = 0.84 + Math.random() * 0.05; // pink/magenta
+            const saturation = 0.1 + Math.random() * 0.5;
+            return util.rgbToInt(util.hsvToRgb(hue, saturation, 1));
+        },
+    },
 };
-const EmitterDefs: Record<string, EmitterDef> = {
+
+export const EmitterDefs: Record<string, EmitterDef> = {
     smoke_barrel: {
         particle: "explosionSmoke",
         rate: new Range(0.2, 0.3),
-        radius: 0,
+        bounds: { kind: "circle", radius: 0 },
         speed: new Range(2, 3),
         angle: Math.PI * 0.1,
         rot: new Range(0, Math.PI * 2),
@@ -3141,7 +3182,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     cabin_smoke_parent: {
         particle: "cabinSmoke",
         rate: new Range(0.72, 0.83),
-        radius: 0,
+        bounds: { kind: "circle", radius: 0 },
         speed: new Range(64, 96),
         angle: Math.PI * 0.1,
         rot: new Range(0, Math.PI * 2),
@@ -3150,7 +3191,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     bathhouse_steam: {
         particle: "bathhouseSteam",
         rate: new Range(2, 3),
-        radius: 1,
+        bounds: { kind: "circle", radius: 1 },
         speed: new Range(1.5, 2),
         angle: Math.PI * 0.1,
         maxCount: Number.MAX_VALUE,
@@ -3158,7 +3199,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     bunker_bubbles_01: {
         particle: "bunkerBubbles",
         rate: new Range(0.3, 0.325),
-        radius: 0,
+        bounds: { kind: "circle", radius: 0 },
         speed: new Range(1.6, 1.8),
         angle: Math.PI * -2.2,
         rot: new Range(0, Math.PI * 2),
@@ -3167,7 +3208,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     bunker_bubbles_02: {
         particle: "bunkerBubbles",
         rate: new Range(0.4, 0.425),
-        radius: 0,
+        bounds: { kind: "circle", radius: 0 },
         speed: new Range(1.6, 1.8),
         angle: Math.PI * -2.2,
         rot: new Range(0, Math.PI * 2),
@@ -3176,7 +3217,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     falling_leaf: {
         particle: "leafAutumn",
         rate: new Range(0.08, 0.12),
-        radius: 120,
+        bounds: { kind: "circle", radius: 120 },
         speed: new Range(2, 3),
         angle: Math.PI * 0.2,
         rot: new Range(0, Math.PI * 2),
@@ -3186,7 +3227,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     falling_leaf_halloween: {
         particle: "leafHalloween",
         rate: new Range(0.08, 0.12),
-        radius: 120,
+        bounds: { kind: "circle", radius: 120 },
         speed: new Range(2, 3),
         angle: Math.PI * 0.2,
         rot: new Range(0, Math.PI * 2),
@@ -3196,7 +3237,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     falling_leaf_spring: {
         particle: "leafSpring",
         rate: new Range(0.1, 0.14),
-        radius: 120,
+        bounds: { kind: "circle", radius: 120 },
         speed: new Range(2, 3),
         angle: Math.PI * 0.2,
         rot: new Range(0, Math.PI * 2),
@@ -3206,7 +3247,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     falling_leaf_summer: {
         particle: "leafSummer",
         rate: new Range(0.18, 0.24),
-        radius: 120,
+        bounds: { kind: "circle", radius: 120 },
         speed: new Range(1.4, 2.4),
         angle: Math.PI * 0.2,
         maxCount: Number.MAX_VALUE,
@@ -3215,7 +3256,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     falling_leaf_potato: {
         particle: "leafPotato",
         rate: new Range(0.1, 0.14),
-        radius: 120,
+        bounds: { kind: "circle", radius: 120 },
         speed: new Range(2, 3),
         angle: Math.PI * 0.2,
         rot: new Range(0, Math.PI * 2),
@@ -3225,7 +3266,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     falling_potato: {
         particle: "potato",
         rate: new Range(0.2, 0.24),
-        radius: 120,
+        bounds: { kind: "circle", radius: 120 },
         speed: new Range(2, 3),
         angle: Math.PI * 0.2,
         rot: new Range(0, Math.PI * 2),
@@ -3237,7 +3278,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
         rate: new Range(0.12, 0.17),
         maxRate: new Range(0.05, 0.07),
         maxElapsed: 240,
-        radius: 70,
+        bounds: { kind: "circle", radius: 70 },
         speed: new Range(1, 1.5),
         angle: Math.PI * 0.2,
         rot: new Range(0, Math.PI * 2),
@@ -3247,7 +3288,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     falling_snow_slow: {
         particle: "snow",
         rate: new Range(0.08, 0.12),
-        radius: 70,
+        bounds: { kind: "circle", radius: 70 },
         speed: new Range(1, 1.5),
         angle: Math.PI * 0.2,
         rot: new Range(0, Math.PI * 2),
@@ -3257,7 +3298,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     heal_basic: {
         particle: "heal_basic",
         rate: new Range(0.3, 0.35),
-        radius: 1.5,
+        bounds: { kind: "circle", radius: 1.5 },
         speed: new Range(1, 1.5),
         angle: 0,
         rot: 0,
@@ -3266,7 +3307,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     heal_heart: {
         particle: "heal_heart",
         rate: new Range(0.3, 0.35),
-        radius: 1.5,
+        bounds: { kind: "circle", radius: 1.5 },
         speed: new Range(1, 1.5),
         angle: 0,
         rot: 0,
@@ -3275,7 +3316,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     heal_moon: {
         particle: "heal_moon",
         rate: new Range(0.3, 0.35),
-        radius: 1.5,
+        bounds: { kind: "circle", radius: 1.5 },
         speed: new Range(1, 1.5),
         angle: 0,
         rot: 0,
@@ -3284,7 +3325,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     heal_tomoe: {
         particle: "heal_tomoe",
         rate: new Range(0.3, 0.35),
-        radius: 1.5,
+        bounds: { kind: "circle", radius: 1.5 },
         speed: new Range(1, 1.5),
         angle: 0,
         rot: 0,
@@ -3293,7 +3334,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     boost_basic: {
         particle: "boost_basic",
         rate: new Range(0.3, 0.35),
-        radius: 1.5,
+        bounds: { kind: "circle", radius: 1.5 },
         speed: new Range(1, 1.5),
         angle: 0,
         rot: new Range(0, Math.PI * 2),
@@ -3302,7 +3343,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     boost_star: {
         particle: "boost_star",
         rate: new Range(0.3, 0.35),
-        radius: 1.5,
+        bounds: { kind: "circle", radius: 1.5 },
         speed: new Range(1, 1.5),
         angle: 0,
         rot: new Range(0, Math.PI * 2),
@@ -3311,7 +3352,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     boost_naturalize: {
         particle: "boost_naturalize",
         rate: new Range(0.3, 0.35),
-        radius: 1.5,
+        bounds: { kind: "circle", radius: 1.5 },
         speed: new Range(1, 1.5),
         angle: 0,
         rot: new Range(0, Math.PI * 2),
@@ -3320,7 +3361,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     boost_shuriken: {
         particle: "boost_shuriken",
         rate: new Range(0.3, 0.35),
-        radius: 1.5,
+        bounds: { kind: "circle", radius: 1.5 },
         speed: new Range(1, 1.5),
         angle: 0,
         rot: new Range(0, Math.PI * 2),
@@ -3329,7 +3370,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     revive_basic: {
         particle: "revive_basic",
         rate: new Range(0.5, 0.55),
-        radius: 1.5,
+        bounds: { kind: "circle", radius: 1.5 },
         speed: new Range(1, 1.5),
         angle: 0,
         rot: 0,
@@ -3338,7 +3379,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     windwalk: {
         particle: "leafStim",
         rate: new Range(0.1, 0.12),
-        radius: 1.5,
+        bounds: { kind: "circle", radius: 1.5 },
         speed: new Range(1, 1.5),
         angle: 0,
         rot: 0,
@@ -3347,7 +3388,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     takedown: {
         particle: "takedownStim",
         rate: new Range(0.1, 0.12),
-        radius: 1.5,
+        bounds: { kind: "circle", radius: 1.5 },
         speed: new Range(1, 1.5),
         angle: 0,
         rot: 0,
@@ -3356,7 +3397,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     inspire: {
         particle: "inspireStim",
         rate: new Range(0.3, 0.35),
-        radius: 1.5,
+        bounds: { kind: "circle", radius: 1.5 },
         speed: new Range(1, 1.5),
         angle: 0,
         rot: 0,
@@ -3365,7 +3406,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     xp_common: {
         particle: "xp_common",
         rate: new Range(0.3, 0.35),
-        radius: 1.5,
+        bounds: { kind: "circle", radius: 1.5 },
         speed: new Range(1, 1.5),
         angle: 0,
         rot: 0,
@@ -3374,7 +3415,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     xp_rare: {
         particle: "xp_rare",
         rate: new Range(0.3, 0.35),
-        radius: 1.5,
+        bounds: { kind: "circle", radius: 1.5 },
         speed: new Range(1, 1.5),
         angle: 0,
         rot: 0,
@@ -3383,7 +3424,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     xp_mythic: {
         particle: "xp_mythic",
         rate: new Range(0.3, 0.35),
-        radius: 1.5,
+        bounds: { kind: "circle", radius: 1.5 },
         speed: new Range(1, 1.5),
         angle: 0,
         rot: 0,
@@ -3392,7 +3433,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     impulse_star: {
         particle: "impulse_star",
         rate: new Range(0.085, 0.085),
-        radius: 0.5,
+        bounds: { kind: "circle", radius: 0.5 },
         speed: new Range(1.25, 1.75),
         angle: 0,
         rot: new Range(0, Math.PI * 2),
@@ -3401,7 +3442,11 @@ const EmitterDefs: Record<string, EmitterDef> = {
     held_fire: {
         particle: "idle_fire",
         rate: new Range(0.2, 0.21),
-        radius: 0.5,
+        bounds: {
+            kind: "local",
+            min: v2.create(-1, -1),
+            max: v2.create(1, 1),
+        },
         speed: new Range(1.25, 1.75),
         angle: Math.PI * 0.3,
         rot: new Range(-Math.PI / 6, Math.PI / 6),
@@ -3410,7 +3455,7 @@ const EmitterDefs: Record<string, EmitterDef> = {
     loot_fire: {
         particle: "idle_fire",
         rate: new Range(0.05, 0.07),
-        radius: 2.5,
+        bounds: { kind: "circle", radius: 2.5 },
         speed: new Range(1.25, 1.75),
         angle: Math.PI * 0.3,
         rot: new Range(-Math.PI / 6, Math.PI / 6),
@@ -3419,10 +3464,40 @@ const EmitterDefs: Record<string, EmitterDef> = {
     streak_fire: {
         particle: "streak_fire",
         rate: new Range(0.0085, 0.0085),
-        radius: 0,
+        bounds: {
+            kind: "local",
+            min: v2.create(0.5, -1),
+            max: v2.create(1, 1),
+        },
         speed: new Range(1.25, 1.75),
         angle: Math.PI * 0.3,
         rot: new Range(-Math.PI / 6, Math.PI / 6),
+        maxCount: Number.MAX_VALUE,
+    },
+    streak_orchid: {
+        particle: "streak_orchid",
+        rate: new Range(0.0085, 0.0085),
+        bounds: {
+            kind: "local",
+            min: v2.create(0.5, -0.9),
+            max: v2.create(1, 0.9),
+        },
+        speed: new Range(1.75, 2.75),
+        angle: Math.PI * 0.3,
+        rot: new Range(-Math.PI / 6, Math.PI / 6),
+        maxCount: Number.MAX_VALUE,
+    },
+    fastfast: {
+        particle: "xp_mythic",
+        rate: new Range(0.005, 0.005),
+        bounds: {
+            kind: "local",
+            min: v2.create(0.5, -1),
+            max: v2.create(1, 1),
+        },
+        speed: new Range(1, 1.5),
+        angle: 0,
+        rot: 0,
         maxCount: Number.MAX_VALUE,
     },
 };
@@ -3456,10 +3531,14 @@ export interface ParticleDef {
 }
 type RangeNumber = Range | number;
 
+type DefBounds =
+    | { kind: "circle"; radius: number }
+    | { kind: "local"; min: Vec2; max: Vec2 };
+
 export interface EmitterDef {
     particle: string;
     rate: Range;
-    radius: number;
+    bounds: DefBounds;
     speed: Range;
     angle: number;
     rot?: RangeNumber;

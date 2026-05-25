@@ -436,6 +436,39 @@ export const Animations: Record<
             effect(def.katana.attack.damageTimes[0], "animMeleeCollision", {}),
         ],
     },
+    katanaOrchidSwing: {
+        keyframes: [
+            frame(0, {
+                [Bones.HandL]: new Pose(v2.create(8.5, 13.25)),
+                [Bones.HandR]: new Pose(v2.create(-3, 17.75)),
+            }),
+            frame(def.katana.attack.damageTimes[0] * 0.3, {
+                [Bones.HandL]: new Pose(v2.create(8.5, 13.25)).rotate(Math.PI * 0.2),
+                [Bones.HandR]: new Pose(v2.create(-3, 17.75)).rotate(Math.PI * 0.2),
+            }),
+            frame(def.katana.attack.damageTimes[0] * 0.9, {
+                [Bones.HandL]: new Pose(v2.create(8.5, 13.25)).rotate(-Math.PI * 1.2),
+                [Bones.HandR]: new Pose(v2.create(-3, 17.75)).rotate(-Math.PI * 1.2),
+            }),
+            frame(def.katana.attack.cooldownTime, {
+                [Bones.HandL]: new Pose(v2.create(8.5, 13.25)),
+                [Bones.HandR]: new Pose(v2.create(-3, 17.75)),
+            }),
+        ],
+        effects: [
+            effect(def.katana.attack.damageTimes[0], "animPlaySound", {
+                sound: "swing",
+            }),
+            effect(def.katana.attack.damageTimes[0], "animMeleeCollision", {}),
+        ],
+        streaks: [
+            {
+                startTime: 0,
+                endTime: def.katana.attack.damageTimes[0],
+                emitter: "streak_orchid",
+            },
+        ],
+    },
     naginataSwing: {
         keyframes: [
             frame(0, {
