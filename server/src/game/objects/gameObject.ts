@@ -6,7 +6,6 @@ import {
 import { type AABB, coldet } from "../../../../shared/utils/coldet";
 import { assert } from "../../../../shared/utils/util";
 import { type Vec2, v2 } from "../../../../shared/utils/v2";
-import { Logger } from "../../utils/logger";
 import type { Game } from "../game";
 import type { Grid } from "../grid";
 import type { Airdrop } from "./airdrop";

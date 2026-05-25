@@ -9,6 +9,7 @@ import type { Game } from "../game";
 import type { DamageParams, GameObject } from "./gameObject";
 import { EXPLOSION_LOOT_PUSH_FORCE } from "./loot";
 import type { Player } from "./player";
+import { SmokeType } from "./smoke";
 
 interface LineCollision {
     obj: GameObject;
@@ -44,11 +45,11 @@ export class ExplosionBarn {
         }
 
         if (explosion.type === "explosion_smoke") {
-            this.game.smokeBarn.addEmitter(explosion.pos, explosion.layer, 0);
+            this.game.smokeBarn.addEmitter(explosion.pos, explosion.layer, SmokeType.Normal);
             return;
         } 
         if(explosion.type === "explosion_mustard") {
-            this.game.smokeBarn.addEmitter(explosion.pos, explosion.layer, 1);
+            this.game.smokeBarn.addEmitter(explosion.pos, explosion.layer, SmokeType.Mustard);
             return;
         }
 

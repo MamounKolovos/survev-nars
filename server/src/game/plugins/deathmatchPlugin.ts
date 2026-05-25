@@ -136,6 +136,7 @@ type Loadout = {
         | "smoke"
         | "strobe"
         | "impulse"
+        | "mustard"
         | "mirv"
         | "snowball"
         | "potato"

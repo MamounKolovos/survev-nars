@@ -49,6 +49,7 @@ import { BaseGameObject, type DamageParams, type GameObject } from "./gameObject
 import type { Loot } from "./loot";
 import type { MapIndicator } from "./mapIndicator";
 import type { Obstacle } from "./obstacle";
+import { SmokeType } from "./smoke";
 import type { Structure } from "./structure";
 
 type GodMode = {
@@ -2003,7 +2004,7 @@ export class Player extends BaseGameObject {
                 if (coldet.testCircleCircle(this.pos, this.rad, obj.pos, obj.rad)) {
                     insideSmoke = true;
                 }
-                if(obj.type == 1) {
+                if(obj.type == SmokeType.Mustard && insideSmoke) {
                    this.health -= 0.5 * dt;
                 }
             }
