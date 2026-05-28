@@ -29,6 +29,10 @@ export interface MeleeDef {
     anim: {
         idlePose: string;
         attackAnims: string[];
+        deploy?: {
+            anims: string[];
+            duration: number;
+        };
     };
     sound: Record<string, string>;
     //  {
@@ -89,6 +93,7 @@ export interface MeleeDef {
 export interface Img {
     sprite: string;
     pos: Vec2;
+    deployPos?: Vec2;
     rot: number;
     scale: Vec2;
     tint: number;
@@ -221,10 +226,15 @@ const BaseDefs: Record<string, MeleeDef> = {
         anim: {
             idlePose: "slash",
             attackAnims: ["slash", "fists"],
+            deploy: {
+                anims: ["spin", "rapidSpin", "swipeSpin"],
+                duration: 0.5,
+            },
         },
         sound: {
             pickup: "frag_pickup_01",
             swing: "knife_swing_01",
+            heavySwing: "heavy_swing_01",
             deploy: "knife_deploy_01",
             playerHit: "knife_hit_01",
         },
@@ -242,6 +252,10 @@ const BaseDefs: Record<string, MeleeDef> = {
             pos: {
                 x: 15.5,
                 y: -5,
+            },
+            deployPos: {
+                x: 32,
+                y: 0,
             },
             rot: 0.5 * Math.PI,
             scale: {
@@ -1318,6 +1332,13 @@ const SkinDefs: Record<string, MeleeDef> = {
         noPotatoSwap: false,
         anim: {
             attackAnims: ["karambitMagmaSlash", "fists"],
+            deploy: {
+                anims: [
+                    "karambitMagmaSpin",
+                    "karambitMagmaRapidSpin",
+                    "karambitMagmaSwipeSpin",
+                ],
+            },
         },
         sound: {
             fireSwing: "fire_swing_01",

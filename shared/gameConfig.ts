@@ -52,6 +52,7 @@ export enum Anim {
     CrawlForward,
     CrawlBackward,
     Revive,
+    DeployMelee,
 }
 
 export enum Plane {
@@ -111,8 +112,8 @@ export const GameConfig = {
     // the protocol we originated from was 78
     // remember to bump this every time a serialization function is changed
     // or a definition item added, removed or moved
-    protocolVersion: 1019,
-    replayVersion: 5,
+    protocolVersion: 1020,
+    replayVersion: 6,
     Input,
     EmoteSlot,
     WeaponSlot,

@@ -2,7 +2,7 @@ import { GameObjectDefs } from "../../shared/defs/gameObjectDefs";
 import type { MeleeDef } from "../../shared/defs/gameObjects/meleeDefs";
 import { GameConfig } from "../../shared/gameConfig";
 import { math } from "../../shared/utils/math";
-import { assert } from "../../shared/utils/util";
+import { assert, util } from "../../shared/utils/util";
 import { type Vec2, v2 } from "../../shared/utils/v2";
 import type { AnimCtx, Player } from "./objects/player";
 
@@ -42,7 +42,7 @@ export class Pose {
         public pos = v2.create(0, 0),
     ) {
         this.pivot = v2.copy(pivot);
-        this.rot = 0;
+        this.rot = rot;
         this.pos = v2.copy(pos);
     }
 
@@ -158,21 +158,30 @@ interface Effect<K extends AnimKeys = AnimKeys> {
     args?: Parameters<Player[K]>[1];
 }
 
-export const Animations: Record<
-    string,
-    {
-        keyframes: Array<{
-            time: number;
-            bones: Partial<Record<Bones, Pose>>;
-        }>;
-        effects: Effect[];
-        streaks?: Array<{
-            startTime: number;
-            endTime: number;
-            emitter: string;
-        }>;
-    }
-> = {
+type AnimDef = {
+    keyframes: Array<{
+        time: number;
+        bones: Partial<Record<Bones, Pose>>;
+    }>;
+    effects: Effect[];
+    streaks?: Array<{
+        startTime: number;
+        endTime: number;
+        emitter: string;
+    }>;
+};
+
+type DeepPartial<T> = T extends object
+    ? {
+          [P in keyof T]?: DeepPartial<T[P]>;
+      }
+    : T;
+
+function deriveAnim(baseType: string, params: DeepPartial<AnimDef>): AnimDef {
+    return util.mergeDeep({}, BaseAnimations[baseType], params);
+}
+
+const BaseAnimations: Record<string, AnimDef> = {
     none: {
         keyframes: [],
         effects: [],
@@ -319,6 +328,105 @@ export const Animations: Record<
                 endTime: def.fists.attack.damageTimes[0],
                 emitter: "streak_fire",
             },
+        ],
+    },
+    spin: {
+        keyframes: [
+            frame(0, {
+                [Bones.HandR]: new Pose(v2.create(0, 0), Math.PI, v2.create(-3, 20.25)),
+            }),
+            frame(def.karambit.anim.deploy!.duration, {
+                [Bones.HandR]: new Pose(
+                    v2.create(0, 0),
+                    -Math.PI * 4,
+                    v2.create(6, 20.25),
+                ),
+            }),
+        ],
+        effects: [
+            effect(0, "animPlaySound", { sound: "swing" }),
+            effect(0.2, "animPlaySound", { sound: "swing" }),
+        ],
+    },
+    swipeSpin: {
+        keyframes: [
+            frame(0, {
+                [Bones.HandR]: new Pose(
+                    v2.create(0, 0),
+                    -Math.PI * 1.5,
+                    v2.create(18, -8.25),
+                ),
+            }),
+            frame(0.075, {
+                [Bones.HandR]: new Pose(
+                    v2.create(0, 0),
+                    -Math.PI * 1.1,
+                    v2.create(5, -14.25),
+                ),
+            }),
+            frame(0.125, {
+                [Bones.HandR]: new Pose(v2.create(0, 0), -Math.PI, v2.create(5, -14.25)),
+            }),
+            frame(0.2, {
+                [Bones.HandR]: new Pose(
+                    v2.create(0, 0),
+                    -Math.PI / 2,
+                    v2.create(30, -8.25),
+                ),
+            }),
+            frame(0.23, {
+                [Bones.HandR]: new Pose(
+                    v2.create(0, 0),
+                    -Math.PI / 2,
+                    v2.create(33, -8.25),
+                ),
+            }),
+            frame(0.3, {
+                [Bones.HandR]: new Pose(v2.create(0, 0), 0, v2.create(10.8, 14.25)),
+            }),
+            frame(def.karambit.anim.deploy!.duration, {
+                [Bones.HandR]: new Pose(
+                    v2.create(0, 0),
+                    Math.PI * 2,
+                    v2.create(6, 20.25),
+                ),
+            }),
+        ],
+        effects: [
+            effect(0.075, "animPlaySound", { sound: "swing" }),
+            effect(0.2, "animPlaySound", { sound: "heavySwing" }),
+        ],
+    },
+    rapidSpin: {
+        keyframes: [
+            frame(0, {
+                [Bones.HandR]: new Pose(v2.create(0, 0), Math.PI, v2.create(-3, 20.25)),
+            }),
+            frame(0.25, {
+                [Bones.HandR]: new Pose(
+                    v2.create(0, 0),
+                    -Math.PI * 3,
+                    v2.create(20, 10.25),
+                ),
+            }),
+            frame(0.35, {
+                [Bones.HandR]: new Pose(
+                    v2.create(0, 0),
+                    -Math.PI * 3.3,
+                    v2.create(20, 10.25),
+                ),
+            }),
+            frame(def.karambit.anim.deploy!.duration, {
+                [Bones.HandR]: new Pose(
+                    v2.create(0, 0),
+                    -Math.PI * 2,
+                    v2.create(6, 20.25),
+                ),
+            }),
+        ],
+        effects: [
+            effect(0, "animPlaySound", { sound: "swing" }),
+            effect(0.15, "animPlaySound", { sound: "swing" }),
         ],
     },
     hook: {
@@ -678,3 +786,47 @@ export const Animations: Record<
         ],
     },
 };
+
+const DerivedAnimations: Record<string, AnimDef> = {
+    karambitMagmaSpin: deriveAnim("spin", {
+        effects: [
+            effect(0, "animPlaySound", { sound: "fireSwing" }),
+            effect(0.2, "animPlaySound", { sound: "fireSwing" }),
+        ],
+        streaks: [
+            {
+                startTime: 0,
+                endTime: def.karambit.anim.deploy!.duration,
+                emitter: "streak_fire",
+            },
+        ],
+    }),
+    karambitMagmaRapidSpin: deriveAnim("rapidSpin", {
+        effects: [
+            effect(0, "animPlaySound", { sound: "fireSwing" }),
+            effect(0.15, "animPlaySound", { sound: "fireSwing" }),
+        ],
+        streaks: [
+            {
+                startTime: 0,
+                endTime: 0.4,
+                emitter: "streak_fire",
+            },
+        ],
+    }),
+    karambitMagmaSwipeSpin: deriveAnim("swipeSpin", {
+        effects: [
+            effect(0.075, "animPlaySound", { sound: "swing" }),
+            effect(0.2, "animPlaySound", { sound: "fireSwing" }),
+        ],
+        streaks: [
+            {
+                startTime: 0.2,
+                endTime: def.karambit.anim.deploy!.duration,
+                emitter: "streak_fire",
+            },
+        ],
+    }),
+};
+
+export const Animations = { ...BaseAnimations, ...DerivedAnimations };

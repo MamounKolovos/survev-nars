@@ -1815,14 +1815,14 @@ export class Player implements AbstractObject {
             this.hipSprite.visible = false;
         }
 
-        const R = GameObjectDefs[this.m_netData.m_activeWeapon] as
+        const weapDef = GameObjectDefs[this.m_netData.m_activeWeapon] as
             | GunDef
             | MeleeDef
             | ThrowableDef;
-        if (R.type == "gun") {
+        if (weapDef.type == "gun") {
             this.gunRSprites.setType(this.m_netData.m_activeWeapon, bodyScale);
             this.gunRSprites.setVisible(true);
-            if (R.isDual) {
+            if (weapDef.isDual) {
                 this.gunLSprites.setType(this.m_netData.m_activeWeapon, bodyScale);
                 this.gunLSprites.setVisible(true);
             } else {
@@ -1831,7 +1831,7 @@ export class Player implements AbstractObject {
             const L = this.bodyContainer.getChildIndex(this.handRContainer);
             const q = this.bodyContainer.getChildIndex(this.handRContainer);
             let F = L + 1;
-            if (this.gunRSprites.magTop || R.worldImg.handsBelow) {
+            if (this.gunRSprites.magTop || weapDef.worldImg.handsBelow) {
                 F = L - 1;
             }
             F = math.max(F, 0);
@@ -1839,7 +1839,9 @@ export class Player implements AbstractObject {
                 this.bodyContainer.addChildAt(this.handLContainer, F);
             }
             const j = this.handRContainer.getChildIndex(this.gunRSprites.container);
-            const N = R.worldImg.handsBelow ? this.handRContainer.children.length : 0;
+            const N = weapDef.worldImg.handsBelow
+                ? this.handRContainer.children.length
+                : 0;
             if (j != N) {
                 this.handRContainer.addChildAt(this.gunRSprites.container, N);
             }
@@ -1858,28 +1860,39 @@ export class Player implements AbstractObject {
                 this.bodyContainer.addChild(this.handRContainer);
             }
         }
-        if (R.type == "melee" && this.m_netData.m_activeWeapon != "fists") {
-            const V = R.worldImg!;
-            this.meleeSprite.texture = PIXI.Texture.from(V.sprite);
-            this.meleeSprite.pivot.set(-V.pos.x, -V.pos.y);
-            this.meleeSprite.scale.set(V.scale.x / bodyScale, V.scale.y / bodyScale);
-            this.meleeSprite.rotation = V.rot;
-            this.meleeSprite.tint = V.tint;
+        if (weapDef.type == "melee" && this.m_netData.m_activeWeapon != "fists") {
+            const worldImg = weapDef.worldImg!;
+            this.meleeSprite.texture = PIXI.Texture.from(worldImg.sprite);
+
+            let pos: Vec2;
+            if (this.m_netData.m_animType == Anim.DeployMelee && worldImg.deployPos) {
+                pos = worldImg.deployPos;
+            } else {
+                pos = worldImg.pos;
+            }
+
+            this.meleeSprite.pivot.set(-pos.x, -pos.y);
+            this.meleeSprite.scale.set(
+                worldImg.scale.x / bodyScale,
+                worldImg.scale.y / bodyScale,
+            );
+            this.meleeSprite.rotation = worldImg.rot;
+            this.meleeSprite.tint = worldImg.tint;
             this.meleeSprite.visible = true;
             const U = this.handRContainer.getChildIndex(this.handRSprite);
-            const W = math.max(V.renderOnHand ? U + 1 : U - 1, 0);
+            const W = math.max(worldImg.renderOnHand ? U + 1 : U - 1, 0);
             if (this.handRContainer.getChildIndex(this.meleeSprite) != W) {
                 this.handRContainer.addChildAt(this.meleeSprite, W);
             }
             const G = this.bodyContainer.getChildIndex(this.handRContainer);
-            const X = math.max(V.leftHandOntop ? G + 1 : G - 1, 0);
+            const X = math.max(worldImg.leftHandOntop ? G + 1 : G - 1, 0);
             if (this.bodyContainer.getChildIndex(this.handLContainer) != X) {
                 this.bodyContainer.addChildAt(this.handLContainer, X);
             }
         } else {
             this.meleeSprite.visible = false;
         }
-        if (R.type == "throwable") {
+        if (weapDef.type == "throwable") {
             const K = function (
                 e: PIXI.Sprite,
                 t: {
@@ -1904,7 +1917,7 @@ export class Player implements AbstractObject {
                     e.visible = false;
                 }
             };
-            const Z = R.handImg?.[this.throwableState]!;
+            const Z = weapDef.handImg?.[this.throwableState]!;
             K(this.objectLSprite, Z.left);
             K(this.objectRSprite, Z.right);
         } else {
@@ -2291,6 +2304,16 @@ export class Player implements AbstractObject {
                 const i = Math.floor(Math.random() * a.length);
                 const o = a[i];
                 return t(o, o == "fists" && a.length == 1);
+            }
+            case Anim.DeployMelee: {
+                const def = GameObjectDefs[this.m_netData.m_activeWeapon] as MeleeDef;
+
+                if (!def.anim.deploy) {
+                    return t("fists", true);
+                }
+
+                const type = util.randomElem(def.anim.deploy.anims);
+                return t(type, false);
             }
             default:
                 return t("none", false);
