@@ -11,6 +11,11 @@ import type { Renderer } from "../renderer";
 import { Pool } from "./objectPool";
 import type { AbstractObject, Player } from "./player";
 
+export enum SmokeType {
+    Normal = 0,
+    Mustard = 1,
+}
+
 class Smoke implements AbstractObject {
     __id!: number;
     __type!: ObjectType.Smoke;
@@ -21,7 +26,7 @@ class Smoke implements AbstractObject {
     m_rad!: number;
     m_layer!: number;
     m_interior!: number;
-    m_type!: number;
+    m_type!: SmokeType;
 
     m_init() {}
     m_free() {

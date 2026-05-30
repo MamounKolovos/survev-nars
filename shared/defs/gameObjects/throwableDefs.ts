@@ -292,7 +292,7 @@ export const ThrowableDefs: Record<string, ThrowableDef> = {
         },
     },
     mustard: {
-        name: "M-Gas",
+        name: "Mustard Gas",
         type: "throwable",
         quality: 0,
         explosionType: "explosion_mustard",

@@ -1488,6 +1488,14 @@ export class Player extends BaseGameObject {
             });
         }
 
+        if (this.game.gas.isInGas(this.pos)) {
+            this.damage({
+                amount: this.game.gas.damage,
+                damageType: GameConfig.DamageType.Gas,
+                dir: this.dir,
+            });
+        }
+
         if (this.reloadAgain) {
             this.reloadAgain = false;
             this.weaponManager.tryReload();
@@ -2004,8 +2012,12 @@ export class Player extends BaseGameObject {
                 if (coldet.testCircleCircle(this.pos, this.rad, obj.pos, obj.rad)) {
                     insideSmoke = true;
                 }
-                if (obj.type == SmokeType.Mustard && insideSmoke) {
-                    this.health -= 0.5 * dt;
+                if (obj.type == SmokeType.Mustard && insideSmoke && obj.__id) {
+                     this.damage({
+                amount: 0.02,
+                damageType: GameConfig.DamageType.Mustard,
+                dir: this.dir,
+            });
                 }
             }
         }
