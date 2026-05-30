@@ -20,7 +20,7 @@ export enum DamageType {
     Gas,
     Airdrop,
     Airstrike,
-    Mustard
+    Mustard,
 }
 
 export enum Action {

@@ -2013,11 +2013,11 @@ export class Player extends BaseGameObject {
                     insideSmoke = true;
                 }
                 if (obj.type == SmokeType.Mustard && insideSmoke && obj.__id) {
-                     this.damage({
-                amount: 0.02,
-                damageType: GameConfig.DamageType.Mustard,
-                dir: this.dir,
-            });
+                    this.damage({
+                        amount: 0.02,
+                        damageType: GameConfig.DamageType.Mustard,
+                        dir: this.dir,
+                    });
                 }
             }
         }
