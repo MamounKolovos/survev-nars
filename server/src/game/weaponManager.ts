@@ -85,13 +85,27 @@ export class WeaponManager {
             forceSwitch = true;
         }
 
-        if (idx === this._curWeapIdx) return;
-        if (this.weapons[idx].type === "") return;
-
         const curWeaponDef = GameObjectDefs[this.activeWeapon] as
             | GunDef
             | MeleeDef
             | ThrowableDef;
+
+        if (idx === this._curWeapIdx) {
+            // just a fun QOL thing, lets people trigger deploy animations without having to switch to another slot then switch back
+            if (
+                curWeaponDef.type == "melee" &&
+                curWeaponDef.anim.deploy &&
+                this.player.animType == GameConfig.Anim.None
+            ) {
+                this.player.playAnim(
+                    GameConfig.Anim.DeployMelee,
+                    curWeaponDef.anim.deploy.duration,
+                );
+            }
+            return;
+        }
+
+        if (this.weapons[idx].type === "") return;
 
         if (
             this.player.game.pluginManager.emit("playerWillSwitchIdx", {
