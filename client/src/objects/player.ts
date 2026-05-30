@@ -167,6 +167,7 @@ class Gun {
 }
 
 export interface AnimCtx {
+    camera: Camera;
     playerBarn: PlayerBarn;
     map: Map;
     audioManager: AudioManager;
@@ -1239,7 +1240,8 @@ export class Player implements AbstractObject {
             curWeapDef.type == "melee" &&
             !!curWeapDef.idleEmitter &&
             !this.m_netData.m_dead &&
-            !this.m_netData.m_downed;
+            !this.m_netData.m_downed &&
+            this.currentAnim() == Anim.None;
 
         if (this.meleeIdleEmitter && (!wantsMeleeEmitter || weapTypeDirty)) {
             this.meleeIdleEmitter.stop();
@@ -1249,6 +1251,43 @@ export class Player implements AbstractObject {
         if (!this.meleeIdleEmitter && wantsMeleeEmitter) {
             this.meleeIdleEmitter = particleBarn.addEmitter(curWeapDef.idleEmitter!, {
                 layer: this.layer,
+                bounds: {
+                    kind: "local",
+                    sample: (min: Vec2, max: Vec2) => {
+                        const bladeBounds = curWeapDef.bladeBounds!;
+
+                        const rMin =
+                            bladeBounds.ori == SpriteOrientation.Right
+                                ? min
+                                : v2.rotate(min, Math.PI / 2);
+                        const rMax =
+                            bladeBounds.ori == SpriteOrientation.Right
+                                ? max
+                                : v2.rotate(max, Math.PI / 2);
+
+                        const localOffset = util.randomPointInAabb({
+                            min: rMin,
+                            max: rMax,
+                        });
+                        const spriteOffset = v2.create(
+                            math.remap(
+                                localOffset.x,
+                                -1,
+                                1,
+                                bladeBounds.min.x,
+                                bladeBounds.max.x,
+                            ),
+                            math.remap(
+                                localOffset.y,
+                                -1,
+                                1,
+                                bladeBounds.min.y,
+                                bladeBounds.max.y,
+                            ),
+                        );
+                        return this.meleeToWorldSpace(spriteOffset, camera);
+                    },
+                },
             });
         }
 
@@ -1320,6 +1359,7 @@ export class Player implements AbstractObject {
         this.gunRecoilR = math.max(0, this.gunRecoilR - this.gunRecoilR * dt * 5 - dt);
 
         const xe: AnimCtx = {
+            camera,
             playerBarn,
             map,
             audioManager,
@@ -1352,30 +1392,32 @@ export class Player implements AbstractObject {
             }
         }
 
-        const bladeBounds = (curWeapDef as MeleeDef).bladeBounds;
-        if (this.meleeStreakEmitter && bladeBounds) {
-            const emitterOffset =
-                bladeBounds.ori == SpriteOrientation.Up
-                    ? v2.create(
-                          (bladeBounds.max.x + bladeBounds.min.x) / 2,
-                          bladeBounds.max.y,
-                      )
-                    : v2.create(
-                          bladeBounds.max.x,
-                          (bladeBounds.max.y + bladeBounds.min.y) / 2,
-                      );
-
-            const emitterPos = this.meleeToWorldSpace(emitterOffset, camera);
+        if (this.meleeStreakEmitter) {
+            const rightHand = this.bones[Bones.HandR];
+            const worldOffset = v2.create(
+                rightHand.pivot.x / camera.m_ppu,
+                -rightHand.pivot.y / camera.m_ppu,
+            );
+            const emitterPos = v2.add(
+                this.m_pos,
+                v2.rotate(worldOffset, Math.atan2(this.m_dir.y, this.m_dir.x)),
+            );
 
             this.meleeStreakEmitter.pos = emitterPos;
             this.meleeStreakEmitter.layer = this.renderLayer;
             this.meleeStreakEmitter.zOrd = this.renderZOrd + 1;
         }
 
-        if (this.meleeIdleEmitter && bladeBounds && this.currentAnim() == Anim.None) {
-            const emitterOffset = v2.midpoint(bladeBounds.min, bladeBounds.max);
-
-            const emitterPos = this.meleeToWorldSpace(emitterOffset, camera);
+        if (this.meleeIdleEmitter) {
+            const rightHand = this.bones[Bones.HandR];
+            const worldOffset = v2.create(
+                rightHand.pivot.x / camera.m_ppu,
+                -rightHand.pivot.y / camera.m_ppu,
+            );
+            const emitterPos = v2.add(
+                this.m_pos,
+                v2.rotate(worldOffset, Math.atan2(this.m_dir.y, this.m_dir.x)),
+            );
 
             this.meleeIdleEmitter.pos = emitterPos;
             this.meleeIdleEmitter.layer = this.renderLayer;
@@ -1773,14 +1815,14 @@ export class Player implements AbstractObject {
             this.hipSprite.visible = false;
         }
 
-        const R = GameObjectDefs[this.m_netData.m_activeWeapon] as
+        const weapDef = GameObjectDefs[this.m_netData.m_activeWeapon] as
             | GunDef
             | MeleeDef
             | ThrowableDef;
-        if (R.type == "gun") {
+        if (weapDef.type == "gun") {
             this.gunRSprites.setType(this.m_netData.m_activeWeapon, bodyScale);
             this.gunRSprites.setVisible(true);
-            if (R.isDual) {
+            if (weapDef.isDual) {
                 this.gunLSprites.setType(this.m_netData.m_activeWeapon, bodyScale);
                 this.gunLSprites.setVisible(true);
             } else {
@@ -1789,7 +1831,7 @@ export class Player implements AbstractObject {
             const L = this.bodyContainer.getChildIndex(this.handRContainer);
             const q = this.bodyContainer.getChildIndex(this.handRContainer);
             let F = L + 1;
-            if (this.gunRSprites.magTop || R.worldImg.handsBelow) {
+            if (this.gunRSprites.magTop || weapDef.worldImg.handsBelow) {
                 F = L - 1;
             }
             F = math.max(F, 0);
@@ -1797,7 +1839,9 @@ export class Player implements AbstractObject {
                 this.bodyContainer.addChildAt(this.handLContainer, F);
             }
             const j = this.handRContainer.getChildIndex(this.gunRSprites.container);
-            const N = R.worldImg.handsBelow ? this.handRContainer.children.length : 0;
+            const N = weapDef.worldImg.handsBelow
+                ? this.handRContainer.children.length
+                : 0;
             if (j != N) {
                 this.handRContainer.addChildAt(this.gunRSprites.container, N);
             }
@@ -1816,28 +1860,39 @@ export class Player implements AbstractObject {
                 this.bodyContainer.addChild(this.handRContainer);
             }
         }
-        if (R.type == "melee" && this.m_netData.m_activeWeapon != "fists") {
-            const V = R.worldImg!;
-            this.meleeSprite.texture = PIXI.Texture.from(V.sprite);
-            this.meleeSprite.pivot.set(-V.pos.x, -V.pos.y);
-            this.meleeSprite.scale.set(V.scale.x / bodyScale, V.scale.y / bodyScale);
-            this.meleeSprite.rotation = V.rot;
-            this.meleeSprite.tint = V.tint;
+        if (weapDef.type == "melee" && this.m_netData.m_activeWeapon != "fists") {
+            const worldImg = weapDef.worldImg!;
+            this.meleeSprite.texture = PIXI.Texture.from(worldImg.sprite);
+
+            let pos: Vec2;
+            if (this.m_netData.m_animType == Anim.DeployMelee && worldImg.deployPos) {
+                pos = worldImg.deployPos;
+            } else {
+                pos = worldImg.pos;
+            }
+
+            this.meleeSprite.pivot.set(-pos.x, -pos.y);
+            this.meleeSprite.scale.set(
+                worldImg.scale.x / bodyScale,
+                worldImg.scale.y / bodyScale,
+            );
+            this.meleeSprite.rotation = worldImg.rot;
+            this.meleeSprite.tint = worldImg.tint;
             this.meleeSprite.visible = true;
             const U = this.handRContainer.getChildIndex(this.handRSprite);
-            const W = math.max(V.renderOnHand ? U + 1 : U - 1, 0);
+            const W = math.max(worldImg.renderOnHand ? U + 1 : U - 1, 0);
             if (this.handRContainer.getChildIndex(this.meleeSprite) != W) {
                 this.handRContainer.addChildAt(this.meleeSprite, W);
             }
             const G = this.bodyContainer.getChildIndex(this.handRContainer);
-            const X = math.max(V.leftHandOntop ? G + 1 : G - 1, 0);
+            const X = math.max(worldImg.leftHandOntop ? G + 1 : G - 1, 0);
             if (this.bodyContainer.getChildIndex(this.handLContainer) != X) {
                 this.bodyContainer.addChildAt(this.handLContainer, X);
             }
         } else {
             this.meleeSprite.visible = false;
         }
-        if (R.type == "throwable") {
+        if (weapDef.type == "throwable") {
             const K = function (
                 e: PIXI.Sprite,
                 t: {
@@ -1862,7 +1917,7 @@ export class Player implements AbstractObject {
                     e.visible = false;
                 }
             };
-            const Z = R.handImg?.[this.throwableState]!;
+            const Z = weapDef.handImg?.[this.throwableState]!;
             K(this.objectLSprite, Z.left);
             K(this.objectRSprite, Z.right);
         } else {
@@ -2250,6 +2305,16 @@ export class Player implements AbstractObject {
                 const o = a[i];
                 return t(o, o == "fists" && a.length == 1);
             }
+            case Anim.DeployMelee: {
+                const def = GameObjectDefs[this.m_netData.m_activeWeapon] as MeleeDef;
+
+                if (!def.anim.deploy) {
+                    return t("fists", true);
+                }
+
+                const type = util.randomElem(def.anim.deploy.anims);
+                return t(type, false);
+            }
             default:
                 return t("none", false);
         }
@@ -2334,7 +2399,8 @@ export class Player implements AbstractObject {
                 }
             }
 
-            if (anim.streaks) {
+            const curWeapDef = GameObjectDefs[this.m_netData.m_activeWeapon];
+            if (anim.streaks && curWeapDef.type == "melee") {
                 for (let i = 0; i < anim.streaks.length; i++) {
                     const streak = anim.streaks[i];
                     if (streak.startTime >= ticker && streak.startTime < f) {
@@ -2344,6 +2410,46 @@ export class Player implements AbstractObject {
                             streak.emitter,
                             {
                                 layer: this.layer,
+                                bounds: {
+                                    kind: "local",
+                                    sample: (min: Vec2, max: Vec2) => {
+                                        const bladeBounds = curWeapDef.bladeBounds!;
+
+                                        const rMin =
+                                            bladeBounds.ori == SpriteOrientation.Right
+                                                ? min
+                                                : v2.rotate(min, Math.PI / 2);
+                                        const rMax =
+                                            bladeBounds.ori == SpriteOrientation.Right
+                                                ? max
+                                                : v2.rotate(max, Math.PI / 2);
+
+                                        const localOffset = util.randomPointInAabb({
+                                            min: rMin,
+                                            max: rMax,
+                                        });
+                                        const spriteOffset = v2.create(
+                                            math.remap(
+                                                localOffset.x,
+                                                -1,
+                                                1,
+                                                bladeBounds.min.x,
+                                                bladeBounds.max.x,
+                                            ),
+                                            math.remap(
+                                                localOffset.y,
+                                                -1,
+                                                1,
+                                                bladeBounds.min.y,
+                                                bladeBounds.max.y,
+                                            ),
+                                        );
+                                        return this.meleeToWorldSpace(
+                                            spriteOffset,
+                                            AnimCtx.camera,
+                                        );
+                                    },
+                                },
                             },
                         );
                     } else if (streak.endTime >= ticker && streak.endTime < f) {

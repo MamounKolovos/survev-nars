@@ -288,15 +288,15 @@ export class Map {
             }
         }
 
-        if (this.cameraEmitter) {
+        if (this.cameraEmitter && this.cameraEmitter.bounds.kind == "circle") {
             this.cameraEmitter.pos = v2.copy(camera.m_pos);
             this.cameraEmitter.enabled = true;
 
             // Adjust radius and spawn rate based on zoom
             const maxRadius = 120;
             const camRadius = activePlayer.m_getZoom() * 2.5;
-            this.cameraEmitter.radius = math.min(camRadius, maxRadius);
-            const radius = this.cameraEmitter.radius;
+            this.cameraEmitter.bounds.radius = math.min(camRadius, maxRadius);
+            const radius = this.cameraEmitter.bounds.radius;
             const ratio = (radius * radius) / (maxRadius * maxRadius);
             this.cameraEmitter.rateMult = 1 / ratio;
             const alphaTarget = activePlayer.layer == 0 ? 1 : 0;

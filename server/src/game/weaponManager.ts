@@ -85,13 +85,27 @@ export class WeaponManager {
             forceSwitch = true;
         }
 
-        if (idx === this._curWeapIdx) return;
-        if (this.weapons[idx].type === "") return;
-
         const curWeaponDef = GameObjectDefs[this.activeWeapon] as
             | GunDef
             | MeleeDef
             | ThrowableDef;
+
+        if (idx === this._curWeapIdx) {
+            // just a fun QOL thing, lets people trigger deploy animations without having to switch to another slot then switch back
+            if (
+                curWeaponDef.type == "melee" &&
+                curWeaponDef.anim.deploy &&
+                this.player.animType == GameConfig.Anim.None
+            ) {
+                this.player.playAnim(
+                    GameConfig.Anim.DeployMelee,
+                    curWeaponDef.anim.deploy.duration,
+                );
+            }
+            return;
+        }
+
+        if (this.weapons[idx].type === "") return;
 
         if (
             this.player.game.pluginManager.emit("playerWillSwitchIdx", {
@@ -128,13 +142,13 @@ export class WeaponManager {
         const nextWeapon = this.weapons[idx];
         let effectiveSwitchDelay = 0;
 
-        if (curWeapon.type && nextWeapon.type && changeCooldown) {
-            // ensure that player is still holding both weapons (didnt drop one)
-            const nextWeaponDef = GameObjectDefs[this.weapons[idx].type] as
-                | GunDef
-                | MeleeDef
-                | ThrowableDef;
+        const nextWeaponDef = GameObjectDefs[this.weapons[idx].type] as
+            | GunDef
+            | MeleeDef
+            | ThrowableDef;
 
+        // ensure that player is still holding both weapons (didnt drop one)
+        if (curWeapon.type && nextWeapon.type && changeCooldown) {
             const swappingToGun = nextWeaponDef.type == "gun";
 
             effectiveSwitchDelay = swappingToGun ? nextWeaponDef.switchDelay : 0;
@@ -183,6 +197,13 @@ export class WeaponManager {
 
         if (idx === this.curWeapIdx && WeaponSlot[idx] == "gun") {
             this.offHand = false;
+        }
+
+        if (nextWeaponDef.type == "melee" && nextWeaponDef.anim.deploy) {
+            this.player.playAnim(
+                GameConfig.Anim.DeployMelee,
+                nextWeaponDef.anim.deploy.duration,
+            );
         }
 
         this.player.setDirty();
@@ -593,6 +614,10 @@ export class WeaponManager {
             if (def.charge) {
                 this.player.impulseGlovesTicker = 0;
                 this.player.hasMeleeCharges = false;
+            }
+
+            if (this.player.animType == GameConfig.Anim.DeployMelee) {
+                this.player.cancelAnim();
             }
 
             this.player.dropLoot(this.weapons[slot].type);

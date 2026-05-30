@@ -260,13 +260,14 @@ export function attachCustomQuickSwitch(plugin: GamePlugin, customSwitchDelay: n
         const nextWeapon = weaponManager.weapons[idx];
         let effectiveSwitchDelay = 0;
 
+        const nextWeaponDef = GameObjectDefs[weaponManager.weapons[idx].type] as
+            | GunDef
+            | MeleeDef
+            | ThrowableDef;
+
         // ensure that player is still holding both weapons (didnt drop one)
         if (curWeapon.type && nextWeapon.type && changeCooldown) {
             const curWeaponDef = GameObjectDefs[player.activeWeapon] as
-                | GunDef
-                | MeleeDef
-                | ThrowableDef;
-            const nextWeaponDef = GameObjectDefs[weaponManager.weapons[idx].type] as
                 | GunDef
                 | MeleeDef
                 | ThrowableDef;
@@ -313,6 +314,13 @@ export function attachCustomQuickSwitch(plugin: GamePlugin, customSwitchDelay: n
 
         if (idx === weaponManager.curWeapIdx && GameConfig.WeaponSlot[idx] == "gun") {
             weaponManager.offHand = false;
+        }
+
+        if (nextWeaponDef.type == "melee" && nextWeaponDef.anim.deploy) {
+            weaponManager.player.playAnim(
+                GameConfig.Anim.DeployMelee,
+                nextWeaponDef.anim.deploy.duration,
+            );
         }
 
         weaponManager.player.setDirty();
