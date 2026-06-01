@@ -2337,10 +2337,9 @@ export class Player implements AbstractObject {
     }
 
     updateAnim(dt: number, AnimCtx: AnimCtx) {
-        if (this.anim.data.type == "none") {
+        if (this.anim.type != Anim.DeployMelee) {
             this.meleeStreakEmitter?.stop();
             this.meleeStreakEmitter = null;
-            this.playAnim(Anim.None, this.anim.seq);
         }
         if (this.currentAnim() != Anim.None) {
             const ticker = this.anim.ticker;
