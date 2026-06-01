@@ -3489,7 +3489,7 @@ export const EmitterDefs: Record<string, EmitterDef> = {
     },
     inspect_orchid: {
         particle: "streak_orchid",
-        rate: new Range(0.01, 0.01),
+        rate: new Range(0.02, 0.02),
         bounds: {
             kind: "local",
             min: v2.create(-0.2, -0.9),

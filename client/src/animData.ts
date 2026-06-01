@@ -955,12 +955,12 @@ const DerivedAnimations: Record<string, AnimDef> = {
             {
                 startTime: 0.1,
                 endTime: 0.3,
-                emitter: "streak_orchid",
+                emitter: "inspect_orchid",
             },
             {
                 startTime: 0.5,
                 endTime: def.katana.anim.deploy!.duration,
-                emitter: "streak_orchid",
+                emitter: "inspect_orchid",
             },
         ],
     }),
