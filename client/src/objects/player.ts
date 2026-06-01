@@ -1503,7 +1503,7 @@ export class Player implements AbstractObject {
         // bone space
         const bonePose = this.bones[Bones.HandR];
         const boneOffset = v2.add(bonePose.pivot, rotatedOffset);
-        const boneSpaceOffset = v2.rotate(boneOffset, bonePose.rot);
+        const boneSpaceOffset = v2.add(v2.rotate(boneOffset, bonePose.rot), bonePose.pos);
 
         // world space
         const worldOffset = v2.create(

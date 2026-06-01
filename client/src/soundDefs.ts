@@ -1211,6 +1211,14 @@ const Sounds: Record<string, Record<string, SoundDef>> = {
             path: "audio/sfx/fire_swing_01.mp3",
             volume: 0.8,
         },
+        sword_slash_01: {
+            path: "audio/sfx/sword_slash_01.mp3",
+            volume: 0.6,
+        },
+        sword_unsheathe_01: {
+            path: "audio/sfx/sword_unsheathe_01.mp3",
+            volume: 0.7,
+        },
         medium_swing_01: {
             path: "audio/sfx/medium_swing_01.mp3",
             volume: 1,
