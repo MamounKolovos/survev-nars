@@ -214,7 +214,7 @@ export const BaseDefs: Record<string, BulletDef> = {
     },
     bullet_garand: {
         type: "bullet",
-        damage: 35,
+        damage: 31.5,
         obstacleDamage: 2,
         falloff: 0.9,
         distance: 400,
@@ -231,7 +231,7 @@ export const BaseDefs: Record<string, BulletDef> = {
         obstacleDamage: 1,
         falloff: 0.6,
         speed: 66,
-        distance: 27,
+        distance: 28.35,
         variance: 0,
         shrapnel: false,
         tracerColor: "12gauge",
@@ -576,7 +576,7 @@ export const BaseDefs: Record<string, BulletDef> = {
     },
     bullet_famas: {
         type: "bullet",
-        damage: 15,
+        damage: 15.75,
         obstacleDamage: 1,
         falloff: 0.8,
         distance: 150,
@@ -668,7 +668,7 @@ export const BaseDefs: Record<string, BulletDef> = {
     },
     bullet_scout: {
         type: "bullet",
-        damage: 56,
+        damage: 58.8,
         obstacleDamage: 1,
         falloff: 0.92,
         distance: 450,

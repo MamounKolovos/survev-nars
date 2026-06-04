@@ -78,17 +78,17 @@ const secondaryWeights = [
     { weight: 1, gun: "ak47" },
     { weight: 1, gun: "hk416" },
     { weight: 1, gun: "scar" },
-    { weight: 2, gun: "garand" },
+    { weight: 0.8, gun: "garand" },
     // { weight: 1, gun: "m1014" },
     { weight: 0.5, gun: "mk12" },
     // { weight: 0.5, gun: "m39" },
 
     { weight: 0.8, gun: "deagle_dual" },
     { weight: 0.3, gun: "saiga" },
-    { weight: 3, gun: "famas" },
+    { weight: 1.5, gun: "famas" },
     { weight: 1.5, gun: "an94" },
     { weight: 0.5, gun: "p30l_dual" },
-    { weight: 1, gun: "colt45_dual" },
+    { weight: 1.1, gun: "colt45_dual" },
     { weight: 0.001, gun: "awc" },
 ];
 
@@ -153,7 +153,7 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
             if (x < 0.05) {
                 return "spas12";
             }
-            if (x < 0.75) {
+            if (x < 0.65) {
                 return "m870";
             }
             return util.weightedRandom(gt.rifles).gun;
@@ -173,7 +173,7 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
         case "ak47":
         case "hk416":
         case "scar": {
-            if (x < 0.2) {
+            if (x < 1.5) {
                 return util.weightedRandom(gt.rifles).gun;
             }
             if (x < 0.75) {
@@ -517,7 +517,7 @@ const gunStrengths: Record<string, number> = {
     mk12: 0.1,
     m39: 0.1,
     deagle_dual: 0.2,
-    famas: 0.25,
+    famas: 0.28,
     an94: 0.5,
     bar: 0.0,
     p30l_dual: 0.75,
