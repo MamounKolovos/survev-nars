@@ -173,7 +173,7 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
         case "ak47":
         case "hk416":
         case "scar": {
-            if (x < 1.5) {
+            if (x < .15) {
                 return util.weightedRandom(gt.rifles).gun;
             }
             if (x < 0.75) {
