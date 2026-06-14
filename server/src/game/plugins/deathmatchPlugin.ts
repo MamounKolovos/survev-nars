@@ -1,5 +1,6 @@
 import { GameObjectDefs } from "../../../../shared/defs/gameObjectDefs";
 import type { GunDef } from "../../../../shared/defs/gameObjects/gunDefs";
+import { SmokeType } from "../../../../shared/defs/gameObjects/throwableDefs";
 import { MapObjectDefs } from "../../../../shared/defs/mapObjectDefs";
 import type { ObstacleDef } from "../../../../shared/defs/mapObjectsTyping";
 import { MapId } from "../../../../shared/defs/types/misc";
@@ -14,7 +15,6 @@ import { v2 } from "../../../../shared/utils/v2";
 import { TimerManager, createSimpleSegment } from "../../utils/pluginUtils";
 import type { DamageParams } from "../objects/gameObject";
 import type { Player } from "../objects/player";
-import { SmokeType } from "../../../../shared/defs/gameObjects/throwableDefs";
 import { GamePlugin } from "../pluginManager";
 import { attachCustomQuickSwitch, attachGracePeriod } from "./internalUtils";
 

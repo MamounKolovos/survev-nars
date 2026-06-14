@@ -1,4 +1,5 @@
 import { GameObjectDefs } from "../../../../shared/defs/gameObjectDefs";
+import { SmokeType } from "../../../../shared/defs/gameObjects/throwableDefs";
 import { MapObjectDefs } from "../../../../shared/defs/mapObjectDefs";
 import type { ObstacleDef } from "../../../../shared/defs/mapObjectsTyping";
 import { DamageType, GameConfig } from "../../../../shared/gameConfig";
@@ -12,7 +13,6 @@ import type { Game } from "../game";
 import type { Building } from "./building";
 import { BaseGameObject, type DamageParams } from "./gameObject";
 import type { Player } from "./player";
-import { SmokeType } from "../../../../shared/defs/gameObjects/throwableDefs";
 
 export class Obstacle extends BaseGameObject {
     override readonly __type = ObjectType.Obstacle;

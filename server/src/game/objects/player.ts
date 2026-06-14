@@ -20,6 +20,7 @@ import type { OutfitDef } from "../../../../shared/defs/gameObjects/outfitDefs";
 import { PerkProperties } from "../../../../shared/defs/gameObjects/perkDefs";
 import type { RoleDef } from "../../../../shared/defs/gameObjects/roleDefs";
 import type { ThrowableDef } from "../../../../shared/defs/gameObjects/throwableDefs";
+import { SmokeType } from "../../../../shared/defs/gameObjects/throwableDefs";
 import {
     type Action,
     type Anim,
@@ -49,7 +50,6 @@ import { BaseGameObject, type DamageParams, type GameObject } from "./gameObject
 import type { Loot } from "./loot";
 import type { MapIndicator } from "./mapIndicator";
 import type { Obstacle } from "./obstacle";
-import { SmokeType } from "../../../../shared/defs/gameObjects/throwableDefs";
 import type { Structure } from "./structure";
 
 type GodMode = {

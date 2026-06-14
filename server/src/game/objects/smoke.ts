@@ -1,3 +1,4 @@
+import { GameConfig } from "../../../../shared/gameConfig";
 import { ObjectType } from "../../../../shared/net/objectSerializeFns";
 import { type AABB, coldet } from "../../../../shared/utils/coldet";
 import { collider } from "../../../../shared/utils/collider";
@@ -6,7 +7,6 @@ import { util } from "../../../../shared/utils/util";
 import { type Vec2, v2 } from "../../../../shared/utils/v2";
 import type { Game } from "../game";
 import { BaseGameObject } from "./gameObject";
-import { GameConfig } from "../../../../shared/gameConfig";
 
 // max smokes an emitter can spawn
 const MAX_SMOKES = 10;
@@ -132,7 +132,10 @@ export class Smoke extends BaseGameObject {
         this.layer = layer;
         this.interior = interior;
         this.type = type;
-        this.life = type == 0 ? GameConfig.smokeTimings["smoke"] : GameConfig.smokeTimings["mustardGas"];
+        this.life =
+            type == 0
+                ? GameConfig.smokeTimings["smoke"]
+                : GameConfig.smokeTimings["mustardGas"];
         this.bounds = collider.createAabbExtents(
             v2.create(0, 0),
             v2.create(this.rad, this.rad),

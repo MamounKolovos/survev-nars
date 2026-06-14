@@ -390,6 +390,6 @@ export const GameConfig = {
     } as Record<string, number>,
     smokeTimings: {
         smoke: 15,
-        mustardGas: 10
+        mustardGas: 10,
     } as Record<string, number>,
 };

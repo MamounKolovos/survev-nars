@@ -1,5 +1,6 @@
 import { GameObjectDefs } from "../../../../shared/defs/gameObjectDefs";
 import type { ExplosionDef } from "../../../../shared/defs/gameObjects/explosionsDefs";
+import { SmokeType } from "../../../../shared/defs/gameObjects/throwableDefs";
 import { ObjectType } from "../../../../shared/net/objectSerializeFns";
 import { collider } from "../../../../shared/utils/collider";
 import { math } from "../../../../shared/utils/math";
@@ -9,7 +10,6 @@ import type { Game } from "../game";
 import type { DamageParams, GameObject } from "./gameObject";
 import { EXPLOSION_LOOT_PUSH_FORCE } from "./loot";
 import type { Player } from "./player";
-import { SmokeType } from "../../../../shared/defs/gameObjects/throwableDefs";
 
 interface LineCollision {
     obj: GameObject;
