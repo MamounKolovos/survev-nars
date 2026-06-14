@@ -95,7 +95,9 @@ export class WeaponManager {
             if (
                 curWeaponDef.type == "melee" &&
                 curWeaponDef.anim.deploy &&
-                this.player.animType == GameConfig.Anim.None
+                this.player.animType == GameConfig.Anim.None &&
+                !this.player.dead &&
+                !this.player.downed
             ) {
                 this.player.playAnim(
                     GameConfig.Anim.DeployMelee,
@@ -257,6 +259,11 @@ export class WeaponManager {
         if (idx === this.curWeapIdx) {
             this.bursts.length = 0;
             this.player.setDirty();
+        }
+
+        // must cancel if you're replacing melee, can potentially crash otherwise
+        if (isMelee && this.player.animType == GameConfig.Anim.DeployMelee) {
+            this.player.cancelAnim();
         }
 
         if (!this.activeWeapon) {

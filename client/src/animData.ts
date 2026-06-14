@@ -577,6 +577,120 @@ const BaseAnimations: Record<string, AnimDef> = {
             },
         ],
     },
+    katanaInspect: {
+        keyframes: [
+            frame(0, {
+                [Bones.HandL]: new Pose(v2.create(0, 0), 0, v2.create(8.5, -20.25)),
+                [Bones.HandR]: new Pose(
+                    v2.create(0, 0),
+                    -2 * Math.PI,
+                    v2.create(-3, -20.75),
+                ),
+            }),
+            frame(0.1, {
+                [Bones.HandL]: new Pose(v2.create(0, 0), 0, v2.create(15, 0)),
+                [Bones.HandR]: new Pose(
+                    v2.create(0, 0),
+                    -1.5 * Math.PI,
+                    v2.create(19, 16.75),
+                ),
+            }),
+            frame(0.25, {
+                [Bones.HandL]: new Pose(v2.create(0, 0), 0, v2.create(18, -35)),
+                [Bones.HandR]: new Pose(
+                    v2.create(0, 0),
+                    -1.45 * Math.PI,
+                    v2.create(19, 16.75),
+                ),
+            }),
+            frame(0.6, {
+                [Bones.HandL]: new Pose(v2.create(0, 0), 0, v2.create(30, -40)),
+                [Bones.HandR]: new Pose(
+                    v2.create(0, 0),
+                    -1.4 * Math.PI,
+                    v2.create(19, 16.75),
+                ),
+            }),
+            frame(0.7, {
+                [Bones.HandL]: new Pose(v2.create(0, 0), 0, v2.create(8.5, 13.25)),
+                [Bones.HandR]: new Pose(
+                    v2.create(0, 0),
+                    -0.1 * Math.PI,
+                    v2.create(-3, 17.75),
+                ),
+            }),
+            frame(def.katana.anim.deploy!.duration, {
+                [Bones.HandL]: new Pose(v2.create(0, 0), 0, v2.create(8.5, 13.25)),
+                [Bones.HandR]: new Pose(v2.create(0, 0), 0, v2.create(-3, 17.75)),
+            }),
+        ],
+        effects: [effect(0, "animPlaySound", { sound: "unsheathe" })],
+    },
+    katanaFlourish: {
+        keyframes: [
+            frame(0, {
+                [Bones.HandL]: new Pose(v2.create(0, 0), 0, v2.create(-12, -25.25)),
+                [Bones.HandR]: new Pose(
+                    v2.create(0, 0),
+                    -2.25 * Math.PI,
+                    v2.create(-17, -14.75),
+                ),
+            }),
+            frame(0.1, {
+                [Bones.HandL]: new Pose(v2.create(0, 0), 0, v2.create(14, -12.25)),
+                [Bones.HandR]: new Pose(
+                    v2.create(0, 0),
+                    -1 * Math.PI,
+                    v2.create(12, -13.75),
+                ),
+            }),
+            frame(0.2, {
+                [Bones.HandL]: new Pose(v2.create(0, 0), 0, v2.create(14, -12.25)),
+                [Bones.HandR]: new Pose(
+                    v2.create(0, 0),
+                    -0.2 * Math.PI,
+                    v2.create(5, 4.75),
+                ),
+            }),
+            frame(0.3, {
+                [Bones.HandL]: new Pose(v2.create(0, 0), 0, v2.create(10, -12.25)),
+                [Bones.HandR]: new Pose(
+                    v2.create(0, 0),
+                    0.5 * Math.PI,
+                    v2.create(20, 4.75),
+                ),
+            }),
+            frame(0.45, {
+                [Bones.HandL]: new Pose(v2.create(0, 0), 0, v2.create(10, -12.25)),
+                [Bones.HandR]: new Pose(v2.create(0, 0), 2 * Math.PI, v2.create(5, -14)),
+            }),
+            frame(0.55, {
+                [Bones.HandL]: new Pose(v2.create(0, 0), 0, v2.create(10, -12.25)),
+                [Bones.HandR]: new Pose(
+                    v2.create(0, 0),
+                    2.25 * Math.PI,
+                    v2.create(15, -14),
+                ),
+            }),
+            frame(0.7, {
+                [Bones.HandL]: new Pose(v2.create(0, 0), 0, v2.create(8.5, 13.25)),
+                [Bones.HandR]: new Pose(
+                    v2.create(0, 0),
+                    0.1 * Math.PI,
+                    v2.create(-1, 15.75),
+                ),
+            }),
+            frame(def.katana.anim.deploy!.duration, {
+                [Bones.HandL]: new Pose(v2.create(0, 0), 0, v2.create(8.5, 13.25)),
+                [Bones.HandR]: new Pose(v2.create(0, 0), 0, v2.create(-3, 17.75)),
+            }),
+        ],
+        effects: [
+            effect(0, "animPlaySound", { sound: "slash" }),
+            effect(0.2, "animPlaySound", { sound: "slash" }),
+            effect(0.5, "animPlaySound", { sound: "slash" }),
+        ],
+    },
     naginataSwing: {
         keyframes: [
             frame(0, {
@@ -824,6 +938,29 @@ const DerivedAnimations: Record<string, AnimDef> = {
                 startTime: 0.2,
                 endTime: def.karambit.anim.deploy!.duration,
                 emitter: "streak_fire",
+            },
+        ],
+    }),
+    katanaOrchidInspect: deriveAnim("katanaInspect", {
+        streaks: [
+            {
+                startTime: 0.2,
+                endTime: 0.7,
+                emitter: "inspect_orchid",
+            },
+        ],
+    }),
+    katanaOrchidFlourish: deriveAnim("katanaFlourish", {
+        streaks: [
+            {
+                startTime: 0.1,
+                endTime: 0.3,
+                emitter: "inspect_orchid",
+            },
+            {
+                startTime: 0.5,
+                endTime: def.katana.anim.deploy!.duration,
+                emitter: "inspect_orchid",
             },
         ],
     }),

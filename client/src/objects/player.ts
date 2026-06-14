@@ -1503,7 +1503,7 @@ export class Player implements AbstractObject {
         // bone space
         const bonePose = this.bones[Bones.HandR];
         const boneOffset = v2.add(bonePose.pivot, rotatedOffset);
-        const boneSpaceOffset = v2.rotate(boneOffset, bonePose.rot);
+        const boneSpaceOffset = v2.add(v2.rotate(boneOffset, bonePose.rot), bonePose.pos);
 
         // world space
         const worldOffset = v2.create(
@@ -2337,10 +2337,9 @@ export class Player implements AbstractObject {
     }
 
     updateAnim(dt: number, AnimCtx: AnimCtx) {
-        if (this.anim.data.type == "none") {
+        if (this.anim.type != Anim.DeployMelee && this.anim.type != Anim.Melee) {
             this.meleeStreakEmitter?.stop();
             this.meleeStreakEmitter = null;
-            this.playAnim(Anim.None, this.anim.seq);
         }
         if (this.currentAnim() != Anim.None) {
             const ticker = this.anim.ticker;

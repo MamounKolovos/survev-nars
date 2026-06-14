@@ -386,7 +386,8 @@ export class GameModeManager {
 
                         const bledOut =
                             player.downedBy &&
-                            params.damageType == GameConfig.DamageType.Bleeding;
+                            (params.damageType == GameConfig.DamageType.Bleeding ||
+                                params.damageType == GameConfig.DamageType.Gas);
 
                         if (finishedByTeammate || bledOut) {
                             params.source = player.downedBy;
@@ -431,7 +432,8 @@ export class GameModeManager {
 
                         const bledOut =
                             player.downedBy &&
-                            params.damageType == GameConfig.DamageType.Bleeding;
+                            (params.damageType == GameConfig.DamageType.Bleeding ||
+                                params.damageType == GameConfig.DamageType.Gas);
 
                         if (finishedByTeammate || bledOut) {
                             params.source = player.downedBy;

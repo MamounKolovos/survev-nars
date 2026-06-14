@@ -3487,6 +3487,19 @@ export const EmitterDefs: Record<string, EmitterDef> = {
         rot: new Range(-Math.PI / 6, Math.PI / 6),
         maxCount: Number.MAX_VALUE,
     },
+    inspect_orchid: {
+        particle: "streak_orchid",
+        rate: new Range(0.02, 0.02),
+        bounds: {
+            kind: "local",
+            min: v2.create(-0.2, -0.9),
+            max: v2.create(1, 0.9),
+        },
+        speed: new Range(1.75, 2.75),
+        angle: Math.PI * 0.3,
+        rot: new Range(-Math.PI / 6, Math.PI / 6),
+        maxCount: Number.MAX_VALUE,
+    },
     fastfast: {
         particle: "xp_mythic",
         rate: new Range(0.005, 0.005),

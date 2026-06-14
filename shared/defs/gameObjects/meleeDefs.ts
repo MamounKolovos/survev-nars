@@ -690,12 +690,18 @@ const BaseDefs: Record<string, MeleeDef> = {
         anim: {
             idlePose: "meleeKatana",
             attackAnims: ["katanaSwing"],
+            deploy: {
+                anims: ["katanaInspect", "katanaFlourish"],
+                duration: 0.75,
+            },
         },
         sound: {
             pickup: "frag_pickup_01",
             swing: "medium_swing_01",
             deploy: "stow_weapon_01",
             playerHit: "knife_hit_01",
+            slash: "sword_slash_01",
+            unsheathe: "sword_unsheathe_01",
         },
         lootImg: {
             sprite: "loot-melee-katana.img",
@@ -709,6 +715,10 @@ const BaseDefs: Record<string, MeleeDef> = {
         worldImg: {
             sprite: "loot-melee-katana.img",
             pos: {
+                x: 52.5,
+                y: -2,
+            },
+            deployPos: {
                 x: 52.5,
                 y: -2,
             },
@@ -1467,6 +1477,9 @@ const SkinDefs: Record<string, MeleeDef> = {
         quality: 1,
         anim: {
             attackAnims: ["katanaOrchidSwing"],
+            deploy: {
+                anims: ["katanaOrchidInspect", "katanaOrchidFlourish"],
+            },
         },
         lootImg: { sprite: "loot-melee-katana-orchid.img" },
         worldImg: {

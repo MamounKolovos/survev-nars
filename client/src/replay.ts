@@ -142,7 +142,7 @@ export class Replay {
 
     stopped = false;
 
-    startingPlayerId?: number;
+    postSeekPlayerId?: number;
 
     lastSpectatedPlayerId?: number;
 
@@ -289,7 +289,7 @@ export class Replay {
             }
 
             if (source.playerId) {
-                this.startingPlayerId = source.playerId;
+                this.postSeekPlayerId = source.playerId;
             }
         }
     }
@@ -454,9 +454,9 @@ export class Replay {
                     this.game.update(this.tickElapsed / 1_000_000);
                 }
 
-                if (this.startingPlayerId) {
-                    this.setPerspectiveById(this.startingPlayerId);
-                    this.startingPlayerId = undefined;
+                if (this.postSeekPlayerId) {
+                    this.setPerspectiveById(this.postSeekPlayerId);
+                    this.postSeekPlayerId = undefined;
                 }
 
                 this.seekCommand = undefined;
@@ -863,7 +863,28 @@ export class Replay {
         if (this.game.m_uiManager.replayInputs.markerClicked != undefined) {
             const totalElapsed = this.game.m_uiManager.replayInputs.markerClicked;
 
-            this.seekCommand = { kind: "absolute", amount: totalElapsed };
+            // 5 seconds before so that the user actually has enough time to watch the event unfold
+            this.seekCommand = { kind: "absolute", amount: totalElapsed - 5_000_000 };
+
+            // should switch perspective to killer/downer if in freecam
+            if (this.game.m_activePlayer.isFreecam) {
+                for (let i = 0; i < this.activeEvents.length; i++) {
+                    const event = this.activeEvents[i];
+                    if (event.totalElapsed != totalElapsed) continue;
+
+                    switch (event.kind) {
+                        case "killed":
+                            this.postSeekPlayerId = event.killerId;
+                            break;
+                        case "downed":
+                            this.postSeekPlayerId = event.downerId;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                }
+            }
         }
 
         if (this.game.m_input.keyPressed(Key.M)) {
