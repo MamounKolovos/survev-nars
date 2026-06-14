@@ -49,7 +49,7 @@ import { BaseGameObject, type DamageParams, type GameObject } from "./gameObject
 import type { Loot } from "./loot";
 import type { MapIndicator } from "./mapIndicator";
 import type { Obstacle } from "./obstacle";
-import { SmokeType } from "./smoke";
+import { SmokeType } from "../../../../shared/defs/gameObjects/throwableDefs";
 import type { Structure } from "./structure";
 
 type GodMode = {
@@ -107,6 +107,7 @@ export class PlayerBarn {
     }> = [];
 
     sendWinEmoteTicker = 0;
+    mustardGasTicker = 0;
     sentWinEmotes = false;
 
     teams: Team[] = [];
@@ -279,6 +280,7 @@ export class PlayerBarn {
         let sendWinEmote = false;
         if (this.game.over && !this.sentWinEmotes) {
             this.sendWinEmoteTicker -= dt;
+            this.mustardGasTicker += dt;
             if (this.sendWinEmoteTicker <= 0) {
                 sendWinEmote = true;
                 this.sentWinEmotes = true;
@@ -2012,7 +2014,7 @@ export class Player extends BaseGameObject {
                 if (coldet.testCircleCircle(this.pos, this.rad, obj.pos, obj.rad)) {
                     insideSmoke = true;
                 }
-                if (obj.type == SmokeType.Mustard && insideSmoke && obj.__id) {
+                if (obj.type == SmokeType.MustardGas && insideSmoke && obj.__id) {
                     this.damage({
                         amount: 0.02,
                         damageType: GameConfig.DamageType.Mustard,

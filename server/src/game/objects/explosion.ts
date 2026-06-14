@@ -9,7 +9,7 @@ import type { Game } from "../game";
 import type { DamageParams, GameObject } from "./gameObject";
 import { EXPLOSION_LOOT_PUSH_FORCE } from "./loot";
 import type { Player } from "./player";
-import { SmokeType } from "./smoke";
+import { SmokeType } from "../../../../shared/defs/gameObjects/throwableDefs";
 
 interface LineCollision {
     obj: GameObject;
@@ -56,7 +56,7 @@ export class ExplosionBarn {
             this.game.smokeBarn.addEmitter(
                 explosion.pos,
                 explosion.layer,
-                SmokeType.Mustard,
+                SmokeType.MustardGas,
             );
             return;
         }

@@ -6,6 +6,7 @@ import { util } from "../../../../shared/utils/util";
 import { type Vec2, v2 } from "../../../../shared/utils/v2";
 import type { Game } from "../game";
 import { BaseGameObject } from "./gameObject";
+import { GameConfig } from "../../../../shared/gameConfig";
 
 // max smokes an emitter can spawn
 const MAX_SMOKES = 10;
@@ -25,16 +26,12 @@ const SPEED_MIN = 0.1;
 const SPAWN_MIN_SPEED = 3;
 const SPAWN_MAX_SPEED = 5;
 
-export enum SmokeType {
-    Normal = 0,
-    Mustard = 1,
-}
-
 class SmokeEmitter {
     active = true;
 
     smokesSpawned = 0;
     spawnTicker = 0;
+    damageTicker = 0;
 
     constructor(
         public smokeBarn: SmokeBarn,
@@ -46,6 +43,7 @@ class SmokeEmitter {
 
     update(dt: number) {
         this.spawnTicker += dt;
+        this.damageTicker += dt;
         if (this.spawnTicker > SPAWN_DELAY) {
             this.smokeBarn.addSmoke(this.pos, this.layer, this.interior, this.type);
             this.smokesSpawned++;
@@ -134,7 +132,7 @@ export class Smoke extends BaseGameObject {
         this.layer = layer;
         this.interior = interior;
         this.type = type;
-        this.life = type == 0 ? LIFE_TIME : 10;
+        this.life = type == 0 ? GameConfig.smokeTimings["smoke"] : GameConfig.smokeTimings["mustardGas"];
         this.bounds = collider.createAabbExtents(
             v2.create(0, 0),
             v2.create(this.rad, this.rad),

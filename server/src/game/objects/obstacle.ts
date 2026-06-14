@@ -12,7 +12,7 @@ import type { Game } from "../game";
 import type { Building } from "./building";
 import { BaseGameObject, type DamageParams } from "./gameObject";
 import type { Player } from "./player";
-import { SmokeType } from "./smoke";
+import { SmokeType } from "../../../../shared/defs/gameObjects/throwableDefs";
 
 export class Obstacle extends BaseGameObject {
     override readonly __type = ObjectType.Obstacle;

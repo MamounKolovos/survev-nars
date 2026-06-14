@@ -14,7 +14,7 @@ import { v2 } from "../../../../shared/utils/v2";
 import { TimerManager, createSimpleSegment } from "../../utils/pluginUtils";
 import type { DamageParams } from "../objects/gameObject";
 import type { Player } from "../objects/player";
-import { SmokeType } from "../objects/smoke";
+import { SmokeType } from "../../../../shared/defs/gameObjects/throwableDefs";
 import { GamePlugin } from "../pluginManager";
 import { attachCustomQuickSwitch, attachGracePeriod } from "./internalUtils";
 

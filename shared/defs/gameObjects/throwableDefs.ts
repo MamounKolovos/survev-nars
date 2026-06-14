@@ -1,5 +1,10 @@
 import type { Vec2 } from "../../utils/v2";
 
+export enum SmokeType {
+    Normal = 0,
+    MustardGas = 1,
+}
+
 export interface ThrowableDef {
     readonly type: "throwable";
     name: string;

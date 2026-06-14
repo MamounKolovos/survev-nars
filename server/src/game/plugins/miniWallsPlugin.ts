@@ -16,7 +16,7 @@ import { TimerManager, createSimpleSegment } from "../../utils/pluginUtils";
 import type { Game } from "../game";
 import type { Obstacle } from "../objects/obstacle";
 import type { Player } from "../objects/player";
-import { SmokeType } from "../objects/smoke";
+import { SmokeType } from "../../../../shared/defs/gameObjects/throwableDefs";
 import { GamePlugin } from "../pluginManager";
 import { attachCustomQuickSwitch, attachGracePeriod } from "./internalUtils";
 
