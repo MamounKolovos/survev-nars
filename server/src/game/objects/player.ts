@@ -280,7 +280,7 @@ export class PlayerBarn {
         let sendWinEmote = false;
         if (this.game.over && !this.sentWinEmotes) {
             this.sendWinEmoteTicker -= dt;
-            this.mustardGasTicker += dt;
+
             if (this.sendWinEmoteTicker <= 0) {
                 sendWinEmote = true;
                 this.sentWinEmotes = true;
@@ -808,6 +808,7 @@ export class Player extends BaseGameObject {
      */
     downedDamageTicker = 0;
     bleedTicker = 0;
+    mustardGasTicker = 0;
     playerBeingRevived: Player | undefined;
 
     animType: Anim = GameConfig.Anim.None;
@@ -2014,12 +2015,21 @@ export class Player extends BaseGameObject {
                 if (coldet.testCircleCircle(this.pos, this.rad, obj.pos, obj.rad)) {
                     insideSmoke = true;
                 }
-                if (obj.type == SmokeType.MustardGas && insideSmoke && obj.__id) {
-                    this.damage({
-                        amount: 0.02,
-                        damageType: GameConfig.DamageType.Mustard,
-                        dir: this.dir,
-                    });
+                if (
+                    obj.type == SmokeType.MustardGas &&
+                    insideSmoke &&
+                    obj.__id &&
+                    this.health >= 1
+                ) {
+                    this.mustardGasTicker -= dt;
+                    if (this.mustardGasTicker <= 0) {
+                        this.mustardGasTicker = 0.5;
+                        this.damage({
+                            amount: 1,
+                            damageType: GameConfig.DamageType.Mustard,
+                            dir: this.dir,
+                        });
+                    }
                 }
             }
         }
