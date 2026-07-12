@@ -61,6 +61,7 @@ const mapDef: PartialMapDef = {
                 // warehouse_01: 1,
                 // house_red_01: 1,
                 house_red_02: 1,
+                workshop_complex_01: 1,
                 // barn_01: 1,
                 // barn_02: 1,
                 // hut_01: 0,

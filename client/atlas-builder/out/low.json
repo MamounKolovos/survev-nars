@@ -16894,30 +16894,10 @@
         "scale": 0.5
       },
       "frames": {
-        "map-building-greenhouse-ceiling-01.img": {
-          "frame": {
-            "x": 754,
-            "y": 1362,
-            "w": 200,
-            "h": 157
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 200,
-            "h": 157
-          },
-          "sourceSize": {
-            "w": 202,
-            "h": 158
-          }
-        },
         "map-building-greenhouse-floor-01.img": {
           "frame": {
-            "x": 2,
-            "y": 910,
+            "x": 1609,
+            "y": 870,
             "w": 416,
             "h": 320
           },
@@ -16934,30 +16914,90 @@
             "h": 321
           }
         },
-        "map-bunker-chrys-chamber-ceiling-01.img": {
+        "map-building-workshop-ceiling-01.img": {
           "frame": {
-            "x": 553,
-            "y": 1811,
-            "w": 224,
-            "h": 136
+            "x": 2,
+            "y": 1322,
+            "w": 528,
+            "h": 708
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 22,
+            "w": 528,
+            "h": 708
+          },
+          "sourceSize": {
+            "w": 528,
+            "h": 752
+          }
+        },
+        "map-building-workshop-ceiling-02.img": {
+          "frame": {
+            "x": 534,
+            "y": 1426,
+            "w": 288,
+            "h": 512
           },
           "rotated": false,
           "trimmed": true,
           "spriteSourceSize": {
             "x": 0,
             "y": 0,
-            "w": 224,
-            "h": 136
+            "w": 288,
+            "h": 512
           },
           "sourceSize": {
-            "w": 224,
-            "h": 136
+            "w": 288,
+            "h": 512
+          }
+        },
+        "map-building-workshop-floor-01.img": {
+          "frame": {
+            "x": 920,
+            "y": 2,
+            "w": 528,
+            "h": 848
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 528,
+            "h": 848
+          },
+          "sourceSize": {
+            "w": 528,
+            "h": 848
+          }
+        },
+        "map-building-workshop-floor-02.img": {
+          "frame": {
+            "x": 534,
+            "y": 910,
+            "w": 272,
+            "h": 512
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 272,
+            "h": 512
+          },
+          "sourceSize": {
+            "w": 273,
+            "h": 512
           }
         },
         "map-bunker-chrys-chamber-floor-01a.img": {
           "frame": {
-            "x": 525,
-            "y": 1954,
+            "x": 278,
+            "y": 1227,
             "w": 80,
             "h": 74
           },
@@ -16976,8 +17016,8 @@
         },
         "map-bunker-chrys-chamber-floor-01b.img": {
           "frame": {
-            "x": 1425,
-            "y": 470,
+            "x": 2,
+            "y": 910,
             "w": 465,
             "h": 313
           },
@@ -16996,8 +17036,8 @@
         },
         "map-bunker-chrys-compartment-ceiling-01a.img": {
           "frame": {
-            "x": 698,
-            "y": 1708,
+            "x": 471,
+            "y": 910,
             "w": 56,
             "h": 96
           },
@@ -17012,32 +17052,12 @@
           "sourceSize": {
             "w": 56,
             "h": 96
-          }
-        },
-        "map-bunker-chrys-compartment-ceiling-01b.img": {
-          "frame": {
-            "x": 1241,
-            "y": 594,
-            "w": 177,
-            "h": 184
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 1,
-            "w": 177,
-            "h": 184
-          },
-          "sourceSize": {
-            "w": 178,
-            "h": 186
           }
         },
         "map-bunker-chrys-compartment-ceiling-02a.img": {
           "frame": {
-            "x": 293,
-            "y": 1998,
+            "x": 1766,
+            "y": 1986,
             "w": 112,
             "h": 48
           },
@@ -17052,32 +17072,12 @@
           "sourceSize": {
             "w": 112,
             "h": 48
-          }
-        },
-        "map-bunker-chrys-compartment-ceiling-02b.img": {
-          "frame": {
-            "x": 781,
-            "y": 1708,
-            "w": 176,
-            "h": 129
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 1,
-            "y": 0,
-            "w": 176,
-            "h": 129
-          },
-          "sourceSize": {
-            "w": 178,
-            "h": 130
           }
         },
         "map-bunker-chrys-compartment-ceiling-03a.img": {
           "frame": {
-            "x": 409,
-            "y": 1998,
+            "x": 1882,
+            "y": 1986,
             "w": 112,
             "h": 48
           },
@@ -17094,30 +17094,10 @@
             "h": 48
           }
         },
-        "map-bunker-chrys-compartment-ceiling-03b.img": {
-          "frame": {
-            "x": 781,
-            "y": 1841,
-            "w": 176,
-            "h": 153
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 1,
-            "y": 1,
-            "w": 176,
-            "h": 153
-          },
-          "sourceSize": {
-            "w": 178,
-            "h": 154
-          }
-        },
         "map-bunker-chrys-compartment-floor-01a.img": {
           "frame": {
-            "x": 1894,
-            "y": 405,
+            "x": 1452,
+            "y": 126,
             "w": 114,
             "h": 304
           },
@@ -17136,8 +17116,8 @@
         },
         "map-bunker-chrys-compartment-floor-01b.img": {
           "frame": {
-            "x": 422,
-            "y": 910,
+            "x": 1609,
+            "y": 1194,
             "w": 400,
             "h": 386
           },
@@ -17156,8 +17136,8 @@
         },
         "map-bunker-chrys-compartment-floor-02a.img": {
           "frame": {
-            "x": 2,
-            "y": 1234,
+            "x": 1230,
+            "y": 1725,
             "w": 384,
             "h": 314
           },
@@ -17176,8 +17156,8 @@
         },
         "map-bunker-chrys-compartment-floor-02b.img": {
           "frame": {
-            "x": 293,
-            "y": 1860,
+            "x": 1790,
+            "y": 1892,
             "w": 256,
             "h": 90
           },
@@ -17196,8 +17176,8 @@
         },
         "map-bunker-chrys-compartment-floor-03a.img": {
           "frame": {
-            "x": 853,
-            "y": 594,
+            "x": 1609,
+            "y": 126,
             "w": 384,
             "h": 432
           },
@@ -17214,30 +17194,10 @@
             "h": 432
           }
         },
-        "map-bunker-crossing-ceiling-01.img": {
-          "frame": {
-            "x": 1198,
-            "y": 1549,
-            "w": 96,
-            "h": 115
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 32,
-            "y": 0,
-            "w": 96,
-            "h": 115
-          },
-          "sourceSize": {
-            "w": 160,
-            "h": 144
-          }
-        },
         "map-bunker-crossing-chamber-ceiling-01.img": {
           "frame": {
-            "x": 853,
-            "y": 470,
+            "x": 1452,
+            "y": 2,
             "w": 568,
             "h": 120
           },
@@ -17276,8 +17236,8 @@
         },
         "map-bunker-crossing-chamber-floor-01b.img": {
           "frame": {
-            "x": 2,
-            "y": 1926,
+            "x": 534,
+            "y": 1942,
             "w": 287,
             "h": 97
           },
@@ -17294,30 +17254,10 @@
             "h": 97
           }
         },
-        "map-bunker-crossing-chamber-floor-01c.img": {
-          "frame": {
-            "x": 1125,
-            "y": 1942,
-            "w": 96,
-            "h": 96
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 2,
-            "y": 0,
-            "w": 96,
-            "h": 96
-          },
-          "sourceSize": {
-            "w": 115,
-            "h": 97
-          }
-        },
         "map-bunker-crossing-chamber-floor-02.img": {
           "frame": {
-            "x": 1230,
-            "y": 1095,
+            "x": 826,
+            "y": 1916,
             "w": 352,
             "h": 126
           },
@@ -17334,30 +17274,10 @@
             "h": 288
           }
         },
-        "map-bunker-crossing-chamber-floor-03.img": {
-          "frame": {
-            "x": 1586,
-            "y": 1160,
-            "w": 352,
-            "h": 125
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 16,
-            "y": 161,
-            "w": 352,
-            "h": 125
-          },
-          "sourceSize": {
-            "w": 368,
-            "h": 288
-          }
-        },
         "map-bunker-crossing-compartment-ceiling-01a.img": {
           "frame": {
-            "x": 1162,
-            "y": 1362,
+            "x": 1953,
+            "y": 1584,
             "w": 64,
             "h": 152
           },
@@ -17376,8 +17296,8 @@
         },
         "map-bunker-crossing-compartment-ceiling-01b.img": {
           "frame": {
-            "x": 390,
-            "y": 1300,
+            "x": 826,
+            "y": 1322,
             "w": 360,
             "h": 248
           },
@@ -17396,8 +17316,8 @@
         },
         "map-bunker-crossing-compartment-floor-01.img": {
           "frame": {
-            "x": 920,
-            "y": 2,
+            "x": 853,
+            "y": 854,
             "w": 752,
             "h": 464
           },
@@ -17416,8 +17336,8 @@
         },
         "map-bunker-crossing-compartment-floor-02.img": {
           "frame": {
-            "x": 174,
-            "y": 1552,
+            "x": 1790,
+            "y": 1584,
             "w": 159,
             "h": 304
           },
@@ -17434,110 +17354,10 @@
             "h": 304
           }
         },
-        "map-bunker-crossing-floor-01.img": {
-          "frame": {
-            "x": 961,
-            "y": 1862,
-            "w": 160,
-            "h": 160
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 160,
-            "h": 160
-          },
-          "sourceSize": {
-            "w": 160,
-            "h": 160
-          }
-        },
-        "map-bunker-generic-ceiling-02.img": {
-          "frame": {
-            "x": 1125,
-            "y": 1823,
-            "w": 80,
-            "h": 115
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 80,
-            "h": 115
-          },
-          "sourceSize": {
-            "w": 80,
-            "h": 115
-          }
-        },
-        "map-bunker-generic-floor-03.img": {
-          "frame": {
-            "x": 1209,
-            "y": 1823,
-            "w": 80,
-            "h": 115
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 80,
-            "h": 115
-          },
-          "sourceSize": {
-            "w": 80,
-            "h": 115
-          }
-        },
-        "map-bunker-hydra-ceiling-01.img": {
-          "frame": {
-            "x": 597,
-            "y": 1552,
-            "w": 216,
-            "h": 152
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 216,
-            "h": 152
-          },
-          "sourceSize": {
-            "w": 216,
-            "h": 152
-          }
-        },
-        "map-bunker-hydra-chamber-ceiling-01.img": {
-          "frame": {
-            "x": 961,
-            "y": 1686,
-            "w": 160,
-            "h": 172
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 160,
-            "h": 172
-          },
-          "sourceSize": {
-            "w": 216,
-            "h": 176
-          }
-        },
         "map-bunker-hydra-chamber-ceiling-02.img": {
           "frame": {
-            "x": 817,
-            "y": 1523,
+            "x": 1452,
+            "y": 434,
             "w": 96,
             "h": 175
           },
@@ -17552,72 +17372,12 @@
           "sourceSize": {
             "w": 96,
             "h": 175
-          }
-        },
-        "map-bunker-hydra-chamber-ceiling-03.img": {
-          "frame": {
-            "x": 958,
-            "y": 1362,
-            "w": 200,
-            "h": 136
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 200,
-            "h": 136
-          },
-          "sourceSize": {
-            "w": 200,
-            "h": 136
-          }
-        },
-        "map-bunker-hydra-chamber-floor-01a.img": {
-          "frame": {
-            "x": 597,
-            "y": 1708,
-            "w": 97,
-            "h": 96
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 97,
-            "h": 96
-          },
-          "sourceSize": {
-            "w": 97,
-            "h": 97
-          }
-        },
-        "map-bunker-hydra-chamber-floor-01b.img": {
-          "frame": {
-            "x": 1676,
-            "y": 787,
-            "w": 353,
-            "h": 369
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 353,
-            "h": 369
-          },
-          "sourceSize": {
-            "w": 353,
-            "h": 369
           }
         },
         "map-bunker-hydra-chamber-floor-02.img": {
           "frame": {
-            "x": 2,
-            "y": 1552,
+            "x": 1618,
+            "y": 1584,
             "w": 168,
             "h": 370
           },
@@ -17636,8 +17396,8 @@
         },
         "map-bunker-hydra-chamber-floor-03.img": {
           "frame": {
-            "x": 1676,
-            "y": 2,
+            "x": 1230,
+            "y": 1322,
             "w": 352,
             "h": 399
           },
@@ -17654,30 +17414,10 @@
             "h": 416
           }
         },
-        "map-bunker-hydra-compartment-ceiling-01.img": {
-          "frame": {
-            "x": 958,
-            "y": 1502,
-            "w": 160,
-            "h": 180
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 160,
-            "h": 180
-          },
-          "sourceSize": {
-            "w": 160,
-            "h": 180
-          }
-        },
         "map-bunker-hydra-compartment-ceiling-02.img": {
           "frame": {
             "x": 826,
-            "y": 1030,
+            "y": 1584,
             "w": 400,
             "h": 328
           },
@@ -17692,46 +17432,6 @@
           "sourceSize": {
             "w": 408,
             "h": 360
-          }
-        },
-        "map-bunker-hydra-compartment-ceiling-03.img": {
-          "frame": {
-            "x": 1586,
-            "y": 1546,
-            "w": 160,
-            "h": 135
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 160,
-            "h": 135
-          },
-          "sourceSize": {
-            "w": 160,
-            "h": 135
-          }
-        },
-        "map-bunker-hydra-compartment-floor-01.img": {
-          "frame": {
-            "x": 1230,
-            "y": 1225,
-            "w": 352,
-            "h": 320
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 352,
-            "h": 320
-          },
-          "sourceSize": {
-            "w": 352,
-            "h": 320
           }
         },
         "map-bunker-hydra-compartment-floor-02.img": {
@@ -17754,30 +17454,10 @@
             "h": 724
           }
         },
-        "map-bunker-hydra-compartment-floor-03.img": {
-          "frame": {
-            "x": 1586,
-            "y": 1289,
-            "w": 352,
-            "h": 253
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 352,
-            "h": 253
-          },
-          "sourceSize": {
-            "w": 352,
-            "h": 256
-          }
-        },
         "map-bunker-hydra-floor-01.img": {
           "frame": {
-            "x": 1241,
-            "y": 787,
+            "x": 1609,
+            "y": 562,
             "w": 431,
             "h": 304
           },
@@ -17792,32 +17472,12 @@
           "sourceSize": {
             "w": 431,
             "h": 304
-          }
-        },
-        "map-bunker-hydra-floor-04.img": {
-          "frame": {
-            "x": 1942,
-            "y": 1440,
-            "w": 100,
-            "h": 100
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 100,
-            "h": 100
-          },
-          "sourceSize": {
-            "w": 100,
-            "h": 100
           }
         },
         "map-complex-warehouse-floor-01.img": {
           "frame": {
-            "x": 917,
-            "y": 1523,
+            "x": 2013,
+            "y": 1462,
             "w": 30,
             "h": 112
           },
@@ -17836,8 +17496,8 @@
         },
         "map-complex-warehouse-floor-02.img": {
           "frame": {
-            "x": 2012,
-            "y": 405,
+            "x": 2013,
+            "y": 1194,
             "w": 30,
             "h": 264
           },
@@ -17856,8 +17516,8 @@
         },
         "map-complex-warehouse-floor-03.img": {
           "frame": {
-            "x": 1257,
-            "y": 1691,
+            "x": 1570,
+            "y": 126,
             "w": 30,
             "h": 112
           },
@@ -17876,48 +17536,8 @@
         },
         "map-planter-01.img": {
           "frame": {
-            "x": 1122,
-            "y": 1518,
-            "w": 72,
-            "h": 136
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 72,
-            "h": 136
-          },
-          "sourceSize": {
-            "w": 72,
-            "h": 136
-          }
-        },
-        "map-planter-02.img": {
-          "frame": {
-            "x": 1942,
-            "y": 1160,
-            "w": 72,
-            "h": 136
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 72,
-            "h": 136
-          },
-          "sourceSize": {
-            "w": 72,
-            "h": 136
-          }
-        },
-        "map-planter-03.img": {
-          "frame": {
-            "x": 1942,
-            "y": 1300,
+            "x": 1953,
+            "y": 1740,
             "w": 72,
             "h": 136
           },
@@ -17936,8 +17556,8 @@
         },
         "map-planter-04.img": {
           "frame": {
-            "x": 754,
-            "y": 1300,
+            "x": 1552,
+            "y": 550,
             "w": 50,
             "h": 50
           },
@@ -17956,8 +17576,8 @@
         },
         "map-planter-05.img": {
           "frame": {
-            "x": 1586,
-            "y": 1095,
+            "x": 471,
+            "y": 1040,
             "w": 50,
             "h": 50
           },
@@ -17976,8 +17596,8 @@
         },
         "map-planter-res-01.img": {
           "frame": {
-            "x": 1894,
-            "y": 713,
+            "x": 810,
+            "y": 910,
             "w": 38,
             "h": 67
           },
@@ -17994,10 +17614,30 @@
             "h": 68
           }
         },
+        "map-safe-01.img": {
+          "frame": {
+            "x": 1552,
+            "y": 492,
+            "w": 51,
+            "h": 54
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 51,
+            "h": 54
+          },
+          "sourceSize": {
+            "w": 51,
+            "h": 54
+          }
+        },
         "map-statue-03.img": {
           "frame": {
-            "x": 1750,
-            "y": 1546,
+            "x": 1452,
+            "y": 687,
             "w": 144,
             "h": 141
           },
@@ -18014,10 +17654,622 @@
             "h": 208
           }
         },
+        "map-table-01x.img": {
+          "frame": {
+            "x": 110,
+            "y": 1227,
+            "w": 80,
+            "h": 64
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 80,
+            "h": 64
+          },
+          "sourceSize": {
+            "w": 80,
+            "h": 64
+          }
+        },
+        "map-table-02x.img": {
+          "frame": {
+            "x": 1618,
+            "y": 1958,
+            "w": 144,
+            "h": 80
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 144,
+            "h": 80
+          },
+          "sourceSize": {
+            "w": 144,
+            "h": 80
+          }
+        },
+        "map-table-03x.img": {
+          "frame": {
+            "x": 194,
+            "y": 1227,
+            "w": 80,
+            "h": 80
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 80,
+            "h": 80
+          },
+          "sourceSize": {
+            "w": 80,
+            "h": 80
+          }
+        },
+        "map-table-04.img": {
+          "frame": {
+            "x": 1452,
+            "y": 613,
+            "w": 150,
+            "h": 70
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 150,
+            "h": 70
+          },
+          "sourceSize": {
+            "w": 150,
+            "h": 70
+          }
+        },
+        "map-woodpile-03.img": {
+          "frame": {
+            "x": 2,
+            "y": 1227,
+            "w": 104,
+            "h": 56
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 104,
+            "h": 56
+          },
+          "sourceSize": {
+            "w": 104,
+            "h": 56
+          }
+        },
+        "map-woodpile-res-02.img": {
+          "frame": {
+            "x": 853,
+            "y": 182,
+            "w": 60,
+            "h": 28
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 2,
+            "y": 2,
+            "w": 60,
+            "h": 28
+          },
+          "sourceSize": {
+            "w": 64,
+            "h": 32
+          }
+        },
+        "map-woodpile-res-03.img": {
+          "frame": {
+            "x": 471,
+            "y": 1010,
+            "w": 57,
+            "h": 26
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 3,
+            "y": 3,
+            "w": 57,
+            "h": 26
+          },
+          "sourceSize": {
+            "w": 64,
+            "h": 32
+          }
+        }
+      }
+    },
+    {
+      "meta": {
+        "image": "main-1-50.png",
+        "size": {
+          "w": 2048,
+          "h": 2048
+        },
+        "scale": 0.5
+      },
+      "frames": {
+        "map-building-greenhouse-ceiling-01.img": {
+          "frame": {
+            "x": 450,
+            "y": 259,
+            "w": 200,
+            "h": 157
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 200,
+            "h": 157
+          },
+          "sourceSize": {
+            "w": 202,
+            "h": 158
+          }
+        },
+        "map-bunker-chrys-chamber-ceiling-01.img": {
+          "frame": {
+            "x": 2,
+            "y": 828,
+            "w": 224,
+            "h": 136
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 224,
+            "h": 136
+          },
+          "sourceSize": {
+            "w": 224,
+            "h": 136
+          }
+        },
+        "map-bunker-chrys-compartment-ceiling-01b.img": {
+          "frame": {
+            "x": 450,
+            "y": 420,
+            "w": 177,
+            "h": 184
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 1,
+            "w": 177,
+            "h": 184
+          },
+          "sourceSize": {
+            "w": 178,
+            "h": 186
+          }
+        },
+        "map-bunker-chrys-compartment-ceiling-02b.img": {
+          "frame": {
+            "x": 358,
+            "y": 608,
+            "w": 176,
+            "h": 129
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 1,
+            "y": 0,
+            "w": 176,
+            "h": 129
+          },
+          "sourceSize": {
+            "w": 178,
+            "h": 130
+          }
+        },
+        "map-bunker-chrys-compartment-ceiling-03b.img": {
+          "frame": {
+            "x": 450,
+            "y": 741,
+            "w": 176,
+            "h": 153
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 1,
+            "y": 1,
+            "w": 176,
+            "h": 153
+          },
+          "sourceSize": {
+            "w": 178,
+            "h": 154
+          }
+        },
+        "map-bunker-crossing-ceiling-01.img": {
+          "frame": {
+            "x": 450,
+            "y": 898,
+            "w": 96,
+            "h": 115
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 32,
+            "y": 0,
+            "w": 96,
+            "h": 115
+          },
+          "sourceSize": {
+            "w": 160,
+            "h": 144
+          }
+        },
+        "map-bunker-crossing-chamber-floor-01c.img": {
+          "frame": {
+            "x": 2,
+            "y": 968,
+            "w": 96,
+            "h": 96
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 2,
+            "y": 0,
+            "w": 96,
+            "h": 96
+          },
+          "sourceSize": {
+            "w": 115,
+            "h": 97
+          }
+        },
+        "map-bunker-crossing-chamber-floor-03.img": {
+          "frame": {
+            "x": 2,
+            "y": 375,
+            "w": 352,
+            "h": 125
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 16,
+            "y": 161,
+            "w": 352,
+            "h": 125
+          },
+          "sourceSize": {
+            "w": 368,
+            "h": 288
+          }
+        },
+        "map-bunker-crossing-floor-01.img": {
+          "frame": {
+            "x": 631,
+            "y": 501,
+            "w": 160,
+            "h": 160
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 160,
+            "h": 160
+          },
+          "sourceSize": {
+            "w": 160,
+            "h": 160
+          }
+        },
+        "map-bunker-generic-ceiling-02.img": {
+          "frame": {
+            "x": 538,
+            "y": 608,
+            "w": 80,
+            "h": 115
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 80,
+            "h": 115
+          },
+          "sourceSize": {
+            "w": 80,
+            "h": 115
+          }
+        },
+        "map-bunker-generic-floor-03.img": {
+          "frame": {
+            "x": 762,
+            "y": 810,
+            "w": 80,
+            "h": 115
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 80,
+            "h": 115
+          },
+          "sourceSize": {
+            "w": 80,
+            "h": 115
+          }
+        },
+        "map-bunker-hydra-ceiling-01.img": {
+          "frame": {
+            "x": 230,
+            "y": 828,
+            "w": 216,
+            "h": 152
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 216,
+            "h": 152
+          },
+          "sourceSize": {
+            "w": 216,
+            "h": 152
+          }
+        },
+        "map-bunker-hydra-chamber-ceiling-01.img": {
+          "frame": {
+            "x": 850,
+            "y": 445,
+            "w": 160,
+            "h": 172
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 160,
+            "h": 172
+          },
+          "sourceSize": {
+            "w": 216,
+            "h": 176
+          }
+        },
+        "map-bunker-hydra-chamber-ceiling-03.img": {
+          "frame": {
+            "x": 654,
+            "y": 261,
+            "w": 200,
+            "h": 136
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 200,
+            "h": 136
+          },
+          "sourceSize": {
+            "w": 200,
+            "h": 136
+          }
+        },
+        "map-bunker-hydra-chamber-floor-01a.img": {
+          "frame": {
+            "x": 846,
+            "y": 864,
+            "w": 97,
+            "h": 96
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 97,
+            "h": 96
+          },
+          "sourceSize": {
+            "w": 97,
+            "h": 97
+          }
+        },
+        "map-bunker-hydra-chamber-floor-01b.img": {
+          "frame": {
+            "x": 2,
+            "y": 2,
+            "w": 353,
+            "h": 369
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 353,
+            "h": 369
+          },
+          "sourceSize": {
+            "w": 353,
+            "h": 369
+          }
+        },
+        "map-bunker-hydra-compartment-ceiling-01.img": {
+          "frame": {
+            "x": 858,
+            "y": 261,
+            "w": 160,
+            "h": 180
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 160,
+            "h": 180
+          },
+          "sourceSize": {
+            "w": 160,
+            "h": 180
+          }
+        },
+        "map-bunker-hydra-compartment-ceiling-03.img": {
+          "frame": {
+            "x": 795,
+            "y": 621,
+            "w": 160,
+            "h": 135
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 160,
+            "h": 135
+          },
+          "sourceSize": {
+            "w": 160,
+            "h": 135
+          }
+        },
+        "map-bunker-hydra-compartment-floor-01.img": {
+          "frame": {
+            "x": 2,
+            "y": 504,
+            "w": 352,
+            "h": 320
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 352,
+            "h": 320
+          },
+          "sourceSize": {
+            "w": 352,
+            "h": 320
+          }
+        },
+        "map-bunker-hydra-compartment-floor-03.img": {
+          "frame": {
+            "x": 359,
+            "y": 2,
+            "w": 352,
+            "h": 253
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 352,
+            "h": 253
+          },
+          "sourceSize": {
+            "w": 352,
+            "h": 256
+          }
+        },
+        "map-bunker-hydra-floor-04.img": {
+          "frame": {
+            "x": 846,
+            "y": 760,
+            "w": 100,
+            "h": 100
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 100,
+            "h": 100
+          },
+          "sourceSize": {
+            "w": 100,
+            "h": 100
+          }
+        },
+        "map-planter-02.img": {
+          "frame": {
+            "x": 359,
+            "y": 259,
+            "w": 72,
+            "h": 136
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 72,
+            "h": 136
+          },
+          "sourceSize": {
+            "w": 72,
+            "h": 136
+          }
+        },
+        "map-planter-03.img": {
+          "frame": {
+            "x": 358,
+            "y": 399,
+            "w": 72,
+            "h": 136
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 72,
+            "h": 136
+          },
+          "sourceSize": {
+            "w": 72,
+            "h": 136
+          }
+        },
         "map-statue-04.img": {
           "frame": {
-            "x": 1898,
-            "y": 1546,
+            "x": 630,
+            "y": 665,
             "w": 144,
             "h": 141
           },
@@ -18036,8 +18288,8 @@
         },
         "map-tree-07sp.img": {
           "frame": {
-            "x": 1125,
-            "y": 1691,
+            "x": 630,
+            "y": 810,
             "w": 128,
             "h": 128
           },
@@ -18056,8 +18308,8 @@
         },
         "map-tree-08sp.img": {
           "frame": {
-            "x": 337,
-            "y": 1552,
+            "x": 715,
+            "y": 2,
             "w": 256,
             "h": 255
           },
@@ -18072,6 +18324,26 @@
           "sourceSize": {
             "w": 256,
             "h": 256
+          }
+        },
+        "map-woodpile-02.img": {
+          "frame": {
+            "x": 654,
+            "y": 401,
+            "w": 192,
+            "h": 96
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 192,
+            "h": 96
+          },
+          "sourceSize": {
+            "w": 192,
+            "h": 96
           }
         }
       }
@@ -20252,26 +20524,6 @@
         "scale": 0.5
       },
       "frames": {
-        "map-barrel-res-03.img": {
-          "frame": {
-            "x": 970,
-            "y": 2018,
-            "w": 38,
-            "h": 26
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 17,
-            "y": 43,
-            "w": 38,
-            "h": 26
-          },
-          "sourceSize": {
-            "w": 72,
-            "h": 72
-          }
-        },
         "map-building-bank-ceiling-03.img": {
           "frame": {
             "x": 1927,
@@ -21212,6 +21464,26 @@
             "h": 180
           }
         },
+        "map-decal-oil-05.img": {
+          "frame": {
+            "x": 978,
+            "y": 2018,
+            "w": 17,
+            "h": 28
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 7,
+            "y": 2,
+            "w": 17,
+            "h": 28
+          },
+          "sourceSize": {
+            "w": 32,
+            "h": 32
+          }
+        },
         "map-drawers-01.img": {
           "frame": {
             "x": 336,
@@ -21234,26 +21506,6 @@
         },
         "map-gun-mount-02.img": {
           "frame": {
-            "x": 902,
-            "y": 2018,
-            "w": 64,
-            "h": 22
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 0,
-            "y": 0,
-            "w": 64,
-            "h": 22
-          },
-          "sourceSize": {
-            "w": 64,
-            "h": 28
-          }
-        },
-        "map-gun-mount-03.img": {
-          "frame": {
             "x": 1005,
             "y": 1251,
             "w": 64,
@@ -21275,6 +21527,26 @@
         "map-gun-mount-05.img": {
           "frame": {
             "x": 826,
+            "y": 2018,
+            "w": 72,
+            "h": 24
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 72,
+            "h": 24
+          },
+          "sourceSize": {
+            "w": 72,
+            "h": 28
+          }
+        },
+        "map-gun-mount-07.img": {
+          "frame": {
+            "x": 902,
             "y": 2018,
             "w": 72,
             "h": 24
@@ -21698,6 +21970,26 @@
             "y": 3,
             "w": 65,
             "h": 63
+          },
+          "sourceSize": {
+            "w": 72,
+            "h": 72
+          }
+        },
+        "map-barrel-res-03.img": {
+          "frame": {
+            "x": 2,
+            "y": 1411,
+            "w": 38,
+            "h": 26
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 17,
+            "y": 43,
+            "w": 38,
+            "h": 26
           },
           "sourceSize": {
             "w": 72,
@@ -24484,26 +24776,6 @@
             "h": 32
           }
         },
-        "map-decal-oil-05.img": {
-          "frame": {
-            "x": 1038,
-            "y": 1259,
-            "w": 17,
-            "h": 28
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 7,
-            "y": 2,
-            "w": 17,
-            "h": 28
-          },
-          "sourceSize": {
-            "w": 32,
-            "h": 32
-          }
-        },
         "map-decal-oil-06.img": {
           "frame": {
             "x": 1586,
@@ -24706,8 +24978,8 @@
         },
         "map-fire-ext-res.img": {
           "frame": {
-            "x": 234,
-            "y": 937,
+            "x": 1038,
+            "y": 1259,
             "w": 23,
             "h": 28
           },
@@ -24742,6 +25014,26 @@
           "sourceSize": {
             "w": 64,
             "h": 64
+          }
+        },
+        "map-gun-mount-03.img": {
+          "frame": {
+            "x": 468,
+            "y": 2024,
+            "w": 64,
+            "h": 22
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 64,
+            "h": 22
+          },
+          "sourceSize": {
+            "w": 64,
+            "h": 28
           }
         },
         "map-gun-mount-04.img": {
@@ -25726,8 +26018,8 @@
         },
         "map-tree-res-01.img": {
           "frame": {
-            "x": 1806,
-            "y": 1567,
+            "x": 234,
+            "y": 937,
             "w": 24,
             "h": 24
           },
@@ -26046,8 +26338,8 @@
         },
         "map-woodpile-res-01.img": {
           "frame": {
-            "x": 2,
-            "y": 1411,
+            "x": 1586,
+            "y": 1127,
             "w": 36,
             "h": 26
           },
