@@ -9448,7 +9448,7 @@ function createWorkshop<T extends BuildingDef>(e: Partial<T>): T {
                 },
             ],
             imgs: [
-               {
+                {
                     sprite: "map-building-workshop-floor-01.img",
                     pos: v2.create(8, 0),
                     scale: 0.5,
@@ -9502,7 +9502,7 @@ function createWorkshop<T extends BuildingDef>(e: Partial<T>): T {
             ],
         },
         mapObjects: [
-           {
+            {
                 type: "workshop_wall_right",
                 pos: v2.create(24, 0),
                 scale: 1,
@@ -9519,13 +9519,13 @@ function createWorkshop<T extends BuildingDef>(e: Partial<T>): T {
                 pos: v2.create(-4.5, -20),
                 scale: 1,
                 ori: 0,
-            }, 
+            },
             {
                 type: "workshop_wall_edge",
                 pos: v2.create(20.5, 20),
                 scale: 1,
                 ori: 0,
-            }, 
+            },
             {
                 type: "workshop_wall_edge",
                 pos: v2.create(-4.5, 20),
@@ -9603,7 +9603,7 @@ function createWorkshop<T extends BuildingDef>(e: Partial<T>): T {
                 pos: v2.create(-7.75, 16),
                 scale: 1,
                 ori: 0,
-            }, 
+            },
             {
                 type: "house_window_01",
                 pos: v2.create(-15, 20.25),
@@ -9621,7 +9621,7 @@ function createWorkshop<T extends BuildingDef>(e: Partial<T>): T {
                 pos: v2.create(-20.5, 17.75),
                 scale: 1,
                 ori: 1,
-            }, 
+            },
             {
                 type: randomObstacleType({ bookshelf_01: 6, bookshelf_02: 1 }),
                 pos: v2.create(-12.5, 11),
@@ -9633,13 +9633,13 @@ function createWorkshop<T extends BuildingDef>(e: Partial<T>): T {
                 pos: v2.create(13, 0.5),
                 scale: 1,
                 ori: 1,
-            }, 
+            },
             {
                 type: "couch_01",
                 pos: v2.create(-10.5, 3.5),
                 scale: 1,
                 ori: 3,
-            }, 
+            },
 
             {
                 type: "crate_01",
@@ -9647,21 +9647,21 @@ function createWorkshop<T extends BuildingDef>(e: Partial<T>): T {
                 scale: 1,
                 ori: 0,
                 ignoreMapSpawnReplacement: true,
-            }, 
+            },
             {
                 type: "crate_01",
                 pos: v2.create(-4.75, -15.5),
                 scale: 1,
                 ori: 0,
                 ignoreMapSpawnReplacement: true,
-            }, 
+            },
             {
                 type: "crate_03",
                 pos: v2.create(-5.5, 1.75),
                 scale: 1,
                 ori: 0,
                 inheritOri: false,
-            }, 
+            },
             {
                 type: "crate_04",
                 pos: v2.create(20.5, 16.5),
@@ -9673,7 +9673,7 @@ function createWorkshop<T extends BuildingDef>(e: Partial<T>): T {
                 pos: v2.create(13, 6),
                 scale: 1,
                 ori: 1,
-            }, 
+            },
             {
                 type: "crate_06",
                 pos: v2.create(8, 8.5),
@@ -9686,50 +9686,50 @@ function createWorkshop<T extends BuildingDef>(e: Partial<T>): T {
                 scale: 1,
                 ori: 0,
                 inheritOri: false,
-            }, 
+            },
             {
                 type: "decal_web_01",
                 pos: v2.create(-5.25, -17.25),
                 scale: 1,
                 ori: 1,
-            }, 
+            },
             {
                 type: "fire_ext_01",
                 pos: v2.create(-9, -8.25),
                 scale: 1,
                 ori: 2,
-            }, 
+            },
             {
                 type: "gun_mount_07",
                 pos: v2.create(-23.75, 12),
                 scale: 1,
                 ori: 1,
-            }, 
-            { 
+            },
+            {
                 type: "oven_01",
                 pos: v2.create(-23, -4.75),
                 scale: 1,
                 ori: 1,
-            }, 
+            },
             {
                 type: "refrigerator_01",
                 pos: v2.create(-23, -8.5),
                 scale: 1,
                 ori: 1,
-            }, 
+            },
             {
                 type: "safe_01",
                 pos: v2.create(-12, 17.75),
                 scale: 1,
                 ori: 0,
-            },  
+            },
             {
                 type: "screen_01",
                 pos: v2.create(-23.5, 3.5),
                 scale: 1,
                 ori: 3,
-            }, 
-            
+            },
+
             {
                 type: "table_01",
                 pos: v2.create(-14.5, 2.25),
@@ -9748,7 +9748,7 @@ function createWorkshop<T extends BuildingDef>(e: Partial<T>): T {
                 scale: 1,
                 ori: 1,
             },
-            
+
             {
                 type: "woodpile_02",
                 pos: v2.create(8, 0),
@@ -11781,7 +11781,7 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
             enter: "none",
         },
     },
-    
+
     sandbags_01: createSandBags({}),
     sandbags_02: createSandBags({
         collision: collider.createAabbExtents(v2.create(0, 0), v2.create(1.1, 1.4)),
@@ -17509,7 +17509,7 @@ export const MapObjectDefs: Record<string, MapObjectDef> = {
                 scale: 1,
                 ori: 0,
             },
-           {
+            {
                 type: "outhouse_01",
                 pos: v2.create(-16, -20),
                 scale: 1,
