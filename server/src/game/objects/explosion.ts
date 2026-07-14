@@ -1,5 +1,6 @@
 import { GameObjectDefs } from "../../../../shared/defs/gameObjectDefs";
 import type { ExplosionDef } from "../../../../shared/defs/gameObjects/explosionsDefs";
+import { SmokeType } from "../../../../shared/defs/gameObjects/throwableDefs";
 import { ObjectType } from "../../../../shared/net/objectSerializeFns";
 import { collider } from "../../../../shared/utils/collider";
 import { math } from "../../../../shared/utils/math";
@@ -44,7 +45,19 @@ export class ExplosionBarn {
         }
 
         if (explosion.type === "explosion_smoke") {
-            this.game.smokeBarn.addEmitter(explosion.pos, explosion.layer);
+            this.game.smokeBarn.addEmitter(
+                explosion.pos,
+                explosion.layer,
+                SmokeType.Normal,
+            );
+            return;
+        }
+        if (explosion.type === "explosion_mustard") {
+            this.game.smokeBarn.addEmitter(
+                explosion.pos,
+                explosion.layer,
+                SmokeType.MustardGas,
+            );
             return;
         }
 

@@ -1,3 +1,4 @@
+import { GameConfig } from "../../../../shared/gameConfig";
 import { ObjectType } from "../../../../shared/net/objectSerializeFns";
 import { type AABB, coldet } from "../../../../shared/utils/coldet";
 import { collider } from "../../../../shared/utils/collider";
@@ -30,18 +31,21 @@ class SmokeEmitter {
 
     smokesSpawned = 0;
     spawnTicker = 0;
+    damageTicker = 0;
 
     constructor(
         public smokeBarn: SmokeBarn,
         public pos: Vec2,
         public layer: number,
         public interior: number,
+        public type: number,
     ) {}
 
     update(dt: number) {
         this.spawnTicker += dt;
+        this.damageTicker += dt;
         if (this.spawnTicker > SPAWN_DELAY) {
-            this.smokeBarn.addSmoke(this.pos, this.layer, this.interior);
+            this.smokeBarn.addSmoke(this.pos, this.layer, this.interior, this.type);
             this.smokesSpawned++;
             this.spawnTicker = 0;
         }
@@ -79,7 +83,7 @@ export class SmokeBarn {
         }
     }
 
-    addEmitter(pos: Vec2, layer: number) {
+    addEmitter(pos: Vec2, layer: number, type: number) {
         let interior = 0;
         const coll = collider.createCircle(pos, 1);
         const objs = this.game.grid.intersectCollider(coll);
@@ -96,13 +100,13 @@ export class SmokeBarn {
             }
         }
 
-        const emitter = new SmokeEmitter(this, pos, layer, interior);
+        const emitter = new SmokeEmitter(this, pos, layer, interior, type);
 
         this.emitters.push(emitter);
     }
 
-    addSmoke(pos: Vec2, layer: number, interior: number) {
-        const smoke = new Smoke(this.game, pos, layer, interior);
+    addSmoke(pos: Vec2, layer: number, interior: number, type: number) {
+        const smoke = new Smoke(this.game, pos, layer, interior, type);
         this.game.objectRegister.register(smoke);
         this.smokes.push(smoke);
     }
@@ -114,18 +118,24 @@ export class Smoke extends BaseGameObject {
 
     layer: number;
 
-    life = LIFE_TIME;
+    life: number;
     rad = util.random(0.5, 1);
     interior: number;
 
     maxSize = util.random(RAD_MIN, RAD_MAX);
     dir = v2.randomUnit();
     speed = util.random(SPAWN_MIN_SPEED, SPAWN_MAX_SPEED);
+    type: number;
 
-    constructor(game: Game, pos: Vec2, layer: number, interior: number) {
+    constructor(game: Game, pos: Vec2, layer: number, interior: number, type: number) {
         super(game, pos);
         this.layer = layer;
         this.interior = interior;
+        this.type = type;
+        this.life =
+            type == 0
+                ? GameConfig.smokeTimings["smoke"]
+                : GameConfig.smokeTimings["mustardGas"];
         this.bounds = collider.createAabbExtents(
             v2.create(0, 0),
             v2.create(this.rad, this.rad),

@@ -1,5 +1,10 @@
 import type { Vec2 } from "../../utils/v2";
 
+export enum SmokeType {
+    Normal = 0,
+    MustardGas = 1,
+}
+
 export interface ThrowableDef {
     readonly type: "throwable";
     name: string;
@@ -282,6 +287,72 @@ export const ThrowableDefs: Record<string, ThrowableDef> = {
             sprite: "proj-martyrdom-01.img",
             scale: 0.12,
             tint: 0xffffff,
+        },
+        useThrowParticles: true,
+        sound: {
+            pullPin: "frag_pin_01",
+            throwing: "frag_throw_01",
+            pickup: "frag_pickup_01",
+            deploy: "frag_deploy_01",
+        },
+    },
+    mustard: {
+        name: "Mustard Gas",
+        type: "throwable",
+        quality: 0,
+        explosionType: "explosion_mustard",
+        inventoryOrder: 3,
+        cookable: false,
+        explodeOnImpact: false,
+        playerCollision: false,
+        fuseTime: 1.5,
+        aimDistance: 0,
+        rad: 1,
+        throwPhysics: {
+            playerVelMult: 0.6,
+            velZ: 5,
+            speed: 15,
+            spinVel: 10 * Math.PI,
+            spinDrag: 1,
+        },
+        speed: { equip: 0, attack: 0 },
+        lootImg: {
+            sprite: "loot-throwable-mustard-gas.img",
+            tint: 0xff00,
+            border: "loot-circle-outer-01.img",
+            borderTint: 0,
+            scale: 0.2,
+        },
+        worldImg: {
+            sprite: "proj-mustard-gas-nopin-nolever.img",
+            scale: 0.12,
+            tint: 0xffffff,
+        },
+        handImg: {
+            equip: {
+                right: {
+                    sprite: "proj-mustard-gas-pin.img",
+                    pos: { x: 3, y: 4.2 },
+                    scale: 0.14,
+                },
+                left: { sprite: "none" },
+            },
+            cook: {
+                right: {
+                    sprite: "proj-mustard-gas-nopin.img",
+                    pos: { x: 3, y: 4.2 },
+                    scale: 0.14,
+                },
+                left: {
+                    sprite: "proj-frag-pin-part.img",
+                    pos: { x: 3, y: 4.2 },
+                    scale: 0.14,
+                },
+            },
+            throwing: {
+                right: { sprite: "none" },
+                left: { sprite: "none" },
+            },
         },
         useThrowParticles: true,
         sound: {

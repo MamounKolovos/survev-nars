@@ -1,4 +1,5 @@
 import { GameObjectDefs } from "../../../../shared/defs/gameObjectDefs";
+import { SmokeType } from "../../../../shared/defs/gameObjects/throwableDefs";
 import { MapObjectDefs } from "../../../../shared/defs/mapObjectDefs";
 import type { ObstacleDef } from "../../../../shared/defs/mapObjectsTyping";
 import { DamageType, GameConfig } from "../../../../shared/gameConfig";
@@ -517,7 +518,7 @@ export class Obstacle extends BaseGameObject {
         }
 
         if (def.createSmoke) {
-            this.game.smokeBarn.addEmitter(this.pos, this.layer);
+            this.game.smokeBarn.addEmitter(this.pos, this.layer, SmokeType.Normal);
         }
 
         if (def.explosion) {

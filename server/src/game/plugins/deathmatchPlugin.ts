@@ -1,5 +1,6 @@
 import { GameObjectDefs } from "../../../../shared/defs/gameObjectDefs";
 import type { GunDef } from "../../../../shared/defs/gameObjects/gunDefs";
+import { SmokeType } from "../../../../shared/defs/gameObjects/throwableDefs";
 import { MapObjectDefs } from "../../../../shared/defs/mapObjectDefs";
 import type { ObstacleDef } from "../../../../shared/defs/mapObjectsTyping";
 import { MapId } from "../../../../shared/defs/types/misc";
@@ -136,6 +137,7 @@ type Loadout = {
         | "smoke"
         | "strobe"
         | "impulse"
+        | "mustard"
         | "mirv"
         | "snowball"
         | "potato"
@@ -181,6 +183,7 @@ const EMPTY_LOADOUT: Loadout = {
         smoke: 0,
         strobe: 0,
         impulse: 0,
+        mustard: 0,
         mirv: 0,
         snowball: 0,
         potato: 0,
@@ -1037,7 +1040,11 @@ export default class DeathmatchPlugin extends GamePlugin {
                 : OBSTACLE_REGROW_DELAY_NOPARENT;
 
             if (def.createSmoke) {
-                this.game.smokeBarn.addEmitter(obstacle.pos, obstacle.layer);
+                this.game.smokeBarn.addEmitter(
+                    obstacle.pos,
+                    obstacle.layer,
+                    SmokeType.Normal,
+                );
             }
 
             if (def.explosion) {

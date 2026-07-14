@@ -30,11 +30,11 @@ export function getConfig(isProduction: boolean, dir: string) {
         regions: {},
         proxies: {},
         modes: [
-            { mapName: "main", teamMode: TeamMode.Solo, enabled: true },
+            { mapName: "solos", teamMode: TeamMode.Solo, enabled: true },
             { mapName: "deathmatch", teamMode: TeamMode.Squad, enabled: true },
             { mapName: "forced_loot2", teamMode: TeamMode.Squad, enabled: true },
         ],
-        clientTheme: "snow",
+        clientTheme: "main",
         gameTps: 100,
         netSyncTps: 33,
         processMode: isDev ? "single" : "multi",

@@ -1,5 +1,6 @@
 import { GameObjectDefs } from "../../../../shared/defs/gameObjectDefs";
 import type { GunDef } from "../../../../shared/defs/gameObjects/gunDefs";
+import { SmokeType } from "../../../../shared/defs/gameObjects/throwableDefs";
 import { MapObjectDefs } from "../../../../shared/defs/mapObjectDefs";
 import type { ObstacleDef } from "../../../../shared/defs/mapObjectsTyping";
 import { TeamColor } from "../../../../shared/defs/maps/factionDefs";
@@ -121,7 +122,11 @@ export default class MiniWallsPlugin extends GamePlugin {
             obstacle.makeDynamic();
             obstacle.regrowTicker = OBSTACLE_REGROW_DELAY;
             if (def.createSmoke) {
-                this.game.smokeBarn.addEmitter(obstacle.pos, obstacle.layer);
+                this.game.smokeBarn.addEmitter(
+                    obstacle.pos,
+                    obstacle.layer,
+                    SmokeType.Normal,
+                );
             }
 
             if (def.explosion) {

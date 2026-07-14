@@ -20,6 +20,7 @@ export enum DamageType {
     Gas,
     Airdrop,
     Airstrike,
+    Mustard,
 }
 
 export enum Action {
@@ -358,6 +359,7 @@ export const GameConfig = {
         smoke: [3, 6, 9, 12],
         strobe: [2, 3, 4, 5],
         impulse: [4, 8, 12, 16],
+        mustard: [2, 3, 4, 5],
         mirv: [2, 4, 6, 8],
         snowball: [10, 20, 30, 40],
         potato: [10, 20, 30, 40],
@@ -385,5 +387,9 @@ export const GameConfig = {
         scope: 1,
         perk: 1.25,
         xp: 1,
+    } as Record<string, number>,
+    smokeTimings: {
+        smoke: 15,
+        mustardGas: 10,
     } as Record<string, number>,
 };

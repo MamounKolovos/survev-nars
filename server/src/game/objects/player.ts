@@ -20,6 +20,7 @@ import type { OutfitDef } from "../../../../shared/defs/gameObjects/outfitDefs";
 import { PerkProperties } from "../../../../shared/defs/gameObjects/perkDefs";
 import type { RoleDef } from "../../../../shared/defs/gameObjects/roleDefs";
 import type { ThrowableDef } from "../../../../shared/defs/gameObjects/throwableDefs";
+import { SmokeType } from "../../../../shared/defs/gameObjects/throwableDefs";
 import {
     type Action,
     type Anim,
@@ -106,6 +107,7 @@ export class PlayerBarn {
     }> = [];
 
     sendWinEmoteTicker = 0;
+    mustardGasTicker = 0;
     sentWinEmotes = false;
 
     teams: Team[] = [];
@@ -278,6 +280,7 @@ export class PlayerBarn {
         let sendWinEmote = false;
         if (this.game.over && !this.sentWinEmotes) {
             this.sendWinEmoteTicker -= dt;
+
             if (this.sendWinEmoteTicker <= 0) {
                 sendWinEmote = true;
                 this.sentWinEmotes = true;
@@ -805,6 +808,7 @@ export class Player extends BaseGameObject {
      */
     downedDamageTicker = 0;
     bleedTicker = 0;
+    mustardGasTicker = 0;
     playerBeingRevived: Player | undefined;
 
     animType: Anim = GameConfig.Anim.None;
@@ -1487,6 +1491,14 @@ export class Player extends BaseGameObject {
             });
         }
 
+        if (this.game.gas.isInGas(this.pos)) {
+            this.damage({
+                amount: this.game.gas.damage,
+                damageType: GameConfig.DamageType.Gas,
+                dir: this.dir,
+            });
+        }
+
         if (this.reloadAgain) {
             this.reloadAgain = false;
             this.weaponManager.tryReload();
@@ -2002,6 +2014,22 @@ export class Player extends BaseGameObject {
                 if (!util.sameLayer(this.layer, obj.layer)) continue;
                 if (coldet.testCircleCircle(this.pos, this.rad, obj.pos, obj.rad)) {
                     insideSmoke = true;
+                }
+                if (
+                    obj.type == SmokeType.MustardGas &&
+                    insideSmoke &&
+                    obj.__id &&
+                    this.health >= 1
+                ) {
+                    this.mustardGasTicker -= dt;
+                    if (this.mustardGasTicker <= 0) {
+                        this.mustardGasTicker = 0.5;
+                        this.damage({
+                            amount: 1,
+                            damageType: GameConfig.DamageType.Mustard,
+                            dir: this.dir,
+                        });
+                    }
                 }
             }
         }

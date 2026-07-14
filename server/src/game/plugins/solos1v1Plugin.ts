@@ -128,6 +128,8 @@ export default class Solos1v1Plugin extends GamePlugin {
             player.inventory["healthkit"] = 15;
             player.inventory["frag"] = 3;
             player.inventory["impulse"] = 99;
+            player.inventory["smoke"] = 3;
+            player.inventory["mustard"] = 3;
             player.addPerk("endless_ammo", false);
             player.addPerk("self_revive", false);
 
@@ -212,6 +214,7 @@ function makeReady(p: Player) {
     }
     p.inventory["frag"] = 3;
     p.inventory["impulse"] = 99;
+    p.inventory["smoke"] = 3;
 
     p.weapsDirty = true;
     p.inventoryDirty = true;

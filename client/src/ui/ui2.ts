@@ -1500,6 +1500,19 @@ export class UiManager2 {
                     "game-the-air-strike",
                 )} ${killTxt} ${targetName}`;
             }
+            case DamageType.Mustard: {
+                const killTxt = this.localization.translate(
+                    downed ? "game-knocked-out" : "game-killed",
+                );
+                if (killerName) {
+                    return `${killerName} ${killTxt} ${targetName} ${this.localization.translate(
+                        "game-with",
+                    )} ${this.localization.translate("game-mustard-gas")}`;
+                }
+                return `${this.localization.translate(
+                    "game-the-mustard-gas",
+                )} ${killTxt} ${targetName}`;
+            }
             default:
                 return "";
         }
