@@ -683,5 +683,38 @@ export const LoadoutAtlas: AtlasDef = {
         "player/player-hands-outfitRedLava.svg",
         "player/player-back-outfitRedLava.svg",
         "loot/loot-shirt-outfitRedLava.svg",
+
+        "player/player-base-outfitKingGalaxy.svg",
+        "player/player-hands-outfitKingGalaxy.svg",
+        "player/player-back-outfitKingGalaxy.svg",
+        "player/player-accessory-outfitKingGalaxy.svg",
+        "loot/loot-shirt-outfitKingGalaxy.svg",
+
+        "player/player-base-outfitSuppaPoncho.svg",
+        "player/player-hands-outfitSuppaPoncho.svg",
+        "player/player-back-outfitSuppaPoncho.svg",
+        "player/player-accessory-outfitSuppaPoncho.svg",
+        "loot/loot-shirt-outfitSuppaPoncho.svg",
+
+        "player/player-base-outfitDragonTails.svg",
+        "player/player-hands-outfitDragonTails.svg",
+        "player/player-back-outfitDragonTails.svg",
+        "player/player-accessory-outfitDragonTails.svg",
+        "loot/loot-shirt-outfitDragonTails.svg",
+
+        "player/player-accessory-outfitWolf.svg",
+        "loot/loot-shirt-outfitWolf.svg",
+
+        "player/player-base-outfitMultiTusking.svg",
+        "player/player-hands-outfitMultiTusking.svg",
+        "player/player-back-outfitMultiTusking.svg",
+        "player/player-accessory-outfitMultiTusking.svg",
+        "loot/loot-shirt-outfitMultiTusking.svg",
+
+        "player/player-base-outfitGhoulFire.svg",
+        "player/player-hands-outfitGhoulFire.svg",
+        "player/player-back-outfitGhoulFire.svg",
+        "player/player-accessory-outfitGhoulFire.svg",
+        "loot/loot-shirt-outfitGhoulFire.svg",
     ],
 };

@@ -107,6 +107,28 @@ function createSprite() {
     return sprite;
 }
 
+function moveBefore(
+    container: PIXI.Container,
+    child: PIXI.DisplayObject,
+    target: PIXI.DisplayObject,
+): void {
+    const from = container.getChildIndex(child);
+    const to = container.getChildIndex(target);
+
+    container.setChildIndex(child, from < to ? to - 1 : to);
+}
+
+function moveAfter(
+    container: PIXI.Container,
+    child: PIXI.DisplayObject,
+    target: PIXI.DisplayObject,
+): void {
+    const from = container.getChildIndex(child);
+    const to = container.getChildIndex(target);
+
+    container.setChildIndex(child, from < to ? to : to + 1);
+}
+
 const desktopZoomRads = Object.values(GameConfig.scopeZoomRadius.desktop);
 const mobileZoomRads = Object.values(GameConfig.scopeZoomRadius.mobile);
 
@@ -220,6 +242,7 @@ export class Player implements AbstractObject {
     footRSubmergeSprite = createSprite();
     bodyEffectSprite = createSprite();
     patchSprite = createSprite();
+    accessorySprite = createSprite();
     handLContainer = new PIXI.Container();
     handRContainer = new PIXI.Container();
 
@@ -428,6 +451,7 @@ export class Player implements AbstractObject {
         this.bodyContainer.addChild(this.flakSprite);
         this.bodyContainer.addChild(this.steelskinSprite);
         this.bodyContainer.addChild(this.hipSprite);
+        this.bodyContainer.addChild(this.accessorySprite);
         this.bodyContainer.addChild(this.patchSprite);
         this.bodyContainer.addChild(this.bodyEffectSprite);
         this.bodyContainer.addChild(this.handLContainer);
@@ -1856,8 +1880,11 @@ export class Player implements AbstractObject {
                 this.bodyContainer.addChildAt(this.handLContainer, H);
                 this.bodyContainer.addChildAt(this.handRContainer, H);
             } else {
-                this.bodyContainer.addChild(this.handLContainer);
-                this.bodyContainer.addChild(this.handRContainer);
+                const bodyEffectIndex = this.bodyContainer.getChildIndex(
+                    this.bodyEffectSprite,
+                );
+                this.bodyContainer.setChildIndex(this.handLContainer, bodyEffectIndex);
+                this.bodyContainer.setChildIndex(this.handRContainer, bodyEffectIndex);
             }
         }
         if (weapDef.type == "melee" && this.m_netData.m_activeWeapon != "fists") {
@@ -1993,6 +2020,41 @@ export class Player implements AbstractObject {
         } else {
             this.visorSprite.visible = false;
         }
+
+        if (outfitImg.accessoryImg) {
+            const accessoryImg = outfitImg.accessoryImg;
+            this.accessorySprite.texture = PIXI.Texture.from(accessoryImg.sprite);
+            // hardcoded because all accessories were made with questionable dimensions
+            // as far as im aware, chestplates are the only thing that expand the player's body out
+            // might change in future
+            const multiplier = this.m_getChestLevel() > 0 ? 1.07692 : 1;
+            const scale = multiplier * accessoryImg.scale;
+            this.accessorySprite.scale.set(scale);
+
+            this.accessorySprite.position.set(accessoryImg.pos.x, accessoryImg.pos.y);
+            // prevents larger accessories from obscuring vest, pan, etc
+            this.accessorySprite.alpha = 0.85;
+            this.accessorySprite.visible = true;
+
+            const handLIndex = this.bodyContainer.getChildIndex(this.handLContainer);
+            const handRIndex = this.bodyContainer.getChildIndex(this.handRContainer);
+
+            const [highestHand, lowestHand] =
+                handLIndex > handRIndex
+                    ? [this.handLContainer, this.handRContainer]
+                    : [this.handRContainer, this.handLContainer];
+
+            if (this.downed) {
+                moveBefore(this.bodyContainer, this.accessorySprite, this.visorSprite);
+            } else if (accessoryImg.aboveHands) {
+                moveAfter(this.bodyContainer, this.accessorySprite, highestHand);
+            } else {
+                moveBefore(this.bodyContainer, this.accessorySprite, lowestHand);
+            }
+        } else {
+            this.accessorySprite.visible = false;
+        }
+
         this.bodyContainer.scale.set(bodyScale, bodyScale);
     }
 

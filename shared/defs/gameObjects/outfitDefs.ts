@@ -1,4 +1,5 @@
 import { defineSkin } from "../../utils/util";
+import { type Vec2, v2 } from "../../utils/v2";
 
 export interface OutfitDef {
     readonly type: "outfit";
@@ -12,6 +13,12 @@ export interface OutfitDef {
         footSprite: string;
         backpackTint: number;
         backpackSprite: string;
+        accessoryImg?: {
+            sprite: string;
+            pos: Vec2;
+            scale: number;
+            aboveHands: boolean;
+        };
     };
     lootImg: {
         sprite: string;
@@ -1105,6 +1112,161 @@ const SkinDefs: Record<string, OutfitDef> = {
         },
         lootImg: {
             sprite: "loot-shirt-outfitRedLava.img",
+            tint: 0xffffff,
+        },
+    }),
+    outfitKingGalaxy: defineOutfitSkin("outfitBase", {
+        name: "King Galaxy",
+        noDropOnDeath: true,
+        rarity: 5,
+        lore: "Created by AMBUSH",
+        skinImg: {
+            baseTint: 0xffffff,
+            baseSprite: "player-base-outfitKingGalaxy.img",
+            handTint: 0xffffff,
+            handSprite: "player-hands-outfitKingGalaxy.img",
+            footTint: 0xffffff,
+            footSprite: "player-feet-01.img",
+            backpackTint: 0xffffff,
+            backpackSprite: "player-back-outfitKingGalaxy.img",
+            accessoryImg: {
+                sprite: "player-accessory-outfitKingGalaxy.img",
+                pos: v2.create(0, 0.425),
+                scale: 0.25,
+                aboveHands: false,
+            },
+        },
+        lootImg: {
+            sprite: "loot-shirt-outfitKingGalaxy.img",
+            tint: 0xffffff,
+        },
+    }),
+    outfitSuppaPoncho: defineOutfitSkin("outfitBase", {
+        name: "Suppa Poncho",
+        noDropOnDeath: true,
+        rarity: 3,
+        skinImg: {
+            baseTint: 0xffffff,
+            baseSprite: "player-base-outfitSuppaPoncho.img",
+            handTint: 0xffffff,
+            handSprite: "player-hands-outfitSuppaPoncho.img",
+            footTint: 0xffffff,
+            footSprite: "player-feet-01.img",
+            backpackTint: 0xffffff,
+            backpackSprite: "player-back-outfitSuppaPoncho.img",
+            accessoryImg: {
+                sprite: "player-accessory-outfitSuppaPoncho.img",
+                pos: v2.create(-8, 0),
+                scale: 0.26,
+                aboveHands: false,
+            },
+        },
+        lootImg: {
+            sprite: "loot-shirt-outfitSuppaPoncho.img",
+            tint: 0xffffff,
+        },
+    }),
+    outfitDragonTails: defineOutfitSkin("outfitBase", {
+        name: "Dragon Tails",
+        noDropOnDeath: true,
+        rarity: 5,
+        lore: "For those who wield the power of the pan.",
+        skinImg: {
+            baseTint: 13041664,
+            baseSprite: "player-base-outfitDragonTails.img",
+            handTint: 0xffffff,
+            handSprite: "player-hands-outfitDragonTails.img",
+            footTint: 0xffffff,
+            footSprite: "player-hands-outfitDragonTails.img",
+            backpackTint: 7667712,
+            backpackSprite: "player-circle-base-02.img",
+            accessoryImg: {
+                sprite: "player-accessory-outfitDragonTails.img",
+                pos: v2.create(-5, 0),
+                scale: 0.26,
+                aboveHands: false,
+            },
+        },
+        lootImg: {
+            sprite: "loot-shirt-outfitDragonTails.img",
+            tint: 0xffffff,
+        },
+    }),
+    outfitWolf: defineOutfitSkin("outfitBase", {
+        name: "Wolf",
+        noDropOnDeath: true,
+        rarity: 3,
+        lore: "For those who hunt alone.",
+        skinImg: {
+            baseTint: 6184542,
+            baseSprite: "player-base-01.img",
+            handTint: 9539985,
+            handSprite: "player-hands-01.img",
+            footTint: 9539985,
+            footSprite: "player-hands-01.img",
+            backpackTint: 5197647,
+            backpackSprite: "player-circle-base-01.img",
+            accessoryImg: {
+                sprite: "player-accessory-outfitWolf.img",
+                pos: v2.create(-3, 0),
+                scale: 0.26,
+                aboveHands: true,
+            },
+        },
+        lootImg: {
+            sprite: "loot-shirt-outfitWolf.img",
+            tint: 0xffffff,
+        },
+    }),
+    outfitMultiTusking: defineOutfitSkin("outfitBase", {
+        name: "Multi Tusking",
+        noDropOnDeath: true,
+        rarity: 3,
+        lore: "Trish's father",
+        skinImg: {
+            baseTint: 16777215,
+            baseSprite: "player-base-outfitMultiTusking.img",
+            handTint: 0xffffff,
+            handSprite: "player-hands-outfitMultiTusking.img",
+            footTint: 0xffffff,
+            footSprite: "player-hands-outfitMultiTusking.img",
+            backpackTint: 9065728,
+            backpackSprite: "player-circle-base-01.img",
+            accessoryImg: {
+                sprite: "player-accessory-outfitMultiTusking.img",
+                pos: v2.create(0, 0),
+                scale: 0.26,
+                aboveHands: true,
+            },
+        },
+        lootImg: {
+            sprite: "loot-shirt-outfitMultiTusking.img",
+            tint: 16777215,
+        },
+    }),
+    outfitGhoulFire: defineOutfitSkin("outfitBase", {
+        name: "Blue Burns",
+        noDropOnDeath: true,
+        rarity: 5,
+        lore: "Created by earldre",
+        skinImg: {
+            baseTint: 0xffffff,
+            baseSprite: "player-base-outfitGhoulFire.img",
+            handTint: 0xffffff,
+            handSprite: "player-hands-outfitGhoulFire.img",
+            footTint: 0xffffff,
+            footSprite: "player-feet-01.img",
+            backpackTint: 0xffffff,
+            backpackSprite: "player-back-outfitGhoulFire.img",
+            accessoryImg: {
+                sprite: "player-accessory-outfitGhoulFire.img",
+                pos: v2.create(-4, 0),
+                scale: 0.26,
+                aboveHands: true,
+            },
+        },
+        lootImg: {
+            sprite: "loot-shirt-outfitGhoulFire.img",
             tint: 0xffffff,
         },
     }),
