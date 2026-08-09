@@ -284,6 +284,11 @@ export interface ConfigType {
         GOOGLE_SECRET_ID?: string;
 
         /**
+         * Discord bot token.
+         */
+        DISCORD_BOT_TOKEN?: string;
+
+        /**
          * Enables proxycheck.io to ban VPNs and proxies from connecting.
          *
          */
@@ -314,6 +319,16 @@ export interface ConfigType {
         AIP_PLACEMENT_ID?: string;
         GAMEMONETIZE_ID?: string;
     };
+
+    /**
+     * Role ID for users with moderation permissions
+     */
+    discordRoleId?: string;
+
+    /**
+     * Guild ID, as of right now the bot can only exist in 1 guild
+     */
+    discordGuildId?: string;
 
     /**
      * Enables caching some expensive API requests (like leaderboards) with Redis.

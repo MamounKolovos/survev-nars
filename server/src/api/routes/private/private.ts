@@ -29,6 +29,8 @@ import {
 import { MOCK_USER_ID } from "../user/auth/mock";
 import { ModerationRouter, hashIp, logPlayerIPs } from "./ModerationRouter";
 
+class TransferError extends Error {}
+
 export const PrivateRouter = new Hono<Context>()
     .use(privateMiddleware)
     .route("/moderation", ModerationRouter)
@@ -202,6 +204,105 @@ export const PrivateRouter = new Hono<Context>()
                 .where(and(eq(itemsTable.userId, user.id), eq(itemsTable.type, item)));
 
             return c.json({ success: true }, 200);
+        },
+    )
+    .post(
+        "/transfer_item",
+        databaseEnabledMiddleware,
+        validateParams(
+            z.object({
+                item: z.string(),
+                oldSlug: z.string(),
+                newSlug: z.string(),
+            }),
+        ),
+        async (c) => {
+            const { item, oldSlug, newSlug } = c.req.valid("json");
+
+            if (oldSlug == newSlug) {
+                return c.json({ error: "Old and new users must be different" }, 400);
+            }
+
+            try {
+                await db.transaction(async (tx) => {
+                    const oldUser = await tx.query.usersTable.findFirst({
+                        where: eq(usersTable.slug, oldSlug),
+                        columns: {
+                            id: true,
+                        },
+                    });
+
+                    if (!oldUser) throw new TransferError("Old user not found");
+
+                    const newUser = await tx.query.usersTable.findFirst({
+                        where: eq(usersTable.slug, newSlug),
+                        columns: {
+                            id: true,
+                        },
+                    });
+
+                    if (!newUser) throw new TransferError("New user not found");
+
+                    const itemRow = await tx.query.itemsTable.findFirst({
+                        where: and(
+                            eq(itemsTable.userId, oldUser.id),
+                            eq(itemsTable.type, item),
+                        ),
+                        columns: {
+                            source: true,
+                            timeAcquired: true,
+                        },
+                    });
+
+                    if (!itemRow) throw new TransferError("Item not found on old user");
+
+                    await tx
+                        .delete(itemsTable)
+                        .where(
+                            and(
+                                eq(itemsTable.userId, oldUser.id),
+                                eq(itemsTable.type, item),
+                            ),
+                        );
+
+                    await tx.insert(itemsTable).values({
+                        userId: newUser.id,
+                        type: item,
+                        source: itemRow.source,
+                        timeAcquired: itemRow.timeAcquired,
+                    });
+                });
+
+                return c.json({ success: true }, 200);
+            } catch (e: unknown) {
+                if (e instanceof TransferError) {
+                    return c.json({ error: e.message }, 400);
+                } else {
+                    return c.json({ error: "Transfer unable to be completed" }, 500);
+                }
+            }
+        },
+    )
+    .post(
+        "/find_item",
+        databaseEnabledMiddleware,
+        validateParams(
+            z.object({
+                name: z.string(),
+            }),
+        ),
+        async (c) => {
+            const { name } = c.req.valid("json");
+
+            const targetDef = Object.values(GameObjectDefs).find(
+                (def) => "name" in def && def.name?.toLowerCase() == name.toLowerCase(),
+            );
+
+            if (targetDef == undefined) {
+                return c.json({ error: "Item not found" }, 404);
+            }
+
+            return c.json(targetDef, 200);
         },
     )
     .post("/clear_cache", async (c) => {

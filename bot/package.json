@@ -1,0 +1,15 @@
+{
+  "name": "bot",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/client.ts",
+    "dev": "tsx watch --clear-screen=false --include '../server/src/api/routes/private/*' --include ../survev-config.hjson src/client.ts",
+    "register": "tsx src/register.ts"
+  },
+  "dependencies": {
+    "discord.js": "^14.27.0",
+    "hono": "^4.7.11",
+    "tsx": "^4.19.4",
+    "zod": "^3.25.45"
+  }
+}
