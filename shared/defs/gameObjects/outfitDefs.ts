@@ -1262,7 +1262,7 @@ const SkinDefs: Record<string, OutfitDef> = {
                 sprite: "player-accessory-outfitGhoulFire.img",
                 pos: v2.create(-4, 0),
                 scale: 0.26,
-                aboveHands: true,
+                aboveHands: false,
             },
         },
         lootImg: {
