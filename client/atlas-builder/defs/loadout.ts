@@ -716,5 +716,16 @@ export const LoadoutAtlas: AtlasDef = {
         "player/player-back-outfitGhoulFire.svg",
         "player/player-accessory-outfitGhoulFire.svg",
         "loot/loot-shirt-outfitGhoulFire.svg",
+
+        "player/player-base-outfitBuckTeeth.svg",
+        "player/player-hands-outfitBuckTeeth.svg",
+        "player/player-back-outfitBuckTeeth.svg",
+        "player/player-accessory-outfitBuckTeeth.svg",
+        "loot/loot-shirt-outfitBuckTeeth.svg",
+
+        "player/player-base-outfitAvocadoh.svg",
+        "player/player-hands-outfitAvocadoh.svg",
+        "player/player-back-outfitAvocadoh.svg",
+        "loot/loot-shirt-outfitAvocadoh.svg",
     ],
 };
