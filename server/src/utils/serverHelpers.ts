@@ -408,7 +408,7 @@ export async function fetchApiServer<
                 "survev-api-key": Config.secrets.SURVEV_API_KEY,
             },
             body: JSON.stringify(body),
-            signal: AbortSignal.timeout(10_000),
+            signal: AbortSignal.timeout(30_000),
         });
 
         if (res.ok) {
