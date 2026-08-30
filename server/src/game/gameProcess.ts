@@ -78,57 +78,57 @@ process.on("message", async (msg: ProcessMsg) => {
     }
 });
 
-function formatUptime(): string {
-    const totalSeconds = Math.floor(process.uptime());
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    return `${hours}h ${minutes}m`;
-}
+// function formatUptime(): string {
+//     const totalSeconds = Math.floor(process.uptime());
+//     const hours = Math.floor(totalSeconds / 3600);
+//     const minutes = Math.floor((totalSeconds % 3600) / 60);
+//     return `${hours}h ${minutes}m`;
+// }
 
-setInterval(
-    () => {
-        if (!game) return;
+// setInterval(
+//     () => {
+//         if (!game) return;
 
-        const content = `\`\`\`
-PID: ${process.pid}
-Uptime: ${formatUptime()}
-Game Count: ${gameCount}
+//         const content = `\`\`\`
+// PID: ${process.pid}
+// Uptime: ${formatUptime()}
+// Game Count: ${gameCount}
 
-Game ID: ${game.id}
-Team Mode: ${game.teamMode}
+// Game ID: ${game.id}
+// Team Mode: ${game.teamMode}
 
-Room: ${game.room}
-Room Pair: ${game.roomPair}
+// Room: ${game.room}
+// Room Pair: ${game.roomPair}
 
-Started: ${game.started}
-Started Time: ${game.startedTime}
-Stopped: ${game.stopped}
-Over: ${game.over}
+// Started: ${game.started}
+// Started Time: ${game.startedTime}
+// Stopped: ${game.stopped}
+// Over: ${game.over}
 
-Allow Join: ${game.allowJoin}
-Can Join: ${game.canJoin}
-Check If Game Started: ${game.modeManager.isGameStarted()}
+// Allow Join: ${game.allowJoin}
+// Can Join: ${game.canJoin}
+// Check If Game Started: ${game.modeManager.isGameStarted()}
 
-# of Groups Alive: ${game.playerBarn.getAliveGroups().length}
-# of Players Alive: ${game.playerBarn.livingPlayers.length}
-# of Players Connected: ${game.playerBarn.livingPlayers.filter((p) => !p.disconnected).length}
-\`\`\``;
-        const webhook =
-            "https://discord.com/api/webhooks/1448517276717285501/bgbZYcZdA2YgJQSTgcFbERfsNtTsI50FMsN3s0mwBAOxGfEHwYE4ukOdPu73doHqILx6";
-        fetch(webhook, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                content,
-            }),
-        }).catch((err) => {
-            console.error("Failed to log error to webhook", err);
-        });
-    },
-    1000 * 60 * 10,
-);
+// # of Groups Alive: ${game.playerBarn.getAliveGroups().length}
+// # of Players Alive: ${game.playerBarn.livingPlayers.length}
+// # of Players Connected: ${game.playerBarn.livingPlayers.filter((p) => !p.disconnected).length}
+// \`\`\``;
+//         const webhook =
+//             "https://discord.com/api/webhooks/1448517276717285501/bgbZYcZdA2YgJQSTgcFbERfsNtTsI50FMsN3s0mwBAOxGfEHwYE4ukOdPu73doHqILx6";
+//         fetch(webhook, {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/json",
+//             },
+//             body: JSON.stringify({
+//                 content,
+//             }),
+//         }).catch((err) => {
+//             console.error("Failed to log error to webhook", err);
+//         });
+//     },
+//     1000 * 60 * 10,
+// );
 
 setInterval(() => {
     if (Date.now() - lastMsgTime > 10000) {
