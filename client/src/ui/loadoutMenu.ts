@@ -536,7 +536,9 @@ export class LoadoutMenu {
             const itemInfo = {
                 type: currentNewItem.type,
                 rarity: objDef.rarity || 0,
-                displayName: objDef.name!,
+                displayName:
+                    this.localization.translate(`game-${currentNewItem.type}`) ||
+                    objDef.name!,
                 category: objDef.type,
             };
             const svg = helpers.getSvgFromGameType(currentNewItem.type);

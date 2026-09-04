@@ -52,13 +52,24 @@ export interface MeleeDef {
         borderTint?: number;
         rot?: number;
         mirror?: boolean;
+        innerScale?: number;
     };
     baseType?: string;
     rarity?: number;
     lore?: string;
     noPotatoSwap?: boolean;
     noDropOnDeath?: boolean;
-    worldImg?: Img;
+    worldImg?: {
+        sprite: string;
+        pos: Vec2;
+        deployPos?: Vec2;
+        rot: number;
+        scale: Vec2;
+        tint: number;
+        leftHandOntop?: boolean;
+        renderOnHand?: boolean;
+        mirror?: boolean;
+    };
     hipImg?: Img;
     reflectSurface?: {
         equipped: {
@@ -1267,6 +1278,79 @@ const BaseDefs: Record<string, MeleeDef> = {
             leftHandOntop: true,
         },
     },
+    sai: {
+        name: "Sai",
+        type: "melee",
+        rarity: 4,
+        quality: 0,
+        autoAttack: true,
+        switchDelay: 0.25,
+        damage: 19,
+        obstacleDamage: 1,
+        headshotMult: 1,
+        noPotatoSwap: true,
+        noDropOnDeath: true,
+        attack: {
+            offset: {
+                x: 2.5,
+                y: 0,
+            },
+            rad: 1.2,
+            damageTimes: [0.1, 0.3, 0.4],
+            cooldownTime: 0.6,
+        },
+        speed: {
+            equip: 1,
+        },
+        anim: {
+            idlePose: "sai",
+            // L: left, R: right, B: both
+            attackAnims: ["saiLRL", "saiBRR"],
+            deploy: {
+                anims: ["saiMirroredSpin"],
+                duration: 0.5,
+            },
+        },
+        sound: {
+            pickup: "frag_pickup_01",
+            swing: "knife_swing_01",
+            heavySwing: "heavy_swing_01",
+            deploy: "knife_deploy_01",
+            playerHit: "knife_hit_01",
+        },
+        lootImg: {
+            sprite: "loot-melee-sai.img",
+            tint: 0xffffff,
+            border: "loot-circle-outer-02.img",
+            borderTint: 0xffffff,
+            scale: 0.3,
+            rot: 0.78539816339,
+        },
+        worldImg: {
+            sprite: "player-melee-sai.img",
+            pos: {
+                x: 0,
+                y: -60,
+            },
+            deployPos: {
+                x: 0,
+                y: -60,
+            },
+            rot: 0.5 * Math.PI,
+            scale: {
+                x: 0.27,
+                y: 0.27,
+            },
+            tint: 0xffffff,
+            mirror: true,
+        },
+        //TODO: fix these if i ever add particles
+        bladeBounds: {
+            min: v2.create(-27, 35),
+            max: v2.create(27, -83),
+            ori: SpriteOrientation.Right,
+        },
+    },
 };
 
 const SkinDefs: Record<string, MeleeDef> = {
@@ -1598,6 +1682,23 @@ const SkinDefs: Record<string, MeleeDef> = {
     lasr_swrd_03: defineMeleeSkin("lasr_swrd_01", {
         lootImg: { sprite: "loot-melee-lasr-sword-03.img" },
         worldImg: { sprite: "player-melee-lasr-sword-03.img" },
+    }),
+    magma_sai: defineMeleeSkin("sai", {
+        lootImg: { sprite: "loot-melee-magma-sai.img" },
+        worldImg: { sprite: "player-melee-magma-sai.img" },
+    }),
+    orchid_sai: defineMeleeSkin("sai", {
+        lootImg: { sprite: "loot-melee-orchid-sai.img" },
+        worldImg: { sprite: "player-melee-orchid-sai.img" },
+    }),
+    golden_sai: defineMeleeSkin("sai", {
+        rarity: 5,
+        lootImg: { sprite: "loot-melee-golden-sai.img" },
+        worldImg: { sprite: "player-melee-golden-sai.img" },
+    }),
+    frozen_sai: defineMeleeSkin("sai", {
+        lootImg: { sprite: "loot-melee-frozen-sai.img" },
+        worldImg: { sprite: "player-melee-frozen-sai.img" },
     }),
 };
 

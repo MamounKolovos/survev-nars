@@ -234,6 +234,7 @@ export class Player implements AbstractObject {
     gunRSprites = new Gun();
     objectLSprite = createSprite();
     objectRSprite = createSprite();
+    mirroredMeleeSprite = createSprite();
     meleeSprite = createSprite();
     bodySubmergeSprite = createSprite();
     handLSubmergeSprite = createSprite();
@@ -432,6 +433,7 @@ export class Player implements AbstractObject {
         this.footRSprite.addChild(this.footRSubmergeSprite);
 
         this.handLContainer.addChild(this.gunLSprites.container);
+        this.handLContainer.addChild(this.mirroredMeleeSprite);
         this.handLContainer.addChild(this.handLSprite);
         this.handLContainer.addChild(this.objectLSprite);
 
@@ -1309,7 +1311,7 @@ export class Player implements AbstractObject {
                                 bladeBounds.max.y,
                             ),
                         );
-                        return this.meleeToWorldSpace(spriteOffset, camera);
+                        return this.meleeToWorldSpace(spriteOffset, Bones.HandR, camera);
                     },
                 },
             });
@@ -1515,17 +1517,24 @@ export class Player implements AbstractObject {
      *
      * useful for attaching particle emitters to certain parts of the melee sprite
      */
-    meleeToWorldSpace(offset: Vec2, camera: Camera): Vec2 {
+    meleeToWorldSpace(
+        offset: Vec2,
+        hand: Bones.HandL | Bones.HandR,
+        camera: Camera,
+    ): Vec2 {
+        const meleeSprite =
+            hand == Bones.HandR ? this.meleeSprite : this.mirroredMeleeSprite;
+
         // melee space
-        const nativeOffset = v2.add(v2.neg(this.meleeSprite.pivot), offset);
+        const nativeOffset = v2.add(v2.neg(meleeSprite.pivot), offset);
         const scaledOffset = v2.create(
-            nativeOffset.x * this.meleeSprite.scale.x,
-            nativeOffset.y * this.meleeSprite.scale.y,
+            nativeOffset.x * meleeSprite.scale.x,
+            nativeOffset.y * meleeSprite.scale.y,
         );
-        const rotatedOffset = v2.rotate(scaledOffset, this.meleeSprite.rotation);
+        const rotatedOffset = v2.rotate(scaledOffset, meleeSprite.rotation);
 
         // bone space
-        const bonePose = this.bones[Bones.HandR];
+        const bonePose = this.bones[hand];
         const boneOffset = v2.add(bonePose.pivot, rotatedOffset);
         const boneSpaceOffset = v2.add(v2.rotate(boneOffset, bonePose.rot), bonePose.pos);
 
@@ -1889,35 +1898,69 @@ export class Player implements AbstractObject {
         }
         if (weapDef.type == "melee" && this.m_netData.m_activeWeapon != "fists") {
             const worldImg = weapDef.worldImg!;
-            this.meleeSprite.texture = PIXI.Texture.from(worldImg.sprite);
+            const applyMeleeSprite = (
+                meleeSprite: PIXI.Sprite,
+                handSprite: PIXI.Sprite,
+                handContainer: PIXI.Container<PIXI.DisplayObject>,
+            ) => {
+                meleeSprite.texture = PIXI.Texture.from(worldImg.sprite);
 
-            let pos: Vec2;
-            if (this.m_netData.m_animType == Anim.DeployMelee && worldImg.deployPos) {
-                pos = worldImg.deployPos;
-            } else {
-                pos = worldImg.pos;
-            }
+                let pos: Vec2;
+                if (this.m_netData.m_animType == Anim.DeployMelee && worldImg.deployPos) {
+                    pos = worldImg.deployPos;
+                } else {
+                    pos = worldImg.pos;
+                }
 
-            this.meleeSprite.pivot.set(-pos.x, -pos.y);
-            this.meleeSprite.scale.set(
-                worldImg.scale.x / bodyScale,
-                worldImg.scale.y / bodyScale,
+                meleeSprite.pivot.set(-pos.x, -pos.y);
+                meleeSprite.scale.set(
+                    worldImg.scale.x / bodyScale,
+                    worldImg.scale.y / bodyScale,
+                );
+                meleeSprite.rotation = worldImg.rot;
+                meleeSprite.tint = worldImg.tint;
+                meleeSprite.visible = true;
+                const handSpriteIndex = handContainer.getChildIndex(handSprite);
+                const meleeSpriteIndex = math.max(
+                    worldImg.renderOnHand ? handSpriteIndex + 1 : handSpriteIndex - 1,
+                    0,
+                );
+                if (handContainer.getChildIndex(meleeSprite) != meleeSpriteIndex) {
+                    handContainer.addChildAt(meleeSprite, meleeSpriteIndex);
+                }
+            };
+
+            applyMeleeSprite(this.meleeSprite, this.handRSprite, this.handRContainer);
+
+            // only makes sense for traditional non mirrored melees
+            const handRContainerIndex = this.bodyContainer.getChildIndex(
+                this.handRContainer,
             );
-            this.meleeSprite.rotation = worldImg.rot;
-            this.meleeSprite.tint = worldImg.tint;
-            this.meleeSprite.visible = true;
-            const U = this.handRContainer.getChildIndex(this.handRSprite);
-            const W = math.max(worldImg.renderOnHand ? U + 1 : U - 1, 0);
-            if (this.handRContainer.getChildIndex(this.meleeSprite) != W) {
-                this.handRContainer.addChildAt(this.meleeSprite, W);
+            const handLContainerIndex = math.max(
+                worldImg.leftHandOntop
+                    ? handRContainerIndex + 1
+                    : handRContainerIndex - 1,
+                0,
+            );
+            if (
+                this.bodyContainer.getChildIndex(this.handLContainer) !=
+                handLContainerIndex
+            ) {
+                this.bodyContainer.addChildAt(this.handLContainer, handLContainerIndex);
             }
-            const G = this.bodyContainer.getChildIndex(this.handRContainer);
-            const X = math.max(worldImg.leftHandOntop ? G + 1 : G - 1, 0);
-            if (this.bodyContainer.getChildIndex(this.handLContainer) != X) {
-                this.bodyContainer.addChildAt(this.handLContainer, X);
+
+            if (worldImg.mirror) {
+                applyMeleeSprite(
+                    this.mirroredMeleeSprite,
+                    this.handLSprite,
+                    this.handLContainer,
+                );
+            } else {
+                this.mirroredMeleeSprite.visible = false;
             }
         } else {
             this.meleeSprite.visible = false;
+            this.mirroredMeleeSprite.visible = false;
         }
         if (weapDef.type == "throwable") {
             const K = function (
@@ -1957,6 +2000,7 @@ export class Player implements AbstractObject {
             this.gunLSprites.setVisible(false);
             this.gunRSprites.setVisible(false);
             this.meleeSprite.visible = false;
+            this.mirroredMeleeSprite.visible = false;
             this.objectLSprite.visible = false;
             this.objectRSprite.visible = false;
         }
@@ -2428,6 +2472,8 @@ export class Player implements AbstractObject {
             );
             const frameABones = frames[frameAIdx].bones;
             const frameBBones = frames[frameBIdx].bones;
+            const easingCallback = frames[frameBIdx].easing;
+            const lerpT = easingCallback ? easingCallback(t) : t;
             const mirror = this.anim.data.mirror;
             for (let i = 0; i < this.anim.bones.length; i++) {
                 const bones = this.anim.bones[i];
@@ -2437,7 +2483,9 @@ export class Player implements AbstractObject {
                 }
                 if (frameABones[bone] !== undefined && frameBBones[bone] !== undefined) {
                     bones.weight = frameAIdx == frameBIdx ? t : 1;
-                    bones.pose.copy(Pose.lerp(t, frameABones[bone]!, frameBBones[bone]!));
+                    bones.pose.copy(
+                        Pose.lerp(lerpT, frameABones[bone]!, frameBBones[bone]!),
+                    );
                     if (mirror) {
                         bones.pose.pos.y *= -1;
                         bones.pose.pivot.y *= -1;
@@ -2507,6 +2555,7 @@ export class Player implements AbstractObject {
                                         );
                                         return this.meleeToWorldSpace(
                                             spriteOffset,
+                                            Bones.HandR,
                                             AnimCtx.camera,
                                         );
                                     },

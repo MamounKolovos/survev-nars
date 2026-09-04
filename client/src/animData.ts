@@ -6,10 +6,15 @@ import { assert, util } from "../../shared/utils/util";
 import { type Vec2, v2 } from "../../shared/utils/v2";
 import type { AnimCtx, Player } from "./objects/player";
 
-function frame(time: number, bones: Partial<Record<Bones, Pose>>) {
+function frame(
+    time: number,
+    bones: Partial<Record<Bones, Pose>>,
+    easing?: (t: number) => number,
+) {
     return {
         time,
         bones,
+        easing,
     };
 }
 
@@ -148,6 +153,10 @@ export const IdlePoses: Record<string, Partial<Record<Bones, Pose>>> = {
         [Bones.HandL]: new Pose(v2.create(10.5, 0.0)),
         [Bones.HandR]: new Pose(v2.create(18.0, 0.5)),
     },
+    sai: {
+        [Bones.HandL]: new Pose(v2.create(0, 0), Math.PI / 10, v2.create(3, -20)),
+        [Bones.HandR]: new Pose(v2.create(0, 0), Math.PI / 20, v2.create(14, 12.25)),
+    },
 };
 
 const def = GameObjectDefs as unknown as Record<string, MeleeDef>;
@@ -162,6 +171,7 @@ type AnimDef = {
     keyframes: Array<{
         time: number;
         bones: Partial<Record<Bones, Pose>>;
+        easing?: (t: number) => number;
     }>;
     effects: Effect[];
     streaks?: Array<{
@@ -448,6 +458,205 @@ const BaseAnimations: Record<string, AnimDef> = {
         effects: [
             effect(0, "animPlaySound", { sound: "swing" }),
             effect(def.hook.attack.damageTimes[0], "animMeleeCollision", {}),
+        ],
+    },
+    saiLRL: {
+        keyframes: [
+            frame(0, {
+                [Bones.HandL]: new Pose(v2.create(0, 0), Math.PI / 10, v2.create(3, -20)),
+                [Bones.HandR]: new Pose(
+                    v2.create(0, 0),
+                    Math.PI / 20,
+                    v2.create(14, 12.25),
+                ),
+            }),
+            // FIRST HIT
+            frame(
+                def.sai.attack.damageTimes[0],
+                {
+                    [Bones.HandL]: new Pose(
+                        v2.create(0, 0),
+                        -Math.PI / 20,
+                        v2.create(25, -5),
+                    ),
+                    [Bones.HandR]: new Pose(
+                        v2.create(0, 0),
+                        Math.PI / 20,
+                        v2.create(8, 14.125),
+                    ),
+                },
+                math.easeOutQuart,
+            ),
+            frame(0.15, {
+                [Bones.HandL]: new Pose(
+                    v2.create(0, 0),
+                    -Math.PI / 20,
+                    v2.create(10, -10),
+                ),
+                [Bones.HandR]: new Pose(v2.create(0, 0), -Math.PI / 12, v2.create(2, 16)),
+            }),
+            frame(0.2, {
+                [Bones.HandL]: new Pose(
+                    v2.create(0, 0),
+                    -Math.PI / 20,
+                    v2.create(10, -10),
+                ),
+                [Bones.HandR]: new Pose(v2.create(0, 0), -Math.PI / 12, v2.create(0, 17)),
+            }),
+            // SECOND HIT
+            frame(
+                def.sai.attack.damageTimes[1],
+                {
+                    [Bones.HandL]: new Pose(
+                        v2.create(0, 0),
+                        Math.PI / 10,
+                        v2.create(3, -20),
+                    ),
+                    [Bones.HandR]: new Pose(
+                        v2.create(0, 0),
+                        Math.PI / 10,
+                        v2.create(29, 2),
+                    ),
+                },
+                math.easeOutQuart,
+            ),
+            // THIRD HIT
+            frame(
+                def.sai.attack.damageTimes[2],
+                {
+                    [Bones.HandL]: new Pose(v2.create(0, 0), 0, v2.create(25, -7)),
+                    [Bones.HandR]: new Pose(
+                        v2.create(0, 0),
+                        Math.PI / 20,
+                        v2.create(10, 14.25),
+                    ),
+                },
+                math.easeOutQuart,
+            ),
+            frame(0.6, {
+                [Bones.HandL]: new Pose(v2.create(0, 0), Math.PI / 10, v2.create(3, -20)),
+                [Bones.HandR]: new Pose(
+                    v2.create(0, 0),
+                    Math.PI / 20,
+                    v2.create(14, 12.25),
+                ),
+            }),
+        ],
+        effects: [
+            effect(0.0, "animPlaySound", { sound: "swing" }),
+            effect(0.0, "animMeleeCollision", {}),
+            effect(0.2, "animPlaySound", { sound: "swing" }),
+            effect(0.2, "animMeleeCollision", {}),
+            effect(0.3, "animPlaySound", { sound: "swing" }),
+            effect(0.3, "animMeleeCollision", {}),
+        ],
+    },
+    saiBRR: {
+        keyframes: [
+            frame(0, {
+                [Bones.HandL]: new Pose(v2.create(0, 0), Math.PI / 10, v2.create(3, -20)),
+                [Bones.HandR]: new Pose(
+                    v2.create(0, 0),
+                    Math.PI / 20,
+                    v2.create(14, 12.25),
+                ),
+            }),
+            // FIRST HIT
+            frame(
+                def.sai.attack.damageTimes[0],
+                {
+                    [Bones.HandL]: new Pose(v2.create(0, 0), 0, v2.create(25, -5)),
+                    [Bones.HandR]: new Pose(v2.create(0, 0), 0, v2.create(29, 2)),
+                },
+                math.easeOutExpo,
+            ),
+            frame(0.2, {
+                [Bones.HandL]: new Pose(
+                    v2.create(0, 0),
+                    -Math.PI / 20,
+                    v2.create(14, -15),
+                ),
+                [Bones.HandR]: new Pose(v2.create(0, 0), -Math.PI / 12, v2.create(17, 5)),
+            }),
+            // SECOND HIT
+            frame(
+                def.sai.attack.damageTimes[1],
+                {
+                    [Bones.HandL]: new Pose(
+                        v2.create(0, 0),
+                        -Math.PI / 20,
+                        v2.create(12, -11.5),
+                    ),
+                    [Bones.HandR]: new Pose(v2.create(0, 0), 0, v2.create(29, 2)),
+                },
+                math.easeOutQuart,
+            ),
+            frame(0.35, {
+                [Bones.HandL]: new Pose(
+                    v2.create(0, 0),
+                    -Math.PI / 20,
+                    v2.create(12, -11.5),
+                ),
+                [Bones.HandR]: new Pose(v2.create(0, 0), -Math.PI / 12, v2.create(13, 5)),
+            }),
+            // THIRD HIT
+            frame(
+                def.sai.attack.damageTimes[2],
+                {
+                    [Bones.HandL]: new Pose(
+                        v2.create(0, 0),
+                        -Math.PI / 20,
+                        v2.create(12, -11.5),
+                    ),
+                    [Bones.HandR]: new Pose(v2.create(0, 0), 0, v2.create(29, 2)),
+                },
+                math.easeOutQuart,
+            ),
+            frame(0.6, {
+                [Bones.HandL]: new Pose(v2.create(0, 0), Math.PI / 10, v2.create(3, -20)),
+                [Bones.HandR]: new Pose(
+                    v2.create(0, 0),
+                    Math.PI / 20,
+                    v2.create(14, 12.25),
+                ),
+            }),
+        ],
+        effects: [
+            effect(0.0, "animPlaySound", { sound: "swing" }),
+            effect(0.0, "animPlaySound", { sound: "swing" }),
+            effect(0.0, "animMeleeCollision", {}),
+            effect(0.2, "animPlaySound", { sound: "swing" }),
+            effect(0.2, "animMeleeCollision", {}),
+            effect(0.3, "animPlaySound", { sound: "swing" }),
+            effect(0.3, "animMeleeCollision", {}),
+        ],
+    },
+    saiMirroredSpin: {
+        keyframes: [
+            frame(0, {
+                [Bones.HandL]: new Pose(v2.create(0, 0), -Math.PI, v2.create(-7, -20)),
+                [Bones.HandR]: new Pose(v2.create(0, 0), Math.PI, v2.create(-7, 20.25)),
+            }),
+            frame(
+                def.sai.anim.deploy!.duration,
+                {
+                    [Bones.HandL]: new Pose(
+                        v2.create(0, 0),
+                        Math.PI * 4 + Math.PI / 10,
+                        v2.create(3, -20),
+                    ),
+                    [Bones.HandR]: new Pose(
+                        v2.create(0, 0),
+                        -Math.PI * 4 + Math.PI / 20,
+                        v2.create(14, 12.25),
+                    ),
+                },
+                math.easeOutExpo,
+            ),
+        ],
+        effects: [
+            effect(0, "animPlaySound", { sound: "swing" }),
+            effect(0.075, "animPlaySound", { sound: "swing" }),
         ],
     },
     pan: {
