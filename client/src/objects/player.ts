@@ -1731,8 +1731,13 @@ export class Player implements AbstractObject {
         const handTint = outfitDef.ghillie
             ? map.getMapDef().biome.colors.playerGhillie
             : outfitImg.handTint;
-        setHandSprite(this.handLSprite, outfitImg.handSprite, handTint);
-        setHandSprite(this.handRSprite, outfitImg.handSprite, handTint);
+        if (typeof outfitImg.handSprite == "string") {
+            setHandSprite(this.handLSprite, outfitImg.handSprite, handTint);
+            setHandSprite(this.handRSprite, outfitImg.handSprite, handTint);
+        } else {
+            setHandSprite(this.handLSprite, outfitImg.handSprite.left, handTint);
+            setHandSprite(this.handRSprite, outfitImg.handSprite.right, handTint);
+        }
 
         // Feet
         const setFootSprite = function (
