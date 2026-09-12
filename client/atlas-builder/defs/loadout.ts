@@ -161,6 +161,12 @@ export const LoadoutAtlas: AtlasDef = {
         "emotes/trunk.svg",
         "emotes/turkey-animal.svg",
         "emotes/whale.svg",
+        "emotes/timeout.svg",
+        "emotes/face-traumatized.svg",
+        "emotes/bruh.svg",
+        "emotes/face-flattered.svg",
+        "emotes/face-salute.svg",
+        "emotes/face-screaming.svg",
         "gui/audio-off.svg",
         "gui/audio-on.svg",
         "gui/bullets.svg",
@@ -742,5 +748,19 @@ export const LoadoutAtlas: AtlasDef = {
 
         "player/player-melee-frozen-sai.svg",
         "loot/loot-melee-frozen-sai.svg",
+
+        "player/player-base-outfitAurora.svg",
+        "player/player-hand-left-outfitAurora.svg",
+        "player/player-hand-right-outfitAurora.svg",
+        "player/player-back-outfitAurora.svg",
+        "loot/loot-shirt-outfitAurora.svg",
+
+        "loot/loot-melee-karambit-borealis.svg",
+
+        "player/player-base-outfitGold.svg",
+        "player/player-hands-outfitGold.svg",
+        "player/player-feet-outfitGold.svg",
+        "player/player-back-outfitGold.svg",
+        "loot/loot-shirt-outfitGold.svg",
     ],
 };
