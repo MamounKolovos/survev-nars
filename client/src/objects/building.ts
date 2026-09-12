@@ -305,8 +305,12 @@ export class Building implements AbstractObject {
             }
 
             for (let i = 0; i < def.ceiling.imgs.length; i++) {
-                break;
                 const imgDef = def.ceiling.imgs[i];
+
+                // the only docks container that has no floor sprite so will be invisible if ceiling is hidden
+                // this is hardcoded because it's not that important as of right now
+                if (imgDef.sprite != "map-building-container-ceiling-05.img") break;
+
                 this.imgs.push({
                     sprite: createSpriteFromDef(imgDef),
                     isCeiling: true,
