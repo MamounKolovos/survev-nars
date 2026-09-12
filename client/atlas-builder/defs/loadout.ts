@@ -592,6 +592,7 @@ export const LoadoutAtlas: AtlasDef = {
         "particles/part-shell-03.svg",
         "particles/part-shell-04.svg",
         "particles/part-shell-05.svg",
+        "particles/part-shell-06.svg",
         "particles/part-smoke-01.svg",
         "particles/part-smoke-02.svg",
         "particles/part-smoke-03.svg",
@@ -762,5 +763,11 @@ export const LoadoutAtlas: AtlasDef = {
         "player/player-feet-outfitGold.svg",
         "player/player-back-outfitGold.svg",
         "loot/loot-shirt-outfitGold.svg",
+
+        "guns/gun-ash12-01.svg",
+        "loot/loot-weapon-ash12.svg",
+
+        "guns/gun-barrett-01.svg",
+        "loot/loot-weapon-barrett.svg",
     ],
 };
