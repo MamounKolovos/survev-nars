@@ -383,7 +383,7 @@ export class WeaponManager {
                     if (weapon.cooldown < 0) {
                         this.fireWeapon(this.offHand);
                         this.offHand = !this.offHand;
-                    } else if (weapon.cooldown < 0.1) {
+                    } else if (weapon.cooldown < 0.05) {
                         this.bufferInput = true;
                     }
                 }
