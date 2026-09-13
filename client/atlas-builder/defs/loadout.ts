@@ -780,5 +780,8 @@ export const LoadoutAtlas: AtlasDef = {
         "player/player-hands-outfitSortaBlue.svg",
         "player/player-back-outfitSortaBlue.svg",
         "loot/loot-shirt-outfitSortaBlue.svg",
+
+        "player/player-accessory-outfitVikingHelm.svg",
+        "loot/loot-shirt-outfitVikingHelm.svg",
     ],
 };

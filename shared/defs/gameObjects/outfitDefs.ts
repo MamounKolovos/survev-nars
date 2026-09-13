@@ -1383,6 +1383,32 @@ const SkinDefs: Record<string, OutfitDef> = {
             tint: 0xffffff,
         },
     }),
+    outfitVikingHelm: defineOutfitSkin("outfitBase", {
+        name: "Viking Helm",
+        noDropOnDeath: true,
+        rarity: 4,
+        lore: "For those who fight with the spirit of the vikings.",
+        skinImg: {
+            baseTint: 0xd4a373,
+            baseSprite: "player-base-01.img",
+            handTint: 0x9a7a42,
+            handSprite: "player-hands-01.img",
+            footTint: 0xffffff,
+            footSprite: "player-feet-01.img",
+            backpackTint: 0x4a0e17,
+            backpackSprite: "player-circle-base-01.img",
+            accessoryImg: {
+                sprite: "player-accessory-outfitVikingHelm.img",
+                pos: v2.create(0, 0),
+                scale: 0.26,
+                aboveHands: true,
+            },
+        },
+        lootImg: {
+            sprite: "loot-shirt-outfitVikingHelm.img",
+            tint: 0xffffff,
+        },
+    }),
     outfitBarrel: defineOutfitSkin("outfitBase", {
         name: "Barrel Costume",
         obstacleType: "barrel_01",
