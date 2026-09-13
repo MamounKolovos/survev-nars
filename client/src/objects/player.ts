@@ -1358,11 +1358,19 @@ export class Player implements AbstractObject {
             !this.meleeIdleEmitter &&
             !this.meleeStreakEmitter;
 
-        if (!this.outfitEmitter && wantsOutfitEmitter) {
-            this.outfitEmitter = particleBarn.addEmitter(outfitDef.emitter!);
-        } else if (this.outfitEmitter && !wantsOutfitEmitter) {
+        // stop if you don't want the current outfit emitter anymore
+        // if you want to switch to a new outfit emitter you must stop the current one
+        if (
+            this.outfitEmitter &&
+            (!wantsOutfitEmitter || outfitDef.emitter != this.outfitEmitter.type)
+        ) {
             this.outfitEmitter.stop();
             this.outfitEmitter = null;
+        }
+
+        // if you don't have a current outfit emitter and you want one, start one
+        if (!this.outfitEmitter && wantsOutfitEmitter) {
+            this.outfitEmitter = particleBarn.addEmitter(outfitDef.emitter!);
         }
 
         if (this.outfitEmitter) {
