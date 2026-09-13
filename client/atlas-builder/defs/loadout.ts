@@ -769,5 +769,10 @@ export const LoadoutAtlas: AtlasDef = {
 
         "guns/gun-barrett-01.svg",
         "loot/loot-weapon-barrett.svg",
+
+        "player/player-base-outfitSortaBlue.svg",
+        "player/player-hands-outfitSortaBlue.svg",
+        "player/player-back-outfitSortaBlue.svg",
+        "loot/loot-shirt-outfitSortaBlue.svg",
     ],
 };

@@ -1360,6 +1360,26 @@ const SkinDefs: Record<string, OutfitDef> = {
             tint: 0xffffff,
         },
     }),
+    outfitSortaBlue: defineOutfitSkin("outfitBase", {
+        name: "Sorta Blue",
+        noDropOnDeath: true,
+        rarity: 2,
+        lore: "Created by StraightUpFoReal",
+        skinImg: {
+            baseTint: 0xffffff,
+            baseSprite: "player-base-outfitSortaBlue.img",
+            handTint: 0xffffff,
+            handSprite: "player-hands-outfitSortaBlue.img",
+            footTint: 0xb38ceb,
+            footSprite: "player-feet-01.img",
+            backpackTint: 0xffffff,
+            backpackSprite: "player-back-outfitSortaBlue.img",
+        },
+        lootImg: {
+            sprite: "loot-shirt-outfitSortaBlue.img",
+            tint: 0xffffff,
+        },
+    }),
     outfitBarrel: defineOutfitSkin("outfitBase", {
         name: "Barrel Costume",
         obstacleType: "barrel_01",
