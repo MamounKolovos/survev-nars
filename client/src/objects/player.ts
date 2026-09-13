@@ -312,6 +312,7 @@ export class Player implements AbstractObject {
     impulseGlovesAuraEmitter: Emitter | null = null;
     meleeIdleEmitter: Emitter | null = null;
     meleeStreakEmitter: Emitter | null = null;
+    outfitEmitter: Emitter | null = null;
     downed = false;
     wasDowned = false;
     bleedTicker = 0;
@@ -583,6 +584,11 @@ export class Player implements AbstractObject {
         if (this.meleeStreakEmitter) {
             this.meleeStreakEmitter.stop();
             this.meleeStreakEmitter = null;
+        }
+
+        if (this.outfitEmitter) {
+            this.outfitEmitter.stop();
+            this.outfitEmitter = null;
         }
     }
 
@@ -1336,6 +1342,34 @@ export class Player implements AbstractObject {
             // Stop effect
             this.impulseGlovesAuraEmitter.stop();
             this.impulseGlovesAuraEmitter = null;
+        }
+
+        const outfitDef = GameObjectDefs[this.m_netData.m_outfit] as OutfitDef;
+        const wantsOutfitEmitter =
+            !!outfitDef.emitter &&
+            // self explanatory
+            !this.m_netData.m_dead &&
+            // no particular reason
+            !this.m_netData.m_downed &&
+            // too visually noisy
+            !this.useItemEmitter &&
+            !this.hasteEmitter &&
+            !this.passiveHealEmitter &&
+            !this.meleeIdleEmitter &&
+            !this.meleeStreakEmitter;
+
+        if (!this.outfitEmitter && wantsOutfitEmitter) {
+            this.outfitEmitter = particleBarn.addEmitter(outfitDef.emitter!);
+        } else if (this.outfitEmitter && !wantsOutfitEmitter) {
+            this.outfitEmitter.stop();
+            this.outfitEmitter = null;
+        }
+
+        if (this.outfitEmitter) {
+            this.outfitEmitter.pos = v2.add(this.m_pos, v2.create(0, 0.1));
+            this.outfitEmitter.bounds = { kind: "circle", radius: this.m_rad * 1.1 };
+            this.outfitEmitter.layer = this.renderLayer;
+            this.outfitEmitter.zOrd = this.renderZOrd + 1;
         }
 
         // Passive heal effect

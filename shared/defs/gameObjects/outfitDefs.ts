@@ -38,6 +38,7 @@ export interface OutfitDef {
     obstacleType?: string;
     baseScale?: number;
     ghillie?: boolean;
+    emitter?: string;
 }
 
 function defineOutfitSkin(baseType: string, params: any) {
@@ -1097,6 +1098,7 @@ const SkinDefs: Record<string, OutfitDef> = {
             sprite: "loot-shirt-outfitBubblegum.img",
             tint: 0xffffff,
         },
+        emitter: "outfit_bubblegum",
     }),
     outfitRedLava: defineOutfitSkin("outfitBase", {
         name: "Red Lava",
@@ -1359,6 +1361,7 @@ const SkinDefs: Record<string, OutfitDef> = {
             sprite: "loot-shirt-outfitGold.img",
             tint: 0xffffff,
         },
+        emitter: "outfit_gold",
     }),
     outfitSortaBlue: defineOutfitSkin("outfitBase", {
         name: "Sorta Blue",

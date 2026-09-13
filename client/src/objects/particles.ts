@@ -3186,6 +3186,48 @@ const ParticleDefs: Record<string, ParticleDef> = {
             return util.rgbToInt(util.hsvToRgb(hue, saturation, 1));
         },
     },
+    outfit_bubblegum: {
+        image: ["part-boost-basic.img", "part-cloth-01.img"],
+        life: new Range(1, 1.2),
+        drag: 0.1,
+        rotVel: 1,
+        scale: {
+            start: new Range(0.11, 0.15),
+            end: new Range(0.01, 0.03),
+            lerp: new Range(0, 1),
+        },
+        alpha: {
+            start: 1,
+            end: 0,
+            lerp: new Range(0.6, 1),
+        },
+        color: function () {
+            const hue = 0.9 + Math.random() * 0.05; // bubblegum pink
+            const saturation = 0.4 + Math.random() * 0.2;
+            return util.rgbToInt(util.hsvToRgb(hue, saturation, 1));
+        },
+    },
+    outfit_gold: {
+        image: ["part-boost-basic.img", "part-boost-star.img"],
+        life: new Range(1, 1.2),
+        drag: 0.1,
+        rotVel: 1,
+        scale: {
+            start: new Range(0.11, 0.15),
+            end: new Range(0.01, 0.03),
+            lerp: new Range(0, 1),
+        },
+        alpha: {
+            start: 1,
+            end: 0,
+            lerp: new Range(0.6, 1),
+        },
+        color: function () {
+            const hue = 0.12 + Math.random() * 0.03; // gold
+            const saturation = 0.8 + Math.random() * 0.12;
+            return util.rgbToInt(util.hsvToRgb(hue, saturation, 1));
+        },
+    },
 };
 
 export const EmitterDefs: Record<string, EmitterDef> = {
@@ -3532,6 +3574,26 @@ export const EmitterDefs: Record<string, EmitterDef> = {
         speed: new Range(1, 1.5),
         angle: 0,
         rot: 0,
+        maxCount: Number.MAX_VALUE,
+    },
+    outfit_bubblegum: {
+        particle: "outfit_bubblegum",
+        rate: new Range(0.25, 0.31),
+        // overwritten by update loop
+        bounds: { kind: "circle", radius: -1 },
+        speed: new Range(1.25, 1.75),
+        angle: Math.PI * 0.3,
+        rot: new Range(-Math.PI / 6, Math.PI / 6),
+        maxCount: Number.MAX_VALUE,
+    },
+    outfit_gold: {
+        particle: "outfit_gold",
+        rate: new Range(0.22, 0.25),
+        // overwritten by update loop
+        bounds: { kind: "circle", radius: -1 },
+        speed: new Range(1.25, 1.75),
+        angle: Math.PI * 0.3,
+        rot: new Range(-Math.PI / 6, Math.PI / 6),
         maxCount: Number.MAX_VALUE,
     },
 };
