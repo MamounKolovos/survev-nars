@@ -3186,7 +3186,7 @@ const ParticleDefs: Record<string, ParticleDef> = {
             return util.rgbToInt(util.hsvToRgb(hue, saturation, 1));
         },
     },
-    outfit_bubblegum: {
+    idle_bubblegum: {
         image: ["part-boost-basic.img", "part-cloth-01.img"],
         life: new Range(1, 1.2),
         drag: 0.1,
@@ -3577,7 +3577,7 @@ export const EmitterDefs: Record<string, EmitterDef> = {
         maxCount: Number.MAX_VALUE,
     },
     outfit_bubblegum: {
-        particle: "outfit_bubblegum",
+        particle: "idle_bubblegum",
         rate: new Range(0.25, 0.31),
         // overwritten by update loop
         bounds: { kind: "circle", radius: -1 },
@@ -3591,6 +3591,19 @@ export const EmitterDefs: Record<string, EmitterDef> = {
         rate: new Range(0.22, 0.25),
         // overwritten by update loop
         bounds: { kind: "circle", radius: -1 },
+        speed: new Range(1.25, 1.75),
+        angle: Math.PI * 0.3,
+        rot: new Range(-Math.PI / 6, Math.PI / 6),
+        maxCount: Number.MAX_VALUE,
+    },
+    held_bubblegum: {
+        particle: "idle_bubblegum",
+        rate: new Range(0.22, 0.27),
+        bounds: {
+            kind: "local",
+            min: v2.create(-1, -1),
+            max: v2.create(1, 1),
+        },
         speed: new Range(1.25, 1.75),
         angle: Math.PI * 0.3,
         rot: new Range(-Math.PI / 6, Math.PI / 6),

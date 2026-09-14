@@ -1459,6 +1459,23 @@ const SkinDefs: Record<string, MeleeDef> = {
             sprite: "loot-melee-karambit-borealis.img",
         },
     }),
+    karambit_bubblegum: defineMeleeSkin("karambit", {
+        name: "Karambit Bubblegum",
+        rarity: 4,
+        noPotatoSwap: true,
+        anim: {
+            deploy: {
+                anims: ["spin", "rapidSpin"],
+            },
+        },
+        lootImg: {
+            sprite: "loot-melee-karambit-bubblegum.img",
+        },
+        worldImg: {
+            sprite: "loot-melee-karambit-bubblegum.img",
+        },
+        idleEmitter: "held_bubblegum",
+    }),
     bayonet_rugged: defineMeleeSkin("bayonet", {
         name: "Bayonet Rugged",
         rarity: 3,

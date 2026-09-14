@@ -1089,7 +1089,7 @@ const SkinDefs: Record<string, OutfitDef> = {
             baseSprite: "player-base-outfitBubblegum.img",
             handTint: 0xffffff,
             handSprite: "player-hands-outfitBubblegum.img",
-            footTint: 0xffffff,
+            footTint: 0xff77bc,
             footSprite: "player-feet-01.img",
             backpackTint: 0xffffff,
             backpackSprite: "player-back-outfitBubblegum.img",

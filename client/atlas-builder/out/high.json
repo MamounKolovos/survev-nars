@@ -4362,8 +4362,8 @@
         },
         "crown.img": {
           "frame": {
-            "x": 261,
-            "y": 592,
+            "x": 2178,
+            "y": 3459,
             "w": 54,
             "h": 46
           },
@@ -8720,6 +8720,26 @@
             "h": 128
           }
         },
+        "loot-melee-karambit-bubblegum.img": {
+          "frame": {
+            "x": 1359,
+            "y": 1674,
+            "w": 101,
+            "h": 39
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 14,
+            "y": 48,
+            "w": 101,
+            "h": 39
+          },
+          "sourceSize": {
+            "w": 128,
+            "h": 128
+          }
+        },
         "loot-melee-karambit-drowned.img": {
           "frame": {
             "x": 1166,
@@ -8742,8 +8762,8 @@
         },
         "loot-melee-karambit-magma.img": {
           "frame": {
-            "x": 1359,
-            "y": 1674,
+            "x": 261,
+            "y": 592,
             "w": 100,
             "h": 42
           },

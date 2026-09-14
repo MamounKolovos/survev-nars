@@ -3922,8 +3922,8 @@
         },
         "audio-on.img": {
           "frame": {
-            "x": 752,
-            "y": 76,
+            "x": 1299,
+            "y": 942,
             "w": 46,
             "h": 40
           },
@@ -6882,8 +6882,8 @@
         },
         "gun-dp28-top-01.img": {
           "frame": {
-            "x": 1476,
-            "y": 1743,
+            "x": 1507,
+            "y": 1703,
             "w": 34,
             "h": 34
           },
@@ -7222,8 +7222,8 @@
         },
         "gun-potato-smg-top-01.img": {
           "frame": {
-            "x": 1550,
-            "y": 1778,
+            "x": 1517,
+            "y": 1895,
             "w": 32,
             "h": 32
           },
@@ -8704,6 +8704,26 @@
           "frame": {
             "x": 678,
             "y": 120,
+            "w": 50,
+            "h": 19
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 7,
+            "y": 24,
+            "w": 50,
+            "h": 19
+          },
+          "sourceSize": {
+            "w": 64,
+            "h": 64
+          }
+        },
+        "loot-melee-karambit-bubblegum.img": {
+          "frame": {
+            "x": 752,
+            "y": 76,
             "w": 50,
             "h": 19
           },
@@ -11602,8 +11622,8 @@
         },
         "loot-weapon-fists.img": {
           "frame": {
-            "x": 1414,
-            "y": 1001,
+            "x": 138,
+            "y": 1087,
             "w": 37,
             "h": 39
           },
@@ -13362,8 +13382,8 @@
         },
         "part-cloth-01.img": {
           "frame": {
-            "x": 1455,
-            "y": 1001,
+            "x": 1480,
+            "y": 1017,
             "w": 35,
             "h": 36
           },
@@ -13462,8 +13482,8 @@
         },
         "part-frag-burst-01.img": {
           "frame": {
-            "x": 1480,
-            "y": 1818,
+            "x": 1514,
+            "y": 1783,
             "w": 33,
             "h": 33
           },
@@ -13482,8 +13502,8 @@
         },
         "part-frag-burst-02.img": {
           "frame": {
-            "x": 1513,
-            "y": 1781,
+            "x": 1516,
+            "y": 1741,
             "w": 33,
             "h": 33
           },
@@ -13922,8 +13942,8 @@
         },
         "part-potato-01.img": {
           "frame": {
-            "x": 1514,
-            "y": 1741,
+            "x": 1481,
+            "y": 1858,
             "w": 33,
             "h": 33
           },
@@ -13962,8 +13982,8 @@
         },
         "part-pulse-01.img": {
           "frame": {
-            "x": 1481,
-            "y": 1855,
+            "x": 1517,
+            "y": 1820,
             "w": 33,
             "h": 33
           },
@@ -14182,8 +14202,8 @@
         },
         "part-snow-01.img": {
           "frame": {
-            "x": 1507,
-            "y": 1703,
+            "x": 1476,
+            "y": 1783,
             "w": 34,
             "h": 34
           },
@@ -14302,8 +14322,8 @@
         },
         "part-strobe-01.img": {
           "frame": {
-            "x": 1517,
-            "y": 1818,
+            "x": 1551,
+            "y": 1778,
             "w": 33,
             "h": 33
           },
@@ -16122,26 +16142,6 @@
         },
         "player-hand-left-outfitAurora.img": {
           "frame": {
-            "x": 1477,
-            "y": 1923,
-            "w": 36,
-            "h": 36
-          },
-          "rotated": false,
-          "trimmed": true,
-          "spriteSourceSize": {
-            "x": 1,
-            "y": 1,
-            "w": 36,
-            "h": 36
-          },
-          "sourceSize": {
-            "w": 38,
-            "h": 38
-          }
-        },
-        "player-hand-right-outfitAurora.img": {
-          "frame": {
             "x": 1467,
             "y": 1703,
             "w": 36,
@@ -16160,10 +16160,10 @@
             "h": 38
           }
         },
-        "player-hands-01.img": {
+        "player-hand-right-outfitAurora.img": {
           "frame": {
-            "x": 1480,
-            "y": 1041,
+            "x": 1478,
+            "y": 1963,
             "w": 36,
             "h": 36
           },
@@ -16180,7 +16180,7 @@
             "h": 38
           }
         },
-        "player-hands-02.img": {
+        "player-hands-01.img": {
           "frame": {
             "x": 1398,
             "y": 1982,
@@ -16200,10 +16200,30 @@
             "h": 38
           }
         },
+        "player-hands-02.img": {
+          "frame": {
+            "x": 1437,
+            "y": 1936,
+            "w": 36,
+            "h": 36
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 1,
+            "y": 1,
+            "w": 36,
+            "h": 36
+          },
+          "sourceSize": {
+            "w": 38,
+            "h": 38
+          }
+        },
         "player-hands-outfitAvocadoh.img": {
           "frame": {
-            "x": 1438,
-            "y": 1976,
+            "x": 1477,
+            "y": 1923,
             "w": 36,
             "h": 36
           },
@@ -16222,8 +16242,8 @@
         },
         "player-hands-outfitBlueLava.img": {
           "frame": {
-            "x": 1509,
-            "y": 1632,
+            "x": 1518,
+            "y": 1857,
             "w": 32,
             "h": 32
           },
@@ -16242,8 +16262,8 @@
         },
         "player-hands-outfitBubblegum.img": {
           "frame": {
-            "x": 1439,
-            "y": 1044,
+            "x": 1435,
+            "y": 1780,
             "w": 37,
             "h": 37
           },
@@ -16262,8 +16282,8 @@
         },
         "player-hands-outfitBuckTeeth.img": {
           "frame": {
-            "x": 1441,
-            "y": 1883,
+            "x": 1438,
+            "y": 1976,
             "w": 36,
             "h": 36
           },
@@ -16323,7 +16343,7 @@
         "player-hands-outfitGold.img": {
           "frame": {
             "x": 1478,
-            "y": 1963,
+            "y": 2003,
             "w": 36,
             "h": 36
           },
@@ -16342,8 +16362,8 @@
         },
         "player-hands-outfitKingGalaxy.img": {
           "frame": {
-            "x": 1435,
-            "y": 1780,
+            "x": 1411,
+            "y": 1187,
             "w": 37,
             "h": 37
           },
@@ -16362,8 +16382,8 @@
         },
         "player-hands-outfitMultiTusking.img": {
           "frame": {
-            "x": 1449,
-            "y": 1146,
+            "x": 1458,
+            "y": 1084,
             "w": 37,
             "h": 37
           },
@@ -16402,8 +16422,8 @@
         },
         "player-hands-outfitSnow.img": {
           "frame": {
-            "x": 1437,
-            "y": 1936,
+            "x": 1441,
+            "y": 1883,
             "w": 36,
             "h": 36
           },
@@ -16422,8 +16442,8 @@
         },
         "player-hands-outfitSortaBlue.img": {
           "frame": {
-            "x": 1478,
-            "y": 2003,
+            "x": 1476,
+            "y": 1743,
             "w": 36,
             "h": 36
           },
@@ -16442,8 +16462,8 @@
         },
         "player-hands-outfitSunburn.img": {
           "frame": {
-            "x": 138,
-            "y": 1087,
+            "x": 1439,
+            "y": 1043,
             "w": 37,
             "h": 37
           },
@@ -16462,8 +16482,8 @@
         },
         "player-hands-outfitSuppaPoncho.img": {
           "frame": {
-            "x": 1411,
-            "y": 1187,
+            "x": 1449,
+            "y": 1146,
             "w": 37,
             "h": 37
           },
@@ -16802,8 +16822,8 @@
         },
         "player-map-outer.img": {
           "frame": {
-            "x": 1458,
-            "y": 1085,
+            "x": 1416,
+            "y": 937,
             "w": 36,
             "h": 36
           },
@@ -17642,8 +17662,8 @@
         },
         "proj-mirv-mini-02.img": {
           "frame": {
-            "x": 1299,
-            "y": 942,
+            "x": 1414,
+            "y": 1001,
             "w": 42,
             "h": 38
           },
@@ -18002,7 +18022,7 @@
         },
         "quit.img": {
           "frame": {
-            "x": 1416,
+            "x": 1456,
             "y": 937,
             "w": 34,
             "h": 36
@@ -18502,8 +18522,8 @@
         },
         "submit.img": {
           "frame": {
-            "x": 1476,
-            "y": 1781,
+            "x": 1480,
+            "y": 1821,
             "w": 33,
             "h": 33
           },
@@ -18642,8 +18662,8 @@
         },
         "timer-background.img": {
           "frame": {
-            "x": 1454,
-            "y": 937,
+            "x": 1460,
+            "y": 977,
             "w": 36,
             "h": 36
           },
