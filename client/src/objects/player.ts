@@ -1354,9 +1354,7 @@ export class Player implements AbstractObject {
             // too visually noisy
             !this.useItemEmitter &&
             !this.hasteEmitter &&
-            !this.passiveHealEmitter &&
-            !this.meleeIdleEmitter &&
-            !this.meleeStreakEmitter;
+            !this.passiveHealEmitter;
 
         // stop if you don't want the current outfit emitter anymore
         // if you want to switch to a new outfit emitter you must stop the current one
