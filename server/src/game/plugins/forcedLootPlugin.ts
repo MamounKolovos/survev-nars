@@ -63,6 +63,7 @@ const roleWeights = [
 // ];
 
 const secondaryWeights = [
+    { weight: 1, gun: "barrett" },
     { weight: 1, gun: "sv98" },
     { weight: 3, gun: "mosin" },
     { weight: 3, gun: "model94" },
@@ -87,6 +88,7 @@ const secondaryWeights = [
     { weight: 0.3, gun: "saiga" },
     { weight: 1.5, gun: "famas" },
     { weight: 1.5, gun: "an94" },
+    { weight: 1.2, gun: "ash12" },
     { weight: 0.5, gun: "p30l_dual" },
     { weight: 1.1, gun: "colt45_dual" },
     { weight: 0.001, gun: "awc" },
@@ -105,6 +107,7 @@ const meleeWeights = [
 function getPrimaryBasedOnSecondary(secondary: string): string {
     const x = Math.random();
     switch (secondary) {
+        case "barrett":
         case "sv98":
         case "mosin":
         case "m1014":
@@ -158,6 +161,7 @@ function getPrimaryBasedOnSecondary(secondary: string): string {
             }
             return util.weightedRandom(gt.rifles).gun;
         }
+        case "ash12":
         case "famas":
         case "an94": {
             if (Math.random() < 0.4) {
@@ -438,13 +442,18 @@ function getUpgradedGun(g: string): string {
         case "m870": {
             return "spas12";
         }
+        case "barrett": {
+            return "sv98";
+        }
         case "m1014":
         case "garand":
         case "mosin": {
             if (Math.random() < 0.3) return "sv98";
             break;
         }
-        case "blr":
+        case "blr": {
+            return "barrett";
+        }
         case "model94":
         case "scout_elite": {
             if (Math.random() < 0.5) return "mosin";
@@ -454,6 +463,7 @@ function getUpgradedGun(g: string): string {
             if (Math.random() < 0.6) return "pkp";
             break;
         }
+        case "ash12":
         case "an94":
         case "qbb97": {
             if (Math.random() < 0.4) return "pkp";
@@ -476,7 +486,9 @@ function getUpgradedGun(g: string): string {
             if (Math.random() < 0.7) return util.weightedRandom(gt.goodSprays).gun;
             break;
         }
-        case "vector":
+        case "vector": {
+            return "ash12";
+        }
         case "ak47":
         case "hk416":
         case "dp28": {
@@ -488,6 +500,7 @@ function getUpgradedGun(g: string): string {
     return "";
 }
 const sniperStrengths: Record<string, number> = {
+    barrett: 0.95,
     sv98: 1,
     mosin: 0.95,
     blr: 0.9,
@@ -498,6 +511,7 @@ const sniperStrengths: Record<string, number> = {
 const gunStrengths: Record<string, number> = {
     spas12: 0.9,
     m870: 0.3,
+    barrett: 0.95,
     sv98: 1,
     mosin: 0.9,
     model94: 0.9,
@@ -518,6 +532,7 @@ const gunStrengths: Record<string, number> = {
     m39: 0.1,
     deagle_dual: 0.2,
     famas: 0.28,
+    ash12: 0.7,
     an94: 0.5,
     bar: 0.0,
     p30l_dual: 0.75,
@@ -529,6 +544,8 @@ const gunStrengths: Record<string, number> = {
 function getTotalGunStrength(primary: string, secondary: string): number {
     if (primary == "spas12") {
         switch (secondary) {
+            case "barrett":
+                return 0.95;
             case "sv98":
                 return 1;
             case "mosin":
@@ -551,6 +568,8 @@ function getTotalGunStrength(primary: string, secondary: string): number {
                 return 0.5;
             case "famas":
                 return 0.65;
+            case "ash12":
+                return 0.8;
             case "an94":
                 return 0.75;
             case "bar":
@@ -587,6 +606,8 @@ function getTotalGunStrength(primary: string, secondary: string): number {
     }
     if (primary == "m870") {
         switch (secondary) {
+            case "barrett":
+                return 0.65;
             case "sv98":
                 return 0.75;
             case "mosin":
@@ -609,6 +630,8 @@ function getTotalGunStrength(primary: string, secondary: string): number {
                 return 0.35;
             case "famas":
                 return 0.4;
+            case "ash12":
+                return 0.5;
             case "an94":
                 return 0.45;
             case "bar":
@@ -682,6 +705,7 @@ const meleeStrengths: Record<string, number> = {
 
 const gt = {
     goodSprays: [
+        { gun: "ash12", weight: 9 },
         { gun: "an94", weight: 10 },
         { gun: "qbb97", weight: 10 },
         { gun: "m249", weight: 3 },
@@ -700,6 +724,7 @@ const gt = {
         { weight: 1, gun: "scar" },
     ],
     bigClipSnipers: [
+        { weight: 1, gun: "barrett" },
         { weight: 1, gun: "sv98" },
         { weight: 2, gun: "mosin" },
         { weight: 4, gun: "scout_elite" },
@@ -718,6 +743,7 @@ const gt = {
         { weight: 0.8, gun: "deagle_dual" },
         { weight: 2, gun: "famas" },
         { weight: 2, gun: "an94" },
+        { weight: 0.9, gun: "ash12" },
         { weight: 0.5, gun: "p30l_dual" },
         { weight: 0.5, gun: "colt45_dual" },
     ],

@@ -3081,7 +3081,7 @@ export const GunDefs: Record<string, GunDef> = {
         maxReload: 3,
         extendedClip: 4,
         extendedReload: 4,
-        reloadTime: 2.9,
+        reloadTime: 2.8,
         fireDelay: 0.925,
         switchDelay: 1,
         barrelLength: 4.2,
